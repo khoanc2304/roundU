@@ -1,0 +1,973 @@
+<%-- 
+    Document   : navbar
+    Created on : Mar 8, 2025, 5:43:41 PM
+    Author     : ADMIN
+--%>
+
+<%@ page import="com.tourismapp.config.ProjectPaths" %>
+<%@ page import="com.tourismapp.controller.mainController.MainControllerServlet" %>
+<%@page contentType="text/html" pageEncoding="UTF-8"%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>8386 Shop - Laptop & PC</title>
+
+    <!-- Bootstrap 5.3 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css" integrity="sha512-Kc323vGBEqzTmouAECnVceyQqyqdsSiqLQISBL29aUW4U/M7pSPA/gEUZQqv1cwx4OnYxTxve5UMg5GT6L4JJg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+
+    <!-- AOS Animation -->
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css">
+
+</head>
+<header class="header">
+    <div class="container d-flex align-items-center justify-content-between">
+        <a href="#" class="logo">
+            <img src="resources/itel.png" alt="Itel Shop Logo">
+        </a>
+        <div class="search-box">
+            <form action="search" method="GET" style="display: flex; width: 100%;">
+                <input type="text" name="keyword" placeholder="Tìm kiếm sản phẩm..." value="${param.keyword}">
+                <button type="submit"><i class="fas fa-search"></i></button>
+            </form>
+        </div>
+        <nav class="nav-links d-flex align-items-center gap-3">
+            <c:choose>
+                <c:when test="${not empty sessionScope.loggedInUser}">
+                    <div class="d-flex align-items-center gap-2">
+                        <img src="${sessionScope.loggedInUser.avatar}" alt="Avatar" class="rounded-circle" style="width: 40px; height: 40px;">
+                        <span class="text-white fw-bold">${sessionScope.loggedInUser.fullName}</span>
+                        <a href="logout" class="nav-link text-white"><i class="fas fa-sign-out-alt me-1"></i> Đăng xuất</a>
+                    </div>
+                </c:when>
+                <c:when test="${not empty sessionScope.googleName}">
+                    <div class="d-flex align-items-center gap-2">
+                        <img src="${sessionScope.googlePicture}" alt="Avatar" class="rounded-circle" style="width: 40px; height: 40px;">
+                        <span class="text-white fw-bold">${sessionScope.googleName}</span>
+                        <a href="logout" class="nav-link text-white"><i class="fas fa-sign-out-alt me-1"></i> Đăng xuất</a>
+                    </div>
+                </c:when>
+                <c:when test="${not empty sessionScope.facebookName}">
+                    <div class="d-flex align-items-center gap-2">
+                        <img src="${not empty sessionScope.facebookPicture ? sessionScope.facebookPicture : 'https://via.placeholder.com/40'}" alt="Avatar" class="rounded-circle" style="width: 40px; height: 40px;">
+                        <span class="text-white fw-bold">${sessionScope.facebookName}</span>
+                        <a href="logout" class="nav-link text-white"><i class="fas fa-sign-out-alt me-1"></i> Đăng xuất</a>
+                    </div>
+                </c:when>
+                <c:otherwise>
+                    <a href="#" class="nav-link"><i class="fas fa-user me-1"></i> Đăng Nhập</a>
+                </c:otherwise>
+            </c:choose>
+            <a href="#" class="nav-link"><i class="fas fa-bell me-1"></i> Thông báo</a>
+            <a href="#" class="nav-link position-relative">
+                <i class="fas fa-shopping-cart me-1"></i> Giỏ hàng
+            </a>
+            <a href="#" class="nav-link"><i class="fas fa-headset me-1"></i> Hỗ trợ</a>
+        </nav>
+    </div>
+</header>
+
+
+<style>
+/*    .icon-circle {
+        position: fixed;
+        bottom: 80px;  Điều chỉnh vị trí 
+        right: 20px;  Điều chỉnh vị trí 
+        background-color: #1877F2;  Màu xanh Facebook 
+        color: white;
+        width: 50px;
+        height: 50px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 50%;
+        font-size: 24px;
+        cursor: pointer;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+        transition: transform 0.2s, background-color 0.3s;
+        text-decoration: none;
+    }
+
+    .icon-circle i {
+        color: white;
+    }
+
+    .icon-circle:hover {
+        transform: scale(1.1);
+        background-color: #166FE5;  Màu hover đậm hơn 
+    }*/
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+        font-family: 'Roboto', sans-serif;
+    }
+
+    body {
+        background: #f0f2f5;
+        color: #212529;
+        overflow-x: hidden;
+    }
+
+    /* Header */
+    .header {
+        /*        background: linear-gradient(90deg, #007bff, #00c4ff);*/
+        background-color: #ff6666;
+        padding: 1rem 2rem;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+        position: sticky;
+        top: 0;
+        z-index: 1030;
+    }
+
+    .header .logo img {
+        height: 70px;
+        transition: transform 0.3s ease;
+        border-radius: 20px;
+    }
+
+    .header .logo img:hover {
+        transform: scale(1.1);
+    }
+
+    .search-box {
+        display: flex;
+        align-items: center;
+        background: #ffffff;
+        padding: 10px 20px;
+        border-radius: 25px;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        width: 400px;
+        transition: all 0.4s ease;
+    }
+
+    .search-box input {
+        border: none;
+        outline: none;
+        background: transparent;
+        font-size: 16px;
+        width: 100%;
+        color: #333;
+    }
+
+    .search-box button {
+        background: none;
+        border: none;
+        font-size: 18px;
+        color: #2a5298;
+        cursor: pointer;
+        transition: color 0.3s;
+    }
+
+    .search-box button:hover {
+        color: #ff6f00; /* Màu cam nổi bật khi hover */
+    }
+
+    .search-box:focus-within {
+        box-shadow: 0 6px 15px rgba(0, 0, 0, 0.2);
+        width: 450px;
+    }
+
+
+    .nav-links .nav-link {
+        color: #fff;
+        font-weight: 500;
+        padding: 0.75rem 1.5rem;
+        border-radius: 25px;
+        transition: all 0.3s ease;
+    }
+
+    .nav-links .nav-link:hover {
+        background: rgba(255, 255, 255, 0.25);
+        color: #fff;
+    }
+
+    .cart-badge {
+        background: #ff2d55;
+        font-size: 12px;
+        width: 22px;
+        height: 22px;
+        line-height: 22px;
+    }
+
+/*    .banner-wrapper {
+        padding: 0;  Xóa padding để banner full width 
+        margin: 2rem 0;
+        width: 100%;  Đảm bảo full width 
+    }
+
+    .banner-container {
+        height: 500px;  Tăng chiều cao để trông đẹp hơn 
+        border-radius: 0;  Xóa border-radius để full width 
+        overflow: hidden;
+        box-shadow: none;  Xóa shadow để phù hợp với full width 
+        width: 100%;  Full width 
+    }
+
+    .carousel-item img {
+        height: 100%;
+        width: 100%;  Đảm bảo ảnh full width 
+        object-fit: cover;  Giữ tỷ lệ ảnh 
+        transition: transform 0.6s ease;
+    }
+
+    .carousel-item:hover img {
+        transform: scale(1.05);
+    }
+
+    .carousel-caption {
+        background: rgba(0, 0, 0, 0.6);
+        border-radius: 15px;
+        padding: 1.5rem;
+        bottom: 20%;
+        left: 5%;  Giảm left để gần mép trái hơn 
+        right: auto;
+        text-align: left;
+        transform: translateY(0);
+        max-width: 40%;  Giới hạn chiều rộng của caption 
+    }
+
+    .carousel-caption h5 {
+        font-size: 2rem;  Tăng kích thước chữ cho nổi bật 
+        margin-bottom: 0.75rem;
+    }
+
+    .carousel-caption p {
+        font-size: 1.25rem;  Tăng kích thước chữ 
+        margin-bottom: 1.5rem;
+    }
+
+    .carousel-control-prev, .carousel-control-next {
+        width: 5%;
+        opacity: 0.8;
+    }
+
+    .carousel-control-prev-icon, .carousel-control-next-icon {
+        font-size: 2.5rem;  Tăng kích thước mũi tên 
+        filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.3));
+    }
+
+     Sidebar 
+    .sidebar {
+        background: #fff;
+        border-radius: 15px;
+        padding: 1.5rem;
+        box-shadow: 0 5px 20px rgba(0, 0, 0, 0.05);
+    }
+
+    .sidebar h3 {
+        font-size: 1.3rem;
+        font-weight: 700;
+        color: #007bff;
+        margin-bottom: 1rem;
+    }
+
+    .sidebar .list-group-item {
+        border: none;
+        padding: 0.8rem 0;
+        font-weight: 500;
+        transition: all 0.3s ease;
+    }
+
+    .sidebar .list-group-item:hover {
+        color: #ff2d55;
+        padding-left: 0.5rem;
+    }
+
+     Product Grid 
+    .product-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(290px, 1fr));
+        gap: 1.5rem;
+    }
+
+    .product-card {
+        background: #fff;
+        border-radius: 20px;
+        box-shadow: 0 5px 25px rgba(0, 0, 0, 0.1);
+        transition: all 0.3s ease;
+        overflow: hidden;
+    }
+
+    .product-card:hover {
+        transform: translateY(-8px);
+        box-shadow: 0 15px 35px rgba(0, 0, 0, 0.15);
+    }
+
+    .product-img {
+        height: 220px;
+        object-fit: contain;
+        padding: 1rem;
+        transition: transform 0.3s ease;
+    }
+
+    .product-card:hover .product-img {
+        transform: scale(1.1);
+    }
+
+    .product-name {
+        font-size: 1.1rem;
+        font-weight: 500;
+        height: 50px;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        display: -webkit-box;
+        -webkit-line-clamp: 2;
+        -webkit-box-orient: vertical;
+    }
+
+    .btn-buy {
+        background: #ff2d55;
+        padding: 0.4rem 1rem;
+        font-size: 0.9rem;
+        border-radius: 20px;
+    }
+    .btn-buy:hover{
+        background: #bf0b32;
+        color: #212529;
+    }
+
+    .btn-cart {
+        background: #007bff;
+        padding: 0.4rem 1rem;
+        font-size: 0.9rem;
+        border-radius: 20px;
+    }
+    .btn-cart:hover{
+        background: #1e3a8a;
+        color:#212529 ;
+    }
+
+     Footer 
+    footer {
+        background: linear-gradient(135deg, #1e3a8a, #3b82f6);
+        color: #fff;
+        padding: 3rem 0;
+    }
+
+    footer h6 {
+        font-weight: 700;
+        margin-bottom: 1.5rem;
+        color: #fff;
+    }
+
+    footer a {
+        color: #e5e7eb;
+        transition: color 0.3s ease;
+    }
+
+    footer a:hover {
+        color: #ff2d55;
+    }
+
+     Back to Top 
+    .back-to-top {
+        background: #ff2d55;
+        width: 50px;
+        height: 50px;
+        border-radius: 50%;
+        line-height: 50px;
+        text-align: center;  Căn giữa icon 
+        color: #fff;  Đảm bảo icon trắng để nổi trên nền đỏ 
+        position: absolute;  Đổi sang absolute để nằm trong footer 
+        bottom: 20px;  Khoảng cách từ dưới footer 
+        right: 20px;  Khoảng cách từ mép phải footer 
+        transition: opacity 0.3s ease;  Thêm hiệu ứng mượt mà 
+        z-index: 1000;  Đảm bảo nút luôn nằm trên cùng 
+    }*/
+
+    /* Điều chỉnh footer để chứa back-to-top */
+    footer {
+        background: linear-gradient(135deg, #1e3a8a, #3b82f6);
+        color: #f8f9fa;
+        padding: 30px 0;
+    }
+
+    footer h6 {
+        font-size: 1rem;
+        margin-bottom: 15px;
+    }
+
+    footer ul {
+        padding: 0;
+    }
+
+    footer ul li {
+        list-style: none;
+        margin-bottom: 8px;
+    }
+
+    footer ul li a {
+        color: #bbb;
+        text-decoration: none;
+        transition: color 0.3s;
+    }
+
+    footer ul li a:hover {
+        color: #007bff;
+        text-decoration: underline;
+    }
+
+    footer .border-top {
+        border-color: rgba(255, 255, 255, 0.2) !important;
+    }
+    .text-center img{
+        height: 50px;
+        border-radius: 50px;
+    }
+    /* Hộp chat */
+    .chat-popup {
+        display: none;
+        position: fixed;
+        bottom: 80px;
+        right: 20px;
+        width: 320px;
+        background: white;
+        border-radius: 10px;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+        border: 1px solid #ddd;
+    }
+
+    /* Header chat */
+    .chat-header {
+        background: #007bff;
+        color: white;
+        padding: 10px;
+        border-radius: 10px 10px 0 0;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    .chat-header .close-btn {
+        background: none;
+        border: none;
+        color: white;
+        font-size: 18px;
+        cursor: pointer;
+    }
+
+    /* Nội dung chat */
+    .chat-body {
+        padding: 10px;
+        height: 300px; /* Tăng chiều cao */
+        overflow-y: auto;
+    }
+
+    /* Tin nhắn từ người dùng (bên phải) */
+    .user-message {
+        background: #007bff;
+        color: white;
+        padding: 8px 12px;
+        border-radius: 10px;
+        max-width: 75%;
+        align-self: flex-end;
+        text-align: right;
+    }
+
+    /* Tin nhắn từ chatbot (bên trái) */
+    .bot-message {
+        background: #f1f1f1;
+        color: black;
+        padding: 8px 12px;
+        border-radius: 10px;
+        max-width: 75%;
+        align-self: flex-start;
+        text-align: left;
+    }
+
+    /* Bố cục tin nhắn */
+    .messages {
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+    }
+
+    /* Footer chat */
+    .chat-footer {
+        display: flex;
+        border-top: 1px solid #ddd;
+        padding: 5px;
+    }
+
+    .chat-footer input {
+        flex: 1;
+        padding: 8px;
+        border: none;
+        outline: none;
+    }
+
+    .chat-footer button {
+        background: #007bff;
+        color: white;
+        border: none;
+        padding: 8px;
+        cursor: pointer;
+    }
+
+    /* Nút mở chat */
+    .chat-icon {
+        position: fixed;
+        bottom: 20px;
+        right: 20px;
+        background-color: #007bff;
+        color: white;
+        width: 50px;
+        height: 50px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 50%;
+        font-size: 24px;
+        cursor: pointer;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+        transition: transform 0.2s;
+    }
+
+    .chat-icon:hover {
+        transform: scale(1.1);
+    }
+
+</style>
+
+<script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
+<script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
+
+
+
+
+//sidebar
+<%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+<%@ page session="true" %>
+
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>SideBar</title>
+
+    </head>
+    <body id="body-pd">
+
+        <!-- Header -->
+        <header id="header" class="header bg-light shadow-sm py-2">
+            <div class="container-fluid">
+                <div class="row align-items-center">
+                    <!-- Toggle Menu (Cột bên trái) -->
+                    <div class="col-3">
+                        <div class="header_toggle">
+                            <i class='bx bx-menu' id="header-toggle"></i>
+                        </div>
+                    </div>
+
+                    <!-- Search Section (Cột giữa) -->
+                    <div class="col-6 d-flex justify-content-center">
+                        <%--        <c:if test="${sessionScope.loggedInUser.userRole == 'customer'}">--%>
+                        <form action="${pageContext.request.contextPath}/index?action=listProducts" method="get" class="w-100">
+                            <div class="input-group">
+                                <input type="text" class="form-control" id="searchProduct" name="searchProduct"
+                                       placeholder="Nhập tên sản phẩm cần tìm"
+                                       value="${param.searchProduct}"
+                                       aria-label="Tìm sản phẩm">
+                                <button class="btn btn-primary" type="submit">
+                                    <i class="fas fa-search"></i> Tìm kiếm
+                                </button>
+                                <!-- Nút quay lại nếu có tìm kiếm -->
+                                <c:if test="${not empty param.searchProduct}">
+                                    <a href="${pageContext.request.contextPath}/index?action=listProducts" class="btn btn-secondary ms-2">
+                                        <i class="fas fa-arrow-left"></i> Quay lại
+                                    </a>
+                                </c:if>
+                            </div>
+                        </form>
+                        <%--        </c:if>--%>
+                    </div>
+
+                    <!-- User Section và Cart -->
+                    <div class="col-3 d-flex justify-content-end align-items-center">
+                        <!-- Cart -->
+                        <c:if test="${sessionScope.loggedInUser.userRole == 'customer'}">
+                            <div class="cart-info ms-3">
+                                <a href="${pageContext.request.contextPath}/cart" class="d-flex align-items-center">
+                                    <i class="fas fa-shopping-cart"></i>
+                                    <span class="badge bg-danger ms-2">${sessionScope.cartItemCount}</span>
+                                </a>
+                            </div>
+                        </c:if>
+
+                        <!-- User Info -->
+                        <c:if test="${not empty sessionScope.loggedInUser}">
+                            <div class="d-flex align-items-center ms-3">
+                                <img src="${sessionScope.loggedInUser.avatar}" alt="avatar" class="rounded-circle border" width="40px">
+                                <a href="${pageContext.request.contextPath}/users?action=viewUser&username=${sessionScope.loggedInUser.username}" class="ms-2 text-dark fw-semibold text-decoration-none">
+                                    ${sessionScope.loggedInUser.fullName}
+                                </a>
+                            </div>
+                            <button type="button" class="btn btn-outline-primary btn-sm ms-2" data-bs-toggle="modal" data-bs-target="#logoutModal">
+                                <i class="fas fa-sign-out-alt me-2"></i> Đăng Xuất
+                            </button>
+                        </c:if>
+
+                        <!-- User NOT LOGIN-->
+                        <c:if test="${empty sessionScope.loggedInUser}">
+                            <a href="${pageContext.request.contextPath}/loginPage.jsp" class="btn btn-outline-primary btn-sm me-2">Đăng Nhập</a>
+                            <a href="${pageContext.request.contextPath}/register.jsp" class="btn btn-outline-primary btn-sm">Đăng Ký</a>
+                        </c:if>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+
+        <!-- Sidebar -->
+        <div class="l-navbar" id="nav-bar">
+            <nav class="nav">
+                <div>
+                    <!-- Logo -->
+                    <a href="product" class="nav_logo">
+                        <img src="https://scontent.fdad3-5.fna.fbcdn.net/v/t1.15752-9/480148661_9011683048954377_8966679042114836256_n.jpg?stp=dst-jpg_s480x480_tt6&_nc_cat=109&ccb=1-7&_nc_sid=0024fc&_nc_ohc=59i_wTGvZt4Q7kNvgG1OR4k&_nc_oc=Adi6BVy88iPaGJmoV-DO0OWECBCkY2Ty_kHigT43IS5jeouOT48j6PAGtKjHEXj1ChwxMaUAoPUWa54FCMJEmz4z&_nc_ad=z-m&_nc_cid=0&_nc_zt=23&_nc_ht=scontent.fdad3-5.fna&oh=03_Q7cD1gF0WgRyL1OUp36J4UCDBM0YKOuIuydm1fDlCT8VluNHYw&oe=67E81504" alt="Logo" width="30px">
+                    </a>
+
+                    <!-- Navigation -->
+                    <div class="nav_list">
+                        <c:choose>
+                            <c:when test="${not empty sessionScope.loggedInUser }">
+                                <c:if test="${sessionScope.loggedInUser.userRole == 'customer'}">
+                                    <a href="${pageContext.request.contextPath}/product.jsp" class="nav_link">
+                                        <i class='bx bx-home nav_icon'></i>
+                                        <span class="nav_name">Trang Chủ</span>
+                                    </a>
+                                    <a href="${pageContext.request.contextPath}/index?action=listProducts" class="nav_link">
+                                        <i class='bx bx-store nav_icon'></i>
+                                        <span class="nav_name">Tất cả sản phẩm</span>
+                                    </a>
+                                    <a href="#" class="nav_link">
+                                        <i class='bx bx-bell nav_icon'></i>
+                                        <span class="nav_name">Thông báo</span>
+                                    </a>
+                                    <a href="#" class="nav_link">
+                                        <i class='bx bx-news nav_icon'></i> <span class="nav_name">Bài viết</span>
+                                    </a>
+                                </c:if>
+                                <c:if test="${sessionScope.loggedInUser.userRole == 'admin' || sessionScope.loggedInUser.userRole == 'manager' || sessionScope.loggedInUser.userRole == 'employee'}">
+                                    <a href="${pageContext.request.contextPath}/dashboard" class="nav_link">
+                                        <i class='bx bx-home nav_icon'></i>
+                                        <span class="nav_name">Dashboard</span>
+                                    </a>
+                                    <a href="${pageContext.request.contextPath}/users?action=listUsers" class="nav_link">
+                                        <i class='bx bx-user-circle nav_icon'></i>
+                                        <span class="nav_name">Users</span>
+                                    </a>
+                                    <a href="${pageContext.request.contextPath}/brand?action=list" class="nav_link">
+                                        <i class='bx bx-category nav_icon'></i>
+                                        <span class="nav_name">Brand</span>
+                                    </a>
+                                    <a href="${pageContext.request.contextPath}/product?action=list-admin" class="nav_link">
+                                        <i class='bx bx-package nav_icon'></i>
+                                        <span class="nav_name">Product</span>
+                                    </a>
+                                    <a href="${pageContext.request.contextPath}/orders" class="nav_link">
+                                        <i class='bx bx-cart nav_icon'></i>
+                                        <span class="nav_name">Cart</span>
+                                    </a>
+                                    <a href="${pageContext.request.contextPath}/product" class="nav_link">
+                                        <i class='bx bx-store nav_icon'></i>
+                                        <span class="nav_name">All Product</span>
+                                    </a>
+                                </c:if>
+                            </c:when>
+                            <c:otherwise>
+                                <a href="${pageContext.request.contextPath}/index.jsp" class="nav_link">
+                                    <i class='bx bx-home nav_icon'></i>
+                                    <span class="nav_name">Trang Chủ</span>
+                                </a>
+                                <a href="${pageContext.request.contextPath}/index?action=listProducts" class="nav_link">
+                                    <i class='bx bx-store nav_icon'></i>
+                                    <span class="nav_name">Tất cả sản phẩm</span>
+                                </a>
+                                <a href="#" class="nav_link">
+                                    <i class='bx bx-bell nav_icon'></i>
+                                    <span class="nav_name">Thông báo</span>
+                                </a>
+                                <a href="#" class="nav_link">
+                                    <i class='bx bx-news nav_icon'></i> <span class="nav_name">Bài viết</span>
+                                </a>
+                            </c:otherwise>
+                        </c:choose>
+                    </div>
+                </div>
+
+                <!-- Sign Out or Dashboard -->
+                <c:if test="${not empty sessionScope.loggedInUser}">
+                    <c:choose>
+                        <c:when test="${sessionScope.loggedInUser.userRole == 'customer'}">
+                            <a href="#" class="nav_link" data-bs-toggle="modal" data-bs-target="#logoutModal">
+                                <i class='bx bx-log-out nav_icon'></i>
+                                <span class="nav_name">Đăng Xuất</span>
+                            </a>
+                        </c:when>
+                        <c:otherwise>
+                            <a href="${pageContext.request.contextPath}/dashboard" class="nav_link">
+                                <i class='bx bx-tachometer nav_icon'></i>
+                                <span class="nav_name">Quay lại Dashboard</span>
+                            </a>
+                        </c:otherwise>
+                    </c:choose>
+                </c:if>
+            </nav>
+        </div>
+
+        <!-- Logout Modal -->
+        <div class="modal fade" id="logoutModal" tabindex="-1" aria-labelledby="logoutModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="logoutModalLabel">Đang đăng xuất...</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        Bạn có chắc chắn muốn đăng xuất khỏi tài khoản này không?
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Hủy</button>
+                        <a href="${pageContext.request.contextPath}/logout" class="btn btn-primary">Đăng Xuất</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- JavaScript -->
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+        <script>
+            document.addEventListener("DOMContentLoaded", function (event) {
+
+                const showNavbar = (toggleId, navId, bodyId, headerId) => {
+                    const toggle = document.getElementById(toggleId),
+                            nav = document.getElementById(navId),
+                            bodypd = document.getElementById(bodyId),
+                            headerpd = document.getElementById(headerId)
+
+                    if (toggle && nav && bodypd && headerpd) {
+                        toggle.addEventListener('click', () => {
+                            nav.classList.toggle('show')
+                            toggle.classList.toggle('bx-x')
+                            bodypd.classList.toggle('body-pd')
+                            headerpd.classList.toggle('body-pd')
+                        })
+                    }
+                }
+
+                showNavbar('header-toggle', 'nav-bar', 'body-pd', 'header')
+
+                /*===== LINK ACTIVE =====*/
+                const linkColor = document.querySelectorAll('.nav_link')
+
+                function colorLink() {
+                    if (linkColor) {
+                        linkColor.forEach(l => l.classList.remove('active'))
+                        this.classList.add('active')
+                    }
+                }
+                linkColor.forEach(l => l.addEventListener('click', colorLink))
+
+            });
+        </script>
+    </body>
+</html>
+
+<!-- CSS Links -->
+<style>
+    @import url("https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700&display=swap");
+
+    :root {
+        --header-height: 3rem;
+        --nav-width: 68px;
+        --first-color: #4723D9;
+        --first-color-light: #AFA5D9;
+        --white-color: #F7F6FB;
+        --body-font: 'Nunito', sans-serif;
+        --normal-font-size: 1rem;
+        --z-fixed: 100;
+    }
+
+    *, ::before, ::after {
+        box-sizing: border-box;
+    }
+
+    body {
+        position: relative;
+        margin: var(--header-height) 0 0 0;
+        padding: 0 1rem;
+        font-family: var(--body-font);
+        font-size: var(--normal-font-size);
+        transition: .5s;
+    }
+
+    a {
+        text-decoration: none;
+    }
+
+    .header {
+        width: 100%;
+        height: var(--header-height);
+        position: fixed;
+        top: 0;
+        left: 0;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 0 1rem;
+        background-color: var(--white-color);
+        z-index: var(--z-fixed);
+        transition: .5s;
+    }
+
+    .header_toggle {
+        color: var(--first-color);
+        font-size: 1.5rem;
+        cursor: pointer;
+    }
+
+    .header_img {
+        width: 35px;
+        height: 35px;
+        display: flex;
+        justify-content: center;
+        border-radius: 50%;
+        overflow: hidden;
+    }
+
+    .header_img img {
+        width: 40px;
+    }
+
+    .l-navbar {
+        position: fixed;
+        top: 0;
+        left: -30%;
+        width: var(--nav-width);
+        height: 100vh;
+        background-color: var(--first-color);
+        padding: .5rem 1rem 0 0;
+        transition: .5s;
+        z-index: var(--z-fixed);
+    }
+
+    .nav {
+        height: 100%;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        overflow: hidden;
+    }
+
+    .nav_logo, .nav_link {
+        display: grid;
+        grid-template-columns: max-content max-content;
+        align-items: center;
+        column-gap: 1rem;
+        padding: .5rem 0 .5rem 1.5rem;
+    }
+
+    .nav_logo {
+        margin-bottom: 2rem;
+    }
+
+    .nav_logo-icon {
+        font-size: 1.25rem;
+        color: var(--white-color);
+    }
+
+    .nav_logo-name {
+        color: var(--white-color);
+        font-weight: 700;
+    }
+
+    .nav_link {
+        position: relative;
+        color: var(--first-color-light);
+        margin-bottom: 1.5rem;
+        transition: .3s;
+    }
+
+    .nav_link:hover {
+        color: var(--white-color);
+    }
+
+    .nav_icon {
+        font-size: 1.25rem;
+    }
+
+    .show {
+        left: 0;
+    }
+
+    .body-pd {
+        padding-left: calc(var(--nav-width) + 1rem);
+    }
+
+    .active {
+        color: var(--white-color);
+    }
+
+    .active::before {
+        content: '';
+        position: absolute;
+        left: 0;
+        width: 2px;
+        height: 32px;
+        background-color: var(--white-color);
+    }
+
+    .height-100 {
+        height: 100vh;
+    }
+
+    @media screen and (min-width: 768px) {
+        body {
+            margin: calc(var(--header-height) + 1rem) 0 0 0;
+            padding-left: calc(var(--nav-width) + 2rem);
+        }
+
+        .header {
+            height: calc(var(--header-height) + 1rem);
+            padding: 0 2rem 0 calc(var(--nav-width) + 2rem);
+        }
+
+        .header_img {
+            width: 40px;
+            height: 40px;
+        }
+
+        .header_img img {
+            width: 45px;
+        }
+
+        .l-navbar {
+            left: 0;
+            padding: 1rem 1rem 0 0;
+        }
+
+        .show {
+            width: calc(var(--nav-width) + 156px);
+        }
+
+        .body-pd {
+            padding-left: calc(var(--nav-width) + 188px);
+        }
+    }
+</style>
+<%-- BOOTSTRAP --%>
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+
+<link href="https://cdn.jsdelivr.net/npm/boxicons@latest/css/boxicons.min.css" rel="stylesheet">

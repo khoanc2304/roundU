@@ -1,0 +1,40 @@
+// DAO
+public interface IProductDao {
+    Product findById(int id);
+    void save(Product product);
+    // ... các phương thức CRUD
+}
+
+public class ProductDao implements IProductDao {
+    // triển khai truy vấn DB
+}
+
+
+
+// Service
+public interface ProductService {
+    Product getProductById(int id);
+    void createProduct(Product product);
+    // các nghiệp vụ khác
+}
+
+public class ProductServiceImpl implements ProductService {
+    private IProductDao productDao;
+
+    // constructor hoặc setter injection
+    public ProductServiceImpl(IProductDao productDao) {
+        this.productDao = productDao;
+    }
+
+    @Override
+    public Product getProductById(int id) {
+        return productDao.findById(id);
+    }
+
+    @Override
+    public void createProduct(Product product) {
+        // business logic (validate, tính toán...)
+        productDao.save(product);
+    }
+}
+

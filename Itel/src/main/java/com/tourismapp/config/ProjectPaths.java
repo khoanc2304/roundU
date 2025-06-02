@@ -1,0 +1,45 @@
+package com.tourismapp.config;
+
+import com.tourismapp.controller.mainController.MainControllerServlet;
+
+/**
+ *
+ * @author LENOVO
+ */
+public class ProjectPaths {
+
+    // JPS pages -> main controllerServlet
+    public static final String PREFIX_WEB_PATH = "/Itel";
+    public static final String HREF_TO_MAINCONTROLLER = PREFIX_WEB_PATH + "/main?action=";
+    // dashboard
+    public static final String HREF_TO_DASHBOARDPAGE = HREF_TO_MAINCONTROLLER + MainControllerServlet.DASHBOARDPAGE_REDIRECT;
+    public static final String HREF_TO_USERMANAGEMENT = HREF_TO_MAINCONTROLLER + MainControllerServlet.USER_MANAGEMENT_REDIRECT;
+    public static final String HREF_TO_BRANDMANAGEMENT = HREF_TO_MAINCONTROLLER + MainControllerServlet.BRAND_MANAGEMENT_REDIRECT;
+    public static final String HREF_TO_CATEGORYMANAGEMENT = HREF_TO_MAINCONTROLLER + MainControllerServlet.CATEGORY_MANAGEMENT_REDIRECT;
+    public static final String HREF_TO_PRODUCTMANAGEMENT = HREF_TO_MAINCONTROLLER + MainControllerServlet.PRODUCT_MANAGEMENT_REDIRECT;
+    public static final String HREF_TO_CARTMANAGEMENT = HREF_TO_MAINCONTROLLER + MainControllerServlet.CART_MANAGEMENT_REDIRECT;
+    
+    
+    // user view
+    public static final String HREF_TO_LOGINPAGE = HREF_TO_MAINCONTROLLER + MainControllerServlet.LOGINPAGE_REDIRECT;
+    public static final String HREF_TO_PROFILEPAGE = HREF_TO_MAINCONTROLLER + MainControllerServlet.PROFILEPAGE_REDIRECT;
+    public static final String HREF_TO_HOMEPAGE = HREF_TO_MAINCONTROLLER + MainControllerServlet.HOMEPAGE_REDIRECT;
+
+    
+    // RedirectServlets -> JSP pages
+    public static final String JSP_PATH_VIEW = "/WEB-INF/view/pages/";
+    public static final String JSP_PATH_DASHBOARD = "/WEB-INF/view/dashboard/";
+//    public static final String JSP_DASHBOARDPAGE_PATH = "/WEB-INF/view/dashboard/dashboard.jsp";
+    public static final String JSP_DASHBOARDPAGE_PATH = JSP_PATH_DASHBOARD + "dashboard.jsp";
+    public static final String JSP_USERMANAGEMENT_PATH = JSP_PATH_DASHBOARD + "userManagement/userManagement.jsp";
+    public static final String JSP_BRANDMANAGEMENT_PATH = JSP_PATH_DASHBOARD + "brandManagement/brandManagement.jsp";
+    public static final String JSP_CATEGORYMANAGEMENT_PATH = JSP_PATH_DASHBOARD + "categoryManagement/categoryManagement.jsp";
+    public static final String JSP_PRODUCTMANAGEMENT_PATH = JSP_PATH_DASHBOARD + "productManagement/productManagement.jsp";
+    public static final String JSP_CARTMANAGEMENT_PATH = JSP_PATH_DASHBOARD + "cartManagement/cartManagement.jsp";
+    
+    //user view
+    public static final String JSP_LOGINPAGE_PATH = JSP_PATH_VIEW + "loginPage/loginPage.jsp";
+    public static final String JSP_PROFILEPAGE_PATH = JSP_PATH_VIEW + "profilePage/profilePage.jsp";
+    public static final String JSP_HOMEPAGE_PATH = JSP_PATH_VIEW + "homePage/homePage.jsp";
+
+}
