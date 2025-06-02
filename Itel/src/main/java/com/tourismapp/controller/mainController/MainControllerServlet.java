@@ -22,7 +22,7 @@ public class MainControllerServlet extends HttpServlet {
     public static final String BRAND_MANAGEMENT_REDIRECT = "brandManagement";
     public static final String CATEGORY_MANAGEMENT_REDIRECT = "categoryManagement";
     public static final String PRODUCT_MANAGEMENT_REDIRECT = "productManagement";
-    public static final String CART_MANAGEMENT_REDIRECT = "cartManagement";
+    public static final String ORDER_MANAGEMENT_REDIRECT = "orderManagement";
     
     
     //user view
@@ -30,6 +30,7 @@ public class MainControllerServlet extends HttpServlet {
     public static final String PROFILEPAGE_REDIRECT = "profilePage";
     public static final String HOMEPAGE_REDIRECT = "homePage";
     public static final String CHECKOUTPAGE_REDIRECT = "checkoutPage";
+    public static final String CARTPAGE_REDIRECT = "cartPage";
 
     // redirect to each servlets
     //dashboard
@@ -38,7 +39,7 @@ public class MainControllerServlet extends HttpServlet {
     public static final String BRAND_MANAGEMENT_SERVLET = "/" + BRAND_MANAGEMENT_REDIRECT;
     public static final String CATEGORY_MANAGEMENT_SERVLET = "/" + CATEGORY_MANAGEMENT_REDIRECT;
     public static final String PRODUCT_MANAGEMENT_SERVLET = "/" + PRODUCT_MANAGEMENT_REDIRECT;
-    public static final String CART_MANAGEMENT_SERVLET = "/" + CART_MANAGEMENT_REDIRECT;
+    public static final String ORDER_MANAGEMENT_SERVLET = "/" + ORDER_MANAGEMENT_REDIRECT;
     
     
     //user view
@@ -46,6 +47,7 @@ public class MainControllerServlet extends HttpServlet {
     public static final String PROFILEPAGE_SERVLET = "/" + PROFILEPAGE_REDIRECT;
     public static final String HOMEPAGE_SERVLET = "/" + HOMEPAGE_REDIRECT;
     public static final String CHECKOUTPAGE_SERVLET = "/" + CHECKOUTPAGE_REDIRECT;
+    public static final String CARTPAGE_SERVLET = "/" + CARTPAGE_REDIRECT;
 
     // main?action=
     // doPost (Action)
@@ -140,20 +142,21 @@ public class MainControllerServlet extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         // chuyen huong / tac vu don gian
         String action = request.getParameter("action");
-//        ErrDialog.showError("MainControllerServlet + action doGet: " + action);
+        ErrDialog.showError("MainControllerServlet + action doGet: " + action);
 
         switch (action) {
             case    //DIRECT TO BROWSER
                     LOGINPAGE_REDIRECT,
                     PROFILEPAGE_REDIRECT, 
                     HOMEPAGE_REDIRECT,
+                    CARTPAGE_REDIRECT,
                     //DIRECT TO DASHBOARD
                     DASHBOARDPAGE_REDIRECT,
                     USER_MANAGEMENT_REDIRECT,
                     BRAND_MANAGEMENT_REDIRECT,
                     CATEGORY_MANAGEMENT_REDIRECT,
                     PRODUCT_MANAGEMENT_REDIRECT,
-                    CART_MANAGEMENT_REDIRECT
+                    ORDER_MANAGEMENT_REDIRECT
                     
                     ->
                 request.getRequestDispatcher(action).forward(request, response);

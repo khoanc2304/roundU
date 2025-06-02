@@ -17,13 +17,14 @@ public class ProjectPaths {
     public static final String HREF_TO_BRANDMANAGEMENT = HREF_TO_MAINCONTROLLER + MainControllerServlet.BRAND_MANAGEMENT_REDIRECT;
     public static final String HREF_TO_CATEGORYMANAGEMENT = HREF_TO_MAINCONTROLLER + MainControllerServlet.CATEGORY_MANAGEMENT_REDIRECT;
     public static final String HREF_TO_PRODUCTMANAGEMENT = HREF_TO_MAINCONTROLLER + MainControllerServlet.PRODUCT_MANAGEMENT_REDIRECT;
-    public static final String HREF_TO_CARTMANAGEMENT = HREF_TO_MAINCONTROLLER + MainControllerServlet.CART_MANAGEMENT_REDIRECT;
+    public static final String HREF_TO_ORDERMANAGEMENT = HREF_TO_MAINCONTROLLER + MainControllerServlet.ORDER_MANAGEMENT_REDIRECT;
     
     
     // user view
     public static final String HREF_TO_LOGINPAGE = HREF_TO_MAINCONTROLLER + MainControllerServlet.LOGINPAGE_REDIRECT;
     public static final String HREF_TO_PROFILEPAGE = HREF_TO_MAINCONTROLLER + MainControllerServlet.PROFILEPAGE_REDIRECT;
     public static final String HREF_TO_HOMEPAGE = HREF_TO_MAINCONTROLLER + MainControllerServlet.HOMEPAGE_REDIRECT;
+    public static final String HREF_TO_CARTPAGE = HREF_TO_MAINCONTROLLER + MainControllerServlet.CARTPAGE_REDIRECT;
 
     
     // RedirectServlets -> JSP pages
@@ -35,11 +36,12 @@ public class ProjectPaths {
     public static final String JSP_BRANDMANAGEMENT_PATH = JSP_PATH_DASHBOARD + "brandManagement/brandManagement.jsp";
     public static final String JSP_CATEGORYMANAGEMENT_PATH = JSP_PATH_DASHBOARD + "categoryManagement/categoryManagement.jsp";
     public static final String JSP_PRODUCTMANAGEMENT_PATH = JSP_PATH_DASHBOARD + "productManagement/productManagement.jsp";
-    public static final String JSP_CARTMANAGEMENT_PATH = JSP_PATH_DASHBOARD + "cartManagement/cartManagement.jsp";
+    public static final String JSP_ORDERMANAGEMENT_PATH = JSP_PATH_DASHBOARD + "orderManagement/orderManagement.jsp";
     
     //user view
     public static final String JSP_LOGINPAGE_PATH = JSP_PATH_VIEW + "loginPage/loginPage.jsp";
     public static final String JSP_PROFILEPAGE_PATH = JSP_PATH_VIEW + "profilePage/profilePage.jsp";
     public static final String JSP_HOMEPAGE_PATH = JSP_PATH_VIEW + "homePage/homePage.jsp";
+    public static final String JSP_CARTPAGE_PATH = JSP_PATH_VIEW + "cartPage/cartPage.jsp";
 
 }

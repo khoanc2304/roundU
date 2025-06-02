@@ -89,9 +89,9 @@
                             <i class='bx bx-package nav_icon'></i>
                             <span class="nav_name">Products</span>
                         </a>
-                        <a href="<%= ProjectPaths.HREF_TO_CARTMANAGEMENT %>" class="nav_link">
+                        <a href="<%= ProjectPaths.HREF_TO_ORDERMANAGEMENT %>" class="nav_link">
                             <i class='bx bx-cart nav_icon'></i>
-                            <span class="nav_name">Carts</span>
+                            <span class="nav_name">Orders</span>
                         </a>
                         <a href="#" class="nav_link">
                             <i class='bx bx-store nav_icon'></i>

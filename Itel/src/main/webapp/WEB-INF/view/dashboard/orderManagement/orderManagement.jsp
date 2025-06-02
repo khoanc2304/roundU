@@ -6,7 +6,7 @@
 <html>
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-        <title>Cart Management Page</title>
+        <title>Order Management Page</title>
     </head>
     <body>
         <jsp:include page="../../components/sidebar.jsp" />
@@ -14,7 +14,7 @@
 
 
         <div id="main-content">
-            <h4>Cart Management Page</h4>
+            <h4>Order Management Page</h4>
         </div>
 
     </body>

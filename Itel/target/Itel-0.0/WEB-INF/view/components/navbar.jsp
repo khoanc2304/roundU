@@ -67,7 +67,7 @@
                 </c:otherwise>
             </c:choose>
             <a href="#" class="nav-link"><i class="fas fa-bell me-1"></i> Thông báo</a>
-            <a href="#" class="nav-link position-relative">
+            <a href="<%= ProjectPaths.HREF_TO_CARTPAGE %>" class="nav-link position-relative">
                 <i class="fas fa-shopping-cart me-1"></i> Giỏ hàng
             </a>
             <a href="#" class="nav-link"><i class="fas fa-headset me-1"></i> Hỗ trợ</a>

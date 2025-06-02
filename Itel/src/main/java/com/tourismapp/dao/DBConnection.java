@@ -1,36 +1,39 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package com.tourismapp.dao;
 
-/**
- *
- * @author Admin
- */
+import com.tourismapp.utils.ErrDialog;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class DBConnection {
 
-    private static Connection connection;
-    private static final String URL = "jdbc:sqlserver://localhost:1433;databaseName=8386shop_new";
-    private static final String USERNAME = "sa";  // Tên người dùng SQL Server (thường là 'sa')
-    private static final String PASSWORD = "123456";  // Mật khẩu người dùng SQL Server
+    public static String driverName = "com.microsoft.sqlserver.jdbc.SQLServerDriver";
+    public static String dbURL = "jdbc:sqlserver://localhost:1433;databaseName=Itel_Shop;encrypt=true;trustServerCertificate=true;";
+    public static String userDB = "sa";
+    public static String passDB = "123456";
 
-    public static Connection getConnection() throws SQLException {
-        Connection connection = null;
+    public static Connection getConnection() {
+        Connection con = null;
         try {
-            if (connection == null || connection.isClosed()) {
-                Class.forName("com.microsoft.sqlserver.jdbc.SQLServerDriver");  // Đảm bảo sử dụng driver cho SQL Server
-                connection = DriverManager.getConnection(URL, USERNAME, PASSWORD);
-                System.out.println("Connection successful");
-            }
-        } catch (ClassNotFoundException | SQLException e) {
-            e.printStackTrace();
-            throw new SQLException("Unable to connect to database", e);
+            Class.forName(driverName);
+            con = DriverManager.getConnection(dbURL, userDB, passDB);
+            return con;
+        } catch (Exception ex) {
+            Logger.getLogger(DBConnection.class.getName()).log(Level.SEVERE, null, ex);
         }
-        return connection;
+        return null;
+    }
+
+    public static void main(String[] args) {
+        try (Connection con = getConnection()) {
+            if (con != null) {
+//                System.out.println("Connect to Itel_Shop Success");
+                ErrDialog.showError("Connect to Itel_Shop Success");
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(DBConnection.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
 }
