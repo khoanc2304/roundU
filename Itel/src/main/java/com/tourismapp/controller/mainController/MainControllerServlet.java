@@ -120,8 +120,8 @@ public class MainControllerServlet extends HttpServlet {
         String action = request.getParameter("action").trim();
 //        ErrDialog.showError("MainControllerServlet + action doPost: " + action);
         switch (action) {
-            case ACTION_LOGIN 
-                    
+            case ACTION_LOGIN ->
+                request.getRequestDispatcher(LOGINPAGE_REDIRECT).forward(request, response);
                     //USER
                     
                     //PRODUCT
@@ -131,8 +131,6 @@ public class MainControllerServlet extends HttpServlet {
                     //CATEGORY
                     
                     //
-                    ->
-                request.getRequestDispatcher(LOGINPAGE_REDIRECT).forward(request, response);
             default ->
                 response.sendRedirect("errorAtMainController.jsp");
         }
@@ -142,7 +140,7 @@ public class MainControllerServlet extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         // chuyen huong / tac vu don gian
         String action = request.getParameter("action");
-        ErrDialog.showError("MainControllerServlet + action doGet: " + action);
+//        ErrDialog.showError("MainControllerServlet + action doGet: " + action);
 
         switch (action) {
             case    //DIRECT TO BROWSER

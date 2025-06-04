@@ -24,6 +24,10 @@ public class Category {
         this.status = status;
     }
 
+    public Category(int categoryId) {
+        this.categoryId = categoryId;
+    }
+
     public int getCategoryId() {
         return categoryId;
     }

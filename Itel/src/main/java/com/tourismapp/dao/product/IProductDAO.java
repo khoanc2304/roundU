@@ -4,10 +4,19 @@
  */
 package com.tourismapp.dao.product;
 
+import com.tourismapp.model.Product;
+import java.util.List;
+
 /**
  *
  * @author Admin
  */
 public interface IProductDAO {
+    //user view
+    List<Product> findActiveProducts();
+    
+    
+    //dashborad
+    
     
 }

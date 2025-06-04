@@ -28,6 +28,10 @@ public class Brand {
         this.status = status;
     }
 
+    public Brand(int brandId) {
+        this.brandId = brandId;
+    }
+
     public int getBrandId() {
         return brandId;
     }

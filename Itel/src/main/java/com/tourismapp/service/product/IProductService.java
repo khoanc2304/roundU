@@ -4,10 +4,15 @@
  */
 package com.tourismapp.service.product;
 
+import com.tourismapp.model.Product;
+import java.util.List;
+
 /**
  *
  * @author Admin
  */
 public interface IProductService {
-    
+
+    List<Product> findActiveProducts();
+
 }

@@ -11,7 +11,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>8386 Shop - Laptop & PC</title>
+    <title>Itel Shop </title>
 
     <!-- Bootstrap 5.3 CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
@@ -40,6 +40,12 @@
             </form>
         </div>
         <nav class="nav-links d-flex align-items-center gap-3">
+            <a href="#" class="nav-link"><i class="fas fa-bell me-1"></i> Thông báo</a>
+            <a href="<%= ProjectPaths.HREF_TO_CARTPAGE %>" class="nav-link position-relative">
+                <i class="fas fa-shopping-cart me-1"></i> Giỏ hàng
+            </a>
+            <a href="#" class="nav-link"><i class="fas fa-headset me-1"></i> Hỗ trợ</a>
+            <a href="<%= ProjectPaths.HREF_TO_DASHBOARDPAGE %>" class="nav-link"><i class="fas fa-headset me-1"></i> Dashboard</a>
             <c:choose>
                 <c:when test="${not empty sessionScope.loggedInUser}">
                     <div class="d-flex align-items-center gap-2">
@@ -54,7 +60,7 @@
                         <span class="text-white fw-bold">${sessionScope.googleName}</span>
                         <a href="logout" class="nav-link text-white"><i class="fas fa-sign-out-alt me-1"></i> Đăng xuất</a>
                     </div>
-                </c:when>
+                </c:when> 
                 <c:when test="${not empty sessionScope.facebookName}">
                     <div class="d-flex align-items-center gap-2">
                         <img src="${not empty sessionScope.facebookPicture ? sessionScope.facebookPicture : 'https://via.placeholder.com/40'}" alt="Avatar" class="rounded-circle" style="width: 40px; height: 40px;">
@@ -66,12 +72,6 @@
                     <a href="#" class="nav-link"><i class="fas fa-user me-1"></i> Đăng Nhập</a>
                 </c:otherwise>
             </c:choose>
-            <a href="#" class="nav-link"><i class="fas fa-bell me-1"></i> Thông báo</a>
-            <a href="<%= ProjectPaths.HREF_TO_CARTPAGE %>" class="nav-link position-relative">
-                <i class="fas fa-shopping-cart me-1"></i> Giỏ hàng
-            </a>
-            <a href="#" class="nav-link"><i class="fas fa-headset me-1"></i> Hỗ trợ</a>
-            <a href="<%= ProjectPaths.HREF_TO_DASHBOARDPAGE %>" class="nav-link"><i class="fas fa-headset me-1"></i> Dashboard</a>
         </nav>
     </div>
 </header>
@@ -86,19 +86,21 @@
     }
 
     body {
-        background: #f0f2f5;
         color: #212529;
         overflow-x: hidden;
+        line-height: 1.6;
+        position: relative;
     }
 
     /* Header */
     .header {
-        background-color: #ff6666;
+        background: linear-gradient(to bottom, #B3E5FC 0%, #E6F4FA 100%); /* Keeping gradient for navbar */
         padding: 1rem 2rem;
         box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
         position: sticky;
         top: 0;
         z-index: 1030;
+        transition: padding 0.3s ease;
     }
 
     .header .logo img {
@@ -129,19 +131,20 @@
         font-size: 16px;
         width: 100%;
         color: #333;
+        padding: 5px;
     }
 
     .search-box button {
         background: none;
         border: none;
         font-size: 18px;
-        color: #2a5298;
+        color: #33ccff;
         cursor: pointer;
         transition: color 0.3s;
     }
 
     .search-box button:hover {
-        color: #ff6f00; 
+        color: #104E8B;
     }
 
     .search-box:focus-within {
@@ -150,16 +153,49 @@
     }
 
     .nav-links .nav-link {
-        color: #fff;
+        color: #000000;
         font-weight: 500;
         padding: 0.75rem 1.5rem;
         border-radius: 25px;
         transition: all 0.3s ease;
+        text-decoration: none;
+        display: flex;
+        align-items: center;
+        gap: 5px;
     }
 
     .nav-links .nav-link:hover {
-        background: rgba(255, 255, 255, 0.25);
-        color: #fff;
+        background: rgba(30, 144, 255, 0.2);
+        color: #333333;
+    }
+
+    /* Responsive Design */
+    @media (max-width: 768px) {
+        .header {
+            padding: 0.5rem 1rem;
+        }
+        .search-box {
+            width: 100%;
+            margin: 0 10px;
+        }
+        .nav-links .nav-link {
+            padding: 0.5rem 1rem;
+            font-size: 14px;
+        }
+    }
+
+    /* Accessibility */
+    .nav-links .nav-link:focus {
+        outline: 2px solid #1E90FF;
+        outline-offset: 2px;
+    }
+
+    .search-box input::placeholder {
+        color: #888;
+    }
+
+    body {
+        font-size: 16px;
     }
 </style>
 
