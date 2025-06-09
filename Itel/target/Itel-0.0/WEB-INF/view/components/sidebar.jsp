@@ -23,25 +23,7 @@
                         </div>
                     </div>
 
-                    <!-- Search Section (Cột giữa) -->
                     <div class="col-6 d-flex justify-content-center">
-                        <form action="#" method="get" class="w-100">
-                            <div class="input-group">
-                                <input type="text" class="form-control" id="searchProduct" name="searchProduct"
-                                       placeholder="Nhập tên sản phẩm cần tìm..."
-                                       value="${param.searchProduct}"
-                                       aria-label="Tìm sản phẩm">
-                                <button class="btn btn-primary" type="submit">
-                                    <i class="fas fa-search"></i> Tìm kiếm
-                                </button>
-                                <!-- Nút quay lại nếu có tìm kiếm -->
-                                <c:if test="${not empty param.searchProduct}">
-                                    <a href="${pageContext.request.contextPath}/index?action=listProducts" class="btn btn-secondary ms-2">
-                                        <i class="fas fa-arrow-left"></i> Quay lại
-                                    </a>
-                                </c:if>
-                            </div>
-                        </form>
                     </div>
 
                     <div class="col-3 d-flex justify-content-end align-items-center">

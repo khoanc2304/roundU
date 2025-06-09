@@ -11,8 +11,17 @@ public class ProductDetail {
     private Attribute attribute;
     private String attributeValue;
 
+    public ProductDetail() {
+    }
+
     public ProductDetail(int detailId, Product product, Attribute attribute, String attributeValue) {
         this.detailId = detailId;
+        this.product = product;
+        this.attribute = attribute;
+        this.attributeValue = attributeValue;
+    }
+    
+    public ProductDetail(Product product, Attribute attribute, String attributeValue) {
         this.product = product;
         this.attribute = attribute;
         this.attributeValue = attributeValue;

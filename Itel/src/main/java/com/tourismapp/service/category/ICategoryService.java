@@ -4,10 +4,17 @@
  */
 package com.tourismapp.service.category;
 
+import com.tourismapp.model.Category;
+import java.util.List;
+import java.util.Optional;
+
 /**
  *
  * @author Admin
  */
 public interface ICategoryService {
     
+    List<Category> getAllCategories();
+    
+    Optional<Category> findCategoryById(int id);
 }

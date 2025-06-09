@@ -16,8 +16,18 @@ public class Attribute {
     private String dataType;
     private String unit;
 
+    public Attribute() {
+    }
+    
     public Attribute(int attributeId, Category category, String name, String dataType, String unit) {
         this.attributeId = attributeId;
+        this.category = category;
+        this.name = name;
+        this.dataType = dataType;
+        this.unit = unit;
+    }
+    
+    public Attribute(Category category, String name, String dataType, String unit) {
         this.category = category;
         this.name = name;
         this.dataType = dataType;

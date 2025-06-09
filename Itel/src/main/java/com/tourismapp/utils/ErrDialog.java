@@ -2,10 +2,6 @@ package com.tourismapp.utils;
 
 import javax.swing.JOptionPane;
 
-/**
- *
- * @author LENOVO
- */
 public class ErrDialog {
 
     public static void showError(String errorMessage) {

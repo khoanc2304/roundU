@@ -20,9 +20,9 @@ import java.util.List;
  */
 @WebServlet(name = "HomePageServlet", urlPatterns = {MainControllerServlet.HOMEPAGE_SERVLET})
 public class HomePageServlet extends HttpServlet {
-
+    
     private final IProductService productService = new ProductService();
-
+    
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
@@ -30,22 +30,39 @@ public class HomePageServlet extends HttpServlet {
         if (action == null) {
             action = "";
         }
-        showActiveProducts(request, response);
+        switch (action) {
+            case MainControllerServlet.ACTION_SEARCH_ACTIVE_PRODUCT ->
+                searchActiveProduct(request, response);
+            default ->
+                showActiveProducts(request, response);
 //        request.getRequestDispatcher(ProjectPaths.JSP_HOMEPAGE_PATH).forward(request, response);
+        }
     }
-
+    
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         request.getRequestDispatcher(ProjectPaths.JSP_HOMEPAGE_PATH).forward(request, response);
     }
-
     // <editor-fold defaultstate="collapsed" desc=" functional ... ">
+
     private void showActiveProducts(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        List<Product> activeProducts = productService.findActiveProducts();
-//        ErrDialog.showError("HomePageServlet Active Product size: " + activeProducts.size());
+        List<Product> activeProducts = productService.getActiveProducts();
         request.setAttribute("activeProducts", activeProducts);
+        request.getRequestDispatcher(ProjectPaths.JSP_HOMEPAGE_PATH).forward(request, response);
+    }
+    
+    private void searchActiveProduct(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+        String q = request.getParameter("qProduct");
+        List<Product> products;
+        if (q == null || q.isEmpty()) {
+            products = productService.getActiveProducts();
+        } else {
+            products = productService.searchActiveProductsByName(q);
+        }
+        request.setAttribute("activeProducts", products);
         request.getRequestDispatcher(ProjectPaths.JSP_HOMEPAGE_PATH).forward(request, response);
     }
     // </editor-fold>

@@ -34,8 +34,9 @@
             <img src="resources/itel.png" alt="Itel Shop Logo">
         </a>
         <div class="search-box">
-            <form action="search" method="GET" style="display: flex; width: 100%;">
-                <input type="text" name="keyword" placeholder="Tìm kiếm sản phẩm..." value="${param.keyword}">
+            <form action="main" method="GET" style="display: flex; width: 100%;">
+                <input type="hidden" name="action" value="searchActiveProduct">
+                <input type="text" name="qProduct" placeholder="Tìm kiếm sản phẩm..." value="${param.qProduct}">
                 <button type="submit"><i class="fas fa-search"></i></button>
             </form>
         </div>
@@ -69,7 +70,7 @@
                     </div>
                 </c:when>
                 <c:otherwise>
-                    <a href="#" class="nav-link"><i class="fas fa-user me-1"></i> Đăng Nhập</a>
+                    <a href="<%= ProjectPaths.HREF_TO_LOGINPAGE %>" class="nav-link"><i class="fas fa-user me-1"></i> Đăng Nhập</a>
                 </c:otherwise>
             </c:choose>
         </nav>
@@ -149,7 +150,7 @@
 
     .search-box:focus-within {
         box-shadow: 0 6px 15px rgba(0, 0, 0, 0.2);
-        width: 450px;
+        width: 400px;
     }
 
     .nav-links .nav-link {

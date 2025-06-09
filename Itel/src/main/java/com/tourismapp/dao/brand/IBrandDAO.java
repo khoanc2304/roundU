@@ -4,10 +4,22 @@
  */
 package com.tourismapp.dao.brand;
 
+import com.tourismapp.model.Brand;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.List;
+import java.util.Optional;
+
 /**
  *
  * @author Admin
  */
 public interface IBrandDAO {
+    
+    Brand mapBrand(ResultSet rs) throws SQLException;
+    
+    List<Brand> getAllBrands();
+    
+    Optional<Brand> findBrandById(int brandId);
     
 }

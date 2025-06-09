@@ -25,7 +25,20 @@ public class Orders {
         this.totalAmount = totalAmount;
         this.shippingAddress = shippingAddress;
     }
+    
+    public Orders(Users user, LocalDateTime orderDate, String status,
+            BigDecimal totalAmount, String shippingAddress) {
+        this.user = user;
+        this.orderDate = orderDate;
+        this.status = status;
+        this.totalAmount = totalAmount;
+        this.shippingAddress = shippingAddress;
+    }
 
+    public Orders(int orderId) {
+        this.orderId = orderId;
+    }
+    
     public int getOrderId() {
         return orderId;
     }

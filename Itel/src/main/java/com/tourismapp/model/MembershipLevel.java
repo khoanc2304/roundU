@@ -25,6 +25,10 @@ public class MembershipLevel {
         this.discountPercent = discountPercent;
     }
 
+    public MembershipLevel(int levelId) {
+        this.levelId = levelId;
+    }
+    
     public int getLevelId() {
         return levelId;
     }

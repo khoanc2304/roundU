@@ -17,8 +17,17 @@ public class Category {
     private String description;
     private Status status;
 
+    public Category() {
+    }
+
     public Category(int categoryId, String name, String description, Status status) {
         this.categoryId = categoryId;
+        this.name = name;
+        this.description = description;
+        this.status = status;
+    }
+    
+    public Category(String name, String description, Status status) {
         this.name = name;
         this.description = description;
         this.status = status;

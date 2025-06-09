@@ -46,6 +46,25 @@ public class Users {
         this.updatedAt = updatedAt;
     }
 
+    public Users(String username, String password, String fullName, String email, String phone, String address,
+            UserRole role, MembershipLevel membershipLevel, Status status, LocalDateTime createdAt, LocalDateTime updatedAt) {
+        this.username = username;
+        this.password = password;
+        this.fullName = fullName;
+        this.email = email;
+        this.phone = phone;
+        this.address = address;
+        this.role = role;
+        this.membershipLevel = membershipLevel;
+        this.status = status;
+        this.createdAt = createdAt;
+        this.updatedAt = updatedAt;
+    }
+
+    public Users(int userId) {
+        this.userId = userId;
+    }
+
     public int getUserId() {
         return userId;
     }

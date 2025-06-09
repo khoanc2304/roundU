@@ -16,9 +16,22 @@ public class Review {
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
 
+    public Review() {
+    }
+
     public Review(int reviewId, Product product, Users user, int rating,
             String comment, LocalDateTime createdAt, LocalDateTime updatedAt) {
         this.reviewId = reviewId;
+        this.product = product;
+        this.user = user;
+        this.rating = rating;
+        this.comment = comment;
+        this.createdAt = createdAt;
+        this.updatedAt = updatedAt;
+    }
+    
+    public Review(Product product, Users user, int rating,
+            String comment, LocalDateTime createdAt, LocalDateTime updatedAt) {
         this.product = product;
         this.user = user;
         this.rating = rating;

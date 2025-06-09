@@ -6,6 +6,7 @@ package com.tourismapp.service.product;
 
 import com.tourismapp.model.Product;
 import java.util.List;
+import java.util.Optional;
 
 /**
  *
@@ -13,6 +14,23 @@ import java.util.List;
  */
 public interface IProductService {
 
-    List<Product> findActiveProducts();
+    //user view
+    List<Product> getActiveProducts();
 
+    //dashborad
+    Optional<Product> findProductById(int id);
+
+    int getNextProductId();
+    
+    List<Product> searchActiveProductsByName(String q);
+
+    List<Product> searchProductsByName(String q);
+
+    List<Product> getAllProducts();
+
+    boolean createProduct(Product product);
+
+    boolean editProduct(Product product);
+
+    boolean deleteProduct(int id);
 }

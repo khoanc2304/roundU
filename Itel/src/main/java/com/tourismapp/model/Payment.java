@@ -15,6 +15,9 @@ public class Payment {
     private BigDecimal amount;
     private Status status;
 
+    public Payment() {
+    }
+
     public Payment(int paymentId, Orders order, LocalDateTime paymentDate,
             PaymentMethod paymentMethod, BigDecimal amount, Status status) {
         this.paymentId = paymentId;
@@ -24,7 +27,16 @@ public class Payment {
         this.amount = amount;
         this.status = status;
     }
-
+    
+    public Payment(Orders order, LocalDateTime paymentDate,
+            PaymentMethod paymentMethod, BigDecimal amount, Status status) {
+        this.order = order;
+        this.paymentDate = paymentDate;
+        this.paymentMethod = paymentMethod;
+        this.amount = amount;
+        this.status = status;
+    }
+    
     public int getPaymentId() {
         return paymentId;
     }

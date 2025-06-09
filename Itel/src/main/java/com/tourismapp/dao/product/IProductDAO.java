@@ -5,7 +5,10 @@
 package com.tourismapp.dao.product;
 
 import com.tourismapp.model.Product;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.List;
+import java.util.Optional;
 
 /**
  *
@@ -13,10 +16,25 @@ import java.util.List;
  */
 public interface IProductDAO {
     //user view
-    List<Product> findActiveProducts();
+    Product mapProduct(ResultSet rs) throws SQLException;
     
+    List<Product> getActiveProducts();
+    
+    Optional<Product> findProductById(int id);
+    
+    int getNextProductId();
+    
+    List<Product> searchActiveProductsByName(String q);
+    
+    List<Product> searchProductsByName(String q);
     
     //dashborad
+    List<Product> getAllProducts();
     
+    boolean createProduct(Product product);
+    
+    boolean editProduct(Product product);
+    
+    boolean deleteProduct(int id);
     
 }

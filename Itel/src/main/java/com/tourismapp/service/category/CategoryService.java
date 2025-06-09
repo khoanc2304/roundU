@@ -4,10 +4,28 @@
  */
 package com.tourismapp.service.category;
 
+import com.tourismapp.dao.category.CategoryDAO;
+import com.tourismapp.dao.category.ICategoryDAO;
+import com.tourismapp.model.Category;
+import java.util.List;
+import java.util.Optional;
+
 /**
  *
  * @author Admin
  */
-public class CategoryService implements ICategoryService{
-    
+public class CategoryService implements ICategoryService {
+
+    private final ICategoryDAO categoryDAO = new CategoryDAO();
+
+    @Override
+    public List<Category> getAllCategories() {
+        return categoryDAO.getAllCategories();
+    }
+
+    @Override
+    public Optional<Category> findCategoryById(int id) {
+        return categoryDAO.findCategoryById(id);
+    }
+
 }

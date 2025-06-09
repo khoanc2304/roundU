@@ -19,8 +19,19 @@ public class Brand {
     private String imageUrl;
     private Status status;
 
+    public Brand() {
+    }
+
     public Brand(int brandId, String name, String country, String description, String imageUrl, Status status) {
         this.brandId = brandId;
+        this.name = name;
+        this.country = country;
+        this.description = description;
+        this.imageUrl = imageUrl;
+        this.status = status;
+    }
+    
+    public Brand(String name, String country, String description, String imageUrl, Status status) {
         this.name = name;
         this.country = country;
         this.description = description;

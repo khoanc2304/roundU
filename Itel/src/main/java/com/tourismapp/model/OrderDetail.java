@@ -10,8 +10,18 @@ public class OrderDetail {
     private int quantity;
     private BigDecimal unitPrice;
 
+    public OrderDetail() {
+    }
+
     public OrderDetail(int orderDetailId, Orders order, Product product, int quantity, BigDecimal unitPrice) {
         this.orderDetailId = orderDetailId;
+        this.order = order;
+        this.product = product;
+        this.quantity = quantity;
+        this.unitPrice = unitPrice;
+    }
+    
+    public OrderDetail(Orders order, Product product, int quantity, BigDecimal unitPrice) {
         this.order = order;
         this.product = product;
         this.quantity = quantity;

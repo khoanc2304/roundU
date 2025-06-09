@@ -4,10 +4,22 @@
  */
 package com.tourismapp.dao.category;
 
+import com.tourismapp.model.Category;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.List;
+import java.util.Optional;
+
 /**
  *
  * @author Admin
  */
 public interface ICategoryDAO {
+
+    Category mapCategory(ResultSet rs) throws SQLException;
+
+    List<Category> getAllCategories();
     
+    Optional<Category> findCategoryById(int categoryId);
+
 }

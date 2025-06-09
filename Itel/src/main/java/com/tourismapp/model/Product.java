@@ -18,6 +18,9 @@ public class Product {
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
 
+    public Product() {
+    }
+    
     public Product(int productId, String name, String description, BigDecimal price, int stockQuantity,
             Category category, Brand brand, String imageUrl, Status status,
             LocalDateTime createdAt, LocalDateTime updatedAt) {
@@ -32,6 +35,32 @@ public class Product {
         this.status = status;
         this.createdAt = createdAt;
         this.updatedAt = updatedAt;
+    }
+    
+    public Product(String name, String description, BigDecimal price, int stockQuantity,
+            Category category, Brand brand, String imageUrl, Status status,
+            LocalDateTime createdAt, LocalDateTime updatedAt) {
+        this.name = name;
+        this.description = description;
+        this.price = price;
+        this.stockQuantity = stockQuantity;
+        this.category = category;
+        this.brand = brand;
+        this.imageUrl = imageUrl;
+        this.status = status;
+        this.createdAt = createdAt;
+        this.updatedAt = updatedAt;
+    }
+    
+    public Product(String name, String description, BigDecimal price, int stockQuantity,
+            Category category, Brand brand, String imageUrl) {
+        this.name = name;
+        this.description = description;
+        this.price = price;
+        this.stockQuantity = stockQuantity;
+        this.category = category;
+        this.brand = brand;
+        this.imageUrl = imageUrl;
     }
 
     public int getProductId() {

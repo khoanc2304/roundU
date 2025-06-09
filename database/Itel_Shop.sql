@@ -20,7 +20,7 @@ IF OBJECT_ID('Orders') IS NOT NULL DROP TABLE Orders;
 IF OBJECT_ID('ProductDetail') IS NOT NULL DROP TABLE ProductDetail;
 IF OBJECT_ID('Product') IS NOT NULL DROP TABLE Product;
 IF OBJECT_ID('Attribute') IS NOT NULL DROP TABLE Attribute;
-IF OBJECT_ID('Brand') IS NOT NULL DROP TABLE Brands;
+IF OBJECT_ID('Brand') IS NOT NULL DROP TABLE Brand;
 IF OBJECT_ID('Category') IS NOT NULL DROP TABLE Category;
 IF OBJECT_ID('Users') IS NOT NULL DROP TABLE Users;
 IF OBJECT_ID('MembershipLevel') IS NOT NULL DROP TABLE MembershipLevel;
@@ -1183,3 +1183,7 @@ VALUES
 (2, 'banking', 600.00, 'pending'),       -- Đơn hàng 2: Acer Aspire 5
 (3, 'banking', 999.00, 'completed'),-- Đơn hàng 3: Legion Y520-15IKBN
 (4, 'cash_on_delivery', 1500.00, 'pending'); -- Đơn hàng 4: Apple MacBook Air M2
+
+
+SELECT * FROM Product WHERE name LIKE '%mac%';
+
