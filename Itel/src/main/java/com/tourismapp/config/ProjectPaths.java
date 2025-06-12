@@ -22,6 +22,7 @@ public class ProjectPaths {
     
     // user view
     public static final String HREF_TO_LOGINPAGE = HREF_TO_MAINCONTROLLER + MainControllerServlet.LOGINPAGE_REDIRECT;
+    public static final String HREF_TO_LOGOUTPAGE = HREF_TO_MAINCONTROLLER + MainControllerServlet.LOGOUTPAGE_REDIRECT;
     public static final String HREF_TO_PROFILEPAGE = HREF_TO_MAINCONTROLLER + MainControllerServlet.PROFILEPAGE_REDIRECT;
     public static final String HREF_TO_HOMEPAGE = HREF_TO_MAINCONTROLLER + MainControllerServlet.HOMEPAGE_REDIRECT;
     public static final String HREF_TO_CARTPAGE = HREF_TO_MAINCONTROLLER + MainControllerServlet.CARTPAGE_REDIRECT;

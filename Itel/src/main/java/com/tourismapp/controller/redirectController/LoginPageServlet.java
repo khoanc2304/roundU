@@ -4,6 +4,7 @@
  */
 package com.tourismapp.controller.redirectController;
 
+import com.tourismapp.common.UserRole;
 import java.io.IOException;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
@@ -13,6 +14,11 @@ import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import com.tourismapp.config.ProjectPaths;
 import com.tourismapp.controller.mainController.MainControllerServlet;
+import com.tourismapp.model.Users;
+import com.tourismapp.service.user.IUserService;
+import com.tourismapp.service.user.UserService;
+import com.tourismapp.utils.ErrDialog;
+import java.util.Optional;
 
 /**
  *
@@ -20,6 +26,8 @@ import com.tourismapp.controller.mainController.MainControllerServlet;
  */
 @WebServlet(name = "LoginPageServlet", urlPatterns = {MainControllerServlet.LOGINPAGE_SERVLET})
 public class LoginPageServlet extends HttpServlet {
+
+    private final IUserService userService = new UserService();
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
@@ -31,18 +39,40 @@ public class LoginPageServlet extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         String action = request.getParameter("action").trim();
-        
-        if (action.equals(MainControllerServlet.ACTION_LOGIN)) {
-            HttpSession session = request.getSession(true);
-            session.setAttribute("user", "da ton tai user");
-            request.getRequestDispatcher(MainControllerServlet.HOMEPAGE_REDIRECT).forward(request, response);
-            return;
+        String username = request.getParameter("username");
+        String email = request.getParameter("email");
+        String password = request.getParameter("password");
+        HttpSession session = request.getSession(true);
+
+        if (action != null && action.equals(MainControllerServlet.ACTION_LOGIN)) {
+            Optional<Users> loggedUser = userService.findUserByCredentials(username, email, password);
+//            ErrDialog.showError("loggedUser: " + loggedUser);
+            if (loggedUser.isPresent()) {
+                Users user = loggedUser.get();
+                session.setAttribute("loggedUser", user);
+                String role = user.getRole().getValue();
+
+                switch (role) {
+                    case "admin" -> {
+                        request.getRequestDispatcher(ProjectPaths.JSP_DASHBOARDPAGE_PATH).forward(request, response);
+                    }
+                    case "staff" -> {
+                        request.getRequestDispatcher(ProjectPaths.JSP_DASHBOARDPAGE_PATH).forward(request, response);
+                    }
+                    case "customer" -> {
+                        request.getRequestDispatcher(ProjectPaths.JSP_HOMEPAGE_PATH).forward(request, response);
+                    }
+                    default ->
+                        request.getRequestDispatcher(ProjectPaths.JSP_HOMEPAGE_PATH).forward(request, response);
+                }
+            } else {
+                response.sendRedirect(ProjectPaths.HREF_TO_LOGINPAGE);
+            }
+        } else {
+            response.sendRedirect(ProjectPaths.HREF_TO_LOGINPAGE);
         }
-        request.getRequestDispatcher(ProjectPaths.JSP_LOGINPAGE_PATH).forward(request, response);
     }
 
     // <editor-fold defaultstate="collapsed" desc=" functional ... ">
-    
     // </editor-fold>
-    
 }

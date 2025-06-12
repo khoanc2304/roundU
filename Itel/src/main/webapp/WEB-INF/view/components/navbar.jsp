@@ -8,6 +8,8 @@
 <%@ page import="com.tourismapp.controller.mainController.MainControllerServlet" %>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+<%@ page session="true" %>
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -30,7 +32,7 @@
 </head>
 <header class="header">
     <div class="container d-flex align-items-center justify-content-between">
-        <a href="#" class="logo">
+        <a href="<%= ProjectPaths.HREF_TO_HOMEPAGE %>" class="logo">
             <img src="resources/itel.png" alt="Itel Shop Logo">
         </a>
         <div class="search-box">
@@ -42,31 +44,30 @@
         </div>
         <nav class="nav-links d-flex align-items-center gap-3">
             <a href="#" class="nav-link"><i class="fas fa-bell me-1"></i> Thông báo</a>
+            <a href="#" class="nav-link"><i class="fas fa-headset me-1"></i> Hỗ trợ</a>
             <a href="<%= ProjectPaths.HREF_TO_CARTPAGE %>" class="nav-link position-relative">
                 <i class="fas fa-shopping-cart me-1"></i> Giỏ hàng
             </a>
-            <a href="#" class="nav-link"><i class="fas fa-headset me-1"></i> Hỗ trợ</a>
-            <a href="<%= ProjectPaths.HREF_TO_DASHBOARDPAGE %>" class="nav-link"><i class="fas fa-headset me-1"></i> Dashboard</a>
+
             <c:choose>
-                <c:when test="${not empty sessionScope.loggedInUser}">
-                    <div class="d-flex align-items-center gap-2">
-                        <img src="${sessionScope.loggedInUser.avatar}" alt="Avatar" class="rounded-circle" style="width: 40px; height: 40px;">
-                        <span class="text-white fw-bold">${sessionScope.loggedInUser.fullName}</span>
-                        <a href="logout" class="nav-link text-white"><i class="fas fa-sign-out-alt me-1"></i> Đăng xuất</a>
-                    </div>
-                </c:when>
-                <c:when test="${not empty sessionScope.googleName}">
-                    <div class="d-flex align-items-center gap-2">
-                        <img src="${sessionScope.googlePicture}" alt="Avatar" class="rounded-circle" style="width: 40px; height: 40px;">
-                        <span class="text-white fw-bold">${sessionScope.googleName}</span>
-                        <a href="logout" class="nav-link text-white"><i class="fas fa-sign-out-alt me-1"></i> Đăng xuất</a>
-                    </div>
-                </c:when> 
-                <c:when test="${not empty sessionScope.facebookName}">
-                    <div class="d-flex align-items-center gap-2">
-                        <img src="${not empty sessionScope.facebookPicture ? sessionScope.facebookPicture : 'https://via.placeholder.com/40'}" alt="Avatar" class="rounded-circle" style="width: 40px; height: 40px;">
-                        <span class="text-white fw-bold">${sessionScope.facebookName}</span>
-                        <a href="logout" class="nav-link text-white"><i class="fas fa-sign-out-alt me-1"></i> Đăng xuất</a>
+                <c:when test="${not empty sessionScope.loggedUser.role}">
+                    <c:if test="${sessionScope.loggedUser.role.getValue() == 'admin' || sessionScope.loggedUser.role.getValue() == 'staff'}">
+                        <a href="<%= ProjectPaths.HREF_TO_DASHBOARDPAGE %>" class="nav-link"><i class="fas fa-tachometer-alt me-1"></i> Dashboard</a>
+                    </c:if>
+                    <div class="dropdown">
+                        <div class="dropdown-toggle d-flex align-items-center gap-2">
+                            <img src="#" alt="Avatar" class="rounded-circle" style="width: 35px; height: 35px;">
+                            <span class="text-black fw-bold">Xin chào, ${sessionScope.loggedUser.fullName}</span>
+                        </div>
+                        <div class="dropdown-content">
+                            <c:if test="${sessionScope.loggedUser.role.getValue() == 'admin' || sessionScope.loggedUser.role.getValue() == 'staff'}">
+                                <a href="<%= ProjectPaths.HREF_TO_DASHBOARDPAGE %>"><i class="fas fa-arrow-left"></i> Quay lại Dashboard</a>
+                            </c:if>
+                            <a href="<%= ProjectPaths.HREF_TO_PROFILEPAGE %>"><i class="fas fa-users"></i> Hello, ${sessionScope.loggedUser.fullName}</a>
+                            <a href="#"><i class="fas fa-shopping-bag"></i> Đơn hàng của tôi</a>
+                            <a href="#"><i class="fas fa-eye"></i> Đã xem gần đây</a>
+                            <a href="<%= ProjectPaths.HREF_TO_LOGOUTPAGE %>"><i class="fas fa-sign-out-alt"></i> Đăng xuất</a>
+                        </div>
                     </div>
                 </c:when>
                 <c:otherwise>
@@ -76,8 +77,6 @@
         </nav>
     </div>
 </header>
-
-
 <style>
     * {
         margin: 0;
@@ -95,7 +94,7 @@
 
     /* Header */
     .header {
-        background: linear-gradient(to bottom, #B3E5FC 0%, #E6F4FA 100%); /* Keeping gradient for navbar */
+        background: linear-gradient(to bottom, #B3E5FC 0%, #E6F4FA 100%);
         padding: 1rem 2rem;
         box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
         position: sticky;
@@ -160,14 +159,61 @@
         border-radius: 25px;
         transition: all 0.3s ease;
         text-decoration: none;
-        display: flex;
+        display: inline-flex; /* Changed to inline-flex */
         align-items: center;
         gap: 5px;
+        white-space: nowrap; /* Prevent text wrapping */
+        min-width: 120px; /* Ensure minimum width to hold text */
     }
 
     .nav-links .nav-link:hover {
         background: rgba(30, 144, 255, 0.2);
         color: #333333;
+    }
+
+    /* Dropdown Styles */
+    .dropdown {
+        position: relative;
+        display: inline-block;
+    }
+    .dropdown .dropdown-toggle {
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        gap: 5px;
+    }
+    .dropdown-content {
+        display: none;
+        position: absolute;
+        background-color: #fff;
+        min-width: 200px;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        border: 1px solid #ddd;
+        border-radius: 5px;
+        right: 0;
+        top: 100%;
+        z-index: 1000;
+        padding: 5px 0;
+    }
+    .dropdown:hover .dropdown-content {
+        display: block;
+    }
+    .dropdown-content a {
+        color: #000;
+        padding: 8px 16px;
+        text-decoration: none;
+        display: flex;
+        align-items: center;
+        font-weight: 400;
+        transition: background-color 0.2s;
+    }
+    .dropdown-content a:hover {
+        background-color: #f8f9fa;
+        color: #000;
+    }
+    .dropdown-content a i {
+        margin-right: 10px;
+        font-size: 14px;
     }
 
     /* Responsive Design */
@@ -182,6 +228,11 @@
         .nav-links .nav-link {
             padding: 0.5rem 1rem;
             font-size: 14px;
+        }
+        .dropdown-content {
+            right: auto;
+            left: 0;
+            min-width: 150px;
         }
     }
 
@@ -199,6 +250,5 @@
         font-size: 16px;
     }
 </style>
-
 <script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
 <script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>

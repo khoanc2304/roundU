@@ -26,6 +26,7 @@ public class MainControllerServlet extends HttpServlet {
 
     //user view
     public static final String LOGINPAGE_REDIRECT = "loginPage";
+    public static final String LOGOUTPAGE_REDIRECT = "logoutPage";
     public static final String PROFILEPAGE_REDIRECT = "profilePage";
     public static final String HOMEPAGE_REDIRECT = "homePage";
     public static final String CHECKOUTPAGE_REDIRECT = "checkoutPage";
@@ -42,6 +43,7 @@ public class MainControllerServlet extends HttpServlet {
 
     //user view
     public static final String LOGINPAGE_SERVLET = "/" + LOGINPAGE_REDIRECT;
+    public static final String LOGOUTPAGE_SERVLET = "/" + LOGOUTPAGE_REDIRECT;
     public static final String PROFILEPAGE_SERVLET = "/" + PROFILEPAGE_REDIRECT;
     public static final String HOMEPAGE_SERVLET = "/" + HOMEPAGE_REDIRECT;
     public static final String CHECKOUTPAGE_SERVLET = "/" + CHECKOUTPAGE_REDIRECT;
@@ -50,6 +52,7 @@ public class MainControllerServlet extends HttpServlet {
     // main?action=
     // doPost (Action)
     public static final String ACTION_LOGIN = "login";
+    public static final String ACTION_LOGOUT = "logout";
 
     // HUY
     public static final String ACTION_CREATE_USER = "createUser";
@@ -145,8 +148,7 @@ public class MainControllerServlet extends HttpServlet {
 
         switch (action) {
             case //DIRECT TO BROWSER
-            LOGINPAGE_REDIRECT, PROFILEPAGE_REDIRECT, HOMEPAGE_REDIRECT, CARTPAGE_REDIRECT, 
-                //DIRECT TO DASHBOARD
+            LOGINPAGE_REDIRECT, LOGOUTPAGE_REDIRECT, PROFILEPAGE_REDIRECT, HOMEPAGE_REDIRECT, CARTPAGE_REDIRECT, //DIRECT TO DASHBOARD
             DASHBOARDPAGE_REDIRECT, USER_MANAGEMENT_REDIRECT, BRAND_MANAGEMENT_REDIRECT, CATEGORY_MANAGEMENT_REDIRECT, PRODUCT_MANAGEMENT_REDIRECT, ORDER_MANAGEMENT_REDIRECT ->
                 request.getRequestDispatcher(action).forward(request, response);
             case ACTION_SEARCH_ACTIVE_PRODUCT ->
