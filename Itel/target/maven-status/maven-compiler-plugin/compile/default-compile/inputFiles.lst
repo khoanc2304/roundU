@@ -39,7 +39,6 @@ C:\Users\Admin\Desktop\webapp\roundU\Itel\src\main\java\com\tourismapp\model\Car
 C:\Users\Admin\Desktop\webapp\roundU\Itel\src\main\java\com\tourismapp\controller\paymentController\PaymentServlet.java
 C:\Users\Admin\Desktop\webapp\roundU\Itel\src\main\java\com\tourismapp\controller\redirectController\LoginGoogleServlet.java
 C:\Users\Admin\Desktop\webapp\roundU\Itel\src\main\java\com\tourismapp\controller\redirectController\LogoutPageServlet.java
-C:\Users\Admin\Desktop\webapp\roundU\Itel\src\main\java\com\tourismapp\model\MembershipLevel.java
 C:\Users\Admin\Desktop\webapp\roundU\Itel\src\main\java\com\tourismapp\dao\user\IUserDAO.java
 C:\Users\Admin\Desktop\webapp\roundU\Itel\src\main\java\com\tourismapp\service\product\IProductService.java
 C:\Users\Admin\Desktop\webapp\roundU\Itel\src\main\java\com\tourismapp\config\ProjectPaths.java
@@ -49,6 +48,7 @@ C:\Users\Admin\Desktop\webapp\roundU\Itel\src\main\java\com\tourismapp\constant\
 C:\Users\Admin\Desktop\webapp\roundU\Itel\src\main\java\com\tourismapp\model\OrderDetail.java
 C:\Users\Admin\Desktop\webapp\roundU\Itel\src\main\java\com\tourismapp\service\category\ICategoryService.java
 C:\Users\Admin\Desktop\webapp\roundU\Itel\src\main\java\com\tourismapp\controller\redirectController\ProductPageServlet.java
+C:\Users\Admin\Desktop\webapp\roundU\Itel\src\main\java\com\tourismapp\model\MemberLevel.java
 C:\Users\Admin\Desktop\webapp\roundU\Itel\src\main\java\com\tourismapp\dao\order\OrderDAO.java
 C:\Users\Admin\Desktop\webapp\roundU\Itel\src\main\java\com\tourismapp\common\Status.java
 C:\Users\Admin\Desktop\webapp\roundU\Itel\src\main\java\com\tourismapp\model\Product.java

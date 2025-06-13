@@ -60,6 +60,7 @@ public class MainControllerServlet extends HttpServlet {
     public static final String ACTION_CREATE_USER = "createUser";
     public static final String ACTION_EDIT_USER = "editUser";
     public static final String ACTION_DELETE_USER = "deleteUser";
+    public static final String ACTION_LIST_USER = "listUser";
 
     //NAM
     public static final String ACTION_CREATE_BRAND = "createBrand";
@@ -128,9 +129,10 @@ public class MainControllerServlet extends HttpServlet {
         switch (action) {
             case ACTION_LOGIN ->
                 request.getRequestDispatcher(LOGINPAGE_REDIRECT).forward(request, response);
-            //USER
-
-            //PRODUCT
+            //USER Huy
+            case ACTION_CREATE_USER, ACTION_EDIT_USER, ACTION_DELETE_USER ->
+                request.getRequestDispatcher(USER_MANAGEMENT_SERVLET).forward(request, response);
+            //PRODUCT 
             case ACTION_CREATE_PRODUCT, ACTION_EDIT_PRODUCT, ACTION_DELETE_PRODUCT ->
                 request.getRequestDispatcher(PRODUCT_MANAGEMENT_REDIRECT).forward(request, response);
             //BRAND
@@ -156,7 +158,7 @@ public class MainControllerServlet extends HttpServlet {
                     PRODUCTPAGE_REDIRECT, 
                     HOMEPAGE_REDIRECT, 
                     CARTPAGE_REDIRECT, 
-                //DIRECT TO DASHBOARD
+            //DIRECT TO DASHBOARD
                     DASHBOARDPAGE_REDIRECT, 
                     USER_MANAGEMENT_REDIRECT, 
                     BRAND_MANAGEMENT_REDIRECT, 
@@ -170,7 +172,9 @@ public class MainControllerServlet extends HttpServlet {
                 request.getRequestDispatcher(HOMEPAGE_REDIRECT).forward(request, response);
             case ACTION_CREATE_PRODUCT_FORM, ACTION_MANAGE_PRODUCT, ACTION_SEARCH_PRODUCT ->
                 request.getRequestDispatcher(PRODUCT_MANAGEMENT_REDIRECT).forward(request, response);
-
+                //User Huy
+            case "createForm" ->
+                request.getRequestDispatcher(USER_MANAGEMENT_REDIRECT).forward(request, response);
             default ->
                 response.sendRedirect("errorAtMainController.jsp");
         }

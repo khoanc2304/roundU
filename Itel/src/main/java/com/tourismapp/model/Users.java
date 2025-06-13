@@ -4,6 +4,7 @@
  */
 package com.tourismapp.model;
 
+import com.tourismapp.common.MembershipLevel;
 import com.tourismapp.common.Status;
 import com.tourismapp.common.UserRole;
 import java.time.LocalDateTime;

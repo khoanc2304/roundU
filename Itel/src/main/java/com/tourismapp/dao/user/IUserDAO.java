@@ -16,11 +16,21 @@ import java.util.Optional;
  * @author Admin
  */
 public interface IUserDAO {
-    
+
     Users mapUser(ResultSet rs) throws SQLException;
 
     List< Users> getAllUsers();
-    
+
     Optional<Users> findUserByCredentials(String username, String email, String password);
-    
+
+    Users getUserById(int userId);
+
+    boolean createUser(Users user);
+
+    boolean updateUser(Users user);
+
+    boolean deleteUser(int userId);
+
+    List<Users> searchUsers(String username, String status);
+
 }

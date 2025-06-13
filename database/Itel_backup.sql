@@ -11,10 +11,7 @@ GO
 
 USE Itel_Shop;
 GO
-SELECT a.name, pd.attribute_value
-FROM ProductDetail pd
-JOIN Attribute a ON pd.attribute_id = a.attribute_id
-WHERE pd.product_id = 1;
+
 -- Xóa bảng theo thứ tự tránh lỗi ràng buộc
 IF OBJECT_ID('Payment') IS NOT NULL DROP TABLE Payment;
 IF OBJECT_ID('Review') IS NOT NULL DROP TABLE Review;
