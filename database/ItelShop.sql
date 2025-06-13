@@ -176,12 +176,12 @@ VALUES
 --User
 INSERT INTO Users (username, password, fullName, email, phone, address, role, membership_level_id)
 VALUES
-('khoa', 'khoa', 'Nguyen Khoa', 'khoa@example.com', '0123456789', '123 Đường A, TP.HCM', 'admin', 4),
-('nam', 'nam', 'Nguyen Nam', 'nam@example.com', '0987654321', '456 Đường B, Hà Nội', 'admin', 4),
-('vinh', 'vinh', 'Nguyen Vinh', 'vinh@example.com', '0912345678', '789 Đường C, Đà Nẵng', 'admin', 4),
-('hieu', 'hieu', 'Ngo Hieu', 'hieu@example.com', '0909876543', '12 Đường D, Hải Phòng', 'admin', 4),
-('huy', 'huy', 'Le Huy', 'huy@example.com', '0999888777', '345 Đường E, Cần Thơ', 'admin', 4),
-('admin', 'admin', 'Vu Van F', 'user5@example.com', '0966778899', '678 Đường F, Huế', 'admin', 4),
+('khoa', 'khoa', 'Nguyen Khoa', 'khoa@gmail.com', '0123456789', '123 Đường A, TP.HCM', 'admin', 4),
+('nam', 'nam', 'Nguyen Nam', 'nam@gmail.com', '0987654321', '456 Đường B, Hà Nội', 'admin', 4),
+('vinh', 'vinh', 'Nguyen Vinh', 'vinh@gmail.com', '0912345678', '789 Đường C, Đà Nẵng', 'admin', 4),
+('hieu', 'hieu', 'Ngo Hieu', 'hieu@gmail.com', '0909876543', '12 Đường D, Hải Phòng', 'admin', 4),
+('huy', 'huy', 'Huynh Huy', 'huy@gmail.com', '0999888777', '345 Đường E, Cần Thơ', 'admin', 4),
+('admin', 'admin', 'ADMIN', 'admin@gmail.com', '0966778899', '678 Đường F, Huế', 'admin', 4),
 ('user1', 'user1', 'Dang Thi G', 'user1@gmail.com', '0933445566', '901 Đường G, Vinh', 'customer', null),
 ('user2', 'user2', 'Bui Van H', 'user2@gmail.com', '0977555333', '234 Đường H, Nha Trang', 'customer', 2),
 ('user3', 'user3', 'Nguyen Thi I', 'user3@gmail.com', '0988123456', '567 Đường I, Phan Thiết', 'customer', 3),

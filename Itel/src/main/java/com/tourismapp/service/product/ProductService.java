@@ -7,9 +7,11 @@ package com.tourismapp.service.product;
 import com.tourismapp.dao.product.IProductDAO;
 import com.tourismapp.dao.product.ProductDAO;
 import com.tourismapp.model.Product;
+import com.tourismapp.model.ProductImage;
 import com.tourismapp.utils.ErrDialog;
 import java.sql.SQLException;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 /**
@@ -23,15 +25,13 @@ public class ProductService implements IProductService {
     //user view
     @Override
     public List<Product> getActiveProducts() {
-        List<Product> activeProducts = productDAO.getActiveProducts();
-        return activeProducts;
+        return productDAO.getActiveProducts();
     }
 
     //dashboard
     @Override
     public List<Product> getAllProducts() {
-        List<Product> products = productDAO.getAllProducts();
-        return products;
+        return productDAO.getAllProducts();
     }
 
     @Override
@@ -68,5 +68,14 @@ public class ProductService implements IProductService {
     public boolean deleteProduct(int id) {
         return productDAO.deleteProduct(id);
     }
-
+    
+    @Override
+    public Optional<List<ProductImage>> getProductImagesById(int productId){
+        return productDAO.getProductImagesById(productId);
+    }
+    
+    @Override
+    public Map<String, String> getInforProductById(int productId){
+        return productDAO.getInforProductById(productId);
+    }
 }

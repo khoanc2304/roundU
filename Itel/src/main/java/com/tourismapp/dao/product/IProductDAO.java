@@ -5,9 +5,11 @@
 package com.tourismapp.dao.product;
 
 import com.tourismapp.model.Product;
+import com.tourismapp.model.ProductImage;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 /**
@@ -37,4 +39,7 @@ public interface IProductDAO {
     
     boolean deleteProduct(int id);
     
+    Optional<List<ProductImage>> getProductImagesById(int productId);
+    
+    Map<String, String> getInforProductById(int productId);
 }

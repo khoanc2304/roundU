@@ -24,6 +24,7 @@ public class ProjectPaths {
     public static final String HREF_TO_LOGINPAGE = HREF_TO_MAINCONTROLLER + MainControllerServlet.LOGINPAGE_REDIRECT;
     public static final String HREF_TO_LOGOUTPAGE = HREF_TO_MAINCONTROLLER + MainControllerServlet.LOGOUTPAGE_REDIRECT;
     public static final String HREF_TO_PROFILEPAGE = HREF_TO_MAINCONTROLLER + MainControllerServlet.PROFILEPAGE_REDIRECT;
+    public static final String HREF_TO_PRODUCTPAGE = HREF_TO_MAINCONTROLLER + MainControllerServlet.PRODUCTPAGE_REDIRECT;
     public static final String HREF_TO_HOMEPAGE = HREF_TO_MAINCONTROLLER + MainControllerServlet.HOMEPAGE_REDIRECT;
     public static final String HREF_TO_CARTPAGE = HREF_TO_MAINCONTROLLER + MainControllerServlet.CARTPAGE_REDIRECT;
 
@@ -43,6 +44,8 @@ public class ProjectPaths {
     public static final String JSP_LOGINPAGE_PATH = JSP_PATH_VIEW + "loginPage/loginPage.jsp";
     public static final String JSP_PROFILEPAGE_PATH = JSP_PATH_VIEW + "profilePage/profilePage.jsp";
     public static final String JSP_HOMEPAGE_PATH = JSP_PATH_VIEW + "homePage/homePage.jsp";
+    public static final String JSP_PRODUCTPAGE_PATH = JSP_PATH_VIEW + "productPage/productPage.jsp";
+    public static final String JSP_PRODUCTDETAILPAGE_PATH = JSP_PATH_VIEW + "productPage/productDetail.jsp";
     public static final String JSP_CARTPAGE_PATH = JSP_PATH_VIEW + "cartPage/cartPage.jsp";
 
 }

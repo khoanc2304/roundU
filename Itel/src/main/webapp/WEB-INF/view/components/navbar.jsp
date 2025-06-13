@@ -51,9 +51,6 @@
 
             <c:choose>
                 <c:when test="${not empty sessionScope.loggedUser.role}">
-                    <c:if test="${sessionScope.loggedUser.role.getValue() == 'admin' || sessionScope.loggedUser.role.getValue() == 'staff'}">
-                        <a href="<%= ProjectPaths.HREF_TO_DASHBOARDPAGE %>" class="nav-link"><i class="fas fa-tachometer-alt me-1"></i> Dashboard</a>
-                    </c:if>
                     <div class="dropdown">
                         <div class="dropdown-toggle d-flex align-items-center gap-2">
                             <img src="#" alt="Avatar" class="rounded-circle" style="width: 35px; height: 35px;">

@@ -6,19 +6,21 @@ package com.tourismapp.dao.product;
 
 import com.tourismapp.common.Status;
 import com.tourismapp.dao.DBConnection;
+import com.tourismapp.model.Attribute;
 import com.tourismapp.model.Brand;
 import com.tourismapp.model.Category;
 import com.tourismapp.model.Product;
+import com.tourismapp.model.ProductImage;
 import com.tourismapp.utils.ErrDialog;
-import java.math.BigDecimal;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -42,6 +44,16 @@ public class ProductDAO implements IProductDAO {
     private static final String SEARCH_PRODUCTS_BY_NAME = "SELECT * FROM Product WHERE name LIKE ?";
     private static final String SEARCH_ACTIVE_PRODUCTS_BY_NAME = "SELECT * FROM Product WHERE name LIKE ? AND status = 'active';";
 
+    // ProductImages
+    private static final String GET_PRODUCT_IMAGES_BY_ID = "SELECT * FROM ProductImages WHERE product_id = ?";
+    // Product Detail -> Attribute
+    private static final String GET_INFO_PRODUCT_BY_ID = """
+                                                         SELECT a.name, pd.attribute_value
+                                                         FROM ProductDetail pd
+                                                         JOIN Attribute a ON pd.attribute_id = a.attribute_id
+                                                         WHERE pd.product_id = ?;""";
+
+    @Override
     public Product mapProduct(ResultSet rs) throws SQLException {
         return new Product(
                 rs.getInt("product_id"),
@@ -95,7 +107,7 @@ public class ProductDAO implements IProductDAO {
 
     @Override
     public Optional<Product> findProductById(int productId) {
-        Product product = null;
+//        Product product = null;
         try (Connection conn = DBConnection.getConnection(); PreparedStatement ps = conn.prepareStatement(FIND_PRODUCT_BY_ID)) {
 
             ps.setInt(1, productId);
@@ -207,7 +219,7 @@ public class ProductDAO implements IProductDAO {
         }
         return qProducts;
     }
-    
+
     @Override
     public List<Product> searchActiveProductsByName(String q) {
         List<Product> qProducts = new ArrayList<>();
@@ -227,12 +239,53 @@ public class ProductDAO implements IProductDAO {
         return qProducts;
     }
 
-    public static void main(String[] args) {
-        ProductDAO pD = new ProductDAO();
-        List<Product> p = pD.searchProductsByName("mac");
-        for (Product s : p) {
-            System.out.println(s);
+    @Override
+    public Optional<List<ProductImage>> getProductImagesById(int productId) {
+        List<ProductImage> productImages = new ArrayList<>();
+        try (Connection conn = DBConnection.getConnection(); PreparedStatement ps = conn.prepareStatement(GET_PRODUCT_IMAGES_BY_ID)) {
+            ps.setInt(1, productId);
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                ProductImage productImage = new ProductImage(
+                        rs.getInt("image_id"),
+                        new Product(productId),
+                        rs.getString("image_url"));
+                productImages.add(productImage);
+            }
+            return Optional.ofNullable(productImages);
+        } catch (SQLException e) {
+//            e.printStackTrace();
+            ErrDialog.showError("ProductDAO findProductImageById getId fail");
         }
+        return Optional.empty();
     }
 
+    @Override
+    public Map<String, String> getInforProductById(int productId) {
+        Map<String, String> infoMap = new LinkedHashMap<>();
+        try (Connection conn = DBConnection.getConnection(); PreparedStatement ps = conn.prepareStatement(GET_INFO_PRODUCT_BY_ID)) {
+            ps.setInt(1, productId);
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                String attributeName = rs.getString("name");
+                String attributeValue = rs.getString("attribute_value"); 
+
+                infoMap.put(attributeName, attributeValue != null ? attributeValue : "No value available");
+            }
+        } catch (SQLException e) {
+//            e.printStackTrace();
+            ErrDialog.showError("ProductDAO findInfoProductId getId fail");
+        }
+        return infoMap;
+    }
+
+//    public static void main(String[] args) {
+//        ProductDAO pD = new ProductDAO();
+//        Map<String, String> map = pD.getInforProductById(1);
+//        for (Map.Entry<String, String> entry : map.entrySet()) {
+//            Object key = entry.getKey();
+//            Object val = entry.getValue();
+//            System.out.println(key + " " + val);
+//        }
+//    }
 }

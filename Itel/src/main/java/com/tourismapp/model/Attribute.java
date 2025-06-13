@@ -34,6 +34,10 @@ public class Attribute {
         this.unit = unit;
     }
 
+    public Attribute(int attributeId) {
+        this.attributeId = attributeId;
+    }
+
     public int getAttributeId() {
         return attributeId;
     }

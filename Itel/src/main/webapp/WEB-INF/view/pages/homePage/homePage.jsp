@@ -2,6 +2,8 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>
+<%@ page import="com.tourismapp.config.ProjectPaths" %>
+<%@ page import="com.tourismapp.controller.mainController.MainControllerServlet" %>
 <!DOCTYPE html>
 <html>
     <head>
@@ -519,10 +521,10 @@
                                         <div class="card-body text-center">
                                             <h5 class="product-name card-title">${product.name}</h5>
                                             <p class="card-text text-danger fw-bold">
-                                                <fmt:formatNumber value="${product.price}" type="currency" currencySymbol="" groupingUsed="true" /> VNĐ
+                                                <fmt:formatNumber value="${product.price}" type="number" pattern="#,###" currencySymbol="" groupingUsed="true" /> VNĐ
                                             </p>
                                             <div class="d-flex justify-content-center gap-2">
-                                                <a href="#" class="btn btn-buy text-white">Xem chi tiết</a>
+                                                <a href="<%= ProjectPaths.HREF_TO_PRODUCTPAGE%>&id=${product.productId}" class="btn btn-buy text-white">Xem chi tiết</a>
                                                 <a href="#" class="btn btn-buy text-white">Thêm vào giỏ</a>
                                             </div>
                                         </div>
@@ -691,7 +693,6 @@
                 z-index: 1000;
             }
 
-            /* Định dạng mặc định cho các mục trong sidebar */
             .list-group-item {
                 background-color: #ffffff; /* Nền trắng mặc định */
                 color: #000000; /* Chữ đen mặc định */
@@ -709,7 +710,6 @@
                 color: #000000; /* Biểu tượng đen mặc định */
             }
 
-            /* Hiệu ứng hover cho tất cả các mục */
             .list-group-item:hover {
                 background-color: #66ccff; /* Nền xanh khi hover */
                 color: #000000; /* Chữ đen khi hover */
@@ -772,14 +772,12 @@
                 color: #007bff;
             }
 
-            /* Product grid */
             .product-grid {
                 display: grid;
                 grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
                 gap: 2rem;
             }
 
-            /* Khung chứa ảnh */
             .image-container {
                 width: 100%;
                 height: 260px; /* Tăng chiều cao lên 280px */
@@ -794,7 +792,6 @@
                 transition: transform 0.3s ease;
             }
 
-            /* Hiệu ứng phóng to khi hover */
             .product-img:hover {
                 transform: scale(1.05);
             }

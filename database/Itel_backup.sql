@@ -11,7 +11,10 @@ GO
 
 USE Itel_Shop;
 GO
-
+SELECT a.name, pd.attribute_value
+FROM ProductDetail pd
+JOIN Attribute a ON pd.attribute_id = a.attribute_id
+WHERE pd.product_id = 1;
 -- Xóa bảng theo thứ tự tránh lỗi ràng buộc
 IF OBJECT_ID('Payment') IS NOT NULL DROP TABLE Payment;
 IF OBJECT_ID('Review') IS NOT NULL DROP TABLE Review;
@@ -24,6 +27,7 @@ IF OBJECT_ID('Brand') IS NOT NULL DROP TABLE Brand;
 IF OBJECT_ID('Category') IS NOT NULL DROP TABLE Category;
 IF OBJECT_ID('Users') IS NOT NULL DROP TABLE Users;
 IF OBJECT_ID('MembershipLevel') IS NOT NULL DROP TABLE MembershipLevel;
+IF OBJECT_ID('ProductImages') IS NOT NULL DROP TABLE ProductImages;
 GO
 
 -- Bắt đầu tạo bảng
@@ -148,7 +152,7 @@ CREATE TABLE ProductImages (
     product_id INT,
     image_url VARCHAR(255) NOT NULL,          -- Đường dẫn tới hình ảnh
     is_primary BIT DEFAULT 0,                 -- Đánh dấu hình ảnh chính (0 = false, 1 = true)
-    status NVARCHAR(20) CHECK (status IN ('active', 'inactive')) DEFAULT 'pending',  
+    status NVARCHAR(20) CHECK (status IN ('active', 'inactive')) DEFAULT 'active',  
     FOREIGN KEY (product_id) REFERENCES Product(product_id)
 );
 
@@ -178,12 +182,12 @@ VALUES
 --User
 INSERT INTO Users (username, password, fullName, email, phone, address, role, membership_level_id, image_url)
 VALUES
-('khoa', 'khoa', 'Nguyen Khoa', 'khoa@example.com', '0123456789', '123 Đường A, TP.HCM', 'admin', 4, 'https://i.pinimg.com/736x/03/eb/d6/03ebd625cc0b9d636256ecc44c0ea324.jpg'),
-('nam', 'nam', 'Nguyen Nam', 'nam@example.com', '0987654321', '456 Đường B, Hà Nội', 'admin', 4, 'https://i.pinimg.com/736x/16/a9/57/16a9570117787327d84c592bb7dd01c6.jpg'),
-('vinh', 'vinh', 'Nguyen Vinh', 'vinh@example.com', '0912345678', '789 Đường C, Đà Nẵng', 'admin', 4, 'https://i.pinimg.com/736x/1c/4b/12/1c4b12f45f56d1d37934dde85af2f4d4.jpg'),
-('hieu', 'hieu', 'Ngo Hieu', 'hieu@example.com', '0909876543', '12 Đường D, Hải Phòng', 'admin', 4, 'https://i.pinimg.com/736x/bf/50/e2/bf50e22082af5810b2976308c721ee5b.jpg'),
-('huy', 'huy', 'Le Huy', 'huy@example.com', '0999888777', '345 Đường E, Cần Thơ', 'admin', 4, 'https://i.pinimg.com/736x/6f/d4/ee/6fd4ee9b13076f991aab35529bc71644.jpg'),
-('admin', 'admin', 'Vu Van F', 'user5@example.com', '0966778899', '678 Đường F, Huế', 'admin', 4, 'https://i.pinimg.com/736x/5c/3b/62/5c3b6262a1850c17d2b4350ee22de1fc.jpg'),
+('khoa', 'khoa', 'Nguyen Khoa', 'khoa@gmail.com', '0123456789', '123 Đường A, TP.HCM', 'admin', 4, 'https://i.pinimg.com/736x/03/eb/d6/03ebd625cc0b9d636256ecc44c0ea324.jpg'),
+('nam', 'nam', 'Nguyen Nam', 'nam@gmail.com', '0987654321', '456 Đường B, Hà Nội', 'admin', 4, 'https://i.pinimg.com/736x/16/a9/57/16a9570117787327d84c592bb7dd01c6.jpg'),
+('vinh', 'vinh', 'Nguyen Vinh', 'vinh@gmail.com', '0912345678', '789 Đường C, Đà Nẵng', 'admin', 4, 'https://i.pinimg.com/736x/1c/4b/12/1c4b12f45f56d1d37934dde85af2f4d4.jpg'),
+('hieu', 'hieu', 'Ngo Hieu', 'hieu@gmail.com', '0909876543', '12 Đường D, Hải Phòng', 'admin', 4, 'https://i.pinimg.com/736x/bf/50/e2/bf50e22082af5810b2976308c721ee5b.jpg'),
+('huy', 'huy', 'Huynh Huy', 'huy@gmail.com', '0999888777', '345 Đường E, Cần Thơ', 'admin', 4, 'https://i.pinimg.com/736x/6f/d4/ee/6fd4ee9b13076f991aab35529bc71644.jpg'),
+('admin', 'admin', 'Vu Van F', 'admin@gmail.com', '0966778899', '678 Đường F, Huế', 'admin', 4, 'https://i.pinimg.com/736x/5c/3b/62/5c3b6262a1850c17d2b4350ee22de1fc.jpg'),
 ('user1', 'user1', 'Dang Thi G', 'user1@gmail.com', '0933445566', '901 Đường G, Vinh', 'customer', null, 'https://i.pinimg.com/736x/d5/c9/d7/d5c9d700340d8eb6122485602e42b578.jpg'),
 ('user2', 'user2', 'Bui Van H', 'user2@gmail.com', '0977555333', '234 Đường H, Nha Trang', 'customer', 2, 'https://i.pinimg.com/736x/82/26/96/822696099c99ecca6054821746001a8b.jpg'),
 ('user3', 'user3', 'Nguyen Thi I', 'user3@gmail.com', '0988123456', '567 Đường I, Phan Thiết', 'customer', 3, 'https://i.pinimg.com/736x/bb/6a/fd/bb6afdb250780ae260d010278381e31b.jpg'),
@@ -235,23 +239,33 @@ INSERT INTO Brand (name, Country, description, image_url) VALUES
 --Attribute
 INSERT INTO Attribute (category_id, name, data_type, unit)
 VALUES
---laptop (cate 1)
-(1, 'CPU', 'text', NULL), --id 1
-(1, 'RAM', 'number', 'GB'), --id 2
-(1, 'Storage', 'number', 'GB'), --id 3
-(1, 'Screen Size', 'number', 'inch'), --id 4
-(1, 'Weight', 'number', 'kg'), --id 5
-(1, 'Operating System', 'text', NULL), --id 6
-(1, 'GPU', 'text', NULL), --id 7
+-- laptop (cate 1)
+(1, 'CPU', 'text', NULL), -- id 1
+(1, 'RAM', 'number', 'GB'), -- id 2
+(1, 'Storage', 'number', 'GB'), -- id 3
+(1, 'GPU', 'text', NULL), -- id 4
+(1, 'Màn hình', 'text', NULL), -- id 5
+(1, 'Hệ điều hành', 'text', NULL), --id 6
+(1, 'Cổng kết nối', 'text', NULL), -- id 7
+(1, 'Bàn phím', 'text', NULL), -- id 8
+(1, 'Webcam', 'text', NULL), -- id 9
+(1, 'Wi-Fi', 'text', NULL), -- id 10
+(1, 'Bluetooth', 'text', NULL), -- id 11
+(1, 'Pin', 'number', 'Wh'), -- id 12
+(1, 'Trọng lượng', 'number', 'kg'), -- id 13
+(1, 'Kích thước', 'text', NULL), -- id 14
 
 --phone (cate 2)
-(2, 'CPU', 'text', NULL), --id 8
-(2, 'RAM', 'number', 'GB'), --id 9
-(2, 'Storage', 'number', 'GB'), --id 10
-(2, 'Screen Size', 'number', 'inch'), --id 11
-(2, 'Battery Capacity', 'number', 'mAh'), --id 12
-(2, 'Camera Resolution', 'number', 'MP'), --id 13
-(2, 'Operating System', 'text', NULL), --id 14
+(2, 'Màn hình', 'text', NULL), -- id 15
+(2, 'Độ phân giải màn hình', 'text', NULL), -- id 16
+(2, 'Camera', 'text', NULL), -- id 17
+(2, 'Chip xử lý', 'text', NULL), -- id 18
+(2, 'RAM', 'number', 'GB'), -- id 19
+(2, 'Bộ nhớ trong', 'number', 'GB'), -- id 20
+(2, 'Kết nối', 'text', NULL), -- id 21
+(2, 'Dung lượng pin', 'number', 'mAh'), -- id 22
+(2, 'Sạc', 'text', NULL), -- id 23
+(2, 'Trọng lượng', 'number', 'g'), -- id 24
 
 --chuột (cate 3)
 (3, 'DPI', 'number', NULL), --id 15
@@ -405,8 +419,8 @@ VALUES
 (1, 1, 'Intel Core i5 2.3GHz'), -- CPU
 (1, 2, '8'), -- RAM (GB)
 (1, 3, '128'), -- Storage (GB)
-(1, 4, '13.3'), -- Screen Size (inch)
-(1, 5, '1.37'), -- Weight (kg)
+(1, 13, '13.3'), -- Screen Size (inch)
+(1, 12, '1.37'), -- Weight (kg)
 (1, 6, 'macOS'), -- Operating System
 (1, 7, 'Intel Iris Plus Graphics 640'), -- GPU
 -- MacBook Air 13.3 i5 1.8GHz 128GB (product_id=2, category_id=1)
@@ -1766,5 +1780,3 @@ VALUES
 (95, 'https://wibutech.com/wp-content/uploads/2022/10/DSC4488.png', 0, 'active'),
 (95, 'https://cdn.24h.com.vn/upload/3-2021/images/2021-07-27/4-1627399622-632-width660height371.jpg', 0, 'active'),
 (95, 'https://manuals.plus/wp-content/uploads/2022/10/NOKIA-TWS-201-Go-Earbuds-Wireless-Earbuds-Featured-Image.jpg', 0, 'active');
-
-SELECT * FROM Product WHERE name LIKE '%mac%';

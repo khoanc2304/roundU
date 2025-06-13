@@ -1,6 +1,7 @@
 com\tourismapp\controller\paymentController\PaymentServlet.class
 com\tourismapp\common\PaymentMethod.class
 com\tourismapp\model\Product.class
+com\tourismapp\model\ProductImage.class
 com\tourismapp\service\user\IUserService.class
 com\tourismapp\model\MembershipLevel.class
 com\tourismapp\dao\user\IUserDAO.class
@@ -15,7 +16,6 @@ com\tourismapp\common\MembershipLevel.class
 com\tourismapp\model\Category.class
 com\tourismapp\model\Orders.class
 com\tourismapp\model\Attribute.class
-com\tourismapp\controller\redirectController\ProductPageServlet.class
 com\tourismapp\controller\redirectController\LoginPageServlet.class
 com\tourismapp\service\user\UserService.class
 com\tourismapp\dao\brand\BrandDAO.class
@@ -45,11 +45,12 @@ com\tourismapp\controller\redirectController\CheckoutPageServlet.class
 com\tourismapp\controller\redirectController\LogoutPageServlet.class
 com\tourismapp\dao\order\IOrderDAO.class
 com\tourismapp\service\product\IProductService.class
-HomePageServlet.class
 com\tourismapp\controller\redirectController\LoginFacebookServlet.class
 com\tourismapp\dao\user\UserDAO.class
 com\tourismapp\service\category\CategoryService.class
 com\tourismapp\common\UserRole.class
+com\tourismapp\controller\redirectController\HomePageServlet.class
+ProductPageServlet.class
 com\tourismapp\dao\order\OrderDAO.class
 com\tourismapp\common\Status.class
 com\tourismapp\service\order\IOrderService.class

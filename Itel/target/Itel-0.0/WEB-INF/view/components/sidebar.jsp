@@ -89,7 +89,6 @@
                     <span class="nav_name">Đăng Xuất</span>
                 </a>
 
-
             </nav>
         </div>
 
@@ -106,7 +105,7 @@
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Hủy</button>
-                        <a href="#" class="btn btn-primary">Đăng Xuất</a>
+                        <a href="<%= ProjectPaths.HREF_TO_LOGOUTPAGE %>" class="btn btn-primary">Đăng Xuất</a>
                     </div>
                 </div>
             </div>
