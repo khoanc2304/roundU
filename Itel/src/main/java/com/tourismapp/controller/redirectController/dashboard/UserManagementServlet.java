@@ -145,6 +145,7 @@ public class UserManagementServlet extends HttpServlet {
         response.sendRedirect(ProjectPaths.HREF_TO_USERMANAGEMENT);
     }
 
+    // <editor-fold defaultstate="collapsed" desc=" functional ... ">
     private Users extractUserFromRequest(HttpServletRequest request) {
         Users user = new Users();
 
@@ -289,4 +290,6 @@ public class UserManagementServlet extends HttpServlet {
 
         return user;
     }
+    // </editor-fold>
+
 }

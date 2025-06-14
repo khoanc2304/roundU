@@ -28,4 +28,23 @@ public class CategoryService implements ICategoryService {
         return categoryDAO.findCategoryById(id);
     }
 
+    @Override
+    public List<Category> searchCategoriesByName(String q) {
+        return categoryDAO.searchCategoriesByName(q);
+    }
+
+    @Override
+    public void createCategory(Category category) {
+        categoryDAO.createCategory(category);
+    }
+
+    @Override
+    public boolean editCategory(Category category) {
+        return categoryDAO.editCategory(category);
+    }
+
+    @Override
+    public boolean deleteCategory(int categoryId) {
+        return categoryDAO.deleteCategory(categoryId);
+    }
 }

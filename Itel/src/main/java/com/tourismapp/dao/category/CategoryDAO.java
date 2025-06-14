@@ -26,12 +26,20 @@ public class CategoryDAO implements ICategoryDAO {
     private static final String GET_ALL_CATEGORIES = "SELECT * FROM Category;";
     private static final String FIND_CATEGORY_BY_ID = "SELECT * FROM Category WHERE category_id = ?";
 
+    private static final String CREATE_CATEGORY = "INSERT INTO Category (name, description, image_url) VALUES (?, ?, ?);";
+    private static final String UPDATE_CATEGORY = "UPDATE Category SET name = ?, description = ?, image_url = ?, status = ? WHERE category_id = ?;";
+    private static final String DELETE_CATEGORY = "UPDATE Category SET status = 'inactive' WHERE category_id = ?;";
+    private static final String updateStatusProductSql = "UPDATE Product SET status = ? WHERE category_id = ?";
+    private static final String updateStatusInactiveProductSql = "UPDATE Product SET status = 'inactive' WHERE category_id = ?";
+    private static final String updateStatusCategorySql = "UPDATE Category SET status = 'inactive' WHERE category_id = ?";
+
     @Override
     public Category mapCategory(ResultSet rs) throws SQLException {
         return new Category(
                 rs.getInt("category_id"),
                 rs.getString("name"),
                 rs.getString("description"),
+                rs.getString("image_url"),
                 Status.valueOf(rs.getString("status").toUpperCase())
         );
     }
@@ -68,6 +76,98 @@ public class CategoryDAO implements ICategoryDAO {
         return Optional.empty();
     }
 
+    @Override
+    public boolean createCategory(Category category) {
+        try (Connection conn = DBConnection.getConnection(); PreparedStatement ps = conn.prepareStatement(CREATE_CATEGORY)) {
+
+            ps.setString(1, category.getName());
+            ps.setString(2, category.getDescription());
+            ps.setString(3, category.getImageUrl());
+
+            int rowsInserted = ps.executeUpdate();
+            return rowsInserted > 0;
+        } catch (SQLException e) {
+            ErrDialog.showError("Lỗi khi tạo danh mục: " + e.getMessage());
+            return false;
+        }
+    }
+
+    @Override
+    public boolean editCategory(Category category) {
+        try (Connection conn = DBConnection.getConnection()) {
+            conn.setAutoCommit(false);  
+            try (
+                    PreparedStatement psCategory = conn.prepareStatement(UPDATE_CATEGORY); PreparedStatement psProduct = conn.prepareStatement(updateStatusProductSql)) {
+                psCategory.setString(1, category.getName());
+                psCategory.setString(2, category.getDescription());
+                psCategory.setString(3, category.getImageUrl());
+                psCategory.setString(4, category.getStatus().name().toLowerCase());
+                psCategory.setInt(5, category.getCategoryId());
+                int rowsUpdated = psCategory.executeUpdate();  // update category
+
+                // Cập nhật tất cả sản phẩm của Category với status mới (sử dụng trạng thái của category)
+                psProduct.setString(1, category.getStatus().name().toLowerCase());  // Đồng bộ status
+                psProduct.setInt(2, category.getCategoryId());
+                psProduct.executeUpdate(); 
+
+                conn.commit(); 
+                return rowsUpdated > 0;  
+            } catch (SQLException e) {
+                conn.rollback(); 
+                ErrDialog.showError("Lỗi khi chỉnh sửa danh mục: " + e.getMessage());
+                return false;
+            }
+        } catch (SQLException e) {
+            ErrDialog.showError("Lỗi kết nối khi chỉnh sửa danh mục: " + e.getMessage());
+            return false;
+        }
+    }
+
+    @Override
+    public boolean deleteCategory(int categoryId) {
+        try (Connection conn = DBConnection.getConnection()) {
+            conn.setAutoCommit(false);
+
+            try (
+                    PreparedStatement psCategory = conn.prepareStatement(updateStatusCategorySql); PreparedStatement psProduct = conn.prepareStatement(updateStatusInactiveProductSql)) {
+
+                psCategory.setInt(1, categoryId);
+                int rows1 = psCategory.executeUpdate();
+
+                psProduct.setInt(1, categoryId);
+                psProduct.executeUpdate();
+
+                conn.commit();
+                return rows1 > 0;
+            } catch (SQLException e) {
+                conn.rollback();
+                ErrDialog.showError("Lỗi khi cập nhật trạng thái INACTIVE: " + e.getMessage());
+                return false;
+            }
+        } catch (SQLException ex) {
+            ErrDialog.showError("Lỗi kết nối khi xóa danh mục: " + ex.getMessage());
+            return false;
+        }
+    }
+
+    @Override
+    public List<Category> searchCategoriesByName(String name) {
+        List<Category> categories = new ArrayList<>();
+        String searchQuery = "SELECT * FROM Category WHERE name LIKE ?";
+
+        try (Connection conn = DBConnection.getConnection(); PreparedStatement ps = conn.prepareStatement(searchQuery)) {
+
+            ps.setString(1, "%" + name + "%");
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                categories.add(mapCategory(rs));
+            }
+        } catch (SQLException e) {
+            ErrDialog.showError("Lỗi khi tìm kiếm danh mục theo tên: " + e.getMessage());
+        }
+        return categories;
+    }
+
     public static void main(String[] args) {
         CategoryDAO cDAO = new CategoryDAO();
 //        List<Category> cs = cDAO.getAllCategories();
@@ -75,9 +175,9 @@ public class CategoryDAO implements ICategoryDAO {
 //        for (Category c : cs) {
 //            System.out.println(c);
 //        }
-          Optional<Category> category = cDAO.findCategoryById(1);
-          ErrDialog.showError("Category : " + category.get() );
-          
+        Optional<Category> category = cDAO.findCategoryById(1);
+        ErrDialog.showError("Category : " + category.get());
+
     }
 
 }

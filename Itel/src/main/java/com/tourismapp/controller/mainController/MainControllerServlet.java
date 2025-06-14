@@ -121,7 +121,9 @@ public class MainControllerServlet extends HttpServlet {
     public static final String ACTION_VIEW_COMMENT = "viewComment";
 
     // VINH
-    public static final String ACTION_MANAGE_CATEGORY = "manageCategory";
+    public static final String ACTION_UPDATE_CATEGORY_FORM = "updateCategoryForm";
+    public static final String ACTION_CREATE_CATEGORY_FORM = "createCategoryForm";
+    public static final String ACTION_SEARCH_CATEGORY = "searchCategory";
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -131,18 +133,17 @@ public class MainControllerServlet extends HttpServlet {
         switch (action) {
             case ACTION_LOGIN ->
                 request.getRequestDispatcher(LOGINPAGE_REDIRECT).forward(request, response);
-            //USER Huy
-            case ACTION_CREATE_USER, ACTION_EDIT_USER, ACTION_DELETE_USER ->
-                request.getRequestDispatcher(USER_MANAGEMENT_SERVLET).forward(request, response);
-            //PRODUCT 
             case ACTION_CREATE_PRODUCT, ACTION_EDIT_PRODUCT, ACTION_DELETE_PRODUCT ->
                 request.getRequestDispatcher(PRODUCT_MANAGEMENT_REDIRECT).forward(request, response);
-            //BRAND
-            case ACTION_CREATE_BRAND, ACTION_EDIT_BRAND, ACTION_DELETE_BRAND -> {
+            //USER HUY
+            case ACTION_CREATE_USER, ACTION_EDIT_USER, ACTION_DELETE_USER ->
+                request.getRequestDispatcher(USER_MANAGEMENT_SERVLET).forward(request, response);
+            //BRAND NAM
+            case ACTION_CREATE_BRAND, ACTION_EDIT_BRAND, ACTION_DELETE_BRAND ->
                 request.getRequestDispatcher(BRAND_MANAGEMENT_REDIRECT).forward(request, response);
-            }
-            //CATEGORY
-            //
+            //CATEGORY VINH
+            case ACTION_CREATE_CATEGORY, ACTION_EDIT_CATEGORY, ACTION_DELETE_CATEGORY -> 
+                request.getRequestDispatcher(CATEGORY_MANAGEMENT_REDIRECT).forward(request, response);
             default ->
                 response.sendRedirect("errorAtMainController.jsp");
         }
@@ -170,19 +171,23 @@ public class MainControllerServlet extends HttpServlet {
                     PRODUCT_MANAGEMENT_REDIRECT, 
                     ORDER_MANAGEMENT_REDIRECT ->
                 request.getRequestDispatcher(action).forward(request, response);
+            // VIEW PRODUCT FOR USER 
             case ACTION_BROWSE_PRODUCT ->
                 request.getRequestDispatcher(PRODUCTPAGE_REDIRECT).forward(request, response);
             case ACTION_SEARCH_ACTIVE_PRODUCT ->
                 request.getRequestDispatcher(HOMEPAGE_REDIRECT).forward(request, response);
+            // PRODUCT MANAGEMENT 
             case ACTION_CREATE_PRODUCT_FORM, ACTION_MANAGE_PRODUCT, ACTION_SEARCH_PRODUCT ->
                 request.getRequestDispatcher(PRODUCT_MANAGEMENT_REDIRECT).forward(request, response);
-            //User HUY
+            //USER MANAGEMENT HUY
             case "createForm" ->
                 request.getRequestDispatcher(USER_MANAGEMENT_REDIRECT).forward(request, response);
-            // Brand NAM
-            case ACTION_MANAGE_BRAND, ACTION_FIND_BRAND, ACTION_NAVIGATE_TO_CREATE_BRAND, ACTION_NAVIGATE_TO_UPDATE_BRAND -> {
+            // BRAND MANAGEMENT NAM
+            case ACTION_MANAGE_BRAND, ACTION_FIND_BRAND, ACTION_NAVIGATE_TO_CREATE_BRAND, ACTION_NAVIGATE_TO_UPDATE_BRAND -> 
                 request.getRequestDispatcher(BRAND_MANAGEMENT_REDIRECT).forward(request, response);
-            }
+            // CATEGORY MANAGEMENT VINH
+            case ACTION_CREATE_CATEGORY_FORM, ACTION_SEARCH_CATEGORY, ACTION_UPDATE_CATEGORY_FORM -> //(fix) -> bỏ action vào đây để nó direct tới trang servlet
+                 request.getRequestDispatcher(CATEGORY_MANAGEMENT_REDIRECT).forward(request, response);
             default ->
                 response.sendRedirect("errorAtMainController.jsp");
         }

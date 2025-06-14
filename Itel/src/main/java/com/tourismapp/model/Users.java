@@ -24,6 +24,7 @@ public class Users {
     private String address;
     private UserRole role;
     private MembershipLevel membershipLevel;
+    private String imageUrl;
     private Status status;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
@@ -42,6 +43,37 @@ public class Users {
         this.address = address;
         this.role = role;
         this.membershipLevel = membershipLevel;
+        this.status = status;
+        this.createdAt = createdAt;
+        this.updatedAt = updatedAt;
+    }
+
+    public Users(int userId, String username, String password, String fullName, String email, String phone, String address, UserRole role, MembershipLevel membershipLevel, String imageUrl, Status status, LocalDateTime createdAt, LocalDateTime updatedAt) {
+        this.userId = userId;
+        this.username = username;
+        this.password = password;
+        this.fullName = fullName;
+        this.email = email;
+        this.phone = phone;
+        this.address = address;
+        this.role = role;
+        this.membershipLevel = membershipLevel;
+        this.imageUrl = imageUrl;
+        this.status = status;
+        this.createdAt = createdAt;
+        this.updatedAt = updatedAt;
+    }
+
+    public Users(String username, String password, String fullName, String email, String phone, String address, UserRole role, MembershipLevel membershipLevel, String imageUrl, Status status, LocalDateTime createdAt, LocalDateTime updatedAt) {
+        this.username = username;
+        this.password = password;
+        this.fullName = fullName;
+        this.email = email;
+        this.phone = phone;
+        this.address = address;
+        this.role = role;
+        this.membershipLevel = membershipLevel;
+        this.imageUrl = imageUrl;
         this.status = status;
         this.createdAt = createdAt;
         this.updatedAt = updatedAt;
@@ -162,17 +194,17 @@ public class Users {
         this.updatedAt = updatedAt;
     }
 
+    public String getImageUrl() {
+        return imageUrl;
+    }
+
+    public void setImageUrl(String imageUrl) {
+        this.imageUrl = imageUrl;
+    }
+
     @Override
     public String toString() {
-        return "User{"
-                + "userId=" + userId
-                + ", username='" + username + '\''
-                + ", email='" + email + '\''
-                + ", phone='" + phone + '\''
-                + ", role='" + role + '\''
-                + ", membershipLevel=" + membershipLevel
-                + ", createdAt='" + createdAt + '\''
-                + ", updatedAt='" + updatedAt + '\''
-                + '}';
+        return "Users{" + "userId=" + userId + ", username=" + username + ", password=" + password + ", fullName=" + fullName + ", email=" + email + ", phone=" + phone + ", address=" + address + ", role=" + role + ", membershipLevel=" + membershipLevel + ", imageUrl=" + imageUrl + ", status=" + status + ", createdAt=" + createdAt + ", updatedAt=" + updatedAt + '}';
     }
+
 }

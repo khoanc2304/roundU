@@ -53,7 +53,7 @@
                 <c:when test="${not empty sessionScope.loggedUser.role}">
                     <div class="dropdown">
                         <div class="dropdown-toggle d-flex align-items-center gap-2">
-                            <img src="#" alt="Avatar" class="rounded-circle" style="width: 35px; height: 35px;">
+                            <img src="${sessionScope.loggedUser.imageUrl}" alt="Avatar" class="rounded-circle" style="width: 35px; height: 35px;">
                             <span class="text-black fw-bold">Xin chào, ${sessionScope.loggedUser.fullName}</span>
                         </div>
                         <div class="dropdown-content">

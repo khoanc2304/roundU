@@ -41,6 +41,7 @@ public class UserDAO implements IUserDAO {
                 rs.getString("address"),
                 UserRole.valueOf(rs.getString("role").toUpperCase()),
                 rs.getInt("membership_level_id") != 0 ? MembershipLevel.fromId(rs.getInt("membership_level_id")) : null,
+                rs.getString("image_url"),
                 Status.valueOf(rs.getString("status").toUpperCase()),
                 rs.getTimestamp("created_at").toLocalDateTime(),
                 rs.getTimestamp("updated_at").toLocalDateTime()

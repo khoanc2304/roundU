@@ -13,8 +13,16 @@ import java.util.Optional;
  * @author Admin
  */
 public interface ICategoryService {
-    
+
     List<Category> getAllCategories();
-    
+
     Optional<Category> findCategoryById(int id);
+
+    List<Category> searchCategoriesByName(String q);
+
+    public void createCategory(Category category);
+
+    public boolean editCategory(Category get);
+
+    public boolean deleteCategory(int categoryId);
 }

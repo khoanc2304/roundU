@@ -19,7 +19,14 @@ public interface ICategoryDAO {
     Category mapCategory(ResultSet rs) throws SQLException;
 
     List<Category> getAllCategories();
-    
+
     Optional<Category> findCategoryById(int categoryId);
 
+    boolean createCategory(Category category);
+
+    boolean editCategory(Category category);
+
+    boolean deleteCategory(int categoryId);
+
+    List<Category> searchCategoriesByName(String name);
 }

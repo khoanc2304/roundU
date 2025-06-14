@@ -16,7 +16,6 @@
         <header id="header" class="header bg-light shadow-sm py-2">
             <div class="container-fluid">
                 <div class="row align-items-center">
-                    <!-- Toggle Menu (Cột bên trái) -->
                     <div class="col-3">
                         <div class="header_toggle">
                             <i class='bx bx-menu' id="header-toggle"></i>
@@ -27,11 +26,10 @@
                     </div>
 
                     <div class="col-3 d-flex justify-content-end align-items-center">
-                        <!-- User Info -->
                         <div class="d-flex align-items-center ms-3">
-                            <img src="#" alt="avatar" class="rounded-circle border" width="40px">
+                            <img src="${sessionScope.loggedUser.imageUrl}" alt="avatar" class="rounded-circle border" width="40px">
                             <a href="#" class="ms-2 text-dark fw-semibold text-decoration-none">
-                                ${sessionScope.loggedInUser.fullName}
+                                ${sessionScope.loggedUser.fullName}
                             </a>
                         </div>
 
@@ -48,7 +46,6 @@
                         <img src="resources/itel.png" alt="Logo">
                     </a>
 
-                    <!-- Navigation -->
                     <div class="nav_list">
 
                         <a href="<%= ProjectPaths.HREF_TO_DASHBOARDPAGE %>" class="nav_link">
@@ -83,7 +80,6 @@
                     </div>
                 </div>
 
-                <!-- Sign Out or Dashboard -->
                 <a href="#" class="nav_link text-dark fw-semibold" data-bs-toggle="modal" data-bs-target="#logoutModal">
                     <i class='bx bx-log-out nav_icon'></i>
                     <span class="nav_name">Đăng Xuất</span>
@@ -92,7 +88,6 @@
             </nav>
         </div>
 
-        <!-- Logout Modal -->
         <div class="modal fade" id="logoutModal" tabindex="-1" aria-labelledby="logoutModalLabel" aria-hidden="true">
             <div class="modal-dialog">
                 <div class="modal-content">
@@ -111,7 +106,6 @@
             </div>
         </div>
 
-        <!-- JavaScript -->
         <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
         <script>
