@@ -5,6 +5,7 @@
 package com.tourismapp.model;
 
 import com.tourismapp.common.Status;
+import java.util.List;
 
 /**
  *
@@ -18,6 +19,7 @@ public class Brand {
     private String description;
     private String imageUrl;
     private Status status;
+    private List<Product> productList;
 
     public Brand() {
     }
@@ -30,7 +32,7 @@ public class Brand {
         this.imageUrl = imageUrl;
         this.status = status;
     }
-    
+
     public Brand(String name, String country, String description, String imageUrl, Status status) {
         this.name = name;
         this.country = country;
@@ -89,6 +91,14 @@ public class Brand {
 
     public void setStatus(Status status) {
         this.status = status;
+    }
+
+    public List<Product> getProductList() {
+        return productList;
+    }
+
+    public void setProductList(List<Product> productList) {
+        this.productList = productList;
     }
 
     @Override

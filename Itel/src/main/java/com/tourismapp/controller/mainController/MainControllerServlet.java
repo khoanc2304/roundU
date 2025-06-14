@@ -66,6 +66,8 @@ public class MainControllerServlet extends HttpServlet {
     public static final String ACTION_CREATE_BRAND = "createBrand";
     public static final String ACTION_EDIT_BRAND = "editBrand";
     public static final String ACTION_DELETE_BRAND = "deleteBrand";
+    public static final String ACTION_NAVIGATE_TO_CREATE_BRAND = "navigateToCreateBrand";
+    public static final String ACTION_NAVIGATE_TO_UPDATE_BRAND = "navigateToUpdateBrand";
 
     // KHOA
     public static final String ACTION_CREATE_PRODUCT = "createProduct";
@@ -136,7 +138,9 @@ public class MainControllerServlet extends HttpServlet {
             case ACTION_CREATE_PRODUCT, ACTION_EDIT_PRODUCT, ACTION_DELETE_PRODUCT ->
                 request.getRequestDispatcher(PRODUCT_MANAGEMENT_REDIRECT).forward(request, response);
             //BRAND
-
+            case ACTION_CREATE_BRAND, ACTION_EDIT_BRAND, ACTION_DELETE_BRAND -> {
+                request.getRequestDispatcher(BRAND_MANAGEMENT_REDIRECT).forward(request, response);
+            }
             //CATEGORY
             //
             default ->
@@ -158,7 +162,7 @@ public class MainControllerServlet extends HttpServlet {
                     PRODUCTPAGE_REDIRECT, 
                     HOMEPAGE_REDIRECT, 
                     CARTPAGE_REDIRECT, 
-            //DIRECT TO DASHBOARD
+                //DIRECT TO DASHBOARD
                     DASHBOARDPAGE_REDIRECT, 
                     USER_MANAGEMENT_REDIRECT, 
                     BRAND_MANAGEMENT_REDIRECT, 
@@ -172,9 +176,13 @@ public class MainControllerServlet extends HttpServlet {
                 request.getRequestDispatcher(HOMEPAGE_REDIRECT).forward(request, response);
             case ACTION_CREATE_PRODUCT_FORM, ACTION_MANAGE_PRODUCT, ACTION_SEARCH_PRODUCT ->
                 request.getRequestDispatcher(PRODUCT_MANAGEMENT_REDIRECT).forward(request, response);
-                //User Huy
+            //User HUY
             case "createForm" ->
                 request.getRequestDispatcher(USER_MANAGEMENT_REDIRECT).forward(request, response);
+            // Brand NAM
+            case ACTION_MANAGE_BRAND, ACTION_FIND_BRAND, ACTION_NAVIGATE_TO_CREATE_BRAND, ACTION_NAVIGATE_TO_UPDATE_BRAND -> {
+                request.getRequestDispatcher(BRAND_MANAGEMENT_REDIRECT).forward(request, response);
+            }
             default ->
                 response.sendRedirect("errorAtMainController.jsp");
         }
