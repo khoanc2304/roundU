@@ -3,7 +3,8 @@
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
-
+<%@ page session="true" %>
+<%@ page import="java.util.*" %>
 <!DOCTYPE html>
 <html>
     <head>
@@ -20,9 +21,7 @@
         <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     </head>
     <body>
-        <!-- Gọi sidebar -->
         <jsp:include page="../../components/sidebar.jsp" />
-        <!-- Gọi toast -->
         <jsp:include page="../../components/toast.jsp" />
 
         <div class="main-container">
@@ -87,9 +86,6 @@
                                         </td>
                                         <td>
                                             <a href="<%= ProjectPaths.HREF_TO_MAINCONTROLLER + MainControllerServlet.ACTION_MANAGE_PRODUCT%>&id=${product.productId}" class="btn btn-primary btn-sm me-1"><i class="fas fa-eye"></i> Xem</a>
-                                            <!--                                            <form action="main" method="POST" class="d-inline">
-                                                                                            <button type="submit" class="btn btn-secondary btn-sm me-1"><i class="fas fa-pen"></i> Sửa</button>
-                                                                                        </form>-->
                                             <form action="<%= ProjectPaths.HREF_TO_MAINCONTROLLER + MainControllerServlet.ACTION_DELETE_PRODUCT %>" method="post" class="d-inline">
                                                 <input type="hidden" name="productId" value="${product.productId}">
                                                 <button type="submit" class="btn btn-danger btn-sm"><i class="fas fa-trash-alt"></i> Xóa</button>

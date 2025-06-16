@@ -25,11 +25,13 @@ import java.util.logging.Logger;
  * @author Admin
  */
 public class BrandDAO implements IBrandDAO {
-
+    
     private static final String GET_ALL_BRANDS = "SELECT * FROM Brand;";
     private static final String FIND_BRAND_BY_ID = "SELECT * FROM Brand WHERE brand_id = ?";
+    private static final String GET_ACTIVE_BRANDS = "SELECT * FROM Brand WHERE status = 'active';";
+    
+    // NAM
     private static final Logger LOGGER = Logger.getLogger(BrandDAO.class.getName());
-
     private static final String INSERT_BRAND = "INSERT INTO Brand (name, Country, description, image_url, status) VALUES (?, ?, ?, ?, ?)";
     private static final String SELECT_BRAND_BY_ID = "SELECT * FROM Brand WHERE brand_id = ?";
     private static final String SELECT_BRANDS_BY_NAME = "SELECT * FROM Brand WHERE name LIKE ?";
@@ -59,10 +61,8 @@ public class BrandDAO implements IBrandDAO {
                 Brand brand = mapBrand(rs);
                 brands.add(brand);
             }
-//            ErrDialog.showError("size active products: " + activeProducts.size());
         } catch (SQLException e) {
             ErrDialog.showError("Lỗi khi truy vấn sản phẩm: " + e.getMessage());
-//            e.printStackTrace(); 
         }
         return brands;
     }
@@ -82,7 +82,22 @@ public class BrandDAO implements IBrandDAO {
         }
         return Optional.empty();
     }
-
+    
+    @Override
+    public List<Brand> getActiveBrands() {
+        List<Brand> activeBrands = new ArrayList<>();
+        try (Connection conn = DBConnection.getConnection(); PreparedStatement ps = conn.prepareStatement(GET_ACTIVE_BRANDS); ResultSet rs = ps.executeQuery()) {
+            while (rs.next()) {
+                Brand brand = mapBrand(rs);
+                activeBrands.add(brand);
+            }
+        } catch (SQLException e) {
+            ErrDialog.showError("Lỗi khi truy vấn sản phẩm: " + e.getMessage());
+        }
+        return activeBrands;
+    }
+    
+// =========================================== NAM =============================================
     @Override
     public void createBrand(Brand brand) {
         validateBrandStatus(brand.getStatus());

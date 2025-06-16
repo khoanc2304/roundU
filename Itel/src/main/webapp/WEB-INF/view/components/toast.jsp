@@ -124,7 +124,8 @@
 
     .toast.success {
         border-left: 4px solid #00ff0a;
-        background: rgba(213, 255, 213, 0.2);
+        /*background: rgba(213, 255, 213, 0.2);*/
+        background: #90ddae;
     }
 
     .toast.error {

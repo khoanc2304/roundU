@@ -51,10 +51,12 @@ public class LoginPageServlet extends HttpServlet {
                 Users user = loggedUser.get();
                 session.setAttribute("loggedUser", user);
                 String role = user.getRole().getValue();
+                session.setAttribute("successMessage", "Đăng nhập thành công.");
 
                 switch (role) {
                     case "admin" -> {
-                        request.getRequestDispatcher(ProjectPaths.JSP_DASHBOARDPAGE_PATH).forward(request, response);
+//                        request.getRequestDispatcher(ProjectPaths.JSP_DASHBOARDPAGE_PATH).forward(request, response);
+                          response.sendRedirect(ProjectPaths.HREF_TO_DASHBOARDPAGE);
                     }
                     case "staff" -> {
                         request.getRequestDispatcher(ProjectPaths.JSP_DASHBOARDPAGE_PATH).forward(request, response);
@@ -66,9 +68,11 @@ public class LoginPageServlet extends HttpServlet {
                         request.getRequestDispatcher(ProjectPaths.JSP_HOMEPAGE_PATH).forward(request, response);
                 }
             } else {
+                session.setAttribute("errorMessage", "Sai tài khoản hoặc mật khẩu. Vui lòng nhập lại!");
                 response.sendRedirect(ProjectPaths.HREF_TO_LOGINPAGE);
             }
         } else {
+            session.setAttribute("errorMessage", "Lỗi trong quá trình đăng nhập. Đăng nhập thất bại!");
             response.sendRedirect(ProjectPaths.HREF_TO_LOGINPAGE);
         }
     }

@@ -32,7 +32,6 @@
                                 ${sessionScope.loggedUser.fullName}
                             </a>
                         </div>
-
                     </div>
                 </div>
             </div>
@@ -47,7 +46,6 @@
                     </a>
 
                     <div class="nav_list">
-
                         <a href="<%= ProjectPaths.HREF_TO_DASHBOARDPAGE %>" class="nav_link">
                             <i class='bx bx-home nav_icon'></i>
                             <span class="nav_name">Dashboard</span>

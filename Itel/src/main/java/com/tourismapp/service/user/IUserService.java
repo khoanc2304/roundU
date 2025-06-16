@@ -13,11 +13,13 @@ import java.util.Optional;
  * @author Admin
  */
 public interface IUserService {
-
+    // KHOA
     List< Users> getAllUsers();
 
     Optional<Users> findUserByCredentials(String username, String email, String password);
-
+    
+    
+    // HUY
     Users getUserById(int userId);
 
     boolean createUser(Users user);

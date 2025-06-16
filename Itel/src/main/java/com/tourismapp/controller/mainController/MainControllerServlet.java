@@ -93,14 +93,14 @@ public class MainControllerServlet extends HttpServlet {
     // Khoa browser
     public static final String ACTION_FILTER_BY_CATEGORY = "filterByCategory";
     public static final String ACTION_FILTER_BY_BRAND = "filterByBrand";
+    public static final String ACTION_FILTER_BY_CRITERIA = "filter";
     public static final String ACTION_SEARCH_ACTIVE_PRODUCT = "searchActiveProduct";
     public static final String ACTION_BROWSE_PRODUCT = "browseProduct";
-
+    
+    // KHOA dashboard
     public static final String ACTION_CREATE_PRODUCT_FORM = "createProductForm";
     public static final String ACTION_EDIT_PRODUCT_FORM = "editProductForm";
     public static final String ACTION_SEARCH_PRODUCT = "searchProduct";
-
-    // KHOA dashboard
     public static final String ACTION_VIEW_PRODUCT = "viewProduct";
     public static final String ACTION_FIND_PRODUCT = "findProduct";
     public static final String ACTION_MANAGE_PRODUCT = "manageProduct";
@@ -120,7 +120,7 @@ public class MainControllerServlet extends HttpServlet {
     // HIEU    
     public static final String ACTION_VIEW_COMMENT = "viewComment";
 
-    // VINH
+    // VINH dashboard
     public static final String ACTION_UPDATE_CATEGORY_FORM = "updateCategoryForm";
     public static final String ACTION_CREATE_CATEGORY_FORM = "createCategoryForm";
     public static final String ACTION_SEARCH_CATEGORY = "searchCategory";
@@ -172,7 +172,7 @@ public class MainControllerServlet extends HttpServlet {
                     ORDER_MANAGEMENT_REDIRECT ->
                 request.getRequestDispatcher(action).forward(request, response);
             // VIEW PRODUCT FOR USER 
-            case ACTION_BROWSE_PRODUCT ->
+            case ACTION_BROWSE_PRODUCT, ACTION_FILTER_BY_CRITERIA ->
                 request.getRequestDispatcher(PRODUCTPAGE_REDIRECT).forward(request, response);
             case ACTION_SEARCH_ACTIVE_PRODUCT ->
                 request.getRequestDispatcher(HOMEPAGE_REDIRECT).forward(request, response);

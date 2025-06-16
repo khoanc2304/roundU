@@ -21,7 +21,9 @@ public interface ICategoryDAO {
     List<Category> getAllCategories();
 
     Optional<Category> findCategoryById(int categoryId);
-
+    
+    
+    // VINH
     boolean createCategory(Category category);
 
     boolean editCategory(Category category);

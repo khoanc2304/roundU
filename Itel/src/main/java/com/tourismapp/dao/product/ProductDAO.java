@@ -6,7 +6,6 @@ package com.tourismapp.dao.product;
 
 import com.tourismapp.common.Status;
 import com.tourismapp.dao.DBConnection;
-import com.tourismapp.model.Attribute;
 import com.tourismapp.model.Brand;
 import com.tourismapp.model.Category;
 import com.tourismapp.model.Product;
@@ -18,12 +17,14 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.stream.Collectors;
 
 /**
  *
@@ -48,10 +49,40 @@ public class ProductDAO implements IProductDAO {
     private static final String GET_PRODUCT_IMAGES_BY_ID = "SELECT * FROM ProductImages WHERE product_id = ?";
     // Product Detail -> Attribute
     private static final String GET_INFO_PRODUCT_BY_ID = """
-                                                         SELECT a.name, pd.attribute_value
+                                                         SELECT a.name, pd.attribute_value, a.unit
                                                          FROM ProductDetail pd
                                                          JOIN Attribute a ON pd.attribute_id = a.attribute_id
                                                          WHERE pd.product_id = ?;""";
+
+    private static final String GET_PRODUCTS_BY_CATEGORY = "SELECT * FROM Product WHERE category_id = ?";
+    private static final String MAP_CATEGORY_ID = "SELECT category_id FROM Category WHERE name = ?";
+    private static final String MAP_BRAND_ID = "SELECT brand_id FROM Brand WHERE name = ?";
+
+    private static final String GET_PRODUCT_DETAIL_BY_ID_TOP_5 = """
+                                                             SELECT TOP 5 
+                                                                 p.attribute_value,
+                                                                 a.unit
+                                                             FROM ProductDetail p
+                                                             JOIN Attribute a ON p.attribute_id = a.attribute_id
+                                                             WHERE p.product_id = ?; 
+                                                             """;
+
+    private static final String FILTER_PRODUCTS_BY_CRITERIA = """
+        SELECT DISTINCT p.* 
+        FROM Product p 
+        LEFT JOIN ProductDetail pd ON p.product_id = pd.product_id 
+        WHERE p.category_id = ? 
+        AND p.price BETWEEN ? AND ? 
+        AND (p.brand_id IN (SELECT brand_id FROM Brand WHERE name IN (?)) OR p.brand_id IS NULL) 
+        AND (pd.attribute_id = 1 AND pd.attribute_value IN (?))
+    """;
+
+    private static final String GET_PRODUCTS_BY_CATEGORY_PAGINATED = """
+        SELECT * FROM Product 
+        WHERE category_id = ? AND status = 'active' 
+        ORDER BY product_id 
+        OFFSET ? ROWS FETCH NEXT ? ROWS ONLY;
+    """;
 
     @Override
     public Product mapProduct(ResultSet rs) throws SQLException {
@@ -268,7 +299,12 @@ public class ProductDAO implements IProductDAO {
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {
                 String attributeName = rs.getString("name");
-                String attributeValue = rs.getString("attribute_value"); 
+                String attributeValue = rs.getString("attribute_value");
+                String unit = rs.getString("unit");
+
+                if (unit != null && !unit.isBlank()) {
+                    attributeValue = attributeValue + " " + unit;
+                }
 
                 infoMap.put(attributeName, attributeValue != null ? attributeValue : "No value available");
             }
@@ -279,13 +315,140 @@ public class ProductDAO implements IProductDAO {
         return infoMap;
     }
 
-//    public static void main(String[] args) {
-//        ProductDAO pD = new ProductDAO();
-//        Map<String, String> map = pD.getInforProductById(1);
-//        for (Map.Entry<String, String> entry : map.entrySet()) {
-//            Object key = entry.getKey();
-//            Object val = entry.getValue();
-//            System.out.println(key + " " + val);
-//        }
-//    }
+    @Override
+    public List<Product> getProductsByCategory(int categoryId) {
+        List<Product> products = new ArrayList<>();
+        try (Connection conn = DBConnection.getConnection(); PreparedStatement ps = conn.prepareStatement(GET_PRODUCTS_BY_CATEGORY)) {
+            ps.setInt(1, categoryId);
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                Product product = mapProduct(rs);
+                products.add(product);
+            }
+        } catch (SQLException e) {
+            ErrDialog.showError("Ex: " + e);
+        }
+        return products;
+    }
+
+    @Override
+    public Integer mapCategoryId(String name) {
+        Integer id = null;
+        try (Connection conn = DBConnection.getConnection(); PreparedStatement ps = conn.prepareStatement(MAP_CATEGORY_ID)) {
+            ps.setString(1, name);
+            ResultSet rs = ps.executeQuery();
+            if (rs.next()) {
+                id = rs.getInt("category_id");
+            }
+        } catch (SQLException e) {
+            ErrDialog.showError("Exc: " + e);
+        }
+        return id;
+    }
+
+    @Override
+    public Integer mapBrandId(String name) {
+        Integer id = null;
+        try (Connection conn = DBConnection.getConnection(); PreparedStatement ps = conn.prepareStatement(MAP_BRAND_ID)) {
+            ps.setString(1, name);
+            ResultSet rs = ps.executeQuery();
+            if (rs.next()) {
+                id = rs.getInt("brand_id");
+            }
+        } catch (SQLException e) {
+            ErrDialog.showError("Exc: " + e);
+        }
+        return id;
+    }
+
+    @Override
+    public List<String> getProductDetailByIdTop5(int productId) {
+        List<String> productDetail = new ArrayList<>();
+        try (Connection conn = DBConnection.getConnection(); PreparedStatement ps = conn.prepareStatement(GET_PRODUCT_DETAIL_BY_ID_TOP_5)) {
+            ps.setInt(1, productId);
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                String value = rs.getString("attribute_value");
+                String unit = rs.getString("unit");
+
+                if (unit != null && !unit.isBlank()) {
+                    productDetail.add(value + " " + unit);
+                } else {
+                    productDetail.add(value);
+                }
+            }
+        } catch (SQLException e) {
+            ErrDialog.showError("Exc: " + e);
+        }
+        return productDetail;
+    }
+
+    @Override
+    public List<Product> filterProductsByCriteria(int categoryId, String brands, String cpus, int minPrice, int maxPrice) {
+        List<Product> products = new ArrayList<>();
+        List<Object> params = new ArrayList<>();
+
+        List<String> brandList = (brands != null && !brands.isEmpty()) ? Arrays.asList(brands.split(",")) : new ArrayList<>();
+        List<String> cpuList = (cpus != null && !cpus.isEmpty())
+                ? Arrays.stream(cpus.split(","))
+                        .map(cpu -> cpu.contains("Series") ? cpu.replace(" Series", "") : cpu)
+                        .collect(Collectors.toList())
+                : new ArrayList<>();
+
+        String sql = FILTER_PRODUCTS_BY_CRITERIA
+                .replace("(? OR p.brand_id IS NULL)", createInClause(brandList))
+                .replace("(?))", createInClause(cpuList) + "))");
+
+        params.add(categoryId);
+        params.add(minPrice);
+        params.add(maxPrice);
+        params.addAll(brandList);
+        params.addAll(cpuList);
+
+        try (Connection conn = DBConnection.getConnection(); PreparedStatement stmt = conn.prepareStatement(sql)) {
+            for (int i = 0; i < params.size(); i++) {
+                stmt.setObject(i + 1, params.get(i));
+            }
+            ResultSet rs = stmt.executeQuery();
+            while (rs.next()) {
+                Product product = mapProduct(rs);
+                products.add(product);
+            }
+        } catch (SQLException e) {
+            ErrDialog.showError("Lỗi lọc sản phẩm theo thương hiệu và CPU: " + e.getMessage());
+            e.printStackTrace();
+        }
+        return products;
+    }
+
+    private String createInClause(List<String> values) {
+        return values.isEmpty() ? "'__EMPTY__'" : values.stream().map(v -> "?").collect(Collectors.joining(","));
+    }
+    
+    public List<Product> getProductsByCategoryPaginated(int categoryId, int offset, int size) {
+        List<Product> products = new ArrayList<>();
+        try (Connection conn = DBConnection.getConnection(); PreparedStatement ps = conn.prepareStatement(GET_PRODUCTS_BY_CATEGORY_PAGINATED)) {
+            ps.setInt(1, categoryId);
+            ps.setInt(2, offset); // Bỏ qua số lượng sản phẩm đã tải
+            ps.setInt(3, size);   // Số sản phẩm trên mỗi trang
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                Product product = mapProduct(rs);
+                products.add(product);
+            }
+        } catch (SQLException e) {
+            ErrDialog.showError("Lỗi khi lấy sản phẩm theo phân trang: " + e.getMessage());
+        }
+        return products;
+    }
+
+    public static void main(String[] args) {
+        ProductDAO pD = new ProductDAO();
+        Map<String, String> st = pD.getInforProductById(1);
+        for (Map.Entry<String, String> entry : st.entrySet()) {
+            Object key = entry.getKey();
+            Object val = entry.getValue();
+            System.out.println(key + " " + val);
+        }
+    }
 }

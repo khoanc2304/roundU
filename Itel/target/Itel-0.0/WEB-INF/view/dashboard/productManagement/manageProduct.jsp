@@ -3,7 +3,8 @@
 <%@ page contentType="text/html" pageEncoding="UTF-8"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
-
+<%@ page session="true" %>
+<%@ page import="java.util.*" %>
 <!DOCTYPE html>
 <html>
     <head>
@@ -20,9 +21,7 @@
         <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     </head>
     <body>
-        <!-- Gọi sidebar -->
         <jsp:include page="../../components/sidebar.jsp" />
-        <!-- Gọi toast -->
         <jsp:include page="../../components/toast.jsp" />
 
         <div class="content">
@@ -30,8 +29,6 @@
                 <div class="d-flex justify-content-between align-items-center mb-4">
                     <h2 class="text-dark">Product Details</h2>
                 </div>
-<!--                <p>Product ID: ${product.productId}</p>-->
-
                 <a href="<%= ProjectPaths.HREF_TO_PRODUCTMANAGEMENT %>" class="btn btn-secondary mt-3">Quay lại danh sách sản phẩm</a>
 
                 <button id="editButton" class="btn btn-warning mt-3" onclick="toggleEditMode()">Sửa Sản Phẩm</button>

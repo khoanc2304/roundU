@@ -1,10 +1,12 @@
 C:\Users\Admin\Desktop\webapp\roundU\Itel\src\main\java\com\tourismapp\dao\product\ProductDAO.java
 C:\Users\Admin\Desktop\webapp\roundU\Itel\src\main\java\com\tourismapp\controller\redirectController\CheckoutPageServlet.java
+C:\Users\Admin\Desktop\webapp\roundU\Itel\src\main\java\com\tourismapp\dao\relation\BrandCategoryDAO.java
 C:\Users\Admin\Desktop\webapp\roundU\Itel\src\main\java\com\tourismapp\model\Review.java
 C:\Users\Admin\Desktop\webapp\roundU\Itel\src\main\java\com\tourismapp\filter\AuthenticationFilter.java
 C:\Users\Admin\Desktop\webapp\roundU\Itel\src\main\java\com\tourismapp\model\GoogleAccount.java
 C:\Users\Admin\Desktop\webapp\roundU\Itel\src\main\java\com\tourismapp\model\Orders.java
 C:\Users\Admin\Desktop\webapp\roundU\Itel\src\main\java\com\tourismapp\model\Payment.java
+C:\Users\Admin\Desktop\webapp\roundU\Itel\src\main\java\com\tourismapp\service\relation\BrandCategoryService.java
 C:\Users\Admin\Desktop\webapp\roundU\Itel\src\main\java\com\tourismapp\service\brand\IBrandService.java
 C:\Users\Admin\Desktop\webapp\roundU\Itel\src\main\java\com\tourismapp\common\UserRole.java
 C:\Users\Admin\Desktop\webapp\roundU\Itel\src\main\java\com\tourismapp\service\order\OrderService.java
@@ -14,6 +16,9 @@ C:\Users\Admin\Desktop\webapp\roundU\Itel\src\main\java\com\tourismapp\controlle
 C:\Users\Admin\Desktop\webapp\roundU\Itel\src\main\java\com\tourismapp\controller\redirectController\ProfilePageServlet.java
 C:\Users\Admin\Desktop\webapp\roundU\Itel\src\main\java\com\tourismapp\utils\ErrDialog.java
 C:\Users\Admin\Desktop\webapp\roundU\Itel\src\main\java\com\tourismapp\controller\redirectController\dashboard\CategoryManagementServlet.java
+C:\Users\Admin\Desktop\webapp\roundU\Itel\src\main\java\com\tourismapp\dao\relation\IBrandCategoryDAO.java
+C:\Users\Admin\Desktop\webapp\roundU\Itel\src\main\java\com\tourismapp\dto\BrandCategoryDTO.java
+C:\Users\Admin\Desktop\webapp\roundU\Itel\src\main\java\com\tourismapp\service\relation\IBrandCategoryService.java
 C:\Users\Admin\Desktop\webapp\roundU\Itel\src\main\java\com\tourismapp\controller\mainController\MainControllerServlet.java
 C:\Users\Admin\Desktop\webapp\roundU\Itel\src\main\java\com\tourismapp\dao\brand\IBrandDAO.java
 C:\Users\Admin\Desktop\webapp\roundU\Itel\src\main\java\com\tourismapp\dao\brand\BrandDAO.java

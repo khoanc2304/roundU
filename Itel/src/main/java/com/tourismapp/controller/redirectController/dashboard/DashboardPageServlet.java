@@ -35,13 +35,11 @@ public class DashboardPageServlet extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
 
-        // Lấy đối tượng session
         HttpSession session = request.getSession();
         List<Product> products = productService.getAllProducts(); 
         List<Brand> brands = brandService.getAllBrands(); 
         List<Category> categories = categoryService.getAllCategories(); 
 
-        // Lưu nhiều đối tượng vào session
         session.setAttribute("products", products);
         session.setAttribute("categories", categories);
         session.setAttribute("brands", brands);

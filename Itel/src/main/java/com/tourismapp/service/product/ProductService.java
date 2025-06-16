@@ -8,8 +8,6 @@ import com.tourismapp.dao.product.IProductDAO;
 import com.tourismapp.dao.product.ProductDAO;
 import com.tourismapp.model.Product;
 import com.tourismapp.model.ProductImage;
-import com.tourismapp.utils.ErrDialog;
-import java.sql.SQLException;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -68,14 +66,45 @@ public class ProductService implements IProductService {
     public boolean deleteProduct(int id) {
         return productDAO.deleteProduct(id);
     }
-    
+
     @Override
-    public Optional<List<ProductImage>> getProductImagesById(int productId){
+    public Optional<List<ProductImage>> getProductImagesById(int productId) {
         return productDAO.getProductImagesById(productId);
     }
-    
+
     @Override
-    public Map<String, String> getInforProductById(int productId){
+    public Map<String, String> getInforProductById(int productId) {
         return productDAO.getInforProductById(productId);
     }
+
+    @Override
+    public List<Product> getProductsByCategory(int categoryId) {
+        return productDAO.getProductsByCategory(categoryId);
+    }
+
+    @Override
+    public Integer mapCategoryId(String name) {
+        return productDAO.mapCategoryId(name);
+    }
+
+    @Override
+    public Integer mapBrandId(String name) {
+        return productDAO.mapBrandId(name);
+    }
+
+    @Override
+    public List<String> getProductDetailByIdTop5(int productId) {
+        return productDAO.getProductDetailByIdTop5(productId);
+    }
+
+    @Override
+    public List<Product> filterProductsByCriteria(int categoryId, String brands, String cpus, int minPrice, int maxPrice) {
+        return productDAO.filterProductsByCriteria(categoryId, brands, cpus, minPrice, maxPrice);
+    }
+
+    @Override
+    public List<Product> getProductsByCategoryPaginated(int categoryId, int offset, int size) {
+        return productDAO.getProductsByCategoryPaginated(categoryId, offset, size);
+    }
+    
 }

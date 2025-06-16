@@ -1,5 +1,6 @@
 com\tourismapp\controller\paymentController\PaymentServlet.class
 com\tourismapp\common\PaymentMethod.class
+com\tourismapp\service\relation\IBrandCategoryService.class
 com\tourismapp\model\Product.class
 com\tourismapp\model\ProductImage.class
 com\tourismapp\service\user\IUserService.class
@@ -15,6 +16,7 @@ com\tourismapp\common\MembershipLevel.class
 com\tourismapp\model\Category.class
 com\tourismapp\model\Orders.class
 com\tourismapp\model\Attribute.class
+com\tourismapp\controller\redirectController\ProductPageServlet.class
 com\tourismapp\controller\redirectController\LoginPageServlet.class
 com\tourismapp\service\user\UserService.class
 com\tourismapp\dao\brand\BrandDAO.class
@@ -22,6 +24,8 @@ com\tourismapp\model\Cart.class
 com\tourismapp\controller\redirectController\ProfilePageServlet.class
 com\tourismapp\constant\GoogleLogin.class
 com\tourismapp\controller\redirectController\LoginGoogleServlet.class
+com\tourismapp\dao\relation\BrandCategoryDAO.class
+com\tourismapp\dto\BrandCategoryDTO.class
 com\tourismapp\utils\ErrDialog.class
 com\tourismapp\model\Users.class
 com\tourismapp\model\Review.class
@@ -36,11 +40,13 @@ com\tourismapp\service\brand\IBrandService.class
 com\tourismapp\model\Brand.class
 com\tourismapp\controller\redirectController\dashboard\BrandManagementServlet.class
 com\tourismapp\model\Payment.class
+com\tourismapp\dao\relation\IBrandCategoryDAO.class
 com\tourismapp\controller\redirectController\CartPageServlet.class
 com\tourismapp\controller\redirectController\dashboard\ProductManagementServlet.class
 com\tourismapp\constant\FacebookLogin.class
 com\tourismapp\controller\redirectController\dashboard\UserManagementServlet.class
 com\tourismapp\controller\redirectController\CheckoutPageServlet.class
+com\tourismapp\service\relation\BrandCategoryService.class
 com\tourismapp\controller\redirectController\LogoutPageServlet.class
 com\tourismapp\dao\order\IOrderDAO.class
 com\tourismapp\model\MemberLevel.class
@@ -50,7 +56,6 @@ com\tourismapp\dao\user\UserDAO.class
 com\tourismapp\service\category\CategoryService.class
 com\tourismapp\common\UserRole.class
 com\tourismapp\controller\redirectController\HomePageServlet.class
-ProductPageServlet.class
 com\tourismapp\dao\order\OrderDAO.class
 com\tourismapp\common\Status.class
 com\tourismapp\service\order\IOrderService.class

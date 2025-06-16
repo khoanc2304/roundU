@@ -31,6 +31,12 @@ public class BrandService implements IBrandService {
     }
 
     @Override
+    public List<Brand> getActiveBrands() {
+        return brandDAO.getActiveBrands();
+    }
+    
+    // NAM
+    @Override
     public void createBrand(Brand brand) {
         validateBrandForCreate(brand);
         // Set default status to ACTIVE if not provided

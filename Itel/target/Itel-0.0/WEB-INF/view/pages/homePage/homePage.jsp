@@ -56,6 +56,54 @@
         </div>
 
         <div class="container my-5">
+            <div class="layout-3col d-flex justify-content-center gap-4">
+
+                <!-- Cột Trái -->
+                <div class="left-col d-flex flex-column gap-3">
+                    <a href="<%= ProjectPaths.HREF_TO_PRODUCTPAGE%>&c=Laptop" class="category-link">
+                        <div class="category-box">
+                            <h4>Laptop</h4>
+                            <img src="${sessionScope.LaptopImageUrl}" alt="Laptop" class="category-image">
+                        </div>
+                    </a>
+                    <a href="<%= ProjectPaths.HREF_TO_PRODUCTPAGE%>&c=Phone" class="category-link">
+                        <div class="category-box">
+                            <h4>Điện thoại</h4>
+                            <img src="${sessionScope.PhoneImageUrl}" alt="Phone" class="category-image">
+                        </div>
+                    </a>
+                </div>
+
+                <!-- Cột Giữa -->
+                <div class="middle-col d-flex align-items-center justify-content-center">
+                    <a href="<%= ProjectPaths.HREF_TO_PRODUCTPAGE%>&c=Mouse" class="category-link w-100">
+                        <div class="category-box-mid">
+                            <h4>Chuột</h4>
+                            <img src="${sessionScope.MouseImageUrl}" alt="Mouse" class="category-image mouse-image">
+                        </div>
+                    </a>
+                </div>
+
+                <!-- Cột Phải -->
+                <div class="right-col d-flex flex-column gap-3">
+                    <a href="<%= ProjectPaths.HREF_TO_PRODUCTPAGE%>&c=Headphones" class="category-link">
+                        <div class="category-box">
+                            <h4>Tai nghe</h4>
+                            <img src="${sessionScope.HeadphonesImageUrl}" alt="Headphones" class="category-image">
+                        </div>
+                    </a>
+                    <a href="<%= ProjectPaths.HREF_TO_PRODUCTPAGE%>&c=Keyboard" class="category-link">
+                        <div class="category-box">
+                            <h4>Bàn phím</h4>
+                            <img src="${sessionScope.KeyboardImageUrl}" alt="Keyboard" class="category-image">
+                        </div>
+                    </a>
+                </div>
+
+            </div>
+        </div>
+
+        <div class="container my-5">
             <div class="row">
                 <div class="col-12 col-md-4 col-lg-3">
                     <div class="sidebar list-group" data-aos="fade-up">
@@ -513,8 +561,10 @@
                             <div class="product-grid">
                                 <c:forEach var="product" items="${activeProducts}">
                                     <div class="product-card card h-100 mb-4" data-aos="zoom-in">
+<!--                                        <a href="<%= ProjectPaths.HREF_TO_PRODUCTPAGE%>&id=${product.productId}" 
+                                           class="stretched-link" style="position: absolute; inset: 0; z-index: 1;"></a>-->
                                         <div class="image-container">
-                                            <a href="#">
+                                            <a href="<%= ProjectPaths.HREF_TO_PRODUCTPAGE%>&id=${product.productId}">
                                                 <img src="${product.imageUrl}" class="product-img card-img-top" alt="${product.name}">
                                             </a>
                                         </div>
@@ -535,6 +585,11 @@
                     </div>
                 </div>
             </div>
+        </div>
+
+        <!--Footer-->                                 
+        <div class="mt-5">
+            <jsp:include page="/WEB-INF/view/components/footer.jsp" />
         </div>
 
         <!-- Bootstrap Bundle JS -->
@@ -641,11 +696,11 @@
             }
 
             .content {
-                background-color: #e0e0e0;
+                background-color: #eae7e7;
             }
 
             body {
-                background-color: #e1dbdb;
+                background-color: #eae7e7;
                 margin: 0;
                 font-family: 'Roboto', sans-serif;
             }
@@ -880,6 +935,72 @@
                 background-color: rgba(0, 0, 0, 0.85);
                 transition: 0.3s;
             }
+
+            .layout-3col {
+                display: flex;
+                justify-content: center;
+                gap: 40px; /* Khoảng cách đều 2 bên */
+                flex-wrap: wrap;
+            }
+
+            .left-col, .right-col {
+                width: 280px;
+            }
+
+            .middle-col {
+                width: 240px;
+            }
+
+            .category-link {
+                text-decoration: none;
+                display: block;
+            }
+
+            .category-box,
+            .category-box-mid {
+                background-color: #fff;
+                padding: 12px 8px;
+                text-align: center;
+                border-radius: 12px;
+                overflow: hidden;
+                display: flex;
+                flex-direction: column;
+                justify-content: center;
+                box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+                transition: transform 0.3s ease, box-shadow 0.3s ease;
+            }
+
+            .category-box {
+                height: 150px;
+            }
+
+            .category-box-mid {
+                height: 310px;
+                align-items: center;
+            }
+
+            .category-image {
+                max-width: 80px;
+                max-height: 80px;
+                object-fit: contain;
+                margin: 6px auto 0;
+            }
+
+            .mouse-image {
+                width: 80%;
+                height: 250px;
+                max-width: unset;
+                max-height: unset;
+            }
+
+            .category-box h4,
+            .category-box-mid h4 {
+                font-size: 1rem;
+                font-weight: 700;
+                color: #000;
+                margin-bottom: 6px;
+            }
+
         </style>
     </body>
 </html>

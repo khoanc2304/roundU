@@ -23,7 +23,7 @@ public interface IProductService {
     Optional<Product> findProductById(int id);
 
     int getNextProductId();
-    
+
     List<Product> searchActiveProductsByName(String q);
 
     List<Product> searchProductsByName(String q);
@@ -35,8 +35,20 @@ public interface IProductService {
     boolean editProduct(Product product);
 
     boolean deleteProduct(int id);
-    
+
     Optional<List<ProductImage>> getProductImagesById(int productId);
-    
+
     Map<String, String> getInforProductById(int productId);
+
+    List<Product> getProductsByCategory(int categoryId);
+
+    Integer mapCategoryId(String name);
+    
+    Integer mapBrandId(String name);
+
+    List<String> getProductDetailByIdTop5(int productId);
+    
+    List<Product> filterProductsByCriteria(int categoryId, String brands, String cpus, int minPrice, int maxPrice);
+    
+    List<Product> getProductsByCategoryPaginated(int categoryId, int offset, int size);
 }

@@ -107,27 +107,28 @@ public class ProductManagementServlet extends HttpServlet {
             throws ServletException, IOException {
         String idParam = request.getParameter("id");
         if (idParam == null || idParam.isEmpty()) {
-            response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Thiếu tham số ID product");
+            response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Thiếu tham số Id sản phẩm!");
             return;
         }
         int id;
         try {
             id = Integer.parseInt(idParam);
         } catch (NumberFormatException e) {
-            response.sendError(HttpServletResponse.SC_BAD_REQUEST, "ID không hợp lệ");
+            response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Id sản phẩm không hợp lệ!");
             return;
         }
         Optional<Product> product = productService.findProductById(id);
         Optional<Brand> brand = brandService.findBrandById(product.get().getBrand().getBrandId());
         Optional<Category> category = categoryService.findCategoryById(product.get().getCategory().getCategoryId());
         if (product == null || brand == null || category == null) {
-            response.sendError(HttpServletResponse.SC_NOT_FOUND, "Không tìm thấy product || brand || category");
+            response.sendError(HttpServletResponse.SC_NOT_FOUND, "Không tìm thấy sản phẩm || thương hiệu || danh mục!");
             return;
         }
 
         request.setAttribute("brandName", brand.get().getName());
         request.setAttribute("categoryName", category.get().getName());
         request.setAttribute("product", product.get());
+//        request.getSession().setAttribute("successMessage", "Cập nhập sản phẩm thành công!");
 
         request.getRequestDispatcher(ProjectPaths.JSP_PATH_DASHBOARD + "/productManagement/manageProduct.jsp").forward(request, response);
     }
@@ -153,17 +154,18 @@ public class ProductManagementServlet extends HttpServlet {
                 boolean success = productService.createProduct(product);
 
                 if (success) {
+                    request.getSession().setAttribute("successMessage", "Thêm sản phẩm thành công.");
                     showAllProducts(request, response);
                 } else {
-                    request.setAttribute("errorMessage", "Thêm sản phẩm không thành công");
+                    request.getSession().setAttribute("errorMessage", "Thêm sản phẩm không thành công!");
                     request.getRequestDispatcher(ProjectPaths.JSP_PATH_DASHBOARD + "/productManagement/createProduct.jsp").forward(request, response);
                 }
             } catch (NumberFormatException e) {
-                request.setAttribute("errorMessage", "Dữ liệu nhập không hợp lệ");
+                request.getSession().setAttribute("errorMessage", "Dữ liệu nhập vào không hợp lệ!");
                 request.getRequestDispatcher(ProjectPaths.JSP_PATH_DASHBOARD + "/productManagement/createProduct.jsp").forward(request, response);
             }
         } else {
-            request.setAttribute("errorMessage", "Các trường thông tin không thể bỏ trống");
+            request.getSession().setAttribute("errorMessage", "Các trường thông tin không thể bỏ trống!");
             request.getRequestDispatcher(ProjectPaths.JSP_PATH_DASHBOARD + "/productManagement/createProduct.jsp").forward(request, response);
         }
     }
@@ -172,14 +174,14 @@ public class ProductManagementServlet extends HttpServlet {
             throws ServletException, IOException {
         String idParam = request.getParameter("productId");
         if (idParam == null || idParam.isEmpty()) {
-            response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Thiếu tham số ID product");
+            response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Thiếu tham số Id sản phẩm!");
             return;
         }
         int productId;
         try {
             productId = Integer.parseInt(idParam);
         } catch (NumberFormatException e) {
-            response.sendError(HttpServletResponse.SC_BAD_REQUEST, "ID không hợp lệ");
+            response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Id sản phẩm không hợp lệ!");
             return;
         }
 
@@ -196,9 +198,10 @@ public class ProductManagementServlet extends HttpServlet {
 
         boolean isUpdated = productService.editProduct(findProduct.get());
         if (isUpdated) {
+            request.getSession().setAttribute("successMessage", "Cập nhập sản phẩm thành công.");
             response.sendRedirect(ProjectPaths.HREF_TO_MAINCONTROLLER + MainControllerServlet.ACTION_MANAGE_PRODUCT + "&id=" + productId);
         } else {
-            request.setAttribute("errorMessage", "Failed to update the product.");
+            request.getSession().setAttribute("errorMessage", "Cập nhập sản phẩm thất bại!");
             request.getRequestDispatcher(ProjectPaths.JSP_PATH_DASHBOARD + "/productManagement/manageProduct.jsp").forward(request, response);
         }
     }
@@ -212,13 +215,14 @@ public class ProductManagementServlet extends HttpServlet {
                 int productId = Integer.parseInt(productIdStr);
                 boolean success = productService.deleteProduct(productId);
                 if (success) {
+                    request.getSession().setAttribute("successMessage", "Xóa sản phẩm thành công.");
                     showAllProducts(request, response);
                 } else {
-                    request.setAttribute("errorMessage", "Xóa sản phẩm không thành công.");
+                    request.getSession().setAttribute("errorMessage", "Xóa sản phẩm không thành công!");
                     showAllProducts(request, response);
                 }
             } catch (NumberFormatException e) {
-                request.setAttribute("errorMessage", "ID sản phẩm không hợp lệ.");
+                request.getSession().setAttribute("errorMessage", "Id sản phẩm không hợp lệ!");
                 showAllProducts(request, response);
             }
         }
