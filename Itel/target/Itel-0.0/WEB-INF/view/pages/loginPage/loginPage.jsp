@@ -2,6 +2,8 @@
 <%@ page import="com.tourismapp.controller.mainController.MainControllerServlet" %>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+<%@ page session="true" %>
+<%@ page import="java.util.*" %>
 <!DOCTYPE html>
 <html lang="en">
     <head>
@@ -14,7 +16,8 @@
     </head>
 
     <body>
-        <!-- Login 11 - Bootstrap Brain Component -->
+        <jsp:include page="../../components/toast.jsp" />
+        
         <section class="py-3 py-md-5 py-xl-8">
             <div class="container">
                 <div class="row">
@@ -25,6 +28,7 @@
                         </div>
                     </div>
                 </div>
+                
                 <div class="row justify-content-center">
                     <div class="col-12 col-lg-10 col-xl-8">
                         <div class="row gy-5 justify-content-center">
@@ -38,12 +42,14 @@
                                                 <label for="email" class="form-label">Email</label>
                                             </div>
                                         </div>
+                                        
                                         <div class="col-12">
                                             <div class="form-floating mb-3">
                                                 <input type="password" class="form-control border-0 border-bottom rounded-0" name="password" id="password" value="" placeholder="Password" required>
                                                 <label for="password" class="form-label">Password</label>
                                             </div>
                                         </div>
+                                        
                                         <div class="col-12">
                                             <div class="row justify-content-between">
                                                 <div class="col-6">
@@ -54,6 +60,7 @@
                                                         </label>
                                                     </div>
                                                 </div>
+                                                
                                                 <div class="col-6">
                                                     <div class="text-end">
                                                         <a href="#!" class="link-secondary text-decoration-none">Forgot password?</a>
@@ -61,6 +68,7 @@
                                                 </div>
                                             </div>
                                         </div>
+                                        
                                         <div class="col-12">
                                             <div class="d-grid">
                                                 <button class="btn btn-primary btn-lg" type="submit">Login</button>
@@ -114,8 +122,7 @@
 
 <style>
     body {
-        /*        background-color: #f0f2f5;*/
-        background: linear-gradient(to bottom, #B3E5FC 0%, #E6F4FA 100%);
+        background: #c8e6ff;
     }
 
     .login-box {

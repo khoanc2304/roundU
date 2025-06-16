@@ -16,13 +16,15 @@ import java.util.Optional;
  * @author Admin
  */
 public interface IBrandDAO {
-
+    
     Brand mapBrand(ResultSet rs) throws SQLException;
 
     List<Brand> getAllBrands();
 
     Optional<Brand> findBrandById(int brandId);
-
+    
+    
+    // NAM
     void createBrand(Brand brand);
 
     Brand getBrandById(int brandId);

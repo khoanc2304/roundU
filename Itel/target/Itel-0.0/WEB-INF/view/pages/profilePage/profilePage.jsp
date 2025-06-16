@@ -16,11 +16,15 @@
     </head>
     <body>
         <% request.getRequestDispatcher("/WEB-INF/view/components/navbar.jsp").include(request, response); %>
-        
+
         <div class="content">
             <h1>Hello, this is profile page!</h1>
         </div>
 
+        <!--Footer-->                                 
+        <div class="mt-5">
+            <jsp:include page="/WEB-INF/view/components/footer.jsp" />
+        </div>
     </body>
 </html>
 

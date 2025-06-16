@@ -18,7 +18,9 @@ public interface IBrandService {
     List<Brand> getAllBrands();
 
     Optional<Brand> findBrandById(int id);
-
+    
+    
+    // NAM
     void createBrand(Brand brand);
 
     Brand getBrandById(int brandId);

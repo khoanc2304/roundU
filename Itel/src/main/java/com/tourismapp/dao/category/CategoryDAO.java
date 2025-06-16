@@ -25,7 +25,9 @@ public class CategoryDAO implements ICategoryDAO {
 
     private static final String GET_ALL_CATEGORIES = "SELECT * FROM Category;";
     private static final String FIND_CATEGORY_BY_ID = "SELECT * FROM Category WHERE category_id = ?";
-
+    
+    
+    // VINH
     private static final String CREATE_CATEGORY = "INSERT INTO Category (name, description, image_url) VALUES (?, ?, ?);";
     private static final String UPDATE_CATEGORY = "UPDATE Category SET name = ?, description = ?, image_url = ?, status = ? WHERE category_id = ?;";
     private static final String DELETE_CATEGORY = "UPDATE Category SET status = 'inactive' WHERE category_id = ?;";
@@ -52,7 +54,6 @@ public class CategoryDAO implements ICategoryDAO {
                 Category category = mapCategory(rs);
                 categories.add(category);
             }
-//            ErrDialog.showError("size active products: " + activeProducts.size());
         } catch (SQLException e) {
             ErrDialog.showError("Lỗi khi truy vấn sản phẩm: " + e.getMessage());
 //            e.printStackTrace(); 
@@ -76,6 +77,8 @@ public class CategoryDAO implements ICategoryDAO {
         return Optional.empty();
     }
 
+    
+    // ========================================== VINH ================================================
     @Override
     public boolean createCategory(Category category) {
         try (Connection conn = DBConnection.getConnection(); PreparedStatement ps = conn.prepareStatement(CREATE_CATEGORY)) {

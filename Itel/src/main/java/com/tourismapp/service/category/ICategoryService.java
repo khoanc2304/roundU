@@ -13,11 +13,14 @@ import java.util.Optional;
  * @author Admin
  */
 public interface ICategoryService {
-
+    
+    // KHOA
     List<Category> getAllCategories();
 
     Optional<Category> findCategoryById(int id);
-
+    
+    
+    // VINH
     List<Category> searchCategoriesByName(String q);
 
     public void createCategory(Category category);

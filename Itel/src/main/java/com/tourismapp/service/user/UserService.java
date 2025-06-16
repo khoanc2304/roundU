@@ -17,7 +17,8 @@ import java.util.Optional;
 public class UserService implements IUserService {
 
     private final IUserDAO userDAO = new UserDAO();
-
+    
+    // KHOA
     @Override
     public List<Users> getAllUsers() {
         return userDAO.getAllUsers();
@@ -27,7 +28,9 @@ public class UserService implements IUserService {
     public Optional<Users> findUserByCredentials(String username, String email, String password) {
         return userDAO.findUserByCredentials(username, email, password);
     }
-
+    
+    
+    // HUY
     @Override
     public Users getUserById(int userId) {
         return userDAO.getUserById(userId);

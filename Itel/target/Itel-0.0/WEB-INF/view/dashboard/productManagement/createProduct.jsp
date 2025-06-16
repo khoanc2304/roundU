@@ -3,7 +3,8 @@
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
-
+<%@ page session="true" %>
+<%@ page import="java.util.*" %>
 <!DOCTYPE html>
 <html lang="en">
     <head>
@@ -20,11 +21,9 @@
         <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     </head>
     <body>
-        <!-- Gọi sidebar -->
         <jsp:include page="../../components/sidebar.jsp" />
-        <!-- Gọi toast -->
         <jsp:include page="../../components/toast.jsp" />
-
+        
         <div class="container mt-5">
             <h2 class="mb-4">Thêm Sản Phẩm Mới</h2>
             <form action="main" method="POST"">

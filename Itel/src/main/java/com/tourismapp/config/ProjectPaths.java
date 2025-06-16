@@ -33,19 +33,6 @@ public class ProjectPaths {
 //    public static final String JSP_DASHBOARDPAGE_PATH = "/WEB-INF/view/dashboard/dashboard.jsp";
     public static final String JSP_DASHBOARDPAGE_PATH = JSP_PATH_DASHBOARD + "dashboard.jsp";
 
-    public static final String JSP_USERMANAGEMENT_PATH = JSP_PATH_DASHBOARD + "userManagement/userManagement.jsp";
-
-    public static final String JSP_BRANDMANAGEMENT_PATH = JSP_PATH_DASHBOARD + "brandManagement/brandManagement.jsp";
-    public static final String JSP_MANAGEBRAND_PATH = JSP_PATH_DASHBOARD + "brandManagement/manageBrand.jsp";
-    public static final String JSP_CREATEBRAND_PATH = JSP_PATH_DASHBOARD + "brandManagement/createBrand.jsp";
-    public static final String JSP_UPDATEBRAND_PATH = JSP_PATH_DASHBOARD + "brandManagement/updateBrand.jsp";
-
-    public static final String JSP_CATEGORYMANAGEMENT_PATH = JSP_PATH_DASHBOARD + "categoryManagement/categoryManagement.jsp";
-
-    public static final String JSP_PRODUCTMANAGEMENT_PATH = JSP_PATH_DASHBOARD + "productManagement/productManagement.jsp";
-
-    public static final String JSP_ORDERMANAGEMENT_PATH = JSP_PATH_DASHBOARD + "orderManagement/orderManagement.jsp";
-
     //user view
     public static final String JSP_LOGINPAGE_PATH = JSP_PATH_VIEW + "loginPage/loginPage.jsp";
     public static final String JSP_PROFILEPAGE_PATH = JSP_PATH_VIEW + "profilePage/profilePage.jsp";
@@ -54,9 +41,29 @@ public class ProjectPaths {
     public static final String JSP_PRODUCTDETAILPAGE_PATH = JSP_PATH_VIEW + "productPage/productDetail.jsp";
     public static final String JSP_CARTPAGE_PATH = JSP_PATH_VIEW + "cartPage/cartPage.jsp";
 
-    // New paths for category management
+    // KHOA
+    public static final String JSP_PRODUCTMANAGEMENT_PATH = JSP_PATH_DASHBOARD + "productManagement/productManagement.jsp";
+
+    
+    //
+    public static final String JSP_ORDERMANAGEMENT_PATH = JSP_PATH_DASHBOARD + "orderManagement/orderManagement.jsp";
+    
+    
+    // HUY
+    public static final String JSP_USERMANAGEMENT_PATH = JSP_PATH_DASHBOARD + "userManagement/userManagement.jsp";
+
+    
+    // NAM
+    public static final String JSP_BRANDMANAGEMENT_PATH = JSP_PATH_DASHBOARD + "brandManagement/brandManagement.jsp";
+    public static final String JSP_MANAGEBRAND_PATH = JSP_PATH_DASHBOARD + "brandManagement/manageBrand.jsp";
+    public static final String JSP_CREATEBRAND_PATH = JSP_PATH_DASHBOARD + "brandManagement/createBrand.jsp";
+    public static final String JSP_UPDATEBRAND_PATH = JSP_PATH_DASHBOARD + "brandManagement/updateBrand.jsp";
+
+    
+    // VINH
+    public static final String JSP_CATEGORYMANAGEMENT_PATH = JSP_PATH_DASHBOARD + "categoryManagement/categoryManagement.jsp";
     public static final String JSP_CREATE_CATEGORY_PATH = JSP_PATH_DASHBOARD + "categoryManagement/createCategory.jsp";  // For creating a new category
     public static final String JSP_EDIT_CATEGORY_PATH = JSP_PATH_DASHBOARD + "categoryManagement/editCategory.jsp";      // For editing an existing category
     public static final String JSP_MANAGE_CATEGORY_PATH = JSP_PATH_DASHBOARD + "categoryManagement/manageCategory.jsp"; // For managing categories
-
+    
 }

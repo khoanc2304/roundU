@@ -65,7 +65,8 @@
                                     <button class="btn btn-custom-buy btn-lg me-2">Mua ngay
                                         <span class="buy-info">Giao tận nơi hoàn tiền tại cửa hàng</span>
                                     </button>
-                                    <button class="btn btn-outline-secondary btn-lg" onclick="scrollToProductInfo()">Giới thiệu sản phẩm</button>                                </div>
+                                    <button class="btn btn-outline-secondary btn-lg" onclick="scrollToProductInfo()">Giới thiệu sản phẩm</button>
+                                </div>
                                 <hr class="my-3">
 
                                 <div class="mt-3">
@@ -123,7 +124,7 @@
                 </div>
             </div>
 
-            <!-- Sản pDhẩm tương tự -->
+            <!-- Sản phẩm tương tự -->
             <section class="row similar-products mt-4">
                 <div class="container">
                     <h3 class="section-title">Sản phẩm tương tự</h3>
@@ -143,78 +144,155 @@
                                 <td style="padding: 5px; border: 1px solid #ddd;">${entry.value}</td>
                             </tr>
                         </c:forEach>
-
                     </table>
+
+                    <%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>
+
+                    <c:set var="title0" value="${fn:replace('Đánh giá chi tiết laptop ${name}', '${name}', product.name)}" />
+                    <c:set var="title4" value="${fn:replace('Màn hình Full HD sắc nét trên ${name}', '${name}', product.name)}" />
+
+                    <c:set var="titles" value="${[title0, 'Thiết kế mạnh mẽ đậm chất gaming', 'Bàn phím dễ thao tác', 'Cấu hình vượt trội chơi game thả ga', title4]}" />
+
+                    <c:set var="descriptions" value="${[
+                                                       'Laptop gaming MSI Katana 15 B13VEK 252VN đáp ứng mọi nhu cầu chơi game của người dùng. Được sản xuất bởi hãng MSI với phần trau chuốt kỹ lưỡng về thiết kế cũng như đầu tư từ những linh kiện hàng đầu hứa hẹn một sản phẩm tuyệt vời cho các tín đồ đam mê game, tham chiến cùng bạn bè. Hãy cùng ITEl tìm hiểu về chiếc laptop này nhé!',
+                                                       'Laptop MSI Katana 15 sở hữu từng đường nét vuông vắn mạnh mẽ được bao phủ một màu đen cá tính. Phần khung được làm từ chất liệu cao cấp tạo độ cứng cáp cho toàn bộ linh kiện bên trong laptop MSI. Trọng lượng chỉ khoảng 2.25kg nên việc bỏ vào balo mang đi bất cứ đâu cũng vô cùng dễ dàng cho người dùng.',
+                                                       'Bàn phím của MSI Katana 15 cho một độ nảy phím ổn định với hành trình phím sâu tạo cảm giác thoải mái cho mọi thao tác nhấn. Ngoài ra, bàn phím của MSI Katana 15 còn được trang bị hệ thống đèn nền LED 4 vùng gia tăng thêm sự mạnh mẽ cá tính đầy thu hút. Bên cạnh đó việc thao tác trong môi trường thiếu ánh sáng cũng chính xác hơn, dễ dàng đạt được mục tiêu mong muốn trong mọi hoàn cảnh. ',
+                                                       'MSI Katana 15 được trang bị bộ vi xử lý Intel Core i7-13620H với xung nhịp cơ bản là 3.6GHz có thể nâng cấp tối đa lên đến 4.9 GHz. Mọi thao tác từ văn phòng cơ bản đến thiết kế nâng cao đều không thể làm khó được chiếc laptop này. Kết hợp cùng card đồ họa NVIDIA GeForce RTX 4050 đem lại trải nghiệm đồ họa đẹp mắt với tốc độ xử lý mượt mà trên mọi khung hình. Laptop MSI gaming có thể đáp ứng mọi yêu cầu khắc nghiệt của người dùng ở bất kỳ tựa game cấu hình cao như là FPS, MOBA,...',
+                                                       'MSI Katana 15 có kích thước màn hình 15.6 inch Full HD, độ phân giải 1920x1080 cực sắc nét. Tốc độ xử lý nhanh chóng với độ mượt mà cao trên chiếc màn hình 144Hz làm cắt giảm hoàn toàn tình trạng giật lag và nhòe màn hình khi chơi game. Giờ đây người dùng không cần tốn nhiều thời gian đến những tiệm net chất lượng cao khi chiếc laptop gaming MSI này có thể đáp ứng đủ mọi nhu cầu sử dụng của họ tại nhà hay bất cứ đâu.'
+                                                       ]}" />
+
+                    <div class="mt-4">
+                        <c:forEach var="image" items="${productImages}" varStatus="loop">
+                            <div class="thumbnail-wrapper mb-4 mt-3">
+                                <h5 class="fw-bold mb-4">${titles[loop.index]}</h5>
+
+                                <img src="${image.imageUrl}" alt="Thumbnail ${loop.count}" class="product-detail-image img-fluid"
+                                     onclick="changeImage(this)" data-src="${image.imageUrl}">
+
+                                <p class="mt-3">${descriptions[loop.index]}</p>
+                            </div>
+                        </c:forEach>
+                    </div>
+
                 </div>
 
                 <div class="col-md-4 product-image" style="padding-left: 15px; padding-top: 0; padding-right: 0">
                     <div style="background-color: #f5f5f5; padding: 10px; border: 1px solid #ddd; border-radius: 5px; margin-top: 0;">
                         <h3 style="font-size: 18px; font-weight: bold; margin-bottom: 10px; color: #1a0dab;">Tin tức về công nghệ</h3>
-                        <ul style="list-style: none; padding: 0; margin: 0;">
-                            <li style="margin-bottom: 5px;"><a href="#" style="color: #1a0dab; text-decoration: none;"><img src="https://via.placeholder.com/50x50" alt="News 1" style="vertical-align: middle; margin-right: 10px;">Hướng dẫn cách sử dụng khoá vàng tự động Roblox trên PC và điện thoại</a></li>
-                            <li style="margin-bottom: 5px;"><a href="#" style="color: #1a0dab; text-decoration: none;"><img src="https://via.placeholder.com/50x50" alt="News 2" style="vertical-align: middle; margin-right: 10px;">Chi tiết cách ẩn bạn bè trên Facebook trên máy tính, điện thoại nhanh chóng</a></li>
-                            <li style="margin-bottom: 5px;"><a href="#" style="color: #1a0dab; text-decoration: none;"><img src="https://via.placeholder.com/50x50" alt="News 3" style="vertical-align: middle; margin-right: 10px;">Link nhận Spin Coin Master free, code Spin Master mới nhất 2025</a></li>
-                            <li style="margin-bottom: 5px;"><a href="#" style="color: #1a0dab; text-decoration: none;"><img src="https://via.placeholder.com/50x50" alt="News 4" style="vertical-align: middle; margin-right: 10px;">Cách tạo Zalo không cần số điện thoại trên PC, điện thoại nhanh chóng</a></li>
-                            <li style="margin-bottom: 5px;"><a href="#" style="color: #1a0dab; text-decoration: none;"><img src="https://via.placeholder.com/50x50" alt="News 5" style="vertical-align: middle; margin-right: 10px;">Tổng hợp 10+ app học tiếng Anh miễn phí tốt nhất cho người mới</a></li>
+                        <ul class="news-list" style="list-style: none; padding: 0; margin: 0;">
+                            <li>
+                                <a href="#" style="color: #1a0dab; text-decoration: none;">
+                                    <img src="${pageContext.request.contextPath}/assets/news/n1.png" alt="News 1"
+                                         style="vertical-align: middle; margin-right: 10px; width: 50px; height: 35px; object-fit: cover;">
+                                    Hướng dẫn cách sử dụng khoá vàng tự động Roblox trên PC và điện thoại
+                                </a>
+                            </li>
+                            <li>
+                                <a href="#" style="color: #1a0dab; text-decoration: none;">
+                                    <img src="${pageContext.request.contextPath}/assets/news/n2.png" alt="News 2"
+                                         style="vertical-align: middle; margin-right: 10px; width: 50px; height: 35px; object-fit: cover;">
+                                    Chi tiết cách ẩn bạn bè trên Facebook trên máy tính, điện thoại nhanh chóng
+                                </a>
+                            </li>
+                            <li>
+                                <a href="#" style="color: #1a0dab; text-decoration: none;">
+                                    <img src="${pageContext.request.contextPath}/assets/news/n3.png" alt="News 3"
+                                         style="vertical-align: middle; margin-right: 10px; width: 50px; height: 35px; object-fit: cover;">
+                                    Link nhận Spin Coin Master free, code Spin Master mới nhất 2025
+                                </a>
+                            </li>
+                            <li>
+                                <a href="#" style="color: #1a0dab; text-decoration: none;">
+                                    <img src="${pageContext.request.contextPath}/assets/news/n4.png" alt="News 4"
+                                         style="vertical-align: middle; margin-right: 10px; width: 50px; height: 35px; object-fit: cover;">
+                                    Cách tạo Zalo không cần số điện thoại trên PC, điện thoại nhanh chóng
+                                </a>
+                            </li>
+                            <li>
+                                <a href="#" style="color: #1a0dab; text-decoration: none;">
+                                    <img src="${pageContext.request.contextPath}/assets/news/n5.png" alt="News 5"
+                                         style="vertical-align: middle; margin-right: 10px; width: 50px; height: 35px; object-fit: cover;">
+                                    Tổng hợp 10+ app học tiếng Anh miễn phí tốt nhất cho người mới
+                                </a>
+                            </li>
                         </ul>
                     </div>
                 </div>
             </div>
         </div>
 
+        <!--Footer-->                                 
+        <div class="mt-5">
+            <jsp:include page="/WEB-INF/view/components/footer.jsp" />
+        </div>
+
         <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
         <script>
-                                        document.addEventListener('DOMContentLoaded', function () {
-                                            AOS.init();
+                                          document.addEventListener('DOMContentLoaded', function () {
+                                              AOS.init();
 
-                                            let currentIndex = 0;
-                                            const thumbnails = document.querySelectorAll('.thumbnail');
-                                            const mainImage = document.getElementById('mainImage');
+                                              const mainImage = document.getElementById('mainImage');
+                                              const thumbnails = document.querySelectorAll('.thumbnail');
+                                              let currentIndex = 0;
 
-                                            function changeImage(thumbnail) {
-                                                mainImage.src = thumbnail.getAttribute('data-src');
-                                                currentIndex = Array.from(thumbnails).indexOf(thumbnail);
-                                                updateActiveThumbnail();
-                                            }
+                                              function changeImage(thumbnail) {
+                                                  const imageUrl = thumbnail.getAttribute('data-src');
+                                                  mainImage.src = imageUrl;
+                                                  currentIndex = Array.from(thumbnails).indexOf(thumbnail);
+                                                  updateActiveThumbnail();
+                                              }
 
-                                            function updateActiveThumbnail() {
-                                                thumbnails.forEach(img => img.classList.remove('active'));
-                                                thumbnails[currentIndex].classList.add('active');
-                                            }
+                                              function updateActiveThumbnail() {
+                                                  thumbnails.forEach(thumb => thumb.classList.remove('active'));
+                                                  if (thumbnails[currentIndex]) {
+                                                      thumbnails[currentIndex].classList.add('active');
+                                                  }
+                                              }
 
-                                            function prevImage() {
-                                                currentIndex = (currentIndex > 0) ? currentIndex - 1 : thumbnails.length - 1;
-                                                mainImage.src = thumbnails[currentIndex].getAttribute('data-src');
-                                                updateActiveThumbnail();
-                                            }
+                                              function prevImage() {
+                                                  currentIndex = (currentIndex > 0) ? currentIndex - 1 : thumbnails.length - 1;
+                                                  mainImage.src = thumbnails[currentIndex].getAttribute('data-src');
+                                                  updateActiveThumbnail();
+                                              }
 
-                                            function nextImage() {
-                                                currentIndex = (currentIndex < thumbnails.length - 1) ? currentIndex + 1 : 0;
-                                                mainImage.src = thumbnails[currentIndex].getAttribute('data-src');
-                                                updateActiveThumbnail();
-                                            }
+                                              function nextImage() {
+                                                  currentIndex = (currentIndex < thumbnails.length - 1) ? currentIndex + 1 : 0;
+                                                  mainImage.src = thumbnails[currentIndex].getAttribute('data-src');
+                                                  updateActiveThumbnail();
+                                              }
 
-                                            // Set the first thumbnail as active and load its image
-                                            if (thumbnails.length > 0) {
-                                                thumbnails[0].classList.add('active');
-                                                mainImage.src = thumbnails[0].getAttribute('data-src');
-                                            }
+                                              // Gán sự kiện cho nút
+                                              document.querySelector('.prev-btn').addEventListener('click', prevImage);
+                                              document.querySelector('.next-btn').addEventListener('click', nextImage);
 
-                                            // Hàm cuộn đến product info
-                                            window.scrollToProductInfo = function () {
-                                                const productInfo = document.getElementById('productInfo');
-                                                if (productInfo) {
-                                                    productInfo.scrollIntoView({behavior: 'smooth'});
-                                                }
-                                            };
-                                        });
+                                              // Gán sự kiện click cho từng thumbnail
+                                              thumbnails.forEach(thumb => {
+                                                  thumb.addEventListener('click', function () {
+                                                      changeImage(this);
+                                                  });
+                                              });
+
+                                              // Hiển thị thumbnail đầu tiên ban đầu
+                                              if (thumbnails.length > 0) {
+                                                  changeImage(thumbnails[0]);
+                                              }
+
+                                              // Scroll to info
+                                              window.scrollToProductInfo = function () {
+                                                  const productInfo = document.getElementById('productInfo');
+                                                  if (productInfo) {
+                                                      productInfo.scrollIntoView({behavior: 'smooth'});
+                                                  }
+                                              };
+                                          });
         </script>
+
     </body>
     <style>
         .product-container {
             max-width: 1200px;
-            margin: 0 auto; /* Căn giữa */
-            padding: 0 15px; /* Đảm bảo có padding đều */
+            margin: 0 auto;
+            padding: 0 15px;
         }
         .card {
             border: none;
@@ -250,6 +328,17 @@
         .thumbnail.active {
             border-color: #007bff;
         }
+        .detail-image {
+            width: 90px;
+            height: 90px;
+            object-fit: cover;
+            cursor: pointer;
+            margin: 0 15px;
+            border: 2px solid #ddd;
+        }
+        .detail-image.active {
+            border-color: #007bff;
+        }
         .nav-btn {
             font-size: 24px;
             background: none;
@@ -259,25 +348,25 @@
             top: 50%;
             transform: translateY(-50%);
             z-index: 1;
-            opacity: 0; /* Ẩn mặc định */
-            transition: opacity 0.3s ease; /* Hiệu ứng chuyển đổi mượt mà */
+            opacity: 0;
+            transition: opacity 0.3s ease;
             width: 40px;
             height: 40px;
-            border-radius: 50%; /* Viền tròn */
-            background-color: rgba(0, 0, 0, 0.5); /* Nền mờ khi hover */
+            border-radius: 50%;
+            background-color: rgba(0, 0, 0, 0.5);
             color: white;
         }
         .nav-btn:hover {
-            opacity: 1; /* Hiển thị khi hover */
+            opacity: 1;
         }
         .image-wrapper:hover .nav-btn {
-            opacity: 1; /* Hiển thị nút khi hover vào image-wrapper */
+            opacity: 1;
         }
         .prev-btn {
-            left: 30px; /* Nút gần main-image */
+            left: 30px;
         }
         .next-btn {
-            right: 30px; /* Nút gần main-image */
+            right: 30px;
         }
         .product-image {
             text-align: center;
@@ -335,128 +424,118 @@
             margin-left: 5px;
         }
         .bg-light {
-            background-color: #ffffff !important; /* Màu trắng giống phần bên dưới */
+            background-color: #ffffff !important;
             border-radius: 1px;
             padding: 15px;
-            border: 1px solid #dee2e6; /* Viền mỏng bao quanh */
+            border: 1px solid #dee2e6;
         }
         .promotion-section {
-            border: 1px solid #dee2e6; /* Viền bao quanh toàn bộ */
+            border: 1px solid #dee2e6;
             border-radius: 5px;
-            overflow: hidden; /* Đảm bảo viền bo tròn áp dụng cho cả nội dung */
+            overflow: hidden;
         }
-
         .promotion-section p {
-            background-color: #f8f9fa; /* Màu xám nhạt cho tiêu đề */
+            background-color: #f8f9fa;
             margin: 0;
             padding: 10px;
             font-weight: bold;
         }
         .alert-custom {
-            background-color: #e5f6f8; /* Màu xanh nhạt */
-            color: #333333; /* Màu chữ đậm hơn để tương phản */
-            border-color: #c3e6cb; /* Viền xanh nhạt */
+            background-color: #e5f6f8;
+            color: #333333;
+            border-color: #c3e6cb;
             border-radius: 5px;
             padding: 10px;
         }
         .button-container {
             display: flex;
-            justify-content: space-between; /* Chia đều không gian */
-            width: 100%; /* Chiếm trọn nguyên row */
+            justify-content: space-between;
+            width: 100%;
             align-items: center;
         }
-
         .btn-custom-buy {
-            background-color: #BAE7FB; /* Màu vàng như ảnh */
-            color: #000000; /* Màu chữ đen */
+            background-color: #BAE7FB;
+            color: #000000;
             border-color: #6c757d;
-            padding: 8px 20px; /* Giảm padding để ngắn lại */
+            padding: 8px 20px;
             font-weight: bold;
-            width: 48%; /* Chia đôi không gian */
+            width: 48%;
             position: relative;
             display: flex;
             flex-direction: column;
             align-items: center;
             text-align: center;
-            height: 60px; /* Đặt chiều cao cố định */
-            line-height: 1; /* Điều chỉnh dòng chữ */
+            height: 60px;
+            line-height: 1;
         }
-
         .btn-custom-buy:hover {
-            transform: scale(1.05); /* Chỉ thay đổi kích thước khi hover */
-            background-color: #BAE7FB !important; /* Bỏ màu nền */
-            color: inherit; /* Giữ nguyên màu chữ */
-            border-color: inherit; /* Giữ nguyên màu viền */
+            transform: scale(1.05);
+            background-color: #BAE7FB !important;
+            color: inherit;
+            border-color: inherit;
         }
-
         .btn-custom-buy .buy-info {
-            font-size: 12px; /* Kích thước chữ nhỏ hơn cho dòng thông tin */
-            color: #000000; /* Màu đỏ */
-            margin-top: 3px; /* Giảm khoảng cách để ngắn lại */
+            font-size: 12px;
+            color: #000000;
+            margin-top: 3px;
             width: 100%;
         }
-        .buy-info{
-            padding-top:5px;
+        .buy-info {
+            padding-top: 5px;
         }
         .btn-outline-secondary {
             background-color: #BAE7FB;
-            color: #000000; /* Màu chữ đen */
+            color: #000000;
             border-color: #6c757d;
-            padding: 10px 20px; /* Giữ padding mặc định */
-            width: 48%; /* Chia đôi không gian */
+            padding: 10px 20px;
+            width: 48%;
             text-align: center;
-            height: 60px; /* Đặt chiều cao cố định để đồng đều */
+            height: 60px;
             display: flex;
             align-items: center;
             justify-content: center;
         }
-
         .btn-outline-secondary:hover {
-            transform: scale(1.05); /* Chỉ thay đổi kích thước khi hover */
-            background-color: #BAE7FB !important; /* Bỏ màu nền */
-            color: inherit; /* Giữ nguyên màu chữ */
-            border-color: inherit; /* Giữ nguyên màu viền */
+            transform: scale(1.05);
+            background-color: #BAE7FB !important;
+            color: inherit;
+            border-color: inherit;
         }
-        /* Sản phẩm tương tự */
         .similar-products {
-            background-color: #ffffff; /* Nền trắng */
-            padding: 20px; /* Khoảng cách từ viền đến nội dung */
-            border: 1px solid #dee2e6; /* Viền màu xám */
-            border-radius: 5px; /* Bo tròn góc */
-            margin-top: 20px; /* Khoảng cách từ phần trên */
+            background-color: #ffffff;
+            padding: 20px;
+            border: 1px solid #dee2e6;
+            border-radius: 5px;
+            margin-top: 20px;
         }
-
         .similar-products .container {
-            max-width: 1200px; /* Đặt chiều rộng tối đa */
-            margin: 0 auto; /* Căn giữa */
+            max-width: 1200px;
+            margin: 0 auto;
         }
-
         .similar-products .section-title {
-            background-color: #ffffff; /* Nền trắng */
-            color: #000000; /* Màu chữ đen */
-            padding: 10px 10px; /* Khoảng cách bên trong */
-            font-weight: bold; /* Chữ đậm */
-            border-radius: 5px; /* Bo tròn viền */
-            margin-bottom: 20px; /* Khoảng cách phía dưới */
+            background-color: #ffffff;
+            color: #000000;
+            padding: 10px 10px;
+            font-weight: bold;
+            border-radius: 5px;
+            margin-bottom: 20px;
         }
-
         .product-card {
-            border: 1px solid #dee2e6; /* Viền xung quanh */
-            border-radius: 5px; /* Bo tròn viền */
-            background-color: #ffffff; /* Nền trắng */
+            border: 1px solid #dee2e6;
+            border-radius: 5px;
+            background-color: #ffffff;
         }
-
         .product-card:hover {
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Bóng mờ */
-            transform: scale(1.02); /* Phóng to khi hover */
-            transition: all 0.3s ease; /* Hiệu ứng mượt mà */
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            transform: scale(1.02);
+            transition: all 0.3s ease;
         }
         .product-card img {
-            width: 100%; /* Làm cho ảnh tự co giãn với kích thước của card */
+            width: 100%;
             height: auto;
         }
         .col-md-3 {
-            margin-bottom: 20px; /* Khoảng cách giữa các cột sản phẩm */
+            margin-bottom: 20px;
         }
         .product-info {
             padding-right: 15px;
@@ -474,6 +553,50 @@
         }
         .product-image {
             text-align: center;
+        }
+        .news-list {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+        .news-list li {
+            display: flex;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+        .news-list li a {
+            display: flex;
+            align-items: center;
+            text-decoration: none;
+            color: #000;
+            font-size: 14px;
+            transition: color 0.2s ease;
+        }
+        .news-list li a:hover {
+            color: #007bff;
+        }
+        .news-list img {
+            width: 40px;
+            height: 40px;
+            object-fit: cover;
+            border-radius: 5px;
+            margin-right: 10px;
+        }
+        .news-list span {
+            line-height: 1.4;
+        }
+        .product-detail-image {
+            display: block;
+            margin: 0 auto;
+            width: 440px;
+            height: 330px;
+            object-fit: cover;
+            cursor: pointer;
+
+        }
+
+        .product-detail-image.active {
+            border-color: #007bff;
         }
     </style>
 </html>

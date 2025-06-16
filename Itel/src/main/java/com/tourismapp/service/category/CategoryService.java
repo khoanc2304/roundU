@@ -17,7 +17,8 @@ import java.util.Optional;
 public class CategoryService implements ICategoryService {
 
     private final ICategoryDAO categoryDAO = new CategoryDAO();
-
+    
+    // KHOA
     @Override
     public List<Category> getAllCategories() {
         return categoryDAO.getAllCategories();
@@ -27,7 +28,9 @@ public class CategoryService implements ICategoryService {
     public Optional<Category> findCategoryById(int id) {
         return categoryDAO.findCategoryById(id);
     }
-
+    
+    
+    // VINH
     @Override
     public List<Category> searchCategoriesByName(String q) {
         return categoryDAO.searchCategoriesByName(q);
