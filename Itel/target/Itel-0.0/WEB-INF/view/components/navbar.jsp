@@ -60,7 +60,7 @@
                             <c:if test="${sessionScope.loggedUser.role.getValue() == 'admin' || sessionScope.loggedUser.role.getValue() == 'staff'}">
                                 <a href="<%= ProjectPaths.HREF_TO_DASHBOARDPAGE %>"><i class="fas fa-arrow-left"></i> Quay lại Dashboard</a>
                             </c:if>
-                            <a href="<%= ProjectPaths.HREF_TO_PROFILEPAGE %>"><i class="fas fa-users"></i> Hello, ${sessionScope.loggedUser.fullName}</a>
+                            <a href="<%= ProjectPaths.PREFIX_WEB_PATH %>/main?action=viewProfile"><i class="fas fa-users"></i> Hello, ${sessionScope.loggedUser.fullName}</a>
                             <a href="#"><i class="fas fa-shopping-bag"></i> Đơn hàng của tôi</a>
                             <a href="#"><i class="fas fa-eye"></i> Đã xem gần đây</a>
                             <a href="<%= ProjectPaths.HREF_TO_LOGOUTPAGE %>"><i class="fas fa-sign-out-alt"></i> Đăng xuất</a>
