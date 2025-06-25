@@ -6,6 +6,7 @@ package com.tourismapp.dao.product;
 
 import com.tourismapp.model.Product;
 import com.tourismapp.model.ProductImage;
+import java.math.BigDecimal;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.List;
@@ -17,29 +18,38 @@ import java.util.Optional;
  * @author Admin
  */
 public interface IProductDAO {
+
     //user view
     Product mapProduct(ResultSet rs) throws SQLException;
-    
+
     List<Product> getActiveProducts();
-    
+
     Optional<Product> findProductById(int id);
-    
+
     int getNextProductId();
-    
+
     List<Product> searchActiveProductsByName(String q);
-    
+
     List<Product> searchProductsByName(String q);
-    
+
     //dashborad
     List<Product> getAllProducts();
-    
+
     boolean createProduct(Product product);
-    
+
     boolean editProduct(Product product);
-    
+
     boolean deleteProduct(int id);
-    
+
     Optional<List<ProductImage>> getProductImagesById(int productId);
-    
+
     Map<String, String> getInforProductById(int productId);
+
+    //HUY
+    List<Product> getSimilarProductsByCategory(int categoryId, int excludeProductId, int limit);
+
+    List<Product> getSimilarProductsByPrice(BigDecimal productPrice, int excludeProductId, int limit);
+
+    List<Product> getSimilarProductsByBrand(int brandId, BigDecimal productPrice, int excludeProductId, int limit);
+
 }

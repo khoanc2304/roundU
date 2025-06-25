@@ -15,6 +15,7 @@ com\tourismapp\common\MembershipLevel.class
 com\tourismapp\model\Category.class
 com\tourismapp\model\Orders.class
 com\tourismapp\model\Attribute.class
+com\tourismapp\controller\redirectController\ProductPageServlet.class
 com\tourismapp\controller\redirectController\LoginPageServlet.class
 com\tourismapp\service\user\UserService.class
 com\tourismapp\dao\brand\BrandDAO.class
@@ -50,7 +51,6 @@ com\tourismapp\dao\user\UserDAO.class
 com\tourismapp\service\category\CategoryService.class
 com\tourismapp\common\UserRole.class
 com\tourismapp\controller\redirectController\HomePageServlet.class
-ProductPageServlet.class
 com\tourismapp\dao\order\OrderDAO.class
 com\tourismapp\common\Status.class
 com\tourismapp\service\order\IOrderService.class

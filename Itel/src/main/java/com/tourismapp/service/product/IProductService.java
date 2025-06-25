@@ -6,6 +6,7 @@ package com.tourismapp.service.product;
 
 import com.tourismapp.model.Product;
 import com.tourismapp.model.ProductImage;
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -23,7 +24,7 @@ public interface IProductService {
     Optional<Product> findProductById(int id);
 
     int getNextProductId();
-    
+
     List<Product> searchActiveProductsByName(String q);
 
     List<Product> searchProductsByName(String q);
@@ -35,8 +36,16 @@ public interface IProductService {
     boolean editProduct(Product product);
 
     boolean deleteProduct(int id);
-    
+
     Optional<List<ProductImage>> getProductImagesById(int productId);
-    
+
     Map<String, String> getInforProductById(int productId);
+
+    //HUY
+    List<Product> getSimilarProductsByCategory(int categoryId, int excludeProductId, int limit);
+
+    List<Product> getSimilarProductsByPrice(BigDecimal productPrice, int excludeProductId, int limit);
+
+    List<Product> getSimilarProductsByBrand(int brandId, BigDecimal productPrice, int excludeProductId, int limit);
+
 }

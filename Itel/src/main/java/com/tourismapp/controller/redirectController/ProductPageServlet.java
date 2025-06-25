@@ -1,3 +1,4 @@
+package com.tourismapp.controller.redirectController;
 
 import com.tourismapp.config.ProjectPaths;
 import com.tourismapp.controller.mainController.MainControllerServlet;
@@ -11,6 +12,7 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -56,9 +58,63 @@ public class ProductPageServlet extends HttpServlet {
         Optional<Product> product = productService.findProductById(id);
         Optional<List<ProductImage>> productImages = productService.getProductImagesById(id);
         Map<String, String> infoProduct = productService.getInforProductById(id);
+
+        //HUY: LAY SAN PHAM THEO GIA
+        List<Product> similarProducts = new ArrayList<>();
+
+// Ưu tiên cùng loại
+        similarProducts.addAll(productService.getSimilarProductsByCategory(
+                product.get().getCategory().getCategoryId(),
+                product.get().getProductId(),
+                4
+        ));
+
+// Nếu chưa đủ, lấy theo giá
+        if (similarProducts.size() < 4) {
+            int missing = 4 - similarProducts.size();
+            List<Product> priceProducts = productService.getSimilarProductsByPrice(
+                    product.get().getPrice(),
+                    product.get().getProductId(),
+                    missing
+            );
+
+            for (Product p : priceProducts) {
+                if (similarProducts.stream().noneMatch(sp -> sp.getProductId() == p.getProductId())) {
+                    similarProducts.add(p);
+                }
+                if (similarProducts.size() >= 4) {
+                    break;
+                }
+            }
+        }
+
+// Nếu vẫn chưa đủ, lấy theo hãng
+        if (similarProducts.size() < 4) {
+            int missing = 4 - similarProducts.size();
+            List<Product> brandProducts = productService.getSimilarProductsByBrand(
+                    product.get().getBrand().getBrandId(),
+                    product.get().getPrice(),
+                    product.get().getProductId(),
+                    missing
+            );
+
+            for (Product p : brandProducts) {
+                if (similarProducts.stream().noneMatch(sp -> sp.getProductId() == p.getProductId())) {
+                    similarProducts.add(p);
+                }
+                if (similarProducts.size() >= 4) {
+                    break;
+                }
+            }
+        }
+
+        //------------------------------------------------------------------------
         request.setAttribute("product", product.get());
         request.setAttribute("productImages", productImages.get());
         request.setAttribute("infoProduct", infoProduct);
+
+        request.setAttribute("similarProducts", similarProducts); //huy
+
         request.getRequestDispatcher(ProjectPaths.JSP_PRODUCTPAGE_PATH).forward(request, response);
     }
     // </editor-fold>

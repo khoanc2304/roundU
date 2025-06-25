@@ -12,6 +12,7 @@ import com.tourismapp.model.Category;
 import com.tourismapp.model.Product;
 import com.tourismapp.model.ProductImage;
 import com.tourismapp.utils.ErrDialog;
+import java.math.BigDecimal;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -53,6 +54,87 @@ public class ProductDAO implements IProductDAO {
                                                          JOIN Attribute a ON pd.attribute_id = a.attribute_id
                                                          WHERE pd.product_id = ?;""";
 
+    //HUY 
+    private static final String GET_SIMILAR_PRODUCTS_BY_PRICE = """
+    SELECT TOP %d * FROM Product
+    WHERE price BETWEEN ? AND ?
+    AND product_id != ?
+    AND status = 'active'
+    ORDER BY ABS(price - ?) ASC;
+""";
+
+    private static final String GET_SIMILAR_PRODUCTS_BY_CATEGORY = """
+    SELECT TOP %d * FROM Product
+    WHERE category_id = ?
+    AND product_id != ?
+    AND status = 'active';
+""";
+
+    private static final String GET_SIMILAR_PRODUCTS_BY_BRAND = """
+    SELECT TOP %d * FROM Product
+    WHERE brand_id = ?
+    AND product_id != ?
+    AND status = 'active'
+    ORDER BY ABS(price - ?) ASC;
+""";
+
+    @Override
+    public List<Product> getSimilarProductsByCategory(int categoryId, int excludeProductId, int limit) {
+        List<Product> products = new ArrayList<>();
+        String sql = GET_SIMILAR_PRODUCTS_BY_CATEGORY.formatted(limit);
+        try (Connection conn = DBConnection.getConnection(); PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setInt(1, categoryId);
+            ps.setInt(2, excludeProductId);
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                products.add(mapProduct(rs));
+            }
+        } catch (SQLException e) {
+            ErrDialog.showError("ProductDAO getSimilarProductsByCategory fail: " + e.getMessage());
+        }
+        return products;
+    }
+
+    @Override
+    public List<Product> getSimilarProductsByPrice(BigDecimal productPrice, int excludeProductId, int limit) {
+        List<Product> products = new ArrayList<>();
+        BigDecimal minPrice = productPrice.multiply(BigDecimal.valueOf(0.9));
+        BigDecimal maxPrice = productPrice.multiply(BigDecimal.valueOf(1.1));
+        String sql = GET_SIMILAR_PRODUCTS_BY_PRICE.formatted(limit);
+        try (Connection conn = DBConnection.getConnection(); PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setBigDecimal(1, minPrice);
+            ps.setBigDecimal(2, maxPrice);
+            ps.setInt(3, excludeProductId);
+            ps.setBigDecimal(4, productPrice);
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                products.add(mapProduct(rs));
+            }
+        } catch (SQLException e) {
+            ErrDialog.showError("ProductDAO getSimilarProductsByPrice fail: " + e.getMessage());
+        }
+        return products;
+    }
+
+    @Override
+    public List<Product> getSimilarProductsByBrand(int brandId, BigDecimal productPrice, int excludeProductId, int limit) {
+        List<Product> products = new ArrayList<>();
+        String sql = GET_SIMILAR_PRODUCTS_BY_BRAND.formatted(limit);
+        try (Connection conn = DBConnection.getConnection(); PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setInt(1, brandId);
+            ps.setInt(2, excludeProductId);
+            ps.setBigDecimal(3, productPrice);
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                products.add(mapProduct(rs));
+            }
+        } catch (SQLException e) {
+            ErrDialog.showError("ProductDAO getSimilarProductsByBrand fail: " + e.getMessage());
+        }
+        return products;
+    }
+
+    //--------------------------------------------------------------------------------------------
     @Override
     public Product mapProduct(ResultSet rs) throws SQLException {
         return new Product(
@@ -268,7 +350,7 @@ public class ProductDAO implements IProductDAO {
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {
                 String attributeName = rs.getString("name");
-                String attributeValue = rs.getString("attribute_value"); 
+                String attributeValue = rs.getString("attribute_value");
 
                 infoMap.put(attributeName, attributeValue != null ? attributeValue : "No value available");
             }
