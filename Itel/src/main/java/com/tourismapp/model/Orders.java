@@ -2,6 +2,8 @@ package com.tourismapp.model;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.List;
+import java.util.ArrayList;
 
 /**
  *
@@ -15,6 +17,7 @@ public class Orders {
     private String status;
     private BigDecimal totalAmount;
     private String shippingAddress;
+    private List<OrderDetail> orderDetails;
 
     public Orders(int orderId, Users user, LocalDateTime orderDate, String status,
             BigDecimal totalAmount, String shippingAddress) {
@@ -24,6 +27,7 @@ public class Orders {
         this.status = status;
         this.totalAmount = totalAmount;
         this.shippingAddress = shippingAddress;
+        this.orderDetails = new ArrayList<>();
     }
     
     public Orders(Users user, LocalDateTime orderDate, String status,
@@ -33,10 +37,12 @@ public class Orders {
         this.status = status;
         this.totalAmount = totalAmount;
         this.shippingAddress = shippingAddress;
+        this.orderDetails = new ArrayList<>();
     }
 
     public Orders(int orderId) {
         this.orderId = orderId;
+        this.orderDetails = new ArrayList<>();
     }
     
     public int getOrderId() {
@@ -85,6 +91,14 @@ public class Orders {
 
     public void setShippingAddress(String shippingAddress) {
         this.shippingAddress = shippingAddress;
+    }
+
+    public List<OrderDetail> getOrderDetails() {
+        return orderDetails;
+    }
+
+    public void setOrderDetails(List<OrderDetail> orderDetails) {
+        this.orderDetails = orderDetails;
     }
 
     @Override

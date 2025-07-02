@@ -12,6 +12,8 @@ public enum Status {
     ACTIVE("active"),
     INACTIVE("inactive"),
     PENDING("pending"),
+    PROCESSING("processing"),
+    DELIVERED("delivered"),
     SHIPPED("shipped"),
     COMPLETED("completed"),
     CANCELED("canceled"),

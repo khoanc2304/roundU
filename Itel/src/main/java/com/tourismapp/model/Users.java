@@ -202,6 +202,41 @@ public class Users {
         this.imageUrl = imageUrl;
     }
 
+        /**
+     * Get first name from full name
+     * @return First name or empty string if full name is null/empty
+     */
+    public String getFirstName() {
+        if (fullName == null || fullName.trim().isEmpty()) {
+            return "";
+        }
+        String[] parts = fullName.trim().split("\\s+");
+        return parts[0];
+    }
+    
+    /**
+     * Get last name from full name
+     * @return Last name or empty string if full name has only one part
+     */
+    public String getLastName() {
+        if (fullName == null || fullName.trim().isEmpty()) {
+            return "";
+        }
+        String[] parts = fullName.trim().split("\\s+");
+        if (parts.length > 1) {
+            return String.join(" ", java.util.Arrays.copyOfRange(parts, 1, parts.length));
+        }
+        return "";
+    }
+    
+    /**
+     * Get phone number (alias for getPhone for consistency)
+     * @return Phone number
+     */
+    public String getPhoneNumber() {
+        return phone;
+    }
+    
     @Override
     public String toString() {
         return "Users{" + "userId=" + userId + ", username=" + username + ", password=" + password + ", fullName=" + fullName + ", email=" + email + ", phone=" + phone + ", address=" + address + ", role=" + role + ", membershipLevel=" + membershipLevel + ", imageUrl=" + imageUrl + ", status=" + status + ", createdAt=" + createdAt + ", updatedAt=" + updatedAt + '}';

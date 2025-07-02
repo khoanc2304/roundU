@@ -83,7 +83,9 @@ public class ProductDAO implements IProductDAO {
         ORDER BY product_id 
         OFFSET ? ROWS FETCH NEXT ? ROWS ONLY;
     """;
-
+    
+    private static final String UPDATE_PRODUCT_STOCK = "UPDATE Product SET stock_quantity = ? WHERE product_id = ?";
+    
     @Override
     public Product mapProduct(ResultSet rs) throws SQLException {
         return new Product(
@@ -441,7 +443,23 @@ public class ProductDAO implements IProductDAO {
         }
         return products;
     }
-
+    
+        @Override
+    public boolean updateProductStock(int productId, int newStock) {
+        try (Connection conn = DBConnection.getConnection();
+             PreparedStatement ps = conn.prepareStatement(UPDATE_PRODUCT_STOCK)) {
+            
+            ps.setInt(1, newStock);
+            ps.setInt(2, productId);
+            
+            int rowsUpdated = ps.executeUpdate();
+            return rowsUpdated > 0;
+            
+        } catch (SQLException e) {
+            ErrDialog.showError("Error updating product stock: " + e.getMessage());
+            return false;
+        }
+    }
     public static void main(String[] args) {
         ProductDAO pD = new ProductDAO();
         Map<String, String> st = pD.getInforProductById(1);

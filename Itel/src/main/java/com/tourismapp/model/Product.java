@@ -62,7 +62,14 @@ public class Product {
         this.brand = brand;
         this.imageUrl = imageUrl;
     }
-
+    
+     public Product(int productId, String name, String imageUrl, BigDecimal price) {
+        this.productId = productId;
+        this.name = name;
+        this.imageUrl = imageUrl;
+        this.price = price;
+    }
+    
     public Product(int productId) {
         this.productId = productId;
     }

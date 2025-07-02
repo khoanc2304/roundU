@@ -107,4 +107,8 @@ public class ProductService implements IProductService {
         return productDAO.getProductsByCategoryPaginated(categoryId, offset, size);
     }
     
+     @Override
+    public boolean updateProductStock(int productId, int newStock) {
+        return productDAO.updateProductStock(productId, newStock);
+    }
 }

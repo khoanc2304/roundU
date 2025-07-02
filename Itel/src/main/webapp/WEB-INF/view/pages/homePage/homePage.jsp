@@ -575,7 +575,9 @@
                                             </p>
                                             <div class="d-flex justify-content-center gap-2">
                                                 <a href="<%= ProjectPaths.HREF_TO_PRODUCTPAGE%>&id=${product.productId}" class="btn btn-buy text-white">Xem chi tiết</a>
-                                                <a href="#" class="btn btn-buy text-white">Thêm vào giỏ</a>
+                                                <button type="button" class="btn btn-cart text-white" onclick="addToCart(${product.productId}, '${product.name}')">
+                                                    <i class="fas fa-shopping-cart me-1"></i>Thêm vào giỏ
+                                                </button>
                                             </div>
                                         </div>
                                     </div>
@@ -597,17 +599,17 @@
 
         <!-- Carousel Auto Init -->
         <script>
-            const myCarousel = document.querySelector('#bannerCarousel');
-            new bootstrap.Carousel(myCarousel, {
-                interval: 3000,
-                ride: 'carousel'
-            });
+                                                    const myCarousel = document.querySelector('#bannerCarousel');
+                                                    new bootstrap.Carousel(myCarousel, {
+                                                        interval: 3000,
+                                                        ride: 'carousel'
+                                                    });
         </script>
 
         <!-- Add AOS JS and initialize -->
         <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
         <script>
-            AOS.init();
+                                                    AOS.init();
         </script>
 
         <!-- JavaScript để điều chỉnh chiều cao và hiển thị mega menu -->
@@ -687,7 +689,115 @@
                 });
             });
         </script>
+        <!-- Add to Cart -->
+        <script>
+            document.querySelectorAll('.add-to-cart').forEach(button => {
+                button.addEventListener('click', function () {
+                    const productId = this.getAttribute('data-product-id');
+                    fetch('<%= MainControllerServlet.CARTPAGE_SERVLET %>', {
+                        method: 'POST',
+                        headers: {'Content-Type': 'application/x-www-form-urlencoded'},
+                        body: `action=<%= MainControllerServlet.ACTION_ADD_ITEMS %>&productId=${productId}&quantity=1`
+                    })
+                            .then(response => response.json())
+                            .then(data => {
+                                if (data.success) {
+                                    window.location.href = '<%= ProjectPaths.HREF_TO_CARTPAGE %>';
+                                } else {
+                                    alert(data.message || 'Failed to add product to cart');
+                                }
+                            })
+                            .catch(error => {
+                                console.error('Error:', error);
+                                alert('An error occurred while adding to cart');
+                            });
+                });
+            });
+        </script>  
+        <!-- Toast Notification for Cart Actions -->
+        <div class="position-fixed top-0 end-0 p-3" style="z-index: 11; margin-top: 80px;">
+            <div id="cartToast" class="toast" role="alert" aria-live="assertive" aria-atomic="true">
+                <div class="toast-header">
+                    <i class="fas fa-shopping-cart text-success me-2"></i>
+                    <strong class="me-auto">Giỏ hàng</strong>
+                    <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+                </div>
+                <div class="toast-body" id="cartToastMessage">
+                    <!-- Message will be inserted here -->
+                </div>
+            </div>
+        </div>
 
+        <!-- Cart JavaScript -->
+        <script>
+            function addToCart(productId, productName) {
+                // Show loading state
+                const button = event.target;
+                const originalText = button.innerHTML;
+                button.innerHTML = '<i class="fas fa-spinner fa-spin me-1"></i>Đang thêm...';
+                button.disabled = true;
+
+                // Send AJAX request to add product to cart
+                fetch('/Itel/cart/add', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/x-www-form-urlencoded',
+                    },
+                    body: 'productId=' + productId + '&quantity=1'
+                })
+                        .then(response => response.json())
+                        .then(data => {
+                            if (data.success) {
+                                showCartToast('Đã thêm "' + productName + '" vào giỏ hàng!', 'success');
+                                updateCartCount(data.cartCount);
+                            } else {
+                                showCartToast('Lỗi: ' + data.message, 'error');
+                            }
+                        })
+                        .catch(error => {
+                            console.error('Error:', error);
+                            showCartToast('Có lỗi xảy ra khi thêm sản phẩm vào giỏ hàng!', 'error');
+                        })
+                        .finally(() => {
+                            // Restore button state
+                            button.innerHTML = originalText;
+                            button.disabled = false;
+                        });
+            }
+
+            function showCartToast(message, type) {
+                const toast = document.getElementById('cartToast');
+                const toastMessage = document.getElementById('cartToastMessage');
+                const toastHeader = toast.querySelector('.toast-header');
+
+                // Update message
+                toastMessage.textContent = message;
+
+                // Update styling based on type
+                if (type === 'success') {
+                    toast.className = 'toast';
+                    toastHeader.querySelector('i').className = 'fas fa-shopping-cart text-success me-2';
+                } else {
+                    toast.className = 'toast';
+                    toastHeader.querySelector('i').className = 'fas fa-exclamation-triangle text-danger me-2';
+                }
+
+                // Show toast
+                const bootstrapToast = new bootstrap.Toast(toast);
+                bootstrapToast.show();
+            }
+
+            function updateCartCount(count) {
+                // Update cart count in navbar if it exists
+                const cartCountElements = document.querySelectorAll('.cart-count');
+                cartCountElements.forEach(element => {
+                    element.textContent = count;
+                    if (count > 0) {
+                        element.style.display = 'inline';
+                    }
+                });
+            }
+        </script>
         <style>
             .sidebar {
                 background-color: #f0f0f0;
@@ -879,6 +989,18 @@
 
             .btn-cart {
                 background-color: #28a745;
+                border: none;
+                border-radius: 4px;
+                padding: 6px 12px;
+                transition: background-color 0.3s ease;
+            }
+
+            .btn-cart:hover,
+            .btn-cart:focus {
+                background-color: #218838;
+                color: white;
+                text-decoration: none;
+                outline: none;
             }
 
             .product-card {

@@ -59,7 +59,11 @@ public class OrderDetail {
     public void setQuantity(int quantity) {
         this.quantity = quantity;
     }
-
+    
+    public BigDecimal getPrice() {
+        return unitPrice;
+    }
+    
     public BigDecimal getUnitPrice() {
         return unitPrice;
     }

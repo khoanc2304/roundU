@@ -1,3 +1,6 @@
+398 orderHistory_final.jsp
+=>                     <strong>${type === 'success' ? 'Thành công!' : type === 'danger' ? 'Lỗi!' : 'Thông báo!'}</strong> ${message}
+
 
 <%@ page import="com.tourismapp.config.ProjectPaths" %>
 <%@ page import="com.tourismapp.controller.mainController.MainControllerServlet" %>

@@ -32,6 +32,7 @@ public class MainControllerServlet extends HttpServlet {
     public static final String HOMEPAGE_REDIRECT = "homePage";
     public static final String CHECKOUTPAGE_REDIRECT = "checkoutPage";
     public static final String CARTPAGE_REDIRECT = "cartPage";
+    public static final String ORDERHISTORY_REDIRECT = "orderHistory";
 
     // redirect to each servlets
     //dashboard
@@ -50,6 +51,7 @@ public class MainControllerServlet extends HttpServlet {
     public static final String HOMEPAGE_SERVLET = "/" + HOMEPAGE_REDIRECT;
     public static final String CHECKOUTPAGE_SERVLET = "/" + CHECKOUTPAGE_REDIRECT;
     public static final String CARTPAGE_SERVLET = "/" + CARTPAGE_REDIRECT;
+    public static final String ORDERHISTORY_SERVLET = "/" + ORDERHISTORY_REDIRECT;
 
     // main?action=
     // doPost (Action)
@@ -84,10 +86,23 @@ public class MainControllerServlet extends HttpServlet {
     public static final String ACTION_EDIT_REVIEW = "editReview"; // làm sau, product, homepage xong ...
     public static final String ACTION_DELETE_REVIEW = "deleteReview"; // làm sau, product, homepage xong ...
     // cart 
+    public static final String ACTION_REMOVE_FROM_CART = "removeFromCart";
+    public static final String ACTION_GET_CART_COUNT = "getCartCount";
+    public static final String ACTION_GET_CART_ITEMS = "getCartItems";
+    
     public static final String ACTION_ADD_ITEMS = "add-items"; // cart
     public static final String ACTION_INCREASE_QUANTITY = "increase-quantity"; // cart
     public static final String ACTION_DECREASE_QUANTITY = "decrease-quantity"; // cart   
     public static final String ACTION_CHECKOUT = "confirm-checkout"; // checkOut
+     // PAYMENT PAGES
+    public static final String PAYMENT_SUCCESS_REDIRECT = "paymentSuccess";
+    public static final String PAYMENT_FAILED_REDIRECT = "paymentFailed";
+    public static final String PAYMENT_PROCESSING_REDIRECT = "paymentProcessing";
+    
+    public static final String ACTION_INITIATE_PAYMENT = "initiatePayment";
+    public static final String ACTION_PAYMENT_SUCCESS = "paymentSuccess";
+    public static final String ACTION_PAYMENT_FAILED = "paymentFailed";
+    public static final String ACTION_PAYMENT_PROCESSING = "paymentProcessing";
 
     // doGet (Action)
     // Khoa browser
@@ -144,6 +159,12 @@ public class MainControllerServlet extends HttpServlet {
             //CATEGORY VINH
             case ACTION_CREATE_CATEGORY, ACTION_EDIT_CATEGORY, ACTION_DELETE_CATEGORY -> 
                 request.getRequestDispatcher(CATEGORY_MANAGEMENT_REDIRECT).forward(request, response);
+            // ORDER-CART HIEU
+            case ACTION_ADD_ITEMS, ACTION_INCREASE_QUANTITY, ACTION_DECREASE_QUANTITY, ACTION_CHECKOUT ->
+                request.getRequestDispatcher(CARTPAGE_SERVLET).forward(request, response);
+            //CHECKOUT
+            case CHECKOUTPAGE_REDIRECT ->
+                request.getRequestDispatcher(CHECKOUTPAGE_REDIRECT).forward(request, response);
             default ->
                 response.sendRedirect("errorAtMainController.jsp");
         }
@@ -163,6 +184,8 @@ public class MainControllerServlet extends HttpServlet {
                     PRODUCTPAGE_REDIRECT, 
                     HOMEPAGE_REDIRECT, 
                     CARTPAGE_REDIRECT, 
+                    CHECKOUTPAGE_REDIRECT,
+                    ORDERHISTORY_REDIRECT,
                 //DIRECT TO DASHBOARD
                     DASHBOARDPAGE_REDIRECT, 
                     USER_MANAGEMENT_REDIRECT, 
@@ -188,6 +211,22 @@ public class MainControllerServlet extends HttpServlet {
             // CATEGORY MANAGEMENT VINH
             case ACTION_CREATE_CATEGORY_FORM, ACTION_SEARCH_CATEGORY, ACTION_UPDATE_CATEGORY_FORM -> //(fix) -> bỏ action vào đây để nó direct tới trang servlet
                  request.getRequestDispatcher(CATEGORY_MANAGEMENT_REDIRECT).forward(request, response);
+            // ORDER-CART HIEU
+            case ACTION_PAYMENT_SUCCESS -> {
+                String message = (String) request.getSession().getAttribute("paymentMessage");
+                request.setAttribute("successMessage", message != null ? message : "Payment completed successfully!");
+                request.getSession().removeAttribute("paymentMessage");
+                request.getRequestDispatcher("paymentSuccess.jsp").forward(request, response);
+            }
+            case ACTION_PAYMENT_FAILED -> {
+                String message = (String) request.getSession().getAttribute("paymentMessage");
+                request.setAttribute("errorMessage", message != null ? message : "Payment failed. Please try again.");
+                request.getSession().removeAttribute("paymentMessage");
+                request.getRequestDispatcher("paymentFailed.jsp").forward(request, response);
+            }
+            case ACTION_PAYMENT_PROCESSING -> {
+                request.getRequestDispatcher("paymentProcessing.jsp").forward(request, response);
+            }  
             default ->
                 response.sendRedirect("errorAtMainController.jsp");
         }

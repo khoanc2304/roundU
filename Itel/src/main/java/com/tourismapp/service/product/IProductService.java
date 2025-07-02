@@ -51,4 +51,12 @@ public interface IProductService {
     List<Product> filterProductsByCriteria(int categoryId, String brands, String cpus, int minPrice, int maxPrice);
     
     List<Product> getProductsByCategoryPaginated(int categoryId, int offset, int size);
+    
+    /**
+     * Update product stock quantity
+     * @param productId Product ID
+     * @param newStock New stock quantity
+     * @return true if successful
+     */
+    boolean updateProductStock(int productId, int newStock);
 }

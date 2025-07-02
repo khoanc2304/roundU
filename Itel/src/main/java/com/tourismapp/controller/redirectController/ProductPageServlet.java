@@ -32,7 +32,7 @@ public class ProductPageServlet extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         String action = request.getParameter("action");
-        ErrDialog.showError("ProductSer: " + action);
+//        ErrDialog.showError("ProductSer: " + action);
         if (action == null) {
             action = "";
         }

@@ -47,6 +47,7 @@
             <a href="#" class="nav-link"><i class="fas fa-headset me-1"></i> Hỗ trợ</a>
             <a href="<%= ProjectPaths.HREF_TO_CARTPAGE %>" class="nav-link position-relative">
                 <i class="fas fa-shopping-cart me-1"></i> Giỏ hàng
+                <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger cart-count" style="display: none;">0</span>
             </a>
 
             <c:choose>
@@ -61,7 +62,7 @@
                                 <a href="<%= ProjectPaths.HREF_TO_DASHBOARDPAGE %>"><i class="fas fa-arrow-left"></i> Quay lại Dashboard</a>
                             </c:if>
                             <a href="<%= ProjectPaths.HREF_TO_PROFILEPAGE %>"><i class="fas fa-users"></i> Hello, ${sessionScope.loggedUser.fullName}</a>
-                            <a href="#"><i class="fas fa-shopping-bag"></i> Đơn hàng của tôi</a>
+                            <a href="<%= ProjectPaths.HREF_TO_ORDERHISTORY %>"><i class="fas fa-shopping-bag"></i> Đơn hàng của tôi</a>
                             <a href="#"><i class="fas fa-eye"></i> Đã xem gần đây</a>
                             <a href="<%= ProjectPaths.HREF_TO_LOGOUTPAGE %>"><i class="fas fa-sign-out-alt"></i> Đăng xuất</a>
                         </div>
@@ -247,5 +248,78 @@
         font-size: 16px;
     }
 </style>
+<!-- Load Cart Count on Page Load -->
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        loadCartCount();
+    });
+
+    function loadCartCount() {
+        fetch('/Itel/cart/count')
+                .then(response => response.json())
+                .then(data => {
+                    updateCartCount(data.count);
+                })
+                .catch(error => {
+                    console.error('Error loading cart count:', error);
+                });
+    }
+
+    function updateCartCount(count) {
+        const cartCountElements = document.querySelectorAll('.cart-count');
+        cartCountElements.forEach(element => {
+            // Show 9+ if count >= 10
+            const displayCount = count >= 10 ? '9+' : count.toString();
+            element.textContent = displayCount;
+            if (count > 0) {
+                element.style.display = 'inline';
+            } else {
+                element.style.display = 'none';
+            }
+        });
+    }
+
+    // Function to be called when adding to cart
+    function addToCart(productId, quantity = 1) {
+        const formData = new FormData();
+        formData.append('productId', productId);
+        formData.append('quantity', quantity);
+
+        fetch('/Itel/cart/add', {
+            method: 'POST',
+            body: formData
+        })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        // Reload cart count
+                        loadCartCount();
+
+                        // Show appropriate message
+                        if (window.showToast) {
+                            if (data.alreadyExists) {
+                                showToast('info', data.message || 'Sản phẩm đã có trong giỏ hàng!');
+                            } else {
+                                showToast('success', data.message || 'Đã thêm sản phẩm vào giỏ hàng!');
+                            }
+                        }
+                    } else {
+                        if (window.showToast) {
+                            showToast('error', data.message || 'Có lỗi xảy ra!');
+                        }
+                    }
+                })
+                .catch(error => {
+                    console.error('Error adding to cart:', error);
+                    if (window.showToast) {
+                        showToast('error', 'Có lỗi xảy ra khi thêm sản phẩm!');
+                    }
+                });
+    }
+
+    // Make functions globally available
+    window.addToCart = addToCart;
+    window.loadCartCount = loadCartCount;
+</script>
 <script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
 <script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
