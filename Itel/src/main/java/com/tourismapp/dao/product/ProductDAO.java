@@ -6,6 +6,7 @@ package com.tourismapp.dao.product;
 
 import com.tourismapp.common.Status;
 import com.tourismapp.dao.DBConnection;
+import com.tourismapp.dto.BrandCategoryDTO;
 import com.tourismapp.model.Brand;
 import com.tourismapp.model.Category;
 import com.tourismapp.model.Product;
@@ -59,7 +60,7 @@ public class ProductDAO implements IProductDAO {
     private static final String MAP_BRAND_ID = "SELECT brand_id FROM Brand WHERE name = ?";
 
     private static final String GET_PRODUCT_DETAIL_BY_ID_TOP_5 = """
-                                                             SELECT TOP 5 
+                                                             SELECT
                                                                  p.attribute_value,
                                                                  a.unit
                                                              FROM ProductDetail p
@@ -460,10 +461,28 @@ public class ProductDAO implements IProductDAO {
             return false;
         }
     }
+//    public static void main(String[] args) {
+//        ProductDAO pD = new ProductDAO();
+//        Map<String, String> st = pD.getInforProductById(1);
+//        for (Map.Entry<String, String> entry : st.entrySet()) {
+//            Object key = entry.getKey();
+//            Object val = entry.getValue();
+//            System.out.println(key + " " + val);
+//        }
+//    }
     public static void main(String[] args) {
         ProductDAO pD = new ProductDAO();
-        Map<String, String> st = pD.getInforProductById(1);
-        for (Map.Entry<String, String> entry : st.entrySet()) {
+        int id = pD.mapCategoryId("Laptop");
+        List<Product> categoryProducts = pD.getProductsByCategory(id);// lấy List<Product> cùng category từ category_id
+//        List<BrandCategoryDTO> brandCategoryDTOs = brandCategoryService.getBrandsByCategoryId(id);
+
+        Map<Product, List<String>> mapProduct_Detail = new LinkedHashMap<>();
+        for (Product categoryProduct : categoryProducts) {
+            List<String> productDetail = pD.getProductDetailByIdTop5(categoryProduct.getProductId());
+            mapProduct_Detail.put(categoryProduct, productDetail);
+        }
+
+        for (Map.Entry<Product, List<String>> entry : mapProduct_Detail.entrySet()) {
             Object key = entry.getKey();
             Object val = entry.getValue();
             System.out.println(key + " " + val);
