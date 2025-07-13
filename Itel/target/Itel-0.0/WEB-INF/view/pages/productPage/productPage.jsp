@@ -11,32 +11,32 @@
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
         <title>Product Page</title>
-        
+
         <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" crossorigin="anonymous">
-        
+
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css" crossorigin="anonymous"/>
-        
+
         <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
-        
+
         <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
     </head>
-    
-    <body style="background-color: #e1dbdb; margin: 0; font-family: 'Roboto', sans-serif;">
+
+    <body style="background-color: #F3F4F6; margin: 0; font-family: 'Roboto', sans-serif;">
         <% request.getRequestDispatcher("/WEB-INF/view/components/navbar.jsp").include(request, response); %>
 
         <div class="container mt-4">
             <nav aria-label="breadcrumb">
                 <ol class="breadcrumb">
                     <li class="breadcrumb-item"><a href="#/">Trang chủ</a></li>
-                        <c:if test="${not empty category}">
+                    <c:if test="${not empty category}">
                         <li class="breadcrumb-item"><a href="#">${category.name}</a></li>
-                        </c:if>
-                        <c:if test="${not empty brand}">
+                    </c:if>
+                    <c:if test="${not empty brand}">
                         <li class="breadcrumb-item"><a href="#">${brand.name}</a></li>
-                        </c:if>
-                        <c:if test="${not empty filterName}">
+                    </c:if>
+                    <c:if test="${not empty filterName}">
                         <li class="breadcrumb-item active" aria-current="page">${filterName}</li>
-                        </c:if>
+                    </c:if>
                 </ol>
             </nav>
 
@@ -67,7 +67,9 @@
                                         <p class="card-text text-danger">
                                             <fmt:formatNumber value="${product.price}" type="number" pattern="#,###" currencySymbol="" groupingUsed="true" /> VNĐ
                                         </p>
-                                        <a href="#" class="btn btn-primary btn-sm mt-2"><i class="fas fa-plus me-1"></i> Thêm vào so sánh</a>
+                                        <button type="button" class="btn btn-primary btn-sm mt-2 add-to-compare" data-action="add" data-product-id="${product.productId}">
+                                            <i class="fas fa-plus me-1"></i> Thêm vào so sánh
+                                        </button>
                                     </div>
                                 </div>
                             </div>
@@ -77,28 +79,32 @@
             </div>
         </div>
 
+        <div class="container-fluid mt-4 added-products" style="position: fixed; bottom: 0; left: 0; right: 0; background: #fff; padding: 10px; box-shadow: 0 -2px 10px rgba(0,0,0,0.1); z-index: 1000; width: 100%; display: flex; flex-wrap: wrap; gap: 10px; display: none;">
+            <h6 class="w-100"></h6>
+        </div>
+
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" crossorigin="anonymous"></script>
 
         <script>
             const products = [
-            <c:forEach var="entry" items="${sessionScope.mapProduct_Detail.entrySet()}" varStatus="loop">
-                <c:set var="product" value="${entry.key}" />
-                <c:set var="details" value="${entry.value}" />
-            {
-            id: "${fn:escapeXml(product.productId)}",
-                    name: "${fn:escapeXml(product.name)}",
-                    imageUrl: "${fn:escapeXml(product.imageUrl) != '' ? fn:escapeXml(product.imageUrl) : 'https://via.placeholder.com/180'}",
-                    price: ${product.price},
-            cpu: "${fn:escapeXml(details[0])}",
-                    ram: "${fn:escapeXml(details[1])}",
-                    storage: "${fn:escapeXml(details[2])}",
-                    gpu: "${fn:escapeXml(details[3])}",
-            screen: "${fn:escapeXml(details[4])}",
-                    os: "${fn:escapeXml(details[5])}",
-                    keyboard: "${fn:escapeXml(details[7])}",
-                    brandId: "${fn:escapeXml(product.brand.brandId)}"
-            }${loop.last ? '' : ','}
-            </c:forEach>
+                <c:forEach var="entry" items="${sessionScope.mapProduct_Detail.entrySet()}" varStatus="loop">
+                    <c:set var="product" value="${entry.key}" />
+                    <c:set var="details" value="${entry.value}" />
+                    {
+                        id: "${fn:escapeXml(product.productId)}",
+                        name: "${fn:escapeXml(product.name)}",
+                        imageUrl: "${fn:escapeXml(product.imageUrl) != '' ? fn:escapeXml(product.imageUrl) : 'https://via.placeholder.com/180'}",
+                        price: ${product.price},
+                        cpu: "${fn:escapeXml(details[0])}",
+                        ram: "${fn:escapeXml(details[1])}",
+                        storage: "${fn:escapeXml(details[2])}",
+                        gpu: "${fn:escapeXml(details[3])}",
+                        screen: "${fn:escapeXml(details[4])}",
+                        os: "${fn:escapeXml(details[5])}",
+                        keyboard: "${fn:escapeXml(details[7])}",
+                        brandId: "${fn:escapeXml(product.brand.brandId)}"
+                    }${loop.last ? '' : ','}
+                </c:forEach>
             ];
             console.log("Danh sách sản phẩm:", products);
 
@@ -115,6 +121,7 @@
                 const osCheckboxes = document.querySelectorAll('input[name="os"]');
                 const brandButtons = document.querySelectorAll('.brand-filter');
                 const keyboardCheckboxes = document.querySelectorAll('input[name="keyboard"]');
+                const addedProducts = document.querySelector('.added-products');
 
                 function formatVND(num) {
                     return num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
@@ -191,6 +198,8 @@
 
                         minPriceInput.value = formatVND(minVal);
                         maxPriceInput.value = formatVND(maxVal);
+                       
+
                         filterProducts();
                     });
                 });
@@ -369,6 +378,92 @@
                     });
                 });
 
+                // Handle "Thêm vào so sánh" button click
+                const addProductBtn = document.querySelectorAll('.add-to-compare');
+                let hasAddedProduct = false;
+                const addedProductsSet = new Set(); // Track added product IDs
+
+                addProductBtn.forEach(button => {
+                    button.addEventListener('click', (e) => {
+                        e.preventDefault();
+                        const productCard = e.target.closest('.card');
+                        const productId = button.getAttribute('data-product-id');
+                        const product = products.find(p => p.id == productId);
+                        if (!product || addedProductsSet.has(productId))
+                            return;
+
+                        const productImage = product.imageUrl || 'https://via.placeholder.com/180';
+                        const productName = product.name || 'Unnamed Product';
+                        console.log("Adding product:", {id: productId, name: productName, image: productImage});
+
+                        // Create new product preview
+                        const newProduct = document.createElement('div');
+                        newProduct.className = 'd-flex align-items-center mb-2';
+                        const img = document.createElement('img');
+                        img.src = productImage;
+                        img.alt = productName;
+                        img.style.width = '50px';
+                        img.style.height = '50px';
+                        img.style.objectFit = 'contain';
+                        img.style.marginRight = '10px';
+                        const nameSpan = document.createElement('span');
+                        nameSpan.textContent = productName;
+                        const removeBtn = document.createElement('button');
+                        removeBtn.className = 'btn btn-danger btn-sm ms-auto';
+                        removeBtn.setAttribute('data-action', 'remove');
+                        removeBtn.setAttribute('data-product-id', productId);
+                        removeBtn.textContent = 'X';
+                        newProduct.appendChild(img);
+                        newProduct.appendChild(nameSpan);
+                        newProduct.appendChild(removeBtn);
+                        document.querySelector('.added-products').appendChild(newProduct);
+
+                        // Update the button to "Đã thêm vào so sánh" with green style
+                        button.classList.remove('btn-primary', 'add-to-compare');
+                        button.classList.add('btn-success', 'added');
+                        button.innerHTML = '<i class="fas fa-check me-1"></i> Đã thêm vào so sánh';
+                        button.removeAttribute('data-action');
+                        addedProductsSet.add(productId);
+
+                        // Show the added-products container if not already visible
+                        if (!hasAddedProduct) {
+                            addedProducts.style.display = 'flex';
+                            hasAddedProduct = true;
+                        }
+                    });
+                });
+
+                // Handle remove button functionality
+                document.addEventListener('click', (e) => {
+                    if (e.target.dataset.action === 'remove') {
+                        const productId = e.target.getAttribute('data-product-id');
+                        const productElement = e.target.closest('.d-flex');
+
+                        // Remove the product from the added-products container
+                        if (productElement) {
+                            productElement.remove();
+                        }
+
+                        // Revert ALL buttons với data-product-id tương ứng (không phụ thuộc class)
+                        const buttonList = document.querySelectorAll(`button[data-product-id="${productId}"]`);
+                        buttonList.forEach(buttonToRevert => {
+                            buttonToRevert.classList.remove('btn-success', 'added');
+                            buttonToRevert.classList.add('btn-primary', 'add-to-compare');
+                            buttonToRevert.innerHTML = '<i class="fas fa-plus me-1"></i> Thêm vào so sánh';
+                            buttonToRevert.setAttribute('data-action', 'add');
+                        });
+
+                        // Remove productId from the addedProductsSet
+                        addedProductsSet.delete(productId);
+
+                        // Hide the added-products container if no products remain
+                        if (!document.querySelector('.added-products .d-flex')) {
+                            addedProducts.style.display = 'none';
+                            hasAddedProduct = false;
+                        }
+                    }
+                });
+
                 filterProducts();
             });
         </script>
@@ -437,6 +532,21 @@
     }
     .btn-primary {
         width: 100%;
+        background-color: #007bff;
+        border-color: #007bff;
+    }
+    .btn-success.added {
+        width: 100%;
+        background-color: #28a745;
+        border-color: #28a745;
+        color: #fff;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 0.25rem 0.5rem;
+        font-size: 0.875rem;
+        line-height: 1.5;
+        border-radius: 0.2rem;
     }
     .filters {
         margin-bottom: 20px;
@@ -492,5 +602,24 @@
     }
     #filterAccordion {
         display: block;
+    }
+    .added-products {
+        width: 100% !important;
+        justify-content: flex-start !important;
+    }
+    .added-products .d-flex {
+        background-color: #f0f8ff;
+        border: 1px solid #ddd;
+        border-radius: 5px;
+        padding: 5px 10px;
+        margin: 5px;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+    .added-products img {
+        border-radius: 3px;
+    }
+    .added-products .btn-danger {
+        padding: 0.1rem 0.4rem;
+        font-size: 0.75rem;
     }
 </style>

@@ -213,7 +213,7 @@
                 </c:otherwise>
             </c:choose>
         </div>
-
+        
         <!--Footer-->                                 
         <div class="mt-5">
             <jsp:include page="/WEB-INF/view/components/footer.jsp" />

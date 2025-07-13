@@ -125,14 +125,28 @@
             </div>
 
             <!-- Sản phẩm tương tự -->
-            <section class="row similar-products mt-3">
+            <section class="row similar-products mt-4">
                 <div class="container">
                     <h3 class="section-title">Sản phẩm tương tự</h3>
+                    <div class="row">
+                        <c:forEach var="item" items="${similarProducts}">
+                            <div class="col-md-3">
+                                <div class="product-card p-2">
+                                    <img src="${item.imageUrl}" alt="${item.name}" class="img-fluid mb-2">
+                                    <h5>${item.name}</h5>
+                                    <p class="price"><fmt:formatNumber value="${item.price}" type="number" pattern="#,###" />đ</p>
+                                    <a href="${pageContext.request.contextPath}/main?action=browseProduct&id=${item.productId}" class="btn btn-outline-secondary btn-sm">Xem chi tiết</a>
+                                </div>
+                            </div>
+                        </c:forEach>
+                    </div>
                 </div>
             </section>
+
+
         </div>
 
-        <div class="container product-container mt-3" style="background-color: #e1dbdb; padding-left: 15px; padding-right: 15px;">
+        <div class="container product-container mt-4" style="background-color: #e1dbdb; padding-left: 15px; padding-right: 15px;">
             <div class="row">
                 <div class="col-md-8 product-info" style="background-color: #ffffff; padding: 15px;">
                     <h3 style="font-size: 18px; font-weight: bold; margin-bottom: 10px;">Thông tin sản phẩm</h3>
@@ -161,7 +175,7 @@
                                                        'MSI Katana 15 có kích thước màn hình 15.6 inch Full HD, độ phân giải 1920x1080 cực sắc nét. Tốc độ xử lý nhanh chóng với độ mượt mà cao trên chiếc màn hình 144Hz làm cắt giảm hoàn toàn tình trạng giật lag và nhòe màn hình khi chơi game. Giờ đây người dùng không cần tốn nhiều thời gian đến những tiệm net chất lượng cao khi chiếc laptop gaming MSI này có thể đáp ứng đủ mọi nhu cầu sử dụng của họ tại nhà hay bất cứ đâu.'
                                                        ]}" />
 
-                    <div class="mt-3">
+                    <div class="mt-4">
                         <c:forEach var="image" items="${productImages}" varStatus="loop">
                             <div class="thumbnail-wrapper mb-4 mt-3">
                                 <h5 class="fw-bold mb-4">${titles[loop.index]}</h5>
@@ -222,7 +236,7 @@
         </div>
 
         <!--Footer-->                                 
-        <div class="mt-3">
+        <div class="mt-5">
             <jsp:include page="/WEB-INF/view/components/footer.jsp" />
         </div>
 
@@ -539,7 +553,6 @@
         }
         .product-info {
             padding-right: 15px;
-            border-radius: 4px;
         }
         .product-info h3 {
             font-size: 24px;
@@ -599,5 +612,199 @@
         .product-detail-image.active {
             border-color: #007bff;
         }
+
+        /*HUY*/
+        /* Similar Products Section */
+        .similar-products {
+            background-color: #f8f9fa;
+            padding: 60px 0;
+            margin-top: 40px;
+        }
+
+        .section-title {
+            font-size: 2rem;
+            font-weight: 700;
+            color: #2c3e50;
+            text-align: center;
+            margin-bottom: 40px;
+            position: relative;
+        }
+
+        .section-title::after {
+            content: '';
+            position: absolute;
+            bottom: -10px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 60px;
+            height: 3px;
+            background: linear-gradient(45deg, #007bff, #0056b3);
+            border-radius: 2px;
+        }
+
+        /* Product Card Styling */
+        .product-card {
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+            transition: all 0.3s ease;
+            margin-bottom: 30px;
+            overflow: hidden;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .product-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+        }
+
+        .product-card img {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+            border-radius: 8px 8px 0 0;
+            transition: transform 0.3s ease;
+        }
+
+        .product-card:hover img {
+            transform: scale(1.05);
+        }
+
+        .product-card h5 {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: #2c3e50;
+            margin: 15px 0 10px 0;
+            line-height: 1.4;
+            height: 2.8em;
+            overflow: hidden;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+        }
+
+        .product-card .price {
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: #e74c3c;
+            margin-bottom: 15px;
+        }
+
+        .product-card .btn {
+            margin-top: auto;
+            border-radius: 8px;
+            font-weight: 500;
+            padding: 8px 20px;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-block;
+            text-align: center;
+        }
+
+        .product-card .btn-outline-secondary {
+            border: 2px solid #6c757d;
+            color: #6c757d;
+            background: transparent;
+        }
+
+        .product-card .btn-outline-secondary:hover {
+            background: #6c757d;
+            color: white;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(108, 117, 125, 0.3);
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .similar-products {
+                padding: 40px 0;
+            }
+
+            .section-title {
+                font-size: 1.5rem;
+                margin-bottom: 30px;
+            }
+
+            .product-card {
+                margin-bottom: 20px;
+            }
+
+            .product-card img {
+                height: 180px;
+            }
+        }
+
+        @media (max-width: 576px) {
+            .similar-products {
+                padding: 30px 0;
+            }
+
+            .section-title {
+                font-size: 1.3rem;
+            }
+
+            .product-card img {
+                height: 160px;
+            }
+
+            .product-card h5 {
+                font-size: 1rem;
+            }
+
+            .product-card .price {
+                font-size: 1.1rem;
+            }
+        }
+
+        /* Animation for loading effect */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .product-card {
+            animation: fadeInUp 0.6s ease forwards;
+        }
+
+        .product-card:nth-child(1) {
+            animation-delay: 0.1s;
+        }
+        .product-card:nth-child(2) {
+            animation-delay: 0.2s;
+        }
+        .product-card:nth-child(3) {
+            animation-delay: 0.3s;
+        }
+        .product-card:nth-child(4) {
+            animation-delay: 0.4s;
+        }
+
+        /* Additional hover effects */
+        .product-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(45deg, transparent, rgba(0, 123, 255, 0.1));
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            pointer-events: none;
+        }
+
+        .product-card:hover::before {
+            opacity: 1;
+        }
+
+
     </style>
 </html>

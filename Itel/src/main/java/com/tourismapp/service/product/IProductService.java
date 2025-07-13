@@ -6,6 +6,7 @@ package com.tourismapp.service.product;
 
 import com.tourismapp.model.Product;
 import com.tourismapp.model.ProductImage;
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -52,6 +53,9 @@ public interface IProductService {
     
     List<Product> getProductsByCategoryPaginated(int categoryId, int offset, int size);
     
+    
+    
+    // HIEU
     /**
      * Update product stock quantity
      * @param productId Product ID
@@ -59,4 +63,14 @@ public interface IProductService {
      * @return true if successful
      */
     boolean updateProductStock(int productId, int newStock);
+    
+    
+    
+    //HUY
+    List<Product> getSimilarProductsByCategory(int categoryId, int excludeProductId, int limit);
+
+    List<Product> getSimilarProductsByPrice(BigDecimal productPrice, int excludeProductId, int limit);
+
+    List<Product> getSimilarProductsByBrand(int brandId, BigDecimal productPrice, int excludeProductId, int limit);
+
 }

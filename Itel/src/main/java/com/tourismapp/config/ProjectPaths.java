@@ -56,6 +56,7 @@ public class ProjectPaths {
     // HUY
     public static final String JSP_USERMANAGEMENT_PATH = JSP_PATH_DASHBOARD + "userManagement/userManagement.jsp";
 
+    public static final String JSP_EDIT_PROFILEPAGE_PATH = "/WEB-INF/view/pages/profilePage/editProfilePage.jsp";
     
     // NAM
     public static final String JSP_BRANDMANAGEMENT_PATH = JSP_PATH_DASHBOARD + "brandManagement/brandManagement.jsp";

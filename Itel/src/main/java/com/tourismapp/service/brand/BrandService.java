@@ -29,7 +29,9 @@ public class BrandService implements IBrandService {
     public Optional<Brand> findBrandById(int id) {
         return brandDAO.findBrandById(id);
     }
-
+    
+    
+    // NAM
     @Override
     public List<Brand> getActiveBrands() {
         return brandDAO.getActiveBrands();

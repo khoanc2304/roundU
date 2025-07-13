@@ -6,6 +6,7 @@ package com.tourismapp.dao.product;
 
 import com.tourismapp.model.Product;
 import com.tourismapp.model.ProductImage;
+import java.math.BigDecimal;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.List;
@@ -59,6 +60,8 @@ public interface IProductDAO {
     List<Product> getProductsByCategoryPaginated(int categoryId, int offset, int size);
     
         
+    
+    //HIEU
     /**
      * Update product stock quantity
      * @param productId Product ID
@@ -66,4 +69,14 @@ public interface IProductDAO {
      * @return true if successful
      */
     boolean updateProductStock(int productId, int newStock);
+    
+    
+    
+    //HUY
+    List<Product> getSimilarProductsByCategory(int categoryId, int excludeProductId, int limit);
+
+    List<Product> getSimilarProductsByPrice(BigDecimal productPrice, int excludeProductId, int limit);
+
+    List<Product> getSimilarProductsByBrand(int brandId, BigDecimal productPrice, int excludeProductId, int limit);
+
 }

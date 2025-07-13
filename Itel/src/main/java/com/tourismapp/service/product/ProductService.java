@@ -8,6 +8,9 @@ import com.tourismapp.dao.product.IProductDAO;
 import com.tourismapp.dao.product.ProductDAO;
 import com.tourismapp.model.Product;
 import com.tourismapp.model.ProductImage;
+import com.tourismapp.utils.ErrDialog;
+import java.math.BigDecimal;
+import java.sql.SQLException;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -111,4 +114,21 @@ public class ProductService implements IProductService {
     public boolean updateProductStock(int productId, int newStock) {
         return productDAO.updateProductStock(productId, newStock);
     }
+
+    //HUY
+    @Override
+    public List<Product> getSimilarProductsByCategory(int categoryId, int excludeProductId, int limit) {
+        return productDAO.getSimilarProductsByCategory(categoryId, excludeProductId, limit);
+    }
+
+    @Override
+    public List<Product> getSimilarProductsByPrice(BigDecimal productPrice, int excludeProductId, int limit) {
+        return productDAO.getSimilarProductsByPrice(productPrice, excludeProductId, limit);
+    }
+
+    @Override
+    public List<Product> getSimilarProductsByBrand(int brandId, BigDecimal productPrice, int excludeProductId, int limit) {
+        return productDAO.getSimilarProductsByBrand(brandId, productPrice, excludeProductId, limit);
+    }
+
 }

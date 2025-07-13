@@ -28,6 +28,7 @@ public class BrandDAO implements IBrandDAO {
     
     private static final String GET_ALL_BRANDS = "SELECT * FROM Brand;";
     private static final String FIND_BRAND_BY_ID = "SELECT * FROM Brand WHERE brand_id = ?";
+
     private static final String GET_ACTIVE_BRANDS = "SELECT * FROM Brand WHERE status = 'active';";
     
     // NAM
