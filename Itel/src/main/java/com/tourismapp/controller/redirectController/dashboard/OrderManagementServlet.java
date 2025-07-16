@@ -20,7 +20,13 @@ public class OrderManagementServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        request.getRequestDispatcher(ProjectPaths.JSP_ORDERMANAGEMENT_PATH).forward(request, response);
+        String action = request.getParameter("action");
+        switch (action) {
+            case MainControllerServlet.ACTION_VIEW_STATISTIC:
+                break;
+            default:
+                request.getRequestDispatcher(ProjectPaths.JSP_ORDERMANAGEMENT_PATH).forward(request, response);
+        }   
     }
 
     // <editor-fold defaultstate="collapsed" desc=" functional ... ">

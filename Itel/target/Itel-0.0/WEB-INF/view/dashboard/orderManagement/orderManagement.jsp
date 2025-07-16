@@ -15,6 +15,7 @@
 
         <div id="main-content">
             <h4>Order Management Page</h4>
+<!--            <a href="<%= ProjectPaths.HREF_TO_MAINCONTROLLER + MainControllerServlet.ACTION_VIEW_STATISTIC%>">View Statistics</a>-->
         </div>
 
     </body>

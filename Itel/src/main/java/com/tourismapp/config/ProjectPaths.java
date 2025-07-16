@@ -51,9 +51,9 @@ public class ProjectPaths {
     public static final String JSP_PRODUCTMANAGEMENT_PATH = JSP_PATH_DASHBOARD + "productManagement/productManagement.jsp";
 
     
-    //
+    // NAM
     public static final String JSP_ORDERMANAGEMENT_PATH = JSP_PATH_DASHBOARD + "orderManagement/orderManagement.jsp";
-    
+    public static final String JSP_VIEWSTAT_PATH = JSP_PATH_DASHBOARD + "statictis/viewStatictis.jsp";
     
     // HUY
     public static final String JSP_USERMANAGEMENT_PATH = JSP_PATH_DASHBOARD + "userManagement/userManagement.jsp";

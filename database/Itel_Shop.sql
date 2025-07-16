@@ -3176,25 +3176,47 @@ INSERT INTO Brand_Category (brand_id, category_id) VALUES
 (19, 4),
 (19, 5);
 
-SELECT 
-                b.brand_id, b.name AS brand_name, b.image_url AS brand_image_url, b.Country AS brand_country,
-                c.category_id, c.name AS category_name, c.image_url AS category_image_url
-            FROM Brand_Category bc
-            JOIN Brand b ON bc.brand_id = b.brand_id
-            JOIN Category c ON bc.category_id = c.category_id
-            WHERE b.status = 'active' AND c.status = 'active' AND c.category_id = 1
 
-SELECT top 5 p.attribute_value, a.unit
-        FROM ProductDetail p
-        JOIN Attribute a ON p.attribute_id = a.attribute_id
-        WHERE p.product_id = 1
-;
-               
-SELECT DISTINCT p.*
-FROM Product p
-JOIN ProductDetail pd_cpu ON p.product_id = pd_cpu.product_id
-WHERE p.status = 'active'
-  AND p.brand_id IN ( 1, 2)
-  --AND p.price BETWEEN 15000000 AND 30000000
-  AND pd_cpu.attribute_id = 1
-  AND pd_cpu.attribute_value IN ('%Intel core%');
+-- Insert thêm test data
+INSERT INTO Orders (user_id, order_date, status, total_amount, shipping_address)
+VALUES
+(1, '2025-02-01 10:15:00', 'completed', 37396950.00, N'123 Lê Lợi, Quận 1, TP. Hồ Chí Minh'),
+(2, '2025-02-05 14:30:00', 'shipped', 23412208.00, N'456 Nguyễn Huệ, Quận 5, TP. Hồ Chí Minh'),
+(3, '2025-02-10 09:00:00', 'pending', 25974096.00, N'789 Trần Hưng Đạo, Quận 7, TP. Hồ Chí Minh'),
+(4, '2025-02-15 16:45:00', 'completed', 66069823.00, N'101 Phạm Văn Đồng, Cầu Giấy, Hà Nội'),
+(5, '2025-03-01 11:20:00', 'shipped', 38933538.00, N'234 Hai Bà Trưng, Quận 3, TP. Hồ Chí Minh'),
+(6, '2025-03-05 13:10:00', 'canceled', 30183258.00, N'567 Lý Thường Kiệt, Tân Bình, TP. Hồ Chí Minh'),
+(7, '2025-03-10 08:50:00', 'completed', 14974438.00, N'890 Nguyễn Văn Cừ, Long Biên, Hà Nội'),
+(8, '2025-03-15 15:30:00', 'pending', 46980670.00, N'321 Đội Cấn, Ba Đình, Hà Nội'),
+(9, '2025-04-01 12:00:00', 'shipped', 5000160.00, N'654 Võ Văn Kiệt, Quận 5, TP. Hồ Chí Minh'),
+(10, '2025-04-05 17:25:00', 'completed', 26016458.00, N'987 Nguyễn Trãi, Thanh Xuân, Hà Nội'),
+(1, '2025-04-10 10:40:00', 'pending', 63543700.00, N'147 Lê Văn Sỹ, Phú Nhuận, TP. Hồ Chí Minh'),
+(2, '2025-04-15 11:15:00', 'shipped', 12995208.00, N'258 Bùi Viện, Quận 1, TP. Hồ Chí Minh'),
+(3, '2025-05-01 09:30:00', 'completed', 74429465.00, N'369 Nguyễn Đình Chiểu, Quận 3, TP. Hồ Chí Minh'),
+(4, '2025-05-05 14:00:00', 'pending', 2500000.00, N'741 Hoàng Văn Thụ, Tân Bình, TP. Hồ Chí Minh'),
+(5, '2025-05-10 16:20:00', 'shipped', 52085000.00, N'852 Trần Phú, Hải Châu, Đà Nẵng'),
+(6, '2025-05-15 10:00:00', 'completed', 31251000.00, N'963 Phạm Ngũ Lão, Quận 1, TP. Hồ Chí Minh'),
+(7, '2025-05-20 13:45:00', 'canceled', 20834000.00, N'159 Lê Đại Hành, Quận 11, TP. Hồ Chí Minh'),
+(8, '2025-05-25 15:00:00', 'shipped', 3500000.00, N'753 Nguyễn Thị Minh Khai, Quận 3, TP. Hồ Chí Minh');
+
+INSERT INTO Order_Detail (order_id, product_id, quantity, unit_price)
+VALUES
+(1, 1, 1, 34896950.00), -- MacBook Pro 13.3 i5 2.3GHz
+(1, 40, 1, 2500000.00), -- Logitech MX Master 3S
+(2, 2, 1, 23412208.00), -- Macbook Air 13.3 i5 1.8GHz 128GB
+(3, 16, 2, 12995208.00), -- IdeaPad 320-15IKB
+(4, 4, 1, 66069823.00), -- MacBook Pro 15.4 i7 2.7GHz
+(5, 8, 1, 38933538.00), -- ZenBook UX430UN
+(6, 7, 1, 30183258.00), -- Macbook Air 13.3 i5 1.8GHz 256GB
+(7, 3, 1, 14974438.00), -- HP 250 G6 i5 7200U
+(8, 5, 1, 46980670.00), -- MacBook Pro 13.3 i5 3.1GHz
+(9, 18, 1, 5000160.00), -- Vivobook E200HA
+(10, 19, 1, 26016458.00), -- Legion Y520-15IKBN
+(11, 11, 1, 63543700.00), -- MacBook Pro 15.4 i7 2.8GHz
+(12, 12, 1, 12995208.00), -- Inspiron 3567 i3 6006U
+(13, 15, 1, 74429465.00), -- MacBook Pro 15.4 i7 2.9GHz
+(14, 40, 1, 2500000.00), -- Logitech MX Master 3S
+(15, 47, 1, 52085000.00), -- Gigabyte AORUS 17
+(16, 48, 1, 31251000.00), -- MSI Prestige 14 Evo
+(17, 54, 1, 20834000.00), -- Xiaomi 14 Pro
+(18, 41, 1, 3500000.00); -- ASUS ROG Strix Scope NX TKL Deluxe

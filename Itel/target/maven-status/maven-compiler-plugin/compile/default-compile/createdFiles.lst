@@ -48,6 +48,7 @@ com\tourismapp\model\Brand.class
 com\tourismapp\controller\redirectController\dashboard\BrandManagementServlet.class
 com\tourismapp\model\Payment.class
 com\tourismapp\dao\relation\IBrandCategoryDAO.class
+com\tourismapp\model\OrderStat.class
 com\tourismapp\controller\redirectController\CartPageServlet.class
 com\tourismapp\controller\redirectController\dashboard\ProductManagementServlet.class
 com\tourismapp\constant\FacebookLogin.class

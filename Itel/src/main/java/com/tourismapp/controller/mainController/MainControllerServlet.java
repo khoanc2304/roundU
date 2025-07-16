@@ -20,6 +20,7 @@ public class MainControllerServlet extends HttpServlet {
     public static final String CATEGORY_MANAGEMENT_REDIRECT = "categoryManagement";
     public static final String PRODUCT_MANAGEMENT_REDIRECT = "productManagement";
     public static final String ORDER_MANAGEMENT_REDIRECT = "orderManagement";
+    public static final String STATISTIC_REDIRECT = "statisticShow";
 
     // user view
     public static final String LOGINPAGE_REDIRECT = "loginPage";
@@ -40,6 +41,7 @@ public class MainControllerServlet extends HttpServlet {
     public static final String CATEGORY_MANAGEMENT_SERVLET = "/" + CATEGORY_MANAGEMENT_REDIRECT;
     public static final String PRODUCT_MANAGEMENT_SERVLET = "/" + PRODUCT_MANAGEMENT_REDIRECT;
     public static final String ORDER_MANAGEMENT_SERVLET = "/" + ORDER_MANAGEMENT_REDIRECT;
+    public static final String STATISTIC_SERVLET = "/" + STATISTIC_REDIRECT;
 
     // user view
     public static final String LOGINPAGE_SERVLET = "/" + LOGINPAGE_REDIRECT;
@@ -135,7 +137,11 @@ public class MainControllerServlet extends HttpServlet {
 
     // HIEU    
     public static final String ACTION_VIEW_COMMENT = "viewComment";
-
+    
+    
+    //NAM
+    public static final String ACTION_VIEW_STATISTIC = "viewStatistic";
+    
     // VINH dashboard
     public static final String ACTION_UPDATE_CATEGORY_FORM = "updateCategoryForm";
     public static final String ACTION_CREATE_CATEGORY_FORM = "createCategoryForm";
@@ -199,12 +205,17 @@ public class MainControllerServlet extends HttpServlet {
                 request.getRequestDispatcher(PRODUCTPAGE_REDIRECT).forward(request, response);
             case ACTION_SEARCH_ACTIVE_PRODUCT ->
                 request.getRequestDispatcher(HOMEPAGE_REDIRECT).forward(request, response);
+            // PRODUCT MANAGEMENT     
             case ACTION_CREATE_PRODUCT_FORM, ACTION_MANAGE_PRODUCT, ACTION_SEARCH_PRODUCT ->
                 request.getRequestDispatcher(PRODUCT_MANAGEMENT_REDIRECT).forward(request, response);
             case "createForm" ->
                 request.getRequestDispatcher(USER_MANAGEMENT_REDIRECT).forward(request, response);
+            // BRAND MANAGEMENT NAME    
             case ACTION_MANAGE_BRAND, ACTION_FIND_BRAND, ACTION_NAVIGATE_TO_CREATE_BRAND, ACTION_NAVIGATE_TO_UPDATE_BRAND ->
                 request.getRequestDispatcher(BRAND_MANAGEMENT_REDIRECT).forward(request, response);
+            //ORDER STAT
+            case ACTION_VIEW_STATISTIC -> 
+                request.getRequestDispatcher(DASHBOARDPAGE_SERVLET).forward(request, response);    
             // CATEGORY MANAGEMENT VINH
             case ACTION_CREATE_CATEGORY_FORM, ACTION_SEARCH_CATEGORY, ACTION_UPDATE_CATEGORY_FORM -> //(fix) -> bỏ action vào đây để nó direct tới trang servlet
                  request.getRequestDispatcher(CATEGORY_MANAGEMENT_REDIRECT).forward(request, response);

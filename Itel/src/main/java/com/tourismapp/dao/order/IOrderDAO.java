@@ -2,6 +2,7 @@ package com.tourismapp.dao.order;
 
 import com.tourismapp.model.Orders;
 import com.tourismapp.model.OrderDetail;
+import com.tourismapp.model.OrderStat;
 import java.util.List;
 import java.util.Optional;
 
@@ -11,6 +12,16 @@ import java.util.Optional;
  */
 public interface IOrderDAO {
     
+    // NAM
+    List<OrderStat> getOrderStatsByMonth();
+    List<Orders> getAllOrders();
+    List<OrderStat> getOrderStatsByStatus();
+    List<OrderStat> getOrderStatsByProduct();
+    List<OrderStat> getRevenueStatsByMonth();
+    
+    
+    
+    // HIEU
     /**
      * Create a new order
      * @param order Order object
