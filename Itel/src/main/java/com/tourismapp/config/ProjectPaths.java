@@ -28,6 +28,7 @@ public class ProjectPaths {
     public static final String HREF_TO_CARTPAGE = HREF_TO_MAINCONTROLLER + MainControllerServlet.CARTPAGE_REDIRECT;
     public static final String HREF_TO_CHECKOUTPAGE = HREF_TO_MAINCONTROLLER + MainControllerServlet.CHECKOUTPAGE_REDIRECT;
     public static final String HREF_TO_ORDERHISTORY = HREF_TO_MAINCONTROLLER + MainControllerServlet.ORDERHISTORY_REDIRECT;
+    public static final String HREF_TO_COMPARE = HREF_TO_MAINCONTROLLER + MainControllerServlet.COMPARE_REDIRECT;
 
     // RedirectServlets -> JSP pages
     public static final String JSP_PATH_VIEW = "/WEB-INF/view/pages/";
@@ -44,6 +45,7 @@ public class ProjectPaths {
     public static final String JSP_CARTPAGE_PATH = JSP_PATH_VIEW + "cartPage/cartPage.jsp";
     public static final String JSP_CHECKOUTPAGE_PATH = JSP_PATH_VIEW + "checkoutPage/checkoutPage.jsp";
     public static final String JSP_ORDERHISTORY_PATH = JSP_PATH_VIEW + "orderHistoryPage/orderHistory.jsp";
+    public static final String JSP_COMPARE_PATH = JSP_PATH_VIEW + "productPage/compareProduct.jsp";
 
     // KHOA
     public static final String JSP_PRODUCTMANAGEMENT_PATH = JSP_PATH_DASHBOARD + "productManagement/productManagement.jsp";

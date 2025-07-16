@@ -10,11 +10,9 @@
         <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     </head>
     <body>
-        <div>
-            <% request.getRequestDispatcher("/WEB-INF/view/components/navbar.jsp").include(request, response); %>
-        </div>
+        <% request.getRequestDispatcher("/WEB-INF/view/components/navbar.jsp").include(request, response); %>
 
-        <div class="content container mt-5">
+        <div class="content container">
             <div class="row">
                 <div class="col-12">
                     <h2><i class="fas fa-shopping-cart"></i> Giỏ hàng của bạn</h2>
@@ -213,7 +211,7 @@
                 </c:otherwise>
             </c:choose>
         </div>
-        
+
         <!--Footer-->                                 
         <div class="mt-5">
             <jsp:include page="/WEB-INF/view/components/footer.jsp" />
@@ -432,7 +430,7 @@
         background-color: #f8f9fa;
     }
     .content {
-        padding-top: 150px;
+        padding-top: 50px;
     }
 
     .cart-item:hover {

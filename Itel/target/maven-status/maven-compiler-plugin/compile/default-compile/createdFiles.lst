@@ -24,6 +24,7 @@ com\tourismapp\controller\redirectController\LoginPageServlet.class
 com\tourismapp\service\user\UserService.class
 com\tourismapp\dao\brand\BrandDAO.class
 com\tourismapp\model\Cart.class
+com\tourismapp\controller\redirectController\ComparePageServlet.class
 com\tourismapp\controller\redirectController\ProfilePageServlet.class
 com\tourismapp\dao\cart\CartDAO.class
 com\tourismapp\constant\GoogleLogin.class

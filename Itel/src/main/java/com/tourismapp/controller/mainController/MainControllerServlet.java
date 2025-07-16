@@ -30,6 +30,7 @@ public class MainControllerServlet extends HttpServlet {
     public static final String CHECKOUTPAGE_REDIRECT = "checkoutPage";
     public static final String CARTPAGE_REDIRECT = "cartPage";
     public static final String ORDERHISTORY_REDIRECT = "orderHistory";
+    public static final String COMPARE_REDIRECT = "compare";
 
     // redirect to each servlets
     // dashboard
@@ -49,6 +50,7 @@ public class MainControllerServlet extends HttpServlet {
     public static final String CHECKOUTPAGE_SERVLET = "/" + CHECKOUTPAGE_REDIRECT;
     public static final String CARTPAGE_SERVLET = "/" + CARTPAGE_REDIRECT;
     public static final String ORDERHISTORY_SERVLET = "/" + ORDERHISTORY_REDIRECT;
+    public static final String COMPARE_SERVLET = "/" + COMPARE_REDIRECT;
 
     // main?action=
     // doPost (Action)
@@ -189,7 +191,8 @@ public class MainControllerServlet extends HttpServlet {
                     BRAND_MANAGEMENT_REDIRECT, 
                     CATEGORY_MANAGEMENT_REDIRECT, 
                     PRODUCT_MANAGEMENT_REDIRECT, 
-                    ORDER_MANAGEMENT_REDIRECT ->
+                    ORDER_MANAGEMENT_REDIRECT, 
+                    COMPARE_REDIRECT ->
                 request.getRequestDispatcher(action).forward(request, response);
             // VIEW PRODUCT FOR USER 
             case ACTION_BROWSE_PRODUCT, ACTION_FILTER_BY_CRITERIA ->

@@ -13,34 +13,31 @@
         <title>Product Page</title>
 
         <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" crossorigin="anonymous">
-
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css" crossorigin="anonymous"/>
-
         <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
-
         <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
     </head>
 
     <body style="background-color: #F3F4F6; margin: 0; font-family: 'Roboto', sans-serif;">
         <% request.getRequestDispatcher("/WEB-INF/view/components/navbar.jsp").include(request, response); %>
 
-        <div class="container mt-4">
-            <nav aria-label="breadcrumb">
+        <div class="container mt-4" >
+            <nav aria-label="breadcrumb" style="margin-left:45px; margin-right: 30px;">
                 <ol class="breadcrumb">
                     <li class="breadcrumb-item"><a href="#/">Trang chủ</a></li>
-                    <c:if test="${not empty category}">
+                        <c:if test="${not empty category}">
                         <li class="breadcrumb-item"><a href="#">${category.name}</a></li>
-                    </c:if>
-                    <c:if test="${not empty brand}">
+                        </c:if>
+                        <c:if test="${not empty brand}">
                         <li class="breadcrumb-item"><a href="#">${brand.name}</a></li>
-                    </c:if>
-                    <c:if test="${not empty filterName}">
+                        </c:if>
+                        <c:if test="${not empty filterName}">
                         <li class="breadcrumb-item active" aria-current="page">${filterName}</li>
-                    </c:if>
+                        </c:if>
                 </ol>
             </nav>
 
-            <div class="row">
+            <div class="row" style="margin-left:30px; margin-right: 30px;">
                 <%@ include file="filterLaptop.jsp" %>
 
                 <div class="col-lg-9">
@@ -67,8 +64,8 @@
                                         <p class="card-text text-danger">
                                             <fmt:formatNumber value="${product.price}" type="number" pattern="#,###" currencySymbol="" groupingUsed="true" /> VNĐ
                                         </p>
-                                        <button type="button" class="btn btn-primary btn-sm mt-2 add-to-compare" data-action="add" data-product-id="${product.productId}">
-                                            <i class="fas fa-plus me-1"></i> Thêm vào so sánh
+                                        <button type="button" class="btn btn-primary btn-sm mt-2 add-to-compare" data-action="add" data-product-id="${product.productId}" id="btn-${product.productId}">
+                                            Thêm vào so sánh
                                         </button>
                                     </div>
                                 </div>
@@ -79,32 +76,40 @@
             </div>
         </div>
 
-        <div class="container-fluid mt-4 added-products" style="position: fixed; bottom: 0; left: 0; right: 0; background: #fff; padding: 10px; box-shadow: 0 -2px 10px rgba(0,0,0,0.1); z-index: 1000; width: 100%; display: flex; flex-wrap: wrap; gap: 10px; display: none;">
-            <h6 class="w-100"></h6>
+        <div class="container-fluid mt-4 added-products" style="position: fixed; bottom: 0; left: 0; right: 0; background: #fff; padding: 10px; box-shadow: 0 -2px 10px rgba(0,0,0,0.1); z-index: 1000; display: none; max-width: 100%;">
+            <div class="row">
+                <div class="col-8 d-flex align-items-center flex-wrap product-list-container" id="added-product-list" style="gap: 5px; overflow-x: auto; margin-right: 5px;"></div>
+                <div class="col-4 d-flex align-items-center gap-2 action-buttons-container" id="action-buttons" style="height: 70px;">
+                    <button class="btn btn-outline-primary btn-sm" id="clear-all">Xóa tất cả</button>
+                    <button class="btn btn-outline-success btn-sm" id="compare-now">So sánh ngay <i class="fas fa-arrow-right"></i></button>
+                    <button class="btn btn-outline-secondary btn-sm" id="toggle-bar"><i class="fas fa-caret-up"></i></button>
+                </div>
+            </div>
         </div>
+        <div id="compare-toggle" style="display: none; position: fixed; bottom: 20px; left: 20px; padding: 10px 20px; background-color: #007bff; color: white; border: none; border-radius: 20px; font-size: 1rem; cursor: pointer; z-index: 1001; font-family: 'Roboto', sans-serif;"></div>
 
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" crossorigin="anonymous"></script>
 
         <script>
             const products = [
-                <c:forEach var="entry" items="${sessionScope.mapProduct_Detail.entrySet()}" varStatus="loop">
-                    <c:set var="product" value="${entry.key}" />
-                    <c:set var="details" value="${entry.value}" />
-                    {
-                        id: "${fn:escapeXml(product.productId)}",
-                        name: "${fn:escapeXml(product.name)}",
-                        imageUrl: "${fn:escapeXml(product.imageUrl) != '' ? fn:escapeXml(product.imageUrl) : 'https://via.placeholder.com/180'}",
-                        price: ${product.price},
-                        cpu: "${fn:escapeXml(details[0])}",
-                        ram: "${fn:escapeXml(details[1])}",
-                        storage: "${fn:escapeXml(details[2])}",
-                        gpu: "${fn:escapeXml(details[3])}",
-                        screen: "${fn:escapeXml(details[4])}",
-                        os: "${fn:escapeXml(details[5])}",
-                        keyboard: "${fn:escapeXml(details[7])}",
-                        brandId: "${fn:escapeXml(product.brand.brandId)}"
-                    }${loop.last ? '' : ','}
-                </c:forEach>
+            <c:forEach var="entry" items="${sessionScope.mapProduct_Detail.entrySet()}" varStatus="loop">
+                <c:set var="product" value="${entry.key}" />
+                <c:set var="details" value="${entry.value}" />
+            {
+            id: "${fn:escapeXml(product.productId)}",
+                    name: "${fn:escapeXml(product.name)}",
+                    imageUrl: "${fn:escapeXml(product.imageUrl) != '' ? fn:escapeXml(product.imageUrl) : 'https://via.placeholder.com/180'}",
+                    price: ${product.price},
+            cpu: "${fn:escapeXml(details[0])}",
+                    ram: "${fn:escapeXml(details[1])}",
+                    storage: "${fn:escapeXml(details[2])}",
+                    gpu: "${fn:escapeXml(details[3])}",
+            screen: "${fn:escapeXml(details[4])}",
+                    os: "${fn:escapeXml(details[5])}",
+                    keyboard: "${fn:escapeXml(details[7])}",
+                    brandId: "${fn:escapeXml(product.brand.brandId)}"
+            }${loop.last ? '' : ','}
+            </c:forEach>
             ];
             console.log("Danh sách sản phẩm:", products);
 
@@ -122,6 +127,11 @@
                 const brandButtons = document.querySelectorAll('.brand-filter');
                 const keyboardCheckboxes = document.querySelectorAll('input[name="keyboard"]');
                 const addedProducts = document.querySelector('.added-products');
+                const addedProductList = document.getElementById('added-product-list');
+                const clearAllBtn = document.getElementById('clear-all');
+                const compareNowBtn = document.getElementById('compare-now');
+                const toggleBarBtn = document.getElementById('toggle-bar');
+                const compareToggle = document.getElementById('compare-toggle');
 
                 function formatVND(num) {
                     return num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
@@ -165,7 +175,6 @@
                     checkbox.addEventListener('change', () => {
                         let minVal = 0;
                         let maxVal = 200000000;
-
                         if (checkbox.id === 'all' && checkbox.checked) {
                             priceChecks.forEach(cb => cb.checked = cb.id === 'all');
                             minVal = 0;
@@ -195,11 +204,8 @@
                                     break;
                             }
                         }
-
                         minPriceInput.value = formatVND(minVal);
                         maxPriceInput.value = formatVND(maxVal);
-                       
-
                         filterProducts();
                     });
                 });
@@ -218,7 +224,6 @@
                         maxPriceInput.value = formatVND(maxVal);
                         priceChecks.forEach(cb => cb.checked = cb.id === 'all' && minVal === 0 && maxVal === 200000000);
                     });
-
                     input.addEventListener('blur', () => {
                         let minVal = parseVND(minPriceInput.value) || 0;
                         let maxVal = parseVND(maxPriceInput.value) || 200000000;
@@ -378,10 +383,10 @@
                     });
                 });
 
-                // Handle "Thêm vào so sánh" button click
                 const addProductBtn = document.querySelectorAll('.add-to-compare');
                 let hasAddedProduct = false;
-                const addedProductsSet = new Set(); // Track added product IDs
+                const addedProductsSet = new Set();
+                const MAX_SLOTS = 3;
 
                 addProductBtn.forEach(button => {
                     button.addEventListener('click', (e) => {
@@ -389,16 +394,14 @@
                         const productCard = e.target.closest('.card');
                         const productId = button.getAttribute('data-product-id');
                         const product = products.find(p => p.id == productId);
-                        if (!product || addedProductsSet.has(productId))
+                        if (!product || addedProductsSet.has(productId) || addedProductsSet.size >= MAX_SLOTS)
                             return;
 
                         const productImage = product.imageUrl || 'https://via.placeholder.com/180';
                         const productName = product.name || 'Unnamed Product';
-                        console.log("Adding product:", {id: productId, name: productName, image: productImage});
 
-                        // Create new product preview
                         const newProduct = document.createElement('div');
-                        newProduct.className = 'd-flex align-items-center mb-2';
+                        newProduct.className = 'd-flex align-items-center mb-2 product-slot';
                         const img = document.createElement('img');
                         img.src = productImage;
                         img.alt = productName;
@@ -409,60 +412,131 @@
                         const nameSpan = document.createElement('span');
                         nameSpan.textContent = productName;
                         const removeBtn = document.createElement('button');
-                        removeBtn.className = 'btn btn-danger btn-sm ms-auto';
+                        removeBtn.className = 'btn btn-outline-secondary btn-sm remove-btn';
                         removeBtn.setAttribute('data-action', 'remove');
                         removeBtn.setAttribute('data-product-id', productId);
+                        removeBtn.setAttribute('data-original-button-id', button.id || `btn-${productId}`);
                         removeBtn.textContent = 'X';
                         newProduct.appendChild(img);
                         newProduct.appendChild(nameSpan);
                         newProduct.appendChild(removeBtn);
-                        document.querySelector('.added-products').appendChild(newProduct);
+                        addedProductList.appendChild(newProduct);
 
-                        // Update the button to "Đã thêm vào so sánh" with green style
                         button.classList.remove('btn-primary', 'add-to-compare');
                         button.classList.add('btn-success', 'added');
                         button.innerHTML = '<i class="fas fa-check me-1"></i> Đã thêm vào so sánh';
                         button.removeAttribute('data-action');
                         addedProductsSet.add(productId);
 
-                        // Show the added-products container if not already visible
                         if (!hasAddedProduct) {
                             addedProducts.style.display = 'flex';
                             hasAddedProduct = true;
                         }
+                        updatePlaceholders();
+                        updateCompareToggle();
+                        updateCompareButton();
                     });
                 });
 
-                // Handle remove button functionality
                 document.addEventListener('click', (e) => {
                     if (e.target.dataset.action === 'remove') {
                         const productId = e.target.getAttribute('data-product-id');
-                        const productElement = e.target.closest('.d-flex');
+                        const originalButtonId = e.target.getAttribute('data-original-button-id');
+                        const productElement = e.target.closest('.product-slot');
 
-                        // Remove the product from the added-products container
                         if (productElement) {
                             productElement.remove();
                         }
 
-                        // Revert ALL buttons với data-product-id tương ứng (không phụ thuộc class)
-                        const buttonList = document.querySelectorAll(`button[data-product-id="${productId}"]`);
-                        buttonList.forEach(buttonToRevert => {
+                        const buttonToRevert = document.getElementById(originalButtonId);
+                        if (buttonToRevert) {
                             buttonToRevert.classList.remove('btn-success', 'added');
                             buttonToRevert.classList.add('btn-primary', 'add-to-compare');
                             buttonToRevert.innerHTML = '<i class="fas fa-plus me-1"></i> Thêm vào so sánh';
                             buttonToRevert.setAttribute('data-action', 'add');
-                        });
+                        }
 
-                        // Remove productId from the addedProductsSet
                         addedProductsSet.delete(productId);
 
-                        // Hide the added-products container if no products remain
-                        if (!document.querySelector('.added-products .d-flex')) {
+                        if (addedProductsSet.size > 0) {
+                            addedProducts.style.display = 'flex';
+                            updatePlaceholders();
+                            updateCompareToggle();
+                        } else {
                             addedProducts.style.display = 'none';
                             hasAddedProduct = false;
+                            compareToggle.style.display = 'none';
                         }
+                        updateCompareButton();
                     }
                 });
+
+                clearAllBtn.addEventListener('click', () => {
+                    addedProductList.innerHTML = '';
+                    addProductBtn.forEach(button => {
+                        if (button.classList.contains('added')) {
+                            button.classList.remove('btn-success', 'added');
+                            button.classList.add('btn-primary', 'add-to-compare');
+                            button.innerHTML = '<i class="fas fa-plus me-1"></i> Thêm vào so sánh';
+                            button.setAttribute('data-action', 'add');
+                        }
+                    });
+                    addedProductsSet.clear();
+                    addedProducts.style.display = 'none';
+                    hasAddedProduct = false;
+                    compareToggle.style.display = 'none';
+                    updateCompareButton();
+                });
+
+                compareNowBtn.addEventListener('click', () => {
+                if (!compareNowBtn.disabled) {
+                    const productIds = Array.from(addedProductsSet).join('-');
+                    console.log("list productid: " + productIds);
+                    window.location.href = `compare?productIds=` + productIds;
+                    }
+                });
+
+                toggleBarBtn.addEventListener('click', () => {
+                    addedProducts.style.display = 'none';
+                    compareToggle.style.display = 'block';
+                    updateCompareToggle();
+                });
+
+                compareToggle.addEventListener('click', () => {
+                    compareToggle.style.display = 'none';
+                    if (hasAddedProduct) {
+                        addedProducts.style.display = 'flex';
+                    }
+                });
+
+                function updatePlaceholders() {
+                    const currentItems = addedProductList.querySelectorAll('.product-slot:not(.placeholder)').length;
+                    const remainingSlots = MAX_SLOTS - currentItems;
+
+                    document.querySelectorAll('#added-product-list .placeholder').forEach(placeholder => placeholder.remove());
+
+                    if (currentItems > 0 && currentItems < MAX_SLOTS) {
+                        const placeholdersNeeded = Math.min(2, remainingSlots);
+                        for (let i = 0; i < placeholdersNeeded; i++) {
+                            const placeholder = document.createElement('div');
+                            placeholder.className = 'd-flex align-items-center mb-2 placeholder product-slot';
+                            placeholder.innerHTML = '<span style="color: #007bff; font-size: 0.9rem;">Thêm sản phẩm</span>';
+                            addedProductList.insertBefore(placeholder, addedProductList.firstChild);
+                        }
+                    }
+                }
+
+                function updateCompareToggle() {
+                    const count = addedProductsSet.size;
+                    if (count > 0 && count <= 3) {
+                        compareToggle.textContent = 'So sánh (' + count + ')';
+                    }
+                }
+
+                function updateCompareButton() {
+                    const productCount = addedProductsSet.size;
+                    compareNowBtn.disabled = productCount < 2;
+                }
 
                 filterProducts();
             });
@@ -471,7 +545,7 @@
 </html>
 
 <style>
-    .range-slider input[type=range] {
+    .range-slider input[type="range"] {
         -webkit-appearance: none;
         appearance: none;
         width: 100%;
@@ -481,7 +555,8 @@
         outline: none;
         position: absolute;
     }
-    .range-slider input[type=range]::-webkit-slider-thumb {
+
+    .range-slider input[type="range"]::-webkit-slider-thumb {
         -webkit-appearance: none;
         appearance: none;
         width: 18px;
@@ -493,7 +568,8 @@
         position: relative;
         z-index: 3;
     }
-    .range-slider input[type=range]::-moz-range-thumb {
+
+    .range-slider input[type="range"]::-moz-range-thumb {
         width: 18px;
         height: 18px;
         border-radius: 50%;
@@ -503,38 +579,46 @@
         position: relative;
         z-index: 3;
     }
+
     .filter-section .form-check {
         margin-bottom: 0.5rem;
     }
+
     .filter-section button {
         min-width: 60px;
     }
+
     .card {
         border: 1px solid #ddd;
         border-radius: 5px;
         text-align: center;
     }
+
     .card-img-top {
         object-fit: contain;
         height: 180px;
         border-top-left-radius: 5px;
         border-top-right-radius: 5px;
     }
+
     .card-title {
         font-size: 1rem;
         overflow: hidden;
         text-overflow: ellipsis;
         white-space: nowrap;
     }
+
     .card-text.text-danger {
         font-weight: bold;
         font-size: 1.1rem;
     }
+
     .btn-primary {
         width: 100%;
         background-color: #007bff;
         border-color: #007bff;
     }
+
     .btn-success.added {
         width: 100%;
         background-color: #28a745;
@@ -548,43 +632,53 @@
         line-height: 1.5;
         border-radius: 0.2rem;
     }
+
     .filters {
         margin-bottom: 20px;
         background-color: #fff;
         padding: 15px;
         border-radius: 8px;
-        box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
     }
+
     .filter-group {
         margin-bottom: 15px;
     }
+
     .filter-group strong {
         display: block;
         margin-bottom: 5px;
         font-size: 1.1em;
     }
+
     .filter-group label {
         margin-right: 10px;
         font-size: 0.9em;
     }
+
     .brand-filter.active {
         border-color: #007bff !important;
         background-color: #e6f0ff;
         box-shadow: 0 0 0 0.15rem rgba(0, 123, 255, 0.25);
     }
+
     .custom-range-section {
         margin-top: 15px;
     }
+
     .form-control-sm {
         max-width: 120px;
     }
+
     .border-primary {
         border-color: #007bff !important;
     }
+
     .price-check:checked + label {
         color: #007bff;
         font-weight: bold;
     }
+
     h5.mb-3 {
         position: relative;
         z-index: 1001;
@@ -592,6 +686,7 @@
         padding-bottom: 10px;
         margin-bottom: 0;
     }
+
     .filter-section {
         position: sticky;
         top: 60px;
@@ -600,26 +695,151 @@
         overflow-y: auto;
         z-index: 1000;
     }
+
     #filterAccordion {
         display: block;
     }
+
     .added-products {
-        width: 100% !important;
-        justify-content: flex-start !important;
+        width: 100%;
     }
-    .added-products .d-flex {
+
+    .added-products .row {
+        display: flex;
+        justify-content: center;
+        margin-left: auto;
+        margin-right: auto;
+        max-width: 90%;
+    }
+
+    .added-products .product-slot {
         background-color: #f0f8ff;
         border: 1px solid #ddd;
         border-radius: 5px;
         padding: 5px 10px;
-        margin: 5px;
-        box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        margin: 0;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        height: 70px;
+        display: flex;
+        align-items: center;
+        flex: 0 0 auto;
+        position: relative;
+        width: 250px;
+        margin-right: 10px;
     }
+
+    .added-products .product-slot .remove-btn {
+        position: absolute;
+        right: 5px;
+        top: 50%;
+        transform: translateY(-50%);
+        background-color: #f0f8ff;
+        border: none;
+        color: #333;
+        padding: 0.1rem 0.4rem;
+        font-size: 0.75rem;
+        height: 30px;
+        width: 30px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
     .added-products img {
         border-radius: 3px;
     }
-    .added-products .btn-danger {
-        padding: 0.1rem 0.4rem;
-        font-size: 0.75rem;
+
+    .added-products .placeholder {
+        background-color: #e9ecef;
+        border: 1px solid #dee2e6;
+        border-radius: 5px;
+        padding: 5px 10px;
+        margin: 0;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        height: 70px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex: 0 0 auto;
+        width: 250px;
+        margin-right: 10px;
+    }
+
+    .product-list-container {
+        flex: 8;
+        display: flex;
+        align-items: center;
+        flex-wrap: wrap;
+        gap: 5px;
+        overflow-x: auto;
+        margin-right: 5px;
+    }
+
+    .action-buttons-container {
+        flex: 2;
+        display: flex;
+        align-items: center;
+        justify-content: flex-start;
+        gap: 10px;
+        height: 70px;
+        margin: 0;
+        padding: 0;
+    }
+
+    #clear-all, #compare-now, #toggle-bar {
+        height: 100%;
+        padding: 0.5rem 1rem;
+        border-radius: 8px;
+        font-weight: 600;
+        min-width: 0;
+        width: auto;
+        transition: all 0.3s ease;
+        border: none;
+        cursor: pointer;
+    }
+
+    #clear-all {
+        background-color: #e9ecef;
+        color: #007bff;
+    }
+
+    #clear-all:hover {
+        background-color: #007bff;
+        color: #fff;
+    }
+
+    #compare-now {
+        background-color: #28a745;
+        color: #fff;
+    }
+
+    #compare-now:disabled {
+        background-color: #a0d3a9;
+        cursor: not-allowed;
+    }
+
+    #compare-now:hover:not(:disabled) {
+        background-color: #218838;
+        color: #fff;
+    }
+
+    #toggle-bar {
+        height: 40px;
+        width: 40px;
+        border-radius: 50%;
+        background-color: #6c757d;
+        color: #fff;
+        border: none;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 0;
+        font-weight: 600;
+        cursor: pointer;
+        transition: background-color 0.3s ease;
+    }
+
+    #toggle-bar:hover {
+        background-color: #5a6268;
     }
 </style>

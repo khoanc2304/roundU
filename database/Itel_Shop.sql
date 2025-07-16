@@ -6,7 +6,7 @@ END
 GO
 
 -- Tạo lại database
-CREATE DATABASE Itel_Shop;
+CREATE DATABASE Itel_Shop2;
 GO
 
 USE Itel_Shop;
@@ -217,19 +217,19 @@ INSERT INTO Brand (name, Country, description, image_url) VALUES
 ('Gigabyte', 'Taiwan', 'AERO, AORUS', 'https://i.pinimg.com/736x/55/f3/42/55f342fcf288825e3e3a9752eb503897.jpg'), --id:8
 
 -- Phone
-('Samsung', 'South Korea', 'Galaxy series & Headphones', 'https://upload.wikimedia.org/wikipedia/commons/thumb/2/24/Samsung_Logo.svg/1024px-Samsung_Logo.svg.png'), --id:9
+('Samsung', 'South Korea', 'Galaxy series & Headphones', 'https://upload.wikimedia.org/wikipedia/commons/thumb/2/24/Samsung_Logo.svg/1000px-Samsung_Logo.svg.png'), --id:9
 ('Xiaomi', 'China', 'Redmi, Mi, Poco', 'https://upload.wikimedia.org/wikipedia/commons/thumb/a/ae/Xiaomi_logo_%282021-%29.svg/1200px-Xiaomi_logo_%282021-%29.svg.png'), --id:10
 ('OPPO', 'China', 'Reno, A series', 'https://upload.wikimedia.org/wikipedia/commons/thumb/0/0a/OPPO_LOGO_2019.svg/1280px-OPPO_LOGO_2019.svg.png'), --id:11
 ('Vivo', 'China', 'X series, Y series', 'https://upload.wikimedia.org/wikipedia/commons/thumb/1/13/Vivo_logo_2019.svg/1200px-Vivo_logo_2019.svg.png'), --id:12
 ('Realme', 'China', 'Narzo, GT series', 'https://upload.wikimedia.org/wikipedia/commons/thumb/e/e6/Realme_logo_SVG.svg/1200px-Realme_logo_SVG.svg.png'), --id:13
-('Nokia', 'Finland', 'Android One phones', 'https://1024logos.net/wp-content/uploads/2017/03/Nokia-Logo.jpg'), --id:14
+('Nokia', 'Finland', 'Android One phones', 'https://1000logos.net/wp-content/uploads/2017/03/Nokia-Logo.jpg'), --id:14
 
 -- Accessories
 ('Logitech', 'Switzerland', 'Famous for mice, keyboards, and headphones for both office and gaming.', 'https://upload.wikimedia.org/wikipedia/commons/1/17/Logitech_logo.svg'), --id:15
 ('Razer', 'USA/Singapore', 'Specializes in RGB gaming gear: keyboards, mice, headphones.', 'https://upload.wikimedia.org/wikipedia/vi/a/a1/Razer_snake_logo.png'), --id:16
 ('Corsair', 'USA', 'Gaming peripherals manufacturer: keyboards, mice, headsets.', 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSK7HxPKivG9Zq16GNTcdKQDVg60OYQnP3QYw&s'), --id:17
 ('SteelSeries', 'Denmark', 'eSports-focused brand with gaming mice, keyboards, and headphones.', 'https://upload.wikimedia.org/wikipedia/en/7/7f/Steelseries-logo.png'), --id:18
-('HyperX', 'USA', 'Best known for gaming headsets, also offers mice and keyboards.', 'https://1024logos.net/wp-content/uploads/2021/04/HyperX-logo.jpg'); --id:19
+('HyperX', 'USA', 'Best known for gaming headsets, also offers mice and keyboards.', 'https://1000logos.net/wp-content/uploads/2021/04/HyperX-logo.jpg'); --id:19
 
 
 
@@ -306,7 +306,7 @@ VALUES
 ('Macbook Air 13.3 i5 1.8GHz 256GB', 'Ultrabook with extended storage', 30183258, 35, 1, 1, 'https://cdn.tgdd.vn/Products/Images/44/106880/apple-macbook-air-mqd42sa-a-i5-5350u-8gb-256gb-bac-450x300-450x300.jpg'),
 ('ZenBook UX430UN', 'Ultrabook with Nvidia GeForce MX150', 38933538, 45, 1, 5, 'https://ducanhcomputer.com/uploads/san-pham/2019_03/gv096t.jpg'),
 ('Swift 3', 'Ultrabook with IPS display', 20052725, 50, 1, 6, 'https://cdn.tgdd.vn/Products/Images/44/269313/acer-swift-3-sf314-511-55qe-i5-nxabnsv003-120122-022600-600x600.jpg'),
-('HP 250 G6 i3 6006U', 'Affordable Notebook with Intel i3', 8984663, 70, 1, 3, 'https://product.hstatic.net/1024296652/product/kk_1a586f1bece145bd8a4cbfc80f4c63f2_7a0b155ca637451e81f6e55005c1f568.jpg'),
+('HP 250 G6 i3 6006U', 'Affordable Notebook with Intel i3', 8984663, 70, 1, 3, 'https://product.hstatic.net/1000296652/product/kk_1a586f1bece145bd8a4cbfc80f4c63f2_7a0b155ca637451e81f6e55005c1f568.jpg'),
 ('MacBook Pro 15.4 i7 2.8GHz', 'Ultrabook with AMD Radeon Pro 555', 63543700, 20, 1, 1, 'https://ttcenter.com.vn/uploads/product/8blddpkb-657-macbook-pro-2017-15-inch-i7-16gb-512gb-touchbar.jpg'),
 ('Inspiron 3567 i3 6006U', 'Notebook with Full HD display', 12995208, 60, 1, 2, 'https://cdn.tgdd.vn/Products/Images/44/91260/dell-inspiron-3567-i3-6006u-ava-600x600.jpg'),
 ('MacBook 12', 'Compact Ultrabook with Retina Display', 32865635, 30, 1, 1, 'https://cdn2.cellphones.com.vn/insecure/rs:fill:0:358/q:90/plain/https://cellphones.com.vn/media/catalog/product/m/a/macbook-mnyf2-1.jpg'),
@@ -344,14 +344,14 @@ VALUES
 -- MSI (brand_id=7, Laptop, category_id=1)
 ('MSI Katana 15', 'Gaming laptop with RTX 4070, 165Hz display', 36459500, 25, 1, 7, 'https://cdn2.fptshop.com.vn/unsafe/750x0/filters:format(webp):quality(75)/msi_katana_15_b13v_1_9310c95515.png'),
 ('MSI Stealth 16', 'Thin gaming laptop with RTX 4060, 144Hz', 41668000, 20, 1, 7, 'https://cdn.tgdd.vn/Products/Images/44/322946/msi-gaming-stealth-16-ai-studio-a1vgg-ultra-9-089vn-1-750x500.jpg'),
-('MSI Prestige 14 Evo', 'Business laptop with Intel Core Ultra 7', 31251024, 30, 1, 7, 'https://cdn2.fptshop.com.vn/unsafe/750x0/filters:format(webp):quality(75)/msi_prestige_14_ai_studio_c1u_1_5ab50baa17.png'),
+('MSI Prestige 14 Evo', 'Business laptop with Intel Core Ultra 7', 31251000, 30, 1, 7, 'https://cdn2.fptshop.com.vn/unsafe/750x0/filters:format(webp):quality(75)/msi_prestige_14_ai_studio_c1u_1_5ab50baa17.png'),
 ('MSI Creator Z17', 'Creator laptop with RTX 3080 Ti, 4K display', 65106250, 15, 1, 7, 'https://cdn2.fptshop.com.vn/unsafe/750x0/filters:format(webp):quality(75)/msi_creator_16_ai_studio_a1v_1_7eece4ea8a.png'),
 -- Gigabyte (brand_id=8, Laptop, category_id=1)
 ('Gigabyte AORUS 17', 'Gaming laptop with RTX 4080, 240Hz display', 52085000, 20, 1, 8, 'https://cdn2.fptshop.com.vn/unsafe/750x0/filters:format(webp):quality(75)/2022_9_26_637998081269981032_gigabyte-gaming-aorus-17-xe5-73vn534gh-i7-12700h-rtx3070ti-den-1.jpg'),
 ('Gigabyte AERO 15 OLED', 'Creator laptop with 4K AMOLED, RTX 3070', 46876500, 25, 1, 8, 'https://product.hstatic.net/200000837185/product/laptopgigabyteaero15oledkd-72s1623go_a4a4b601ef9c4bddb1bdfd1d12825bef.png'),
 ('Gigabyte G5', 'Budget gaming laptop with RTX 4050', 26042500, 35, 1, 8, 'https://cdn2.fptshop.com.vn/unsafe/750x0/filters:format(webp):quality(75)/2023_5_5_638188828261835779_gigabyte-gaming-g5-kf-e3vn313sh-i5-12500h-den-3.jpg'),
 -- Samsung (brand_id=9, Phone, category_id=2)
-('Samsung Galaxy S24 Ultra', 'Flagship phone with Snapdragon 8 Gen 3', 31251024, 40, 2, 9, 'https://cdn2.fptshop.com.vn/unsafe/750x0/filters:format(webp):quality(75)/2024_1_15_638409395342231798_samsung-galaxy-s24-ultra-xam-1.png'),
+('Samsung Galaxy S24 Ultra', 'Flagship phone with Snapdragon 8 Gen 3', 31251000, 40, 2, 9, 'https://cdn2.fptshop.com.vn/unsafe/750x0/filters:format(webp):quality(75)/2024_1_15_638409395342231798_samsung-galaxy-s24-ultra-xam-1.png'),
 ('Samsung Galaxy A35', 'Mid-range phone with Exynos 1380', 9114875, 60, 2, 9, 'https://cdn.mobilecity.vn/mobilecity-vn/images/2024/03/w300/samsung-galaxy-a35-tim.jpg.webp'),
 ('Samsung Galaxy Z Fold 6', 'Foldable phone with 7.6-inch AMOLED', 46876500, 20, 2, 9, 'https://cdn2.fptshop.com.vn/unsafe/750x0/filters:format(webp):quality(75)/samsung_galaxy_z_fold6_gray_a413f785af.png'),
 -- Xiaomi (brand_id=10, Phone, category_id=2)
@@ -380,7 +380,7 @@ VALUES
 ('Corsair HS80 RGB Wireless', 'Wireless gaming headset with Dolby Atmos', 3906375, 50, 4, 17, 'https://product.hstatic.net/200000722513/product/led_rgb_wireless_ca_9011235_ap_0001_2_436fee75cc8d499e9d7619b9efef8acd_8f3b7e1f606c49b8b209034703d29d54_1024x1024.jpg'),
 -- SteelSeries (brand_id=18, Keyboard/Mouse, category_id=5/3)
 ('SteelSeries Apex Pro TKL', 'Mechanical keyboard with adjustable switches', 4687650, 45, 5, 18, 'https://nguyencongpc.vn/media/product/17186-b--n-ph--m-c---steelseries-apex-pro-tkl-3.jpg'),
-('SteelSeries Aerox 5 Wireless', 'Lightweight gaming mouse with 9 buttons', 2604250, 55, 3, 18, 'https://file.hstatic.net/1024026716/file/gearvn-chuot-steelseries-aerox-5-wireless-1_15b7fafa0f42499394e87b7b75a7ac58_grande.png'),
+('SteelSeries Aerox 5 Wireless', 'Lightweight gaming mouse with 9 buttons', 2604250, 55, 3, 18, 'https://file.hstatic.net/1000026716/file/gearvn-chuot-steelseries-aerox-5-wireless-1_15b7fafa0f42499394e87b7b75a7ac58_grande.png'),
 ('SteelSeries Arctis Nova Pro', 'Wireless gaming headset with ANC', 6510625, 40, 4, 18, 'https://product.hstatic.net/200000722513/product/800_crop-scale_optimize_subsampling-2_85403d08f58e43de8be56cbc40688980_92aaa444113d491c92b3096a44a385f9_1024x1024.png'),
 -- Corsair (brand_id=17, Headphone=4, Keyboard=5, Mouse=3)
 ('Corsair Virtuoso RGB Wireless', 'Premium wireless gaming headset with 7.1 surround', 4687650, 35, 4, 17, 'https://cdn2.fptshop.com.vn/unsafe/750x0/filters:format(webp):quality(75)/2021_11_9_637720718333788887_tai-nghe-khong-day-corsair-virtuoso-rgb-den-1.jpg'),
@@ -409,7 +409,7 @@ VALUES
 ('Realme Buds Air 6 Pro', 'Wireless earbuds with 50dB ANC', 2083400, 70, 4, 13, 'https://down-vn.img.susercontent.com/file/sg-11134201-7rd6w-lv325z0e6pas45'),
 ('Realme Buds T300', 'Budget wireless earbuds with 30-hour battery', 1041700, 100, 4, 13, 'https://cdn2.cellphones.com.vn/insecure/rs:fill:0:358/q:90/plain/https://cellphones.com.vn/media/catalog/product/t/a/tai-nghe-khong-day-realme-buds-t300_4_.png'),
 -- Nokia (brand_id=14, Headphone=4)
-('Nokia Clarity Earbuds 2 Pro', 'Wireless earbuds with ANC', 1822975, 75, 4, 14, 'https://images.ctfassets.net/wcfotm6rrl7u/2Z3VgGVzRvyp79rtRQ2VOX/f1f855d234ba7531d9862d9f52b66237/nokia-TWS-852W-black-angled.png?h=1024&fm=png&fl=png8'),
+('Nokia Clarity Earbuds 2 Pro', 'Wireless earbuds with ANC', 1822975, 75, 4, 14, 'https://images.ctfassets.net/wcfotm6rrl7u/2Z3VgGVzRvyp79rtRQ2VOX/f1f855d234ba7531d9862d9f52b66237/nokia-TWS-852W-black-angled.png?h=1000&fm=png&fl=png8'),
 ('Nokia Go Earbuds+', 'Budget wireless earbuds with 20-hour battery', 781275, 110, 4, 14, 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRQXAiBYVepZP2H0uEnAhzU04JdKsZ78_N5VA&s'),
 -- Apple MacBook (3 sản phẩm, category_id=1, brand_id=1)
 ('MacBook Air 13-inch M4 2025', 'Ultra-thin laptop with M4 chip, 13.6-inch Liquid Retina display, 16GB RAM, 256GB SSD, up to 18 hours battery life.', 26048925, 100, 1, 1, 'https://cdn2.cellphones.com.vn/insecure/rs:fill:0:358/q:90/plain/https://cellphones.com.vn/media/catalog/product/t/e/text_ng_n_2__9_14.png'),
@@ -839,7 +839,7 @@ VALUES
 -- ProBook 470 (product_id=25, category_id=1)
 (25, 1, 'Intel Core i5 8250U 1.6GHz'), -- CPU
 (25, 2, '8'), -- RAM (GB)
-(25, 3, '1024'), -- Storage (GB)
+(25, 3, '1000'), -- Storage (GB)
 (25, 4, 'Nvidia GeForce 930MX'), -- GPU
 (25, 5, '17.3-inch Full HD'), -- Màn hình
 (25, 6, 'Windows 10'), -- Hệ điều hành
@@ -933,7 +933,7 @@ VALUES
 
 (31, 1, 'Intel Core i3 6006U 2GHz'), -- CPU
 (31, 2, '4'), -- RAM (GB)
-(31, 3, '1024'), -- Storage (GB)
+(31, 3, '1000'), -- Storage (GB)
 (31, 4, 'Intel HD Graphics 520'), -- GPU
 (31, 5, '15.6-inch Full HD'), -- Màn hình
 (31, 6, 'Linux'), -- Hệ điều hành
@@ -963,7 +963,7 @@ VALUES
 
 (33, 1, 'Intel Core i5 7200U 2.5GHz'), -- CPU
 (33, 2, '8'), -- RAM (GB)
-(33, 3, '1024'), -- Storage (GB)
+(33, 3, '1000'), -- Storage (GB)
 (33, 4, 'Nvidia GeForce 940MX'), -- GPU
 (33, 5, '15.6-inch Full HD'), -- Màn hình
 (33, 6, 'Linux'), -- Hệ điều hành
@@ -993,7 +993,7 @@ VALUES
 
 (35, 1, 'Intel Core i5 8250U 1.6GHz'), -- CPU
 (35, 2, '12'), -- RAM (GB)
-(35, 3, '1024'), -- Storage (GB)
+(35, 3, '1000'), -- Storage (GB)
 (35, 4, 'Nvidia GeForce 150MX'), -- GPU
 (35, 5, '17.3-inch Full HD Touch'), -- Màn hình
 (35, 6, 'Windows 10'), -- Hệ điều hành
@@ -1070,7 +1070,7 @@ VALUES
 (40, 29, 'Wireless'), -- Connection Type
 (40, 30, '7'), -- Buttons
 (40, 31, 'Optical'), -- Sensor Type
-(40, 32, '1024'), -- Polling Rate (Hz)
+(40, 32, '1000'), -- Polling Rate (Hz)
 (40, 33, '70 hours'), -- Battery Life
 (40, 34, '141'), -- Weight (g)
 
@@ -1094,7 +1094,7 @@ VALUES
 (43, 29, 'Wireless'), -- Connection Type
 (43, 30, '5'), -- Buttons
 (43, 31, 'Optical'), -- Sensor Type
-(43, 32, '1024'), -- Polling Rate (Hz)
+(43, 32, '1000'), -- Polling Rate (Hz)
 (43, 33, '90 hours'), -- Battery Life
 (43, 34, '63'), -- Weight (g)
 
@@ -1108,7 +1108,7 @@ VALUES
 
 (45, 1, 'Intel Core i7 13620H 2.4GHz'), -- CPU
 (45, 2, '16'), -- RAM (GB)
-(45, 3, '1024'), -- Storage (GB)
+(45, 3, '1000'), -- Storage (GB)
 (45, 4, 'Nvidia RTX 4070'), -- GPU
 (45, 5, '15.6-inch Full HD 165Hz'), -- Màn hình
 (45, 6, 'Windows 11'), -- Hệ điều hành
@@ -1168,7 +1168,7 @@ VALUES
 
 (49, 1, 'Intel Core i9 13980HX 2.2GHz'), -- CPU
 (49, 2, '32'), -- RAM (GB)
-(49, 3, '1024'), -- Storage (GB)
+(49, 3, '1000'), -- Storage (GB)
 (49, 4, 'Nvidia RTX 4080'), -- GPU
 (49, 5, '17.3-inch QHD 240Hz'), -- Màn hình
 (49, 6, 'Windows 11'), -- Hệ điều hành
@@ -1183,7 +1183,7 @@ VALUES
 
 (50, 1, 'Intel Core i7 13700H 2.4GHz'), -- CPU
 (50, 2, '16'), -- RAM (GB)
-(50, 3, '1024'), -- Storage (GB)
+(50, 3, '1000'), -- Storage (GB)
 (50, 4, 'Nvidia RTX 3070'), -- GPU
 (50, 5, '15.6-inch 4K AMOLED'), -- Màn hình
 (50, 6, 'Windows 11'), -- Hệ điều hành
@@ -1499,7 +1499,7 @@ VALUES
 (71, 29, 'Wired'), -- Connection Type
 (71, 30, '17'), -- Buttons
 (71, 31, 'Optical'), -- Sensor Type
-(71, 32, '1024'), -- Polling Rate (Hz)
+(71, 32, '1000'), -- Polling Rate (Hz)
 (71, 33, 'N/A'), -- Battery Life
 (71, 34, '122'), -- Weight (g)
 
@@ -1526,7 +1526,7 @@ VALUES
 (74, 29, 'Wireless'), -- Connection Type
 (74, 30, '9'), -- Buttons
 (74, 31, 'Optical'), -- Sensor Type
-(74, 32, '1024'), -- Polling Rate (Hz)
+(74, 32, '1000'), -- Polling Rate (Hz)
 (74, 33, '180 hours'), -- Battery Life
 (74, 34, '74'), -- Weight (g)
 
@@ -1589,7 +1589,7 @@ VALUES
 (81, 29, 'Wired'), -- Connection Type
 (81, 30, '9'), -- Buttons
 (81, 31, 'Optical'), -- Sensor Type
-(81, 32, '1024'), -- Polling Rate (Hz)
+(81, 32, '1000'), -- Polling Rate (Hz)
 (81, 33, 'N/A'), -- Battery Life
 (81, 34, '85'), -- Weight (g)
 
@@ -1607,7 +1607,7 @@ VALUES
 (83, 29, 'Wired'), -- Connection Type
 (83, 30, '6'), -- Buttons
 (83, 31, 'Optical'), -- Sensor Type
-(83, 32, '1024'), -- Polling Rate (Hz)
+(83, 32, '1000'), -- Polling Rate (Hz)
 (83, 33, 'N/A'), -- Battery Life
 (83, 34, '65'), -- Weight (g)
 
@@ -1625,7 +1625,7 @@ VALUES
 (85, 29, 'Wired'), -- Connection Type
 (85, 30, '7'), -- Buttons
 (85, 31, 'Optical'), -- Sensor Type
-(85, 32, '1024'), -- Polling Rate (Hz)
+(85, 32, '1000'), -- Polling Rate (Hz)
 (85, 33, 'N/A'), -- Battery Life
 (85, 34, '118'), -- Weight (g)
 
@@ -2103,7 +2103,7 @@ VALUES
 -- DELL XPS 17 2025 (product_id=121, category_id=1)
 (121, 1, 'Intel Core Ultra 9 185H'), -- CPU
 (121, 2, '32'), -- RAM (GB)
-(121, 3, '1024'), -- Storage (GB)
+(121, 3, '1000'), -- Storage (GB)
 (121, 4, 'NVIDIA GeForce RTX 4070'), -- GPU
 (121, 5, '16.3-inch OLED, 3840x2400'), -- Màn hình
 (121, 6, 'Windows 11 Pro'), -- Hệ điều hành
@@ -2167,7 +2167,7 @@ VALUES
 -- ASUS ROG Zephyrus G17 2024 (product_id=125, category_id=1)
 (125, 1, 'AMD Ryzen AI 9 HX 370'), -- CPU
 (125, 2, '32'), -- RAM (GB)
-(125, 3, '1024'), -- Storage (GB)
+(125, 3, '1000'), -- Storage (GB)
 (125, 4, 'NVIDIA GeForce RTX 4070'), -- GPU
 (125, 5, '16.0-inch OLED, 2560x1600'), -- Màn hình
 (125, 6, 'Windows 11 Pro'), -- Hệ điều hành
@@ -2183,7 +2183,7 @@ VALUES
 -- ASUS Vivobook 17 2024 (product_id=126, category_id=1)
 (126, 1, 'AMD Ryzen 7 7735HS'), -- CPU
 (126, 2, '16'), -- RAM (GB)
-(126, 3, '512') , -- Storage (GB)
+(126, 3, '512'), -- Storage (GB)
 (126, 4, 'AMD Radeon Graphics'), -- GPU
 (126, 5, '16.0-inch WUXGA, 1920x1200'), -- Màn hình
 (126, 6, 'Windows 11 Home'), -- Hệ điều hành
@@ -2199,7 +2199,7 @@ VALUES
 -- ASUS ProArt P17 2024 (product_id=127, category_id=1)
 (127, 1, 'AMD Ryzen AI 9 HX 370'), -- CPU
 (127, 2, '32'), -- RAM (GB)
-(127, 3, '1024'), -- Storage (GB)
+(127, 3, '1000'), -- Storage (GB)
 (127, 4, 'NVIDIA GeForce RTX 4070'), -- GPU
 (127, 5, '16.0-inch OLED, 3840x2400'), -- Màn hình
 (127, 6, 'Windows 11 Pro'), -- Hệ điều hành
@@ -2218,7 +2218,43 @@ VALUES
 (1, 'completed', 1339.69, '123 Main St, Hanoi'), -- MacBook Pro 13.3 i5 2.3GHz
 (1, 'pending', 898.94, '123 Main St, Hanoi'),   -- Macbook Air 13.3 i5 1.8GHz 128GB
 (3, 'shipped', 999.00, '456 Elm St, Ho Chi Minh City'), -- Legion Y520-15IKBN
-(1, 'canceled', 1495.00, '123 Main St, Hanoi'); -- ZenBook UX430UN
+(1, 'canceled', 1495.00, '123 Main St, Hanoi'), -- ZenBook UX430UN
+(12, 'completed', 1299.99, '789 Nguyen Trai, Da Nang'), -- Order 5: iPhone 16
+(14, 'pending', 1899.99, '101 Le Loi, Ho Chi Minh City'), -- Order 6: MacBook Pro 14 M4 Pro
+(11, 'shipped', 799.99, '123 Yên Lãng, Hanoi'), -- Order 7: Samsung Galaxy S25
+(15, 'completed', 1499.99, '456 Tran Hung Dao, Can Tho'), -- Order 8: DELL XPS 15
+(13, 'pending', 1099.99, '456 Elm St, Ho Chi Minh City'), -- Order 9: iPhone 17
+(7, 'canceled', 999.99, '789 Nguyen Trai, Da Nang'), -- Order 10: ASUS Zenbook S 14
+(8, 'shipped', 699.99, '101 Le Loi, Ho Chi Minh City'), -- Order 11: Samsung Galaxy A56
+(9, 'completed', 1399.99, '321 Tran Phu, Hanoi'), -- Order 12: iPhone 16 Pro
+(2, 'pending', 1999.99, '654 Ly Thuong Kiet, Ho Chi Minh City'), -- Order 13: MacBook Air 15 M4
+(10, 'shipped', 899.99, '987 Le Duan, Da Nang'), -- Order 14: Samsung Galaxy S25 Plus
+(4, 'completed', 1599.99, '123 Nguyen Van Cu, Can Tho'), -- Order 15: DELL XPS 17
+(5, 'canceled', 1199.99, '456 Hai Ba Trung, Hai Phong'), -- Order 16: ASUS ROG Zephyrus G16
+(3, 'completed', 1499.99, '789 Ngo Quyen, Nha Trang'), -- Order 17: iPhone 17 Pro
+(4, 'pending', 699.99, '321 Tran Phu, Hanoi'), -- Order 18: Samsung Galaxy A36
+(3, 'shipped', 2299.99, '654 Ly Thuong Kiet, Ho Chi Minh City'), -- Order 19: MacBook Pro 14 M4
+(2, 'completed', 799.99, '987 Le Duan, Da Nang'), -- Order 20: iPhone 16 Mini
+(4, 'pending', 1099.99, '123 Nguyen Van Cu, Can Tho'), -- Order 21: Samsung Galaxy Z Flip 7
+(5, 'shipped', 1299.99, '456 Hai Ba Trung, Hai Phong'), -- Order 22: ASUS ProArt P16
+(7, 'completed', 999.99, '789 Ngo Quyen, Nha Trang'), -- Order 23: iPhone 17 Air
+(11, 'canceled', 1799.99, '321 Tran Phu, Hanoi'), -- Order 24: DELL Latitude 7450
+(3, 'pending', 649.99, '654 Ly Thuong Kiet, Ho Chi Minh City'), -- Order 25: Samsung Galaxy M55
+(2, 'shipped', 1399.99, '987 Le Duan, Da Nang'), -- Order 26: iPhone 16 Pro Max
+(4, 'completed', 1899.99, '123 Nguyen Van Cu, Can Tho'), -- Order 27: MacBook Air 13 M4
+(5, 'pending', 799.99, '456 Hai Ba Trung, Hai Phong'), -- Order 28: Samsung Galaxy S25 FE
+(9, 'shipped', 1199.99, '789 Ngo Quyen, Nha Trang'), -- Order 29: ASUS Vivobook 16
+(10, 'completed', 1499.99, '321 Tran Phu, Hanoi'), -- Order 30: iPhone 17 Plus
+(13, 'canceled', 999.99, '654 Ly Thuong Kiet, Ho Chi Minh City'), -- Order 31: Samsung Galaxy A56
+(12, 'pending', 1699.99, '987 Le Duan, Da Nang'), -- Order 32: DELL XPS 14
+(4, 'shipped', 1299.99, '123 Nguyen Van Cu, Can Tho'), -- Order 33: iPhone 16e
+(5, 'completed', 1099.99, '456 Hai Ba Trung, Hai Phong'), -- Order 34: Samsung Galaxy Z Fold 7
+(14, 'pending', 1999.99, '789 Ngo Quyen, Nha Trang'), -- Order 35: MacBook Pro 14 M4 Pro
+(11, 'shipped', 799.99, '321 Tran Phu, Hanoi'), -- Order 36: iPhone 17 Slim
+(3, 'completed', 1399.99, '654 Ly Thuong Kiet, Ho Chi Minh City'), -- Order 37: ASUS Zenbook S 14
+(12, 'pending', 899.99, '987 Le Duan, Da Nang'), -- Order 38: Samsung Galaxy S25
+(4, 'canceled', 1599.99, '123 Nguyen Van Cu, Can Tho'), -- Order 39: DELL Inspiron 14 Plus
+(5, 'shipped', 1199.99, '456 Hai Ba Trung, Hai Phong'); -- Order 40: iPhone 17 Pro Max
 
 --OrderDetail
 INSERT INTO Order_Detail (order_id, product_id, quantity, unit_price)
@@ -2226,7 +2262,43 @@ VALUES
 (1, 6, 1, 1339.69),  -- Order 1: MacBook Pro 13.3 i5 2.3GHz
 (2, 7, 1, 898.94),   -- Order 2: Macbook Air 13.3 i5 1.8GHz 128GB
 (3, 24, 1, 999.00),  -- Order 3: Legion Y520-15IKBN
-(4, 13, 1, 1495.00); -- Order 4: ZenBook UX430UN
+(4, 13, 1, 1495.00), -- Order 4: ZenBook UX430UN
+(5, 99, 1, 1299.99), -- Order 5: iPhone 16
+(6, 97, 1, 1899.99), -- Order 6: MacBook Pro 14 M4 Pro
+(7, 111, 1, 799.99), -- Order 7: Samsung Galaxy S25
+(8, 120, 1, 1499.99), -- Order 8: DELL XPS 15
+(9, 103, 1, 1099.99), -- Order 9: iPhone 17
+(10, 124, 1, 999.99), -- Order 10: ASUS Zenbook S 14
+(11, 116, 1, 699.99), -- Order 11: Samsung Galaxy A56
+(12, 101, 1, 1399.99), -- Order 12: iPhone 16 Pro
+(13, 98, 1, 1999.99), -- Order 13: MacBook Air 15 M4
+(14, 112, 1, 899.99), -- Order 14: Samsung Galaxy S25 Plus
+(15, 121, 1, 1599.99), -- Order 15: DELL XPS 17
+(16, 125, 1, 1199.99), -- Order 16: ASUS ROG Zephyrus G16
+(17, 105, 1, 1499.99), -- Order 17: iPhone 17 Pro
+(18, 117, 1, 699.99), -- Order 18: Samsung Galaxy A36
+(19, 97, 1, 2299.99), -- Order 19: MacBook Pro 14 M4 Pro
+(20, 109, 1, 799.99), -- Order 20: iPhone 16 Mini
+(21, 115, 1, 1099.99), -- Order 21: Samsung Galaxy Z Flip 7
+(22, 127, 1, 1299.99), -- Order 22: ASUS ProArt P16
+(23, 108, 1, 999.99), -- Order 23: iPhone 17 Air
+(24, 123, 1, 1799.99), -- Order 24: DELL Latitude 7450
+(25, 118, 1, 649.99), -- Order 25: Samsung Galaxy M55
+(26, 102, 1, 1399.99), -- Order 26: iPhone 16 Pro Max
+(27, 96, 1, 1899.99), -- Order 27: MacBook Air 13 M4
+(28, 119, 1, 799.99), -- Order 28: Samsung Galaxy S25 FE
+(29, 126, 1, 1199.99), -- Order 29: ASUS Vivobook 16
+(30, 104, 1, 1499.99), -- Order 30: iPhone 17 Plus
+(31, 116, 1, 999.99), -- Order 31: Samsung Galaxy A56
+(32, 120, 1, 1699.99), -- Order 32: DELL XPS 14
+(33, 107, 1, 1299.99), -- Order 33: iPhone 16e
+(34, 114, 1, 1099.99), -- Order 34: Samsung Galaxy Z Fold 7
+(35, 97, 1, 1999.99), -- Order 35: MacBook Pro 14 M4 Pro
+(36, 110, 1, 799.99), -- Order 36: iPhone 17 Slim
+(37, 124, 1, 1399.99), -- Order 37: ASUS Zenbook S 14
+(38, 111, 1, 899.99), -- Order 38: Samsung Galaxy S25
+(39, 122, 1, 1599.99), -- Order 39: DELL Inspiron 14 Plus
+(40, 106, 1, 1199.99); -- Order 40: iPhone 17 Pro Max
 
 --Review
 INSERT INTO Review (product_id, user_id, rating, comment, created_at)
@@ -2234,8 +2306,40 @@ VALUES
 (1, 1, 5, 'Excellent performance and display quality!', '2025-05-21 12:00:00'), -- MacBook Pro
 (2, 1, 4, 'Great for portability, but storage is limited.', '2025-05-26 15:00:00'), -- Macbook Air
 (19, 3, 5, 'Perfect for gaming, solid GPU performance.', '2025-05-29 10:00:00'), -- Legion Y520
-(8, 1, 3, 'Good specs, but a bit pricey.', '2025-05-31 09:00:00'); -- ZenBook UX430UN
-
+(8, 1, 3, 'Good specs, but a bit pricey.', '2025-05-31 09:00:00'), -- ZenBook UX430UN
+(99, 2, 5, 'Amazing camera and performance!', '2025-06-01 14:00:00'), -- iPhone 16
+(97, 4, 4, 'Powerful laptop, but battery life could be better.', '2025-06-05 10:00:00'), -- MacBook Pro 14 M4 Pro
+(111, 1, 5, 'Great value for money, sleek design.', '2025-06-10 16:00:00'), -- Samsung Galaxy S25
+(120, 5, 4, 'Excellent display, but a bit heavy.', '2025-06-15 09:00:00'), -- DELL XPS 15
+(101, 1, 5, 'Stunning display and camera!', '2025-06-16 10:00:00'), -- iPhone 16 Pro
+(98, 3, 4, 'Lightweight and powerful, but pricey.', '2025-06-17 12:00:00'), -- MacBook Air 15 M4
+(112, 2, 5, 'Great AMOLED screen, fast performance.', '2025-06-18 14:00:00'), -- Samsung Galaxy S25 Plus
+(121, 4, 4, 'Excellent for work, good battery life.', '2025-06-19 09:00:00'), -- DELL XPS 17
+(125, 5, 3, 'Good for gaming, but fans are loud.', '2025-06-20 11:00:00'), -- ASUS ROG Zephyrus G16
+(105, 6, 5, 'Best iPhone yet, love the design.', '2025-06-21 15:00:00'), -- iPhone 17 Pro
+(117, 1, 4, 'Affordable and reliable phone.', '2025-06-22 13:00:00'), -- Samsung Galaxy A36
+(97, 3, 5, 'Perfect for professionals, fast M4 Pro.', '2025-06-23 10:00:00'), -- MacBook Pro 14 M4 Pro
+(109, 2, 4, 'Compact and powerful, great for travel.', '2025-06-24 16:00:00'), -- iPhone 16 Mini
+(115, 4, 5, 'Stylish foldable, great display.', '2025-06-25 08:00:00'), -- Samsung Galaxy Z Flip 7
+(127, 5, 4, 'Ideal for creators, vibrant OLED screen.', '2025-06-26 12:00:00'), -- ASUS ProArt P16
+(108, 6, 5, 'Thin and light, amazing performance.', '2025-06-27 14:00:00'), -- iPhone 17 Air
+(123, 1, 3, 'Good specs, but a bit bulky.', '2025-06-28 09:00:00'), -- DELL Latitude 7450
+(118, 3, 4, 'Budget-friendly, decent battery life.', '2025-06-29 11:00:00'), -- Samsung Galaxy M55
+(102, 2, 5, 'Huge screen, pro-level camera.', '2025-06-30 15:00:00'), -- iPhone 16 Pro Max
+(96, 4, 4, 'Sleek design, good for multitasking.', '2025-06-16 10:00:00'), -- MacBook Air 13 M4
+(119, 5, 5, 'Great value, solid performance.', '2025-06-17 12:00:00'), -- Samsung Galaxy S25 FE
+(126, 6, 4, 'Large screen, good for students.', '2025-06-18 14:00:00'), -- ASUS Vivobook 16
+(104, 1, 5, 'Big display, smooth iOS experience.', '2025-06-19 09:00:00'), -- iPhone 17 Plus
+(116, 3, 4, 'Good mid-range phone, nice camera.', '2025-06-20 11:00:00'), -- Samsung Galaxy A56
+(120, 2, 5, 'Premium build, excellent display.', '2025-06-21 15:00:00'), -- DELL XPS 14
+(107, 4, 4, 'Affordable iPhone, good performance.', '2025-06-22 13:00:00'), -- iPhone 16e
+(114, 5, 5, 'Innovative foldable, great multitasking.', '2025-06-23 10:00:00'), -- Samsung Galaxy Z Fold 7
+(97, 6, 4, 'Powerful but slightly expensive.', '2025-06-24 16:00:00'), -- MacBook Pro 14 M4 Pro
+(110, 1, 5, 'Ultra-thin, perfect for portability.', '2025-06-25 08:00:00'), -- iPhone 17 Slim
+(124, 3, 4, 'Elegant design, good battery life.', '2025-06-26 12:00:00'), -- ASUS Zenbook S 14
+(111, 2, 5, 'Fast and sleek, great camera.', '2025-06-27 14:00:00'), -- Samsung Galaxy S25
+(122, 4, 3, 'Good laptop, but average display.', '2025-06-28 09:00:00'), -- DELL Inspiron 14 Plus
+(106, 5, 5, 'Top-tier iPhone, worth the price.', '2025-06-29 11:00:00'); -- iPhone 17 Pro Max
 
 --Payment
 INSERT INTO Payment (order_id, payment_method, amount, status)
@@ -2243,7 +2347,43 @@ VALUES
 (1, 'cash', 1200.00, 'completed'), -- Đơn hàng 1: Asus ZenBook 14
 (2, 'banking', 600.00, 'pending'),       -- Đơn hàng 2: Acer Aspire 5
 (3, 'banking', 999.00, 'completed'),-- Đơn hàng 3: Legion Y520-15IKBN
-(4, 'cash_on_delivery', 1500.00, 'pending'); -- Đơn hàng 4: Apple MacBook Air M2
+(4, 'cash_on_delivery', 1500.00, 'pending'), -- Đơn hàng 4: Apple MacBook Air M2
+(5, 'banking', 1299.99, 'completed'), -- Order 5: iPhone 16
+(6, 'cash_on_delivery', 1000.00, 'pending'), -- Order 6: MacBook Pro 14 M4 Pro (thanh toán một phần)
+(7, 'banking', 799.99, 'completed'), -- Order 7: Samsung Galaxy S25
+(8, 'cash', 1499.99, 'completed'), -- Order 8: DELL XPS 15
+(9, 'banking', 500.00, 'pending'), -- Order 9: iPhone 17 (thanh toán một phần)
+(10, 'cash_on_delivery', 999.99, 'pending'), -- Order 10: ASUS Zenbook S 14
+(11, 'banking', 699.99, 'completed'), -- Order 11: Samsung Galaxy A56
+(12, 'banking', 1399.99, 'completed'), -- Order 12: iPhone 16 Pro
+(13, 'cash_on_delivery', 1000.00, 'pending'), -- Order 13: MacBook Air 15 M4
+(14, 'cash', 899.99, 'completed'), -- Order 14: Samsung Galaxy S25 Plus
+(15, 'banking', 1599.99, 'completed'), -- Order 15: DELL XPS 17
+(16, 'cash_on_delivery', 1199.99, 'pending'), -- Order 16: ASUS ROG Zephyrus G16
+(17, 'banking', 1499.99, 'completed'), -- Order 17: iPhone 17 Pro
+(18, 'cash', 600.00, 'pending'), -- Order 18: Samsung Galaxy A36
+(19, 'banking', 2299.99, 'completed'), -- Order 19: MacBook Pro 14 M4 Pro
+(20, 'cash_on_delivery', 799.99, 'completed'), -- Order 20: iPhone 16 Mini
+(21, 'banking', 500.00, 'pending'), -- Order 21: Samsung Galaxy Z Flip 7
+(22, 'cash', 1299.99, 'completed'), -- Order 22: ASUS ProArt P16
+(23, 'banking', 999.99, 'completed'), -- Order 23: iPhone 17 Air
+(24, 'cash_on_delivery', 1799.99, 'pending'), -- Order 24: DELL Latitude 7450
+(25, 'banking', 649.99, 'pending'), -- Order 25: Samsung Galaxy M55
+(26, 'cash', 1399.99, 'completed'), -- Order 26: iPhone 16 Pro Max
+(27, 'banking', 1899.99, 'completed'), -- Order 27: MacBook Air 13 M4
+(28, 'cash_on_delivery', 400.00, 'pending'), -- Order 28: Samsung Galaxy S25 FE
+(29, 'banking', 1199.99, 'completed'), -- Order 29: ASUS Vivobook 16
+(30, 'cash', 1499.99, 'completed'), -- Order 30: iPhone 17 Plus
+(31, 'cash_on_delivery', 999.99, 'pending'), -- Order 31: Samsung Galaxy A56
+(32, 'banking', 800.00, 'pending'), -- Order 32: DELL XPS 14
+(33, 'cash', 1299.99, 'completed'), -- Order 33: iPhone 16e
+(34, 'banking', 1099.99, 'completed'), -- Order 34: Samsung Galaxy Z Fold 7
+(35, 'cash_on_delivery', 1000.00, 'pending'), -- Order 35: MacBook Pro 14 M4 Pro
+(36, 'banking', 799.99, 'completed'), -- Order 36: iPhone 17 Slim
+(37, 'cash', 1399.99, 'completed'), -- Order 37: ASUS Zenbook S 14
+(38, 'banking', 500.00, 'pending'), -- Order 38: Samsung Galaxy S25
+(39, 'cash_on_delivery', 1599.99, 'pending'), -- Order 39: DELL Inspiron 14 Plus
+(40, 'banking', 1199.99, 'completed'); -- Order 40: iPhone 17 Pro Max
 
 INSERT INTO ProductImages (product_id, image_url, is_primary, status)
 VALUES
@@ -2257,7 +2397,7 @@ VALUES
 (2, 'https://product.hstatic.net/200000373523/product/34925_laptop_apple_macbook_air_m0uu3_128gb__2017___silver__1_1_5308f3368d8245849dbe6c6c96a280cd_grande.jpg', 1, 'active'),
 (2, 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQORjgFYoQPj-ILa7a7iMMHMV2vDlalPtbd-Q&s', 0, 'active'),
 (2, 'https://bizweb.dktcdn.net/thumb/1024x1024/100/308/710/products/51nqh-pphkl-jpeg.jpg?v=1672292782107', 0, 'active'),
-(2, 'https://product.hstatic.net/1024384805/product/laptop_apple_macbook_air_2017_128gb_1.8ghz_intel_core_i5_2_2d4bfef3a30b412bb2561629dc8a36f7_master.jpg', 0, 'active'),
+(2, 'https://product.hstatic.net/1000384805/product/laptop_apple_macbook_air_2017_128gb_1.8ghz_intel_core_i5_2_2d4bfef3a30b412bb2561629dc8a36f7_master.jpg', 0, 'active'),
 (2, 'https://laptoptitan.vn/wp-content/uploads/2021/04/Macbook_Air-13-inch-2013-204-2015-2016-2017-004.jpg', 0, 'active'),
 -- Product 3: HP 250 G6 i5 7200U (category_id=1)
 (3, 'https://anphat.com.vn/media/product/25740_laptop_hp_250_g6_2xr76pa_1.jpg', 1, 'active'),
@@ -2279,7 +2419,7 @@ VALUES
 (5, 'https://macvn.com.vn/wp-content/uploads/2024/08/Macbook-Pro-13inch-2016-USED-Core-i5-2.0Ghz-Ram-8Gb-SSD-256Gb-1-1200x846.jpg', 0, 'active'),
 -- Product 6: MacBook Pro 15.4 i7 2.2GHz (category_id=1)
 (6, 'https://macmall.vn/uploads/macbook-pro-15inch-2018-macmall_1718126810.png', 1, 'active'),
-(6, 'https://m.media-amazon.com/images/I/61EaR0v9+7L._AC_UF894,1024_QL80_.jpg', 0, 'active'),
+(6, 'https://m.media-amazon.com/images/I/61EaR0v9+7L._AC_UF894,1000_QL80_.jpg', 0, 'active'),
 (6, 'https://bizweb.dktcdn.net/thumb/grande/100/318/659/files/15-percentage-22-3.png?v=1530849316860', 0, 'active'),
 (6, 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQYwPJEhClbDMaDCwVMert09SOaUbxjHM38VA&s', 0, 'active'),
 (6, 'https://muabanlaptopcuhcm.com/wp-content/uploads/2020/05/Macbook-Pro-Retina-2014-MGXA2-05.jpg', 0, 'active'),
@@ -2293,7 +2433,7 @@ VALUES
 (8, 'https://ducanhcomputer.com/uploads/san-pham/2019_03/gv096t.jpg', 1, 'active'),
 (8, 'https://phucanhcdn.com/media/product/31417-ux430un-gv091t-1.jpg', 0, 'active'),
 (8, 'https://laptop88.vn/media/product/4313_ux430un_gv096t___2.jpg', 0, 'active'),
-(8, 'https://product.hstatic.net/1024267672/product/asus_zenbook_ux430un-gv096t2_grande.jpg', 0, 'active'),
+(8, 'https://product.hstatic.net/1000267672/product/asus_zenbook_ux430un-gv096t2_grande.jpg', 0, 'active'),
 (8, 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcStA_htMmbXQhHjY5JZ9Sj5JFOVMOIuqutzQg&s', 0, 'active'),
 -- Product 9: Swift 3 (category_id=1)
 (9, 'https://cdn.tgdd.vn/Products/Images/44/269313/acer-swift-3-sf314-511-55qe-i5-nxabnsv003-120122-022600-600x600.jpg', 1, 'active'),
@@ -2302,10 +2442,10 @@ VALUES
 (9, 'https://bizweb.dktcdn.net/100/082/878/products/42871-laptop-acer-swift-3-sf314-512-56qn-2.jpg?v=1664805814097', 0, 'active'),
 (9, 'https://no1computer.vn/images/products/2022/11/22/large/acer-swift-3-sf314-511-thietke2_1669110542.jpg', 0, 'active'),
 -- Product 10: HP 250 G6 i3 6006U (category_id=1)
-(10, 'https://product.hstatic.net/1024296652/product/kk_1a586f1bece145bd8a4cbfc80f4c63f2_7a0b155ca637451e81f6e55005c1f568.jpg', 1, 'active'),
+(10, 'https://product.hstatic.net/1000296652/product/kk_1a586f1bece145bd8a4cbfc80f4c63f2_7a0b155ca637451e81f6e55005c1f568.jpg', 1, 'active'),
 (10, 'https://cdn.tgdd.vn/Products/Images/44/132735/hp-250-g6-i3-6006u-2fg16pa-2-2.png', 0, 'active'),
 (10, 'https://cdn.tgdd.vn/Products/Images/44/132735/hp-250-g6-i3-6006u-2fg16pa-1.jpg', 0, 'active'),
-(10, 'https://product.hstatic.net/1024296652/product/kk_1a586f1bece145bd8a4cbfc80f4c63f2_7a0b155ca637451e81f6e55005c1f568_1024x1024.jpg', 0, 'active'),
+(10, 'https://product.hstatic.net/1000296652/product/kk_1a586f1bece145bd8a4cbfc80f4c63f2_7a0b155ca637451e81f6e55005c1f568_1024x1024.jpg', 0, 'active'),
 (10, 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRPzJFuQF_jTzRuceuo5vNZd0DWt5Zi1WbzyQ&s', 0, 'active'),
 -- Product 11: MacBook Pro 15.4 i7 2.8GHz (category_id=1)
 (11, 'https://ttcenter.com.vn/uploads/product/8blddpkb-657-macbook-pro-2017-15-inch-i7-16gb-512gb-touchbar.jpg', 1, 'active'),
@@ -2382,7 +2522,7 @@ VALUES
 -- Product 23: Inspiron 5570 (category_id=1)
 (23, 'https://bizweb.dktcdn.net/thumb/grande/100/244/033/products/0104539-dell-inspiron-5570-15-5000-series-i7-8550u-156-full-hd-notebook-600-jpeg-63c6b10e-389a-4f93-86b0-94b9da7826f8-93d7976c-e12d-4172-9590-19177f9d5c98.jpg?v=1561955966243', 1, 'active'),
 (23, 'https://www.laptopvip.vn/images/ab__webp/detailed/10/DELL-Inspiron-5570-1.8GHz-i7-8550U-15.webp', 0, 'active'),
-(23, 'https://product.hstatic.net/1024287389/product/5570-i5-4gb-1tb-vga-ati-m530-2g-15-6-fhd-win10-m5i5238w-b-bac-_37924_2_3fbe18de5bf94cfc92f2eb3766d22fca_master.png', 0, 'active'),
+(23, 'https://product.hstatic.net/1000287389/product/5570-i5-4gb-1tb-vga-ati-m530-2g-15-6-fhd-win10-m5i5238w-b-bac-_37924_2_3fbe18de5bf94cfc92f2eb3766d22fca_master.png', 0, 'active'),
 (23, 'https://ttcenter.com.vn/uploads/photos/1695108414_1818_2f07a92784a9efd990e4cced8357694d.png', 0, 'active'),
 (23, 'https://drive.gianhangvn.com/image/dell-inspiron-5570-i5-8250u-tai-laptop43-2180060j20085.jpg', 0, 'active'),
 -- Product 24: Latitude 5590 (category_id=1)
@@ -2491,7 +2631,7 @@ VALUES
 (41, 'https://minhancomputercdn.com/media/product/10303_b__n_ph__m_c___asus_rog_strix_scope_nx_tkl_deluxe_1.jpg', 1, 'active'),
 (41, 'https://product.hstatic.net/200000722513/product/ix-scope-nx-tkl-deluxe_-_red_switch-3_7234fdc478f84cdc966a0683b3f05a74_fc21cc2f99e24abea3ae6ffaeae108d8_grande.jpg', 0, 'active'),
 (41, 'https://cdn2.cellphones.com.vn/x/media/catalog/product/f/r/frame_379_-_2025-05-27t161541.953.png', 0, 'active'),
-(41, 'https://product.hstatic.net/1024333506/product/10303_b__n_ph__m_c___asus_rog_strix_scope_nx_tkl_deluxe_4_550268e2ed774611a0fec5b103b16b3f.jpg', 0, 'active'),
+(41, 'https://product.hstatic.net/1000333506/product/10303_b__n_ph__m_c___asus_rog_strix_scope_nx_tkl_deluxe_4_550268e2ed774611a0fec5b103b16b3f.jpg', 0, 'active'),
 (41, 'https://product.hstatic.net/200000722513/product/ix-scope-nx-tkl-deluxe_-_red_switch-3_7234fdc478f84cdc966a0683b3f05a74_fc21cc2f99e24abea3ae6ffaeae108d8_grande.jpg', 0, 'active'),
 -- Product 42: Logitech Combo Touch iPad Pro (category_id=5)
 (42, 'https://resource.logitech.com/w_1200,h_630,c_limit,q_auto,f_auto,dpr_1.0/d_transparent.gif/content/dam/logitech/en/products/mobility/combo-touch-for-ipad-pro/combo-touch-ipadpro-og-image.jpg?v=1', 1, 'active'),
@@ -2538,7 +2678,7 @@ VALUES
 -- Product 49: Gigabyte AORUS 17
 (49, 'https://cdn2.fptshop.com.vn/unsafe/750x0/filters:format(webp):quality(75)/2022_9_26_637998081269981032_gigabyte-gaming-aorus-17-xe5-73vn534gh-i7-12700h-rtx3070ti-den-1.jpg', 1, 'active'),
 (49, 'https://laptopbaoloc.vn/wp-content/uploads/2023/07/Laptop-Gaming-Gigabyte-AORUS-17-BKF-73VN254SH-4.jpg', 0, 'active'),
-(49, 'https://product.hstatic.net/200000304081/product/1024__19__2712988dec1d4b47ba6a1029717d682f_grande.png', 0, 'active'),
+(49, 'https://product.hstatic.net/200000304081/product/1000__19__2712988dec1d4b47ba6a1029717d682f_grande.png', 0, 'active'),
 (49, 'https://songphuong.vn/Content/uploads/2023/03/Laptop-Gigabyte-AORUS-17-BKF-73VN254SH-4-songphuong.vn_.jpg', 0, 'active'),
 (49, 'https://lapvip.vn/upload/products/thumb_800x0/gigabyte-aorus-17-xe4-lapvip-4-1709633084.jpg', 0, 'active'),
 -- Product 50: Gigabyte AERO 15 OLED
@@ -2549,7 +2689,7 @@ VALUES
 (50, 'https://laptoptld.com/wp-content/uploads/2023/04/4-2-300x300.webp', 0, 'active'),
 -- Product 51: Gigabyte G5
 (51, 'https://cdn2.fptshop.com.vn/unsafe/750x0/filters:format(webp):quality(75)/2023_5_5_638188828261835779_gigabyte-gaming-g5-kf-e3vn313sh-i5-12500h-den-3.jpg', 1, 'active'),
-(51, 'https://product.hstatic.net/200000304081/product/1024_55648a86099145528b054c604fc91a74_master_7ef755837b3547f587b411cd99891391.png', 0, 'active'),
+(51, 'https://product.hstatic.net/200000304081/product/1000_55648a86099145528b054c604fc91a74_master_7ef755837b3547f587b411cd99891391.png', 0, 'active'),
 (51, 'https://static.gigabyte.com/StaticFile/Image/Global/d164dfdb6ef49adb4d1d9bd5cae2f01e/Product/28519/Png', 0, 'active'),
 (51, 'https://cdn.tgdd.vn/Products/Images/44/251426/gigabyte-gaming-g5-i5-5s11130sh-191021-102800-600x600.jpg', 0, 'active'),
 (51, 'https://product.hstatic.net/200000680839/product/giga-g5-12th-18_4e0b3c0d103f4d1db3a7031b30d3c455_1024x1024.jpg', 0, 'active'),
@@ -2585,7 +2725,7 @@ VALUES
 (56, 'https://cdn2.fptshop.com.vn/unsafe/1920x0/filters:format(webp):quality(75)/redmi_note_14_pro_gia_nhap_bang_xep_hang_antutu_thang_9_2_ea5bc4e7b9.jpg', 0, 'active'),
 -- Product 57: Redmi A4 5G
 (57, 'https://cdn.viettablet.com/images/detailed/65/redmi-a4-5g.jpg', 1, 'active'),
-(57, 'https://rukminid2.flixcart.com/image/850/1024/xif0q/mobile/z/h/f/a4-5g-a4-5g-redmi-original-imah6yhdg9kpnzgd.jpeg?q=90&crop=false', 0, 'active'),
+(57, 'https://rukminid2.flixcart.com/image/850/1000/xif0q/mobile/z/h/f/a4-5g-a4-5g-redmi-original-imah6yhdg9kpnzgd.jpeg?q=90&crop=false', 0, 'active'),
 (57, 'https://www.financialexpress.com/wp-content/uploads/2024/11/cropped-Redmi-A4-5G1.jpg?w=640', 0, 'active'),
 (57, 'https://bsmedia.business-standard.com/_media/bs/img/article/2024-11/20/full/1732097410-3511.png', 0, 'active'),
 (57, 'https://img.baba-blog.com/2024/10/redmi-A4.jpg?x-oss-process=style%2Ffull', 0, 'active'),
@@ -2603,9 +2743,9 @@ VALUES
 (59, 'https://bvtmobile.com/uploads/source/oppo/oppo-reno11-pro/oppo-reno-11-pro-xam-5.jpg', 0, 'active'),
 -- Product 60: OPPO A79 5G
 (60, 'https://cdn.tgdd.vn/Products/Images/42/316776/oppo-a79-5g-tim-thumb-1-2-600x600.jpg', 1, 'active'),
-(60, 'https://product.hstatic.net/1024063620/product/den_dfcb94183f00457497aeec219c7d7ab4.jpg', 0, 'active'),
+(60, 'https://product.hstatic.net/1000063620/product/den_dfcb94183f00457497aeec219c7d7ab4.jpg', 0, 'active'),
 (60, 'https://www.oppo.com/content/dam/oppo/common/mkt/v2-2/a79-5g-en/specs/a79-5g-860_720-bpg.jpg', 0, 'active'),
-(60, 'https://file.hstatic.net/1024063620/file/oa792-271023-225532-800-resize_1024x1024.jpg', 0, 'active'),
+(60, 'https://file.hstatic.net/1000063620/file/oa792-271023-225532-800-resize_1024x1024.jpg', 0, 'active'),
 (60, 'https://bachlongstore.vn/vnt_upload/product/11_2024/oppo_a79_tim_8_750x500.jpg', 0, 'active'),
 -- Product 61: Vivo X100 Pro
 (61, 'https://www.xtmobile.vn/vnt_upload/product/11_2023/vivo-x100-pro-12gb-256gb-xtmobile.jpg', 1, 'active'),
@@ -2653,7 +2793,7 @@ VALUES
 (68, 'https://cdn.tgdd.vn/Products/Images/42/309833/nokia-g42-5g-600x600.jpg', 1, 'active'),
 (68, 'https://cdn.kalvo.com/uploads/img/gallery/53021-nokia-g42-6.jpg', 0, 'active'),
 (68, 'https://images.ctfassets.net/wcfotm6rrl7u/2A76sbRJjZNQH31EiAQJjc/94a6234187d7803fc9000526cb083227/nokia_G42-DTC-VIDEO-mobile.png', 0, 'active'),
-(68, 'https://images.ctfassets.net/wcfotm6rrl7u/3BhWVje5jB1wHYpUs7Ty8L/15f4aec50ba0b30679c9ccee4874d809/nokia-G42_5G-so_pink-front_back-int.png?h=1024&fm=png&fl=png8', 0, 'active'),
+(68, 'https://images.ctfassets.net/wcfotm6rrl7u/3BhWVje5jB1wHYpUs7Ty8L/15f4aec50ba0b30679c9ccee4874d809/nokia-G42_5G-so_pink-front_back-int.png?h=1000&fm=png&fl=png8', 0, 'active'),
 (68, 'https://media.vov.vn/sites/default/files/styles/large/public/2023-10/2_0_34.jpg', 0, 'active'),
 -- Product 69: Nokia C32
 (69, 'https://cdn2.fptshop.com.vn/unsafe/2023_7_14_638249469495107256_nokia-c32-dd.jpg', 1, 'active'),
@@ -2686,7 +2826,7 @@ VALUES
 (73, 'https://nguyencongpc.vn/media/product/17186-b--n-ph--m-c---steelseries-apex-pro-tkl-2.jpg', 0, 'active'),
 (73, 'https://bizweb.dktcdn.net/thumb/grande/100/410/941/products/annotation-2023-06-05-155015-c1686fe6-95d6-44d9-9d43-2975cb10e1af.jpg?v=1685955330817', 0, 'active'),
 -- Product 74: SteelSeries Aerox 5 Wireless
-(74, 'https://file.hstatic.net/1024026716/file/gearvn-chuot-steelseries-aerox-5-wireless-1_15b7fafa0f42499394e87b7b75a7ac58_grande.png', 1, 'active'),
+(74, 'https://file.hstatic.net/1000026716/file/gearvn-chuot-steelseries-aerox-5-wireless-1_15b7fafa0f42499394e87b7b75a7ac58_grande.png', 1, 'active'),
 (74, 'https://product.hstatic.net/200000722513/product/_q100_crop-fit_optimize_subsampling-2_36b24c7c9351454b988c38bf55e36b1b_8b41cbe6c65541ec84f85186542b9c3e_1024x1024.png', 0, 'active'),
 (74, 'https://hanoicomputercdn.com/media/product/69600_chuot_gaming_khong_day_steelseries_aerox_5_wireless_62406_6.jpg', 0, 'active'),
 (74, 'https://hanoicomputercdn.com/media/product/69600_chuot_gaming_khong_day_steelseries_aerox_5_wireless_62406_2.jpg', 0, 'active'),
@@ -2699,8 +2839,8 @@ VALUES
 (75, 'https://gameone.ph/media/catalog/product/cache/d378a0f20f83637cdb1392af8dc032a2/s/t/steelseries-nova-pro-wireless.jpg', 0, 'active'),
 -- Product 76: Corsair Virtuoso RGB Wireless
 (76, 'https://cdn2.fptshop.com.vn/unsafe/750x0/filters:format(webp):quality(75)/2021_11_9_637720718333788887_tai-nghe-khong-day-corsair-virtuoso-rgb-den-1.jpg', 1, 'active'),
-(76, 'https://product.hstatic.net/1024129940/product/corsair-virtuoso-rgb-wireless-white_9cbcc325b43340a9b22e34a1064955d1_master.jpg', 0, 'active'),
-(76, 'https://product.hstatic.net/1024129940/product/tai_nghe_corsair_virtuoso_rgb_wireless_se_-_espresso_19a8cf7a3dad455d8930085b7d3fa0cb.png', 0, 'active'),
+(76, 'https://product.hstatic.net/1000129940/product/corsair-virtuoso-rgb-wireless-white_9cbcc325b43340a9b22e34a1064955d1_master.jpg', 0, 'active'),
+(76, 'https://product.hstatic.net/1000129940/product/tai_nghe_corsair_virtuoso_rgb_wireless_se_-_espresso_19a8cf7a3dad455d8930085b7d3fa0cb.png', 0, 'active'),
 (76, 'https://down-vn.img.susercontent.com/file/sg-11134201-7rbk7-lnxrx9727nvsf0', 0, 'active'),
 (76, 'https://www.tnc.com.vn/uploads/product/gallery/Tai-nghe-khong-day-Corsair-Virtuoso-RGB-Carbon-3.png', 0, 'active'),
 -- Product 77: Corsair K70 RGB TKL
@@ -2712,7 +2852,7 @@ VALUES
 -- Product 78: Corsair Dark Core RGB Pro
 (78, 'https://product.hstatic.net/200000722513/product/-core-rgb-pro-wireless-gaming-mouse-1_b647046fefda46f7a86b1151dd4f138c_d2a85a2e839a4e60b6d790d65862053b.png', 1, 'active'),
 (78, 'https://hanoicomputercdn.com/media/product/53100_chuot_corsair_dark_core_rgb_pro_0001_2.jpg', 0, 'active'),
-(78, 'https://product.hstatic.net/1024333506/product/chuot-corsair-dark-core-rgb-pro-se-4_f1a3cbf9237d44e2a8339725cf4d211f_cd71a79229b94a4dbe5d0ebab6dc3e19.png', 0, 'active'),
+(78, 'https://product.hstatic.net/1000333506/product/chuot-corsair-dark-core-rgb-pro-se-4_f1a3cbf9237d44e2a8339725cf4d211f_cd71a79229b94a4dbe5d0ebab6dc3e19.png', 0, 'active'),
 (78, 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQIF6cGHrPu1lexXCZqH0s8D4xx162yMRd87w&s', 0, 'active'),
 (78, 'https://www.tncstore.vn/media/product/9490-tnc-store-chuot-corsair-20.jpg', 0, 'active'),
 -- Product 79: SteelSeries Arctis 7+
@@ -2732,12 +2872,12 @@ VALUES
 (81, 'https://product.hstatic.net/200000637319/product/imgbuy_rival5_002.png__1920x1080_q100_crop-fit_optimize_subsampling-2_fffef4b9eee64d279969211fca97c353_master.jpg', 0, 'active'),
 (81, 'https://product.hstatic.net/200000320233/product/imgbuy_rival5_004.png__1920x1080_q100_crop-fit_optimize_subsampling-2_b05924a86ac64b0bbc91b7c74f93cf0e.png', 0, 'active'),
 (81, 'https://bienhoagear.com/wp-content/uploads/2024/06/chuot-steelseries-rival-5-1_7ca8e3197adf4a679ce4751e3e762e48_master.jpg', 0, 'active'),
-(81, 'https://m.media-amazon.com/images/I/61QdKZP26rS._AC_UF894,1024_QL80_.jpg', 0, 'active'),
+(81, 'https://m.media-amazon.com/images/I/61QdKZP26rS._AC_UF894,1000_QL80_.jpg', 0, 'active'),
 -- Product 82: MSI Vigor GK71 Sonic
 (82, 'https://asset.msi.com/resize/image/global/product/product_16415411303a4f3ad1ddc39e1b18dd3904a62e4767.png62405b38c58fe0f07fcef2367d8a9ba1/600.png', 1, 'active'),
 (82, 'https://asset.msi.com/resize/image/global/product/product_16415411345fd4741cb1cb02d1e48d0dd14a503160.png62405b38c58fe0f07fcef2367d8a9ba1/600.png', 0, 'active'),
 (82, 'https://asset.msi.com/resize/image/global/product/product_1641541132255eaef826d8a8be32af3f490500df74.png62405b38c58fe0f07fcef2367d8a9ba1/600.png', 0, 'active'),
-(82, 'https://m.media-amazon.com/images/I/81KTNadJ8QL._AC_UF894,1024_QL80_.jpg', 0, 'active'),
+(82, 'https://m.media-amazon.com/images/I/81KTNadJ8QL._AC_UF894,1000_QL80_.jpg', 0, 'active'),
 (82, 'https://hanoicomputercdn.com/media/lib/04-06-2022/ban-phim-game-msi-vigor-gk71-sonic-den-usb-rgb-sonic-sw-06.jpg', 0, 'active'),
 -- Product 83: MSI Clutch GM41 Lightweight
 (83, 'https://storage-asset.msi.com/global/picture/image/feature/mouse/GM41/images/kv_mouse.png', 1, 'active'),
@@ -2754,7 +2894,7 @@ VALUES
 -- Product 85: Gigabyte AORUS M5
 (85, 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRbtPjPHYQbr2ZOQOxuYihY92SSh_0Kued3eQ&s', 1, 'active'),
 (85, 'https://songphuong.vn/Content/uploads/2020/05/1_Aorus_M5_songphuong.vn_.jpg', 0, 'active'),
-(85, 'https://product.hstatic.net/1024129940/product/aorus_m5-1_large.jpg', 0, 'active'),
+(85, 'https://product.hstatic.net/1000129940/product/aorus_m5-1_large.jpg', 0, 'active'),
 (85, 'https://www.gigabyte.com/FileUpload/Global/KeyFeature/960/img/mouse/04.png', 0, 'active'),
 (85, 'https://product.hstatic.net/200000722513/product/-chuot-gaming-gigabyte-aorus-m5-rgb-1_e82686f3a8b64fe792328398bd18d362_2459efae16d4487e8866ab78d7880bed.png', 0, 'active'),
 -- Product 86: Xiaomi Buds 5
@@ -2766,7 +2906,7 @@ VALUES
 -- Product 87: Redmi Buds 6 Active
 (87, 'https://cdn2.cellphones.com.vn/insecure/rs:fill:0:358/q:90/plain/https://cellphones.com.vn/media/catalog/product/t/a/tai-nghe-bluetooth-xiaomi-redmi-buds-6-active.png', 1, 'active'),
 (87, 'https://i02.appmifile.com/mi-com-product/fly-birds/redmi-buds-6-active/m/hongmilanyaerjibgm.png', 0, 'active'),
-(87, 'https://product.hstatic.net/1024382236/product/6_active_den_60d70d3e50f34a2da50925464026d4a7_grande.jpg', 0, 'active'),
+(87, 'https://product.hstatic.net/1000382236/product/6_active_den_60d70d3e50f34a2da50925464026d4a7_grande.jpg', 0, 'active'),
 (87, 'https://i02.appmifile.com/863_item_vn/09/04/2025/c2a2c2a5cf823fecb78af8ecc738f4ac!400x400!85.png', 0, 'active'),
 (87, 'https://mihome.vn/wp-content/uploads/2024/08/Untitled-1-4.jpg', 0, 'active'),
 -- Product 88: OPPO Enco X3
@@ -2806,7 +2946,7 @@ VALUES
 (93, 'https://www.smcyberzone.com/_ipx/f_webp/https://www.smcyberzone.com/app/uploads/2024/03/CYBERZONE-WEBSITE-UPLOAD-1080-%C3%97-1080-px-2024-03-27T093112.149.png', 0, 'active'),
 (93, 'https://cdn.phonebunch.com/news-images/2023/09/Realme-Buds-T300-colors-India.webp', 0, 'active'),
 -- Product 94: Nokia Clarity Earbuds 2 Pro
-(94, 'https://images.ctfassets.net/wcfotm6rrl7u/2Z3VgGVzRvyp79rtRQ2VOX/f1f855d234ba7531d9862d9f52b66237/nokia-TWS-852W-black-angled.png?h=1024&fm=png&fl=png8', 1, 'active'),
+(94, 'https://images.ctfassets.net/wcfotm6rrl7u/2Z3VgGVzRvyp79rtRQ2VOX/f1f855d234ba7531d9862d9f52b66237/nokia-TWS-852W-black-angled.png?h=1000&fm=png&fl=png8', 1, 'active'),
 (94, 'https://i.ebayimg.com/images/g/0sEAAOSwTXpmulZo/s-l1200.jpg', 0, 'active'),
 (94, 'https://pcchip.hr/wp-content/uploads/2022/09/Nokia-Clarity-Earbuds-2-Pro-scaled.webp', 0, 'active'),
 (94, 'https://gagadget.com/media/post_big/Nokia_Clarity_Earbuds_2_Pro.jpg', 0, 'active'),
@@ -2967,6 +3107,9 @@ VALUES
 (127, 'https://event.mediacdn.vn/thumb_w/800/257767050295742464/image/btc/2024/8/29/proart-px13-3-1717432503413572338110-172491747504362636355.jpg', 0, 'active'),
 (127, 'https://event.mediacdn.vn/thumb_w/800/257767050295742464/image/btc/2024/8/29/sfvabrsdfb-1724917475032295053051.jpg', 0, 'active'),
 (127, 'https://www.laptopvip.vn/images/ab__webp/detailed/39/asus-proart-pz13-ht5306-635e444c-5e08-4081-99f1-119085969cae-ci03-yc-www.laptopvip.vn-1727150181.webp', 0, 'active');
+
+
+SELECT order_id, user_id, order_date, status, total_amount, shipping_address FROM Orders
 
 -- mapping brand_id & category_id -> query
 CREATE TABLE Brand_Category (
