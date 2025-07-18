@@ -29,6 +29,8 @@ public class ProjectPaths {
     public static final String HREF_TO_CHECKOUTPAGE = HREF_TO_MAINCONTROLLER + MainControllerServlet.CHECKOUTPAGE_REDIRECT;
     public static final String HREF_TO_ORDERHISTORY = HREF_TO_MAINCONTROLLER + MainControllerServlet.ORDERHISTORY_REDIRECT;
     public static final String HREF_TO_COMPARE = HREF_TO_MAINCONTROLLER + MainControllerServlet.COMPARE_REDIRECT;
+    public static final String HREF_TO_REGISTERPAGE = HREF_TO_MAINCONTROLLER + MainControllerServlet.REGISTERPAGE_REDIRECT;
+    public static final String HREF_TO_FORGOTPASSWORD = HREF_TO_MAINCONTROLLER + MainControllerServlet.FORGOTPASSWORD_REDIRECT;
 
     // RedirectServlets -> JSP pages
     public static final String JSP_PATH_VIEW = "/WEB-INF/view/pages/";
@@ -59,6 +61,11 @@ public class ProjectPaths {
     public static final String JSP_USERMANAGEMENT_PATH = JSP_PATH_DASHBOARD + "userManagement/userManagement.jsp";
 
     public static final String JSP_EDIT_PROFILEPAGE_PATH = "/WEB-INF/view/pages/profilePage/editProfilePage.jsp";
+    
+                        // REGISTER
+    public static final String JSP_REGISTER_PAGE_PATH = JSP_PATH_VIEW + "registerPage/registerPage.jsp";
+    public static final String JSP_REGISTER_THANKYOU_PATH = JSP_PATH_VIEW + "registerPage/thankYouPage.jsp";
+    public static final String JSP_FORGOTPASSWORD_PAGE_PATH = JSP_PATH_VIEW + "forgotPasswordPage/forgotPasswordPage.jsp";
     
     // NAM
     public static final String JSP_BRANDMANAGEMENT_PATH = JSP_PATH_DASHBOARD + "brandManagement/brandManagement.jsp";

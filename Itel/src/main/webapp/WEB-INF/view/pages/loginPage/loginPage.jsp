@@ -24,7 +24,7 @@
                     <div class="col-12">
                         <div class="mb-5">
                             <h2 class="display-5 fw-bold text-center">Sign in</h2>
-                            <p class="text-center m-0">Don't have an account? <a href="#!">Sign up</a></p>
+                            <p class="text-center m-0">Don't have an account? <a href="<%= ProjectPaths.HREF_TO_REGISTERPAGE %>">Sign up</a></p>
                         </div>
                     </div>
                 </div>
@@ -63,7 +63,7 @@
                                                 
                                                 <div class="col-6">
                                                     <div class="text-end">
-                                                        <a href="#!" class="link-secondary text-decoration-none">Forgot password?</a>
+                                                        <a href="<%= ProjectPaths.HREF_TO_FORGOTPASSWORD %>" class="link-secondary text-decoration-none">Forgot password?</a>
                                                     </div>
                                                 </div>
                                             </div>
@@ -110,6 +110,11 @@
                                 </div>
                             </div>
                         </div>
+                        <!-- Thêm phần Register new account -->
+                        <div class="text-center mt-4">
+                            <p class="mb-0">Don't have an account yet?</p>
+                            <a href="<%= ProjectPaths.HREF_TO_REGISTERPAGE %>" class="btn btn-outline-primary btn-lg">Register new account</a>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -118,7 +123,6 @@
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     </body>
 </html>
-
 
 <style>
     body {

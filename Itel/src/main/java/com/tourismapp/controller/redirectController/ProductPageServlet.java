@@ -114,62 +114,36 @@ public class ProductPageServlet extends HttpServlet {
         Optional<List<ProductImage>> productImages = productService.getProductImagesById(id);
         Map<String, String> infoProduct = productService.getInforProductById(id);
 
-        //HUY: LAY SAN PHAM THEO GIA
-        List<Product> similarProducts = new ArrayList<>();
+        //HUY
+        List<Product> sameCategoryProducts = productService.getProductsByCategory(product.get().getCategory().getCategoryId());
 
-// Ưu tiên cùng loại
-        similarProducts.addAll(productService.getSimilarProductsByCategory(
-                product.get().getCategory().getCategoryId(),
-                product.get().getProductId(),
-                4
-        ));
+// Loại bỏ sản phẩm hiện tại
+        sameCategoryProducts.removeIf(p -> p.getProductId() == product.get().getProductId());
 
-// Nếu chưa đủ, lấy theo giá
-        if (similarProducts.size() < 4) {
-            int missing = 4 - similarProducts.size();
-            List<Product> priceProducts = productService.getSimilarProductsByPrice(
-                    product.get().getPrice(),
-                    product.get().getProductId(),
-                    missing
-            );
+// ✅ Lấy toàn bộ sản phẩm liên quan (không giới hạn)
+        List<Product> top5Suggestions = sameCategoryProducts;
 
-            for (Product p : priceProducts) {
-                if (similarProducts.stream().noneMatch(sp -> sp.getProductId() == p.getProductId())) {
-                    similarProducts.add(p);
-                }
-                if (similarProducts.size() >= 4) {
-                    break;
-                }
-            }
+// Lấy danh sách tên thuộc tính từ sản phẩm chính
+        Map<String, String> currentAttributes = productService.getInforProductById(product.get().getProductId());
+        List<String> attributeNames = new ArrayList<>(currentAttributes.keySet()).subList(0, Math.min(5, currentAttributes.size()));
+
+// Dữ liệu gợi ý
+        Map<Product, List<String>> productSuggestionMap = new LinkedHashMap<>();
+        for (Product p : top5Suggestions) {
+            List<String> topAttributes = productService.getProductDetailByIdTop5(p.getProductId());
+            productSuggestionMap.put(p, topAttributes);
         }
 
-// Nếu vẫn chưa đủ, lấy theo hãng
-        if (similarProducts.size() < 4) {
-            int missing = 4 - similarProducts.size();
-            List<Product> brandProducts = productService.getSimilarProductsByBrand(
-                    product.get().getBrand().getBrandId(),
-                    product.get().getPrice(),
-                    product.get().getProductId(),
-                    missing
-            );
-
-            for (Product p : brandProducts) {
-                if (similarProducts.stream().noneMatch(sp -> sp.getProductId() == p.getProductId())) {
-                    similarProducts.add(p);
-                }
-                if (similarProducts.size() >= 4) {
-                    break;
-                }
-            }
-        }
+// Gửi sang JSP
+        // Gửi danh sách sản phẩm và thuộc tính
+        request.setAttribute("suggestionMap", productSuggestionMap);
+        request.setAttribute("attributeNames", attributeNames);
 
         //------------------------------------------------------------------------
         request.setAttribute("product", product.get());
         request.setAttribute("productImages", productImages.get());
         request.setAttribute("infoProduct", infoProduct);
         
-        request.setAttribute("similarProducts", similarProducts); //huy
-
         request.getRequestDispatcher(ProjectPaths.JSP_PRODUCTDETAILPAGE_PATH).forward(request, response);
     }
 

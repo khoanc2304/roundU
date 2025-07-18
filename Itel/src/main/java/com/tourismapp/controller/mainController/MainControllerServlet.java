@@ -2,6 +2,7 @@ package com.tourismapp.controller.mainController;
 
 import com.tourismapp.model.Users;
 import com.tourismapp.utils.ErrDialog;
+import com.tourismapp.config.ProjectPaths;
 import java.io.IOException;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
@@ -32,6 +33,7 @@ public class MainControllerServlet extends HttpServlet {
     public static final String CARTPAGE_REDIRECT = "cartPage";
     public static final String ORDERHISTORY_REDIRECT = "orderHistory";
     public static final String COMPARE_REDIRECT = "compare";
+    public static final String REGISTERPAGE_REDIRECT = "registerPage";
 
     // redirect to each servlets
     // dashboard
@@ -130,6 +132,11 @@ public class MainControllerServlet extends HttpServlet {
     // HUY dashboard
     public static final String ACTION_MANAGE_USER = "manageUser";
     public static final String ACTION_SEARCH_USER = "searchUser";
+    // HUY register and forgot_password
+    public static final String ACTION_NAVIGATE_REGISTER_PAGE = "navigateToRegisterPage";
+    public static final String FORGOTPASSWORD_REDIRECT = "forgot-password";  // Đặt tên cho URL của servlet
+    public static final String ACTION_FORGOT_PASSWORD = "forgotPassword";
+    public static final String FORGOTPASSWORD_SERVLET = "/" + FORGOTPASSWORD_REDIRECT;  // Trỏ đến servlet xử lý quên mật khẩu
 
     // Profile actions
     public static final String ACTION_VIEW_PROFILE = "viewProfile";
@@ -173,6 +180,15 @@ public class MainControllerServlet extends HttpServlet {
             // HUY
             case ACTION_UPDATE_PROFILE ->
                 request.getRequestDispatcher(PROFILEPAGE_SERVLET).forward(request, response);
+            case ACTION_NAVIGATE_REGISTER_PAGE ->
+                request.getRequestDispatcher(REGISTERPAGE_REDIRECT).forward(request, response);
+            // FORGOT PASSWORD ACTION
+            case ACTION_FORGOT_PASSWORD ->
+                request.getRequestDispatcher(FORGOTPASSWORD_REDIRECT).forward(request, response);
+            case "verifyOtp" ->
+                request.getRequestDispatcher(FORGOTPASSWORD_REDIRECT).forward(request, response);
+            case "resetPassword" ->
+                request.getRequestDispatcher(FORGOTPASSWORD_REDIRECT).forward(request, response);
             default ->
                 response.sendRedirect("errorAtMainController.jsp");
         }
@@ -237,6 +253,12 @@ public class MainControllerServlet extends HttpServlet {
             }  
             case ACTION_VIEW_PROFILE, ACTION_EDIT_PROFILE ->
                 request.getRequestDispatcher(PROFILEPAGE_SERVLET).forward(request, response);
+            //REGISTER
+            case REGISTERPAGE_REDIRECT ->
+                request.getRequestDispatcher(ProjectPaths.JSP_REGISTER_PAGE_PATH).forward(request, response);
+
+            case FORGOTPASSWORD_REDIRECT ->
+                request.getRequestDispatcher(FORGOTPASSWORD_REDIRECT).forward(request, response);    
             default ->
                 response.sendRedirect("errorAtMainController.jsp");
         }

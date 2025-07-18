@@ -26,6 +26,7 @@ C:\Users\Admin\Desktop\webapp\roundU\Itel\src\main\java\com\tourismapp\dto\Brand
 C:\Users\Admin\Desktop\webapp\roundU\Itel\src\main\java\com\tourismapp\service\relation\IBrandCategoryService.java
 C:\Users\Admin\Desktop\webapp\roundU\Itel\src\main\java\com\tourismapp\controller\redirectController\SimpleOrderHistoryServlet.java
 C:\Users\Admin\Desktop\webapp\roundU\Itel\src\main\java\com\tourismapp\controller\mainController\MainControllerServlet.java
+C:\Users\Admin\Desktop\webapp\roundU\Itel\src\main\java\com\tourismapp\controller\redirectController\RegisterServlet.java
 C:\Users\Admin\Desktop\webapp\roundU\Itel\src\main\java\com\tourismapp\dao\brand\IBrandDAO.java
 C:\Users\Admin\Desktop\webapp\roundU\Itel\src\main\java\com\tourismapp\dao\brand\BrandDAO.java
 C:\Users\Admin\Desktop\webapp\roundU\Itel\src\main\java\com\tourismapp\controller\redirectController\dashboard\BrandManagementServlet.java
@@ -43,6 +44,7 @@ C:\Users\Admin\Desktop\webapp\roundU\Itel\src\main\java\com\tourismapp\service\o
 C:\Users\Admin\Desktop\webapp\roundU\Itel\src\main\java\com\tourismapp\dao\DBConnection.java
 C:\Users\Admin\Desktop\webapp\roundU\Itel\src\main\java\com\tourismapp\dao\category\CategoryDAO.java
 C:\Users\Admin\Desktop\webapp\roundU\Itel\src\main\java\com\tourismapp\model\Category.java
+C:\Users\Admin\Desktop\webapp\roundU\Itel\src\main\java\com\tourismapp\controller\redirectController\ResetPasswordServlet.java
 C:\Users\Admin\Desktop\webapp\roundU\Itel\src\main\java\com\tourismapp\common\MembershipLevel.java
 C:\Users\Admin\Desktop\webapp\roundU\Itel\src\main\java\com\tourismapp\controller\redirectController\dashboard\DashboardPageServlet.java
 C:\Users\Admin\Desktop\webapp\roundU\Itel\src\main\java\com\tourismapp\model\Users.java
@@ -65,6 +67,7 @@ C:\Users\Admin\Desktop\webapp\roundU\Itel\src\main\java\com\tourismapp\model\Ord
 C:\Users\Admin\Desktop\webapp\roundU\Itel\src\main\java\com\tourismapp\service\category\ICategoryService.java
 C:\Users\Admin\Desktop\webapp\roundU\Itel\src\main\java\com\tourismapp\controller\redirectController\ProductPageServlet.java
 C:\Users\Admin\Desktop\webapp\roundU\Itel\src\main\java\com\tourismapp\model\MemberLevel.java
+C:\Users\Admin\Desktop\webapp\roundU\Itel\src\main\java\com\tourismapp\controller\redirectController\ForgotPasswordServlet.java
 C:\Users\Admin\Desktop\webapp\roundU\Itel\src\main\java\com\tourismapp\controller\chatController\ChatHistoryServlet.java
 C:\Users\Admin\Desktop\webapp\roundU\Itel\src\main\java\com\tourismapp\dao\order\OrderDAO.java
 C:\Users\Admin\Desktop\webapp\roundU\Itel\src\main\java\com\tourismapp\common\Status.java

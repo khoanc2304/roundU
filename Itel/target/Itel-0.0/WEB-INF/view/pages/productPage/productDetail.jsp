@@ -117,9 +117,45 @@
                 </div>
             </div>
 
-            <section class="row similar-products mt-3">
+            <section class="row similar-products mt-4">
                 <div class="container">
-                    <h3 class="section-title">Sản phẩm tương tự</h3>
+                    <div class="carousel-header d-flex justify-content-between align-items-center mb-3">
+                        <h3 class="carousel-title">Sản phẩm tương tự</h3>
+                        <div class="carousel-subtitle">
+                            <i class="fa fa-truck text-danger me-1"></i> Trả góp 0%
+                        </div>
+                    </div>
+
+                    <div class="carousel-wrapper position-relative">
+                        <button class="carousel-btn left" onclick="scrollLeft()">‹</button>
+
+                        <div class="carousel-container" id="similarCarousel">
+                            <c:forEach var="entry" items="${suggestionMap}">
+                                <div class="product-card">
+                                    <div class="product-img-wrapper">
+                                        <img src="${entry.key.imageUrl}" class="product-img" alt="product image" />
+                                    </div>
+                                    <div class="product-info">
+                                        <div class="product-name">${entry.key.name}</div>
+                                        <div class="product-specs">
+                                            <c:forEach var="i" begin="0" end="4">
+                                                <c:if test="${not empty attributeNames and not empty entry.value and i lt fn:length(attributeNames) and i lt fn:length(entry.value)}">
+                                                    <div class="spec-item">
+                                                        <strong>${attributeNames[i]}:</strong> ${entry.value[i]}
+                                                    </div>
+                                                </c:if>
+                                            </c:forEach>
+                                        </div>
+                                        <div class="product-price text-danger fw-bold mt-2">
+                                            <fmt:formatNumber value="${entry.key.price}" type="number" pattern="#,###" />đ
+                                        </div>
+                                    </div>
+                                </div>
+                            </c:forEach>
+                        </div>
+
+                        <button class="carousel-btn right" onclick="scrollRight()">›</button>
+                    </div>
                 </div>
             </section>
         </div>
@@ -664,5 +700,358 @@
             margin: 0 auto;
             display: block;
         }
+        
+        
+        /*        HUY*/
+        /* Section container */
+        .similar-products {
+            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+            padding: 48px 0;
+            margin: 40px 0;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .similar-products::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, rgba(0,0,0,0.1), transparent);
+        }
+
+        /* Container */
+        .container {
+            max-width: 1240px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        /* Carousel header */
+        .carousel-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 32px;
+            padding: 0 20px;
+        }
+
+        .carousel-title {
+            font-size: 2rem;
+            font-weight: 700;
+            color: #212529;
+            margin: 0;
+            position: relative;
+            letter-spacing: -0.5px;
+        }
+
+        .carousel-title::after {
+            content: '';
+            position: absolute;
+            bottom: -8px;
+            left: 0;
+            width: 60px;
+            height: 3px;
+            background: linear-gradient(90deg, #dc3545, #fd7e14);
+            border-radius: 2px;
+        }
+
+        .carousel-subtitle {
+            font-size: 0.9rem;
+            font-weight: 600;
+            color: #dc3545;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            background: rgba(220, 53, 69, 0.1);
+            padding: 8px 16px;
+            border-radius: 20px;
+            border: 1px solid rgba(220, 53, 69, 0.2);
+        }
+
+        /* Carousel wrapper */
+        .carousel-wrapper {
+            position: relative;
+            padding: 0 60px;
+        }
+
+        /* Carousel buttons */
+        .carousel-btn {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            background: #ffffff;
+            border: 2px solid #e9ecef;
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            font-size: 1.5rem;
+            color: #495057;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s ease;
+            z-index: 10;
+            user-select: none;
+        }
+
+        .carousel-btn.left {
+            left: 10px;
+        }
+
+        .carousel-btn.right {
+            right: 10px;
+        }
+
+        .carousel-btn:hover {
+            background: #dc3545;
+            color: white;
+            border-color: #dc3545;
+            box-shadow: 0 6px 20px rgba(220, 53, 69, 0.3);
+            transform: translateY(-50%) scale(1.05);
+        }
+
+        .carousel-btn:active {
+            transform: translateY(-50%) scale(0.95);
+        }
+
+        .carousel-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            background: #f8f9fa;
+            color: #6c757d;
+        }
+
+        .carousel-btn:disabled:hover {
+            background: #f8f9fa;
+            color: #6c757d;
+            transform: translateY(-50%);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+
+        /* Carousel container */
+        .carousel-container {
+            display: flex;
+            gap: 20px;
+            overflow: hidden;
+            padding: 20px 0;
+            position: relative;
+
+            overflow-x: hidden;
+            scroll-behavior: smooth;
+            scroll-snap-type: x mandatory;
+        }
+
+        .carousel-track {
+            display: flex;
+            gap: 20px;
+            transition: transform 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+            will-change: transform;
+        }
+
+        /* Product card */
+.product-card {
+    flex: 0 0 280px;
+    height: 450px;
+    background: #ffffff;
+    border: 1px solid #e9ecef;
+    border-radius: 16px;
+    padding: 20px;
+    transition: all 0.3s ease;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    box-sizing: border-box;
+    position: relative;
+    overflow: hidden;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+    scroll-snap-align: start;
+}
+
+.product-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 3px;
+    background: linear-gradient(90deg, #dc3545, #fd7e14);
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform 0.3s ease;
+}
+
+.product-card:hover::before {
+    transform: scaleX(1);
+}
+
+.product-card:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 12px 32px rgba(0, 0, 0, 0.12);
+    border-color: #dc3545;
+}
+
+/* Product image wrapper */
+.product-img-wrapper {
+    width: 100%;
+    height: 240px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 10px;
+    background-color: #ffffff;
+    border-radius: 12px;
+    overflow: hidden;
+    position: relative;
+}
+
+/* Product image */
+.product-img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain !important; /* Override mọi nơi khác */
+    object-position: center;
+    display: block;
+    transition: transform 0.3s ease;
+}
+
+/* Hover effect */
+.product-card:hover .product-img {
+    transform: scale(1.05); /* Nhẹ nhàng không phá bố cục */
+}
+
+
+
+        /* Product info */
+        .product-info {
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        .product-name {
+            font-size: 1rem;
+            font-weight: 600;
+            color: #212529;
+            line-height: 1.4;
+            min-height: 50px;
+            margin-bottom: 12px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            transition: color 0.3s ease;
+        }
+
+        .product-card:hover .product-name {
+            color: #dc3545;
+        }
+
+        .product-specs {
+            flex-grow: 1;
+            font-size: 0.85rem;
+            color: #6c757d;
+            line-height: 1.6;
+            margin-bottom: 12px;
+        }
+
+        .spec-item {
+            margin-bottom: 6px;
+            padding: 4px 0;
+            border-bottom: 1px solid #f8f9fa;
+        }
+
+        .spec-item:last-child {
+            border-bottom: none;
+        }
+
+        .spec-item strong {
+            font-weight: 600;
+            color: #495057;
+        }
+
+        .product-price {
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: #dc3545;
+            margin-top: 12px;
+            padding: 8px 0;
+            border-top: 2px solid #f8f9fa;
+            position: relative;
+        }
+
+        .product-price::before {
+            content: '';
+            position: absolute;
+            top: -2px;
+            left: 0;
+            width: 40px;
+            height: 2px;
+            background: #dc3545;
+            transform: scaleX(0);
+            transition: transform 0.3s ease;
+        }
+
+        .product-card:hover .product-price::before {
+            transform: scaleX(1);
+        }
+
+        /* Indicators */
+        .carousel-indicators {
+            display: flex;
+            justify-content: center;
+            gap: 8px;
+            margin-top: 20px;
+        }
+
+        .indicator {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background: #dee2e6;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .indicator.active {
+            background: #dc3545;
+            transform: scale(1.2);
+        }
+
+
+
+
+
+    </style>
+
+
+
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            const carousel = document.getElementById("similarCarousel");
+            const cards = carousel?.querySelectorAll(".product-card");
+            if (!carousel || !cards.length)
+                return;
+
+            const gap = parseInt(getComputedStyle(carousel).gap) || 20;
+            const cardWidth = cards[0].offsetWidth + gap;
+
+            document.querySelector(".carousel-btn.left").addEventListener("click", function () {
+                carousel.scrollBy({left: -cardWidth, behavior: "smooth"});
+            });
+
+            document.querySelector(".carousel-btn.right").addEventListener("click", function () {
+                carousel.scrollBy({left: cardWidth, behavior: "smooth"});
+            });
+        });
+    </script>
+
     </style>
 </html>
