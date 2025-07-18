@@ -16,6 +16,7 @@ C:\Users\Admin\Desktop\webapp\roundU\Itel\src\main\java\com\tourismapp\service\o
 C:\Users\Admin\Desktop\webapp\roundU\Itel\src\main\java\com\tourismapp\controller\redirectController\LoginFacebookServlet.java
 C:\Users\Admin\Desktop\webapp\roundU\Itel\src\main\java\com\tourismapp\controller\cartController\CartController.java
 C:\Users\Admin\Desktop\webapp\roundU\Itel\src\main\java\com\tourismapp\model\Brand.java
+C:\Users\Admin\Desktop\webapp\roundU\Itel\src\main\java\com\tourismapp\controller\chatController\ChatServlet.java
 C:\Users\Admin\Desktop\webapp\roundU\Itel\src\main\java\com\tourismapp\controller\redirectController\dashboard\OrderManagementServlet.java
 C:\Users\Admin\Desktop\webapp\roundU\Itel\src\main\java\com\tourismapp\controller\redirectController\ProfilePageServlet.java
 C:\Users\Admin\Desktop\webapp\roundU\Itel\src\main\java\com\tourismapp\utils\ErrDialog.java
@@ -64,6 +65,7 @@ C:\Users\Admin\Desktop\webapp\roundU\Itel\src\main\java\com\tourismapp\model\Ord
 C:\Users\Admin\Desktop\webapp\roundU\Itel\src\main\java\com\tourismapp\service\category\ICategoryService.java
 C:\Users\Admin\Desktop\webapp\roundU\Itel\src\main\java\com\tourismapp\controller\redirectController\ProductPageServlet.java
 C:\Users\Admin\Desktop\webapp\roundU\Itel\src\main\java\com\tourismapp\model\MemberLevel.java
+C:\Users\Admin\Desktop\webapp\roundU\Itel\src\main\java\com\tourismapp\controller\chatController\ChatHistoryServlet.java
 C:\Users\Admin\Desktop\webapp\roundU\Itel\src\main\java\com\tourismapp\dao\order\OrderDAO.java
 C:\Users\Admin\Desktop\webapp\roundU\Itel\src\main\java\com\tourismapp\common\Status.java
 C:\Users\Admin\Desktop\webapp\roundU\Itel\src\main\java\com\tourismapp\model\Product.java
@@ -74,6 +76,7 @@ C:\Users\Admin\Desktop\webapp\roundU\Itel\src\main\java\com\tourismapp\dao\produ
 C:\Users\Admin\Desktop\webapp\roundU\Itel\src\main\java\com\tourismapp\controller\redirectController\LoginPageServlet.java
 C:\Users\Admin\Desktop\webapp\roundU\Itel\src\main\java\com\tourismapp\model\ProductImage.java
 C:\Users\Admin\Desktop\webapp\roundU\Itel\src\main\java\com\tourismapp\service\product\ProductService.java
+C:\Users\Admin\Desktop\webapp\roundU\Itel\src\main\java\com\tourismapp\api\ChatApiServlet.java
 C:\Users\Admin\Desktop\webapp\roundU\Itel\src\main\java\com\tourismapp\controller\redirectController\dashboard\ProductManagementServlet.java
 C:\Users\Admin\Desktop\webapp\roundU\Itel\src\main\java\com\tourismapp\dao\category\ICategoryDAO.java
 C:\Users\Admin\Desktop\webapp\roundU\Itel\src\main\java\com\tourismapp\controller\redirectController\dashboard\UserManagementServlet.java

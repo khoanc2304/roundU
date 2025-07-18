@@ -24,7 +24,7 @@
         <div class="container mt-4" >
             <nav aria-label="breadcrumb" style="margin-left:45px; margin-right: 30px;">
                 <ol class="breadcrumb">
-                    <li class="breadcrumb-item"><a href="#/">Trang chủ</a></li>
+                    <li class="breadcrumb-item"><a href="<%= ProjectPaths.HREF_TO_HOMEPAGE %>">Trang chủ</a></li>
                         <c:if test="${not empty category}">
                         <li class="breadcrumb-item"><a href="#">${category.name}</a></li>
                         </c:if>

@@ -6,7 +6,7 @@ END
 GO
 
 -- Tạo lại database
-CREATE DATABASE Itel_Shop2;
+CREATE DATABASE Itel_Shop;
 GO
 
 USE Itel_Shop;
@@ -3220,3 +3220,44 @@ VALUES
 (16, 48, 1, 31251000.00), -- MSI Prestige 14 Evo
 (17, 54, 1, 20834000.00), -- Xiaomi 14 Pro
 (18, 41, 1, 3500000.00); -- ASUS ROG Strix Scope NX TKL Deluxe
+
+UPDATE Category
+SET image_url = 'https://cdn2.fptshop.com.vn/unsafe/180x0/filters:format(webp):quality(75)/laptop_thumb_2_4df0fab60f.png'
+WHERE category_id = 1;
+
+UPDATE Category
+SET image_url = 'https://cdn2.fptshop.com.vn/unsafe/180x0/filters:format(webp):quality(75)/phone_cate_c6a412f60a.png'
+WHERE category_id = 2;
+
+UPDATE Category
+SET image_url = 'https://maytinhanphat.vn/img/image/tin/724/8-loai-chuot-may-tinh-pho-bien-nhat-hien-nay-1.jpg'
+WHERE category_id = 3;
+
+UPDATE Category
+SET image_url = 'https://cdn2.fptshop.com.vn/unsafe/180x0/filters:format(webp):quality(75)/phu_kien_thum_2_21c419aa09.png'
+WHERE category_id = 4;
+
+UPDATE Category
+SET image_url = 'https://jola.vn/Product/t7yBPY2AI/aula-f3261-mini-mechanical-keyboard-61-keys-rgb-backlit-wired-office-gaming-keyboard-with-blue-switchejpg-640x640jpg-1.jpg'
+WHERE category_id = 5;
+
+--Category
+INSERT INTO Category (name, description, image_url)
+VALUES
+('Television', 'Electronic device for viewing multimedia content on a large screen', 'https://cdn2.fptshop.com.vn/unsafe/360x0/filters:format(webp):quality(75)/tivi_thumb_2_fc9b0f8bde.png'), -- id 6
+('Tablet', 'Portable touchscreen device for web browsing, media, and apps', 'https://cdn2.fptshop.com.vn/unsafe/180x0/filters:format(webp):quality(75)/may_tinh_bang_cate_thumb_00e3b3eefa.png'), -- id 7
+('Desktop PC', 'Stationary computer designed for high performance and expandability', 'https://cdn2.fptshop.com.vn/unsafe/180x0/filters:format(webp):quality(75)/PC_May_tinh_de_ban_aa72b0ea4f.png'), -- id 8
+('Accessories', 'Computer components and peripherals such as mice, keyboards, and adapters', 'https://cdn2.fptshop.com.vn/unsafe/180x0/filters:format(webp):quality(75)/linh_kien_cate_thumb_4c25ebf717.png'); -- id 9
+
+UPDATE Category
+SET name = 'DesktopPC'
+WHERE category_id = 8;
+
+
+CREATE TABLE Chat_History (
+    id INT IDENTITY(1,1) PRIMARY KEY,
+    sender VARCHAR(50) NOT NULL,
+    receiver VARCHAR(50) NOT NULL,
+    message NVARCHAR(MAX) NOT NULL,
+    timestamp DATETIME NOT NULL DEFAULT GETDATE()
+);

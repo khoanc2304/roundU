@@ -173,13 +173,11 @@ public class CategoryDAO implements ICategoryDAO {
 
     public static void main(String[] args) {
         CategoryDAO cDAO = new CategoryDAO();
-//        List<Category> cs = cDAO.getAllCategories();
-//        System.out.println("=== ALL Category ===");
-//        for (Category c : cs) {
-//            System.out.println(c);
-//        }
-        Optional<Category> category = cDAO.findCategoryById(1);
-        ErrDialog.showError("Category : " + category.get());
+        List<Category> categories = cDAO.getAllCategories();
+        
+        for (Category c : categories){
+            System.out.println(c.getName() + "ImageUrl" + c.getImageUrl());
+        }
 
     }
 

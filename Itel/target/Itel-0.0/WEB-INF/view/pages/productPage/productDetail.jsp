@@ -10,21 +10,14 @@
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
         <title>Product Detail Page</title>
 
-        <!-- Bootstrap 5.3 CSS -->
         <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" crossorigin="anonymous">
-
-        <!-- Font Awesome -->
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css" crossorigin="anonymous"/>
-
-        <!-- Google Fonts -->
         <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
 
-        <!-- Add AOS CSS -->
         <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
     </head>
     <body style="background-color: #F3F4F6; margin: 0; font-family: 'Roboto', sans-serif;">
 
-        <!-- Navbar (optional) -->
         <% request.getRequestDispatcher("/WEB-INF/view/components/navbar.jsp").include(request, response); %>
 
         <div class="container product-container mt-5">
@@ -124,7 +117,6 @@
                 </div>
             </div>
 
-            <!-- Sản phẩm tương tự -->
             <section class="row similar-products mt-3">
                 <div class="container">
                     <h3 class="section-title">Sản phẩm tương tự</h3>
@@ -137,11 +129,11 @@
                 <div class="col-md-8 product-info" style="background-color: #ffffff; padding: 15px;">
                     <h3 style="font-size: 18px; font-weight: bold; margin-bottom: 10px;">Thông tin sản phẩm</h3>
                     <p style="font-size: 14px; margin-bottom: 5px;">Thông số kỹ thuật:</p>
-                    <table style="width: 100%; font-size: 14px; border-collapse: collapse;">
+                    <table class="spec-table">
                         <c:forEach var="entry" items="${infoProduct.entrySet()}">
                             <tr>
-                                <td style="padding: 5px; border: 1px solid #ddd;"><strong>${entry.key}</strong></td>
-                                <td style="padding: 5px; border: 1px solid #ddd;">${entry.value}</td>
+                                <td class="spec-key">${entry.key}</td>
+                                <td class="spec-value">${entry.value}</td>
                             </tr>
                         </c:forEach>
                     </table>
@@ -221,70 +213,65 @@
             </div>
         </div>
 
-        <!--Footer-->                                 
         <div class="mt-3">
             <jsp:include page="/WEB-INF/view/components/footer.jsp" />
         </div>
 
         <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
         <script>
-                                         document.addEventListener('DOMContentLoaded', function () {
-                                             AOS.init();
+            document.addEventListener('DOMContentLoaded', function () {
+                AOS.init();
 
-                                             const mainImage = document.getElementById('mainImage');
-                                             const thumbnails = document.querySelectorAll('.thumbnail');
-                                             let currentIndex = 0;
+                const mainImage = document.getElementById('mainImage');
+                const thumbnails = document.querySelectorAll('.thumbnail');
+                let currentIndex = 0;
 
-                                             function changeImage(thumbnail) {
-                                                 const imageUrl = thumbnail.getAttribute('data-src');
-                                                 mainImage.src = imageUrl;
-                                                 currentIndex = Array.from(thumbnails).indexOf(thumbnail);
-                                                 updateActiveThumbnail();
-                                             }
+                function changeImage(thumbnail) {
+                    const imageUrl = thumbnail.getAttribute('data-src');
+                    mainImage.src = imageUrl;
+                    currentIndex = Array.from(thumbnails).indexOf(thumbnail);
+                    updateActiveThumbnail();
+                }
 
-                                             function updateActiveThumbnail() {
-                                                 thumbnails.forEach(thumb => thumb.classList.remove('active'));
-                                                 if (thumbnails[currentIndex]) {
-                                                     thumbnails[currentIndex].classList.add('active');
-                                                 }
-                                             }
+                function updateActiveThumbnail() {
+                    thumbnails.forEach(thumb => thumb.classList.remove('active'));
+                    if (thumbnails[currentIndex]) {
+                        thumbnails[currentIndex].classList.add('active');
+                    }
+                }
 
-                                             function prevImage() {
-                                                 currentIndex = (currentIndex > 0) ? currentIndex - 1 : thumbnails.length - 1;
-                                                 mainImage.src = thumbnails[currentIndex].getAttribute('data-src');
-                                                 updateActiveThumbnail();
-                                             }
+                function prevImage() {
+                    currentIndex = (currentIndex > 0) ? currentIndex - 1 : thumbnails.length - 1;
+                    mainImage.src = thumbnails[currentIndex].getAttribute('data-src');
+                    updateActiveThumbnail();
+                }
 
-                                             function nextImage() {
-                                                 currentIndex = (currentIndex < thumbnails.length - 1) ? currentIndex + 1 : 0;
-                                                 mainImage.src = thumbnails[currentIndex].getAttribute('data-src');
-                                                 updateActiveThumbnail();
-                                             }
+                function nextImage() {
+                    currentIndex = (currentIndex < thumbnails.length - 1) ? currentIndex + 1 : 0;
+                    mainImage.src = thumbnails[currentIndex].getAttribute('data-src');
+                    updateActiveThumbnail();
+                }
 
-                                             // Gán sự kiện cho nút
-                                             document.querySelector('.prev-btn').addEventListener('click', prevImage);
-                                             document.querySelector('.next-btn').addEventListener('click', nextImage);
+                document.querySelector('.prev-btn').addEventListener('click', prevImage);
+                document.querySelector('.next-btn').addEventListener('click', nextImage);
 
-                                             // Gán sự kiện click cho từng thumbnail
-                                             thumbnails.forEach(thumb => {
-                                                 thumb.addEventListener('click', function () {
-                                                     changeImage(this);
-                                                 });
-                                             });
+                thumbnails.forEach(thumb => {
+                    thumb.addEventListener('click', function () {
+                        changeImage(this);
+                    });
+                });
 
-                                             // Hiển thị thumbnail đầu tiên ban đầu
-                                             if (thumbnails.length > 0) {
-                                                 changeImage(thumbnails[0]);
-                                             }
+                if (thumbnails.length > 0) {
+                    changeImage(thumbnails[0]);
+                }
 
-                                             // Scroll to info
-                                             window.scrollToProductInfo = function () {
-                                                 const productInfo = document.getElementById('productInfo');
-                                                 if (productInfo) {
-                                                     productInfo.scrollIntoView({behavior: 'smooth'});
-                                                 }
-                                             };
-                                         });
+                window.scrollToProductInfo = function () {
+                    const productInfo = document.querySelector('.product-info');
+                    if (productInfo) {
+                        productInfo.scrollIntoView({behavior: 'smooth'});
+                    }
+                };
+            });
         </script>
 
     </body>
@@ -470,7 +457,6 @@
         }
         .btn-custom-buy:hover {
             transform: scale(1.05);
-            background-color: #BAE7FB !important;
             color: inherit;
             border-color: inherit;
         }
@@ -593,11 +579,90 @@
             height: 330px;
             object-fit: cover;
             cursor: pointer;
-
         }
-
         .product-detail-image.active {
             border-color: #007bff;
+        }
+        .product-info {
+            background-color: #ffffff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+        }
+
+        .section-title {
+            font-size: 22px;
+            font-weight: 600;
+            color: #1a0dab;
+            margin-bottom: 15px;
+            padding-bottom: 8px;
+            border-bottom: 2px solid #e0e0e0;
+        }
+
+        .info-subtitle {
+            font-size: 16px;
+            font-weight: 500;
+            color: #333;
+            margin-bottom: 10px;
+        }
+
+        .spec-table {
+            width: 100%;
+            border-collapse: separate;
+            border-spacing: 0;
+            background-color: #ffffff;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            margin-bottom: 20px;
+        }
+
+        .spec-table tr {
+            border-bottom: 1px solid #e0e0e0;
+        }
+
+        .spec-table tr:last-child {
+            border-bottom: none;
+        }
+
+        .spec-key {
+            width: 30%;
+            padding: 12px 15px;
+            background-color: #f8f9fa;
+            font-weight: 600;
+            color: #333;
+            vertical-align: top;
+            border-right: 1px solid #e0e0e0;
+        }
+
+        .spec-value {
+            padding: 12px 15px;
+            color: #444;
+            vertical-align: top;
+        }
+
+        .section-subtitle {
+            font-size: 18px;
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 12px;
+        }
+
+        .description-text {
+            font-size: 15px;
+            line-height: 1.6;
+            color: #444;
+            margin-bottom: 20px;
+        }
+
+        .product-detail-image {
+            width: 440px;
+            height: 330px;
+            object-fit: cover;
+            border-radius: 4px;
+            cursor: pointer;
+            margin: 0 auto;
+            display: block;
         }
     </style>
 </html>

@@ -10,24 +10,18 @@
         <meta charset="UTF-8">
         <title>Home Page</title>
 
-        <!-- Bootstrap 5.3 CSS -->
         <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" crossorigin="anonymous">
 
-        <!-- Font Awesome -->
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css" crossorigin="anonymous"/>
 
-        <!-- Google Fonts -->
         <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
 
-        <!-- Add AOS CSS -->
         <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
     </head>
 
     <body>
-        <!-- Navbar (optional) -->
         <% request.getRequestDispatcher("/WEB-INF/view/components/navbar.jsp").include(request, response); %>
 
-        <!-- Main Banner -->
         <div class="banner-wrapper">
             <div id="bannerCarousel" class="carousel slide banner-container" data-bs-ride="carousel" data-bs-interval="3000">
                 <div class="carousel-inner">
@@ -58,34 +52,22 @@
         <div class="container my-5">
             <div class="layout-3col d-flex justify-content-center gap-4">
 
-                <!-- Cột Trái -->
                 <div class="left-col d-flex flex-column gap-3">
-                    <a href="<%= ProjectPaths.HREF_TO_PRODUCTPAGE%>&c=Laptop" class="category-link">
-                        <div class="category-box">
-                            <h4>Laptop</h4>
-                            <img src="${sessionScope.LaptopImageUrl}" alt="Laptop" class="category-image">
-                        </div>
-                    </a>
                     <a href="<%= ProjectPaths.HREF_TO_PRODUCTPAGE%>&c=Phone" class="category-link">
                         <div class="category-box">
                             <h4>Điện thoại</h4>
                             <img src="${sessionScope.PhoneImageUrl}" alt="Phone" class="category-image">
                         </div>
                     </a>
-                </div>
-
-                <!-- Cột Giữa -->
-                <div class="middle-col d-flex align-items-center justify-content-center">
-                    <a href="<%= ProjectPaths.HREF_TO_PRODUCTPAGE%>&c=Mouse" class="category-link w-100">
-                        <div class="category-box-mid">
+                    <a href="<%= ProjectPaths.HREF_TO_PRODUCTPAGE%>&c=Mouse" class="category-link">
+                        <div class="category-box">
                             <h4>Chuột</h4>
-                            <img src="${sessionScope.MouseImageUrl}" alt="Mouse" class="category-image mouse-image">
+                            <img src="${sessionScope.MouseImageUrl}" alt="Mouse" class="category-image">
                         </div>
-                    </a>
+                    </a>    
                 </div>
 
-                <!-- Cột Phải -->
-                <div class="right-col d-flex flex-column gap-3">
+                <div class="left-col d-flex flex-column gap-3">
                     <a href="<%= ProjectPaths.HREF_TO_PRODUCTPAGE%>&c=Headphones" class="category-link">
                         <div class="category-box">
                             <h4>Tai nghe</h4>
@@ -98,471 +80,55 @@
                             <img src="${sessionScope.KeyboardImageUrl}" alt="Keyboard" class="category-image">
                         </div>
                     </a>
+                </div>        
+
+                <div class="middle-col d-flex align-items-center justify-content-center">
+                    <a href="<%= ProjectPaths.HREF_TO_PRODUCTPAGE%>&c=Laptop" class="category-link w-100">
+                        <div class="category-box-mid">
+                            <h4>Laptop</h4>
+                            <img src="${sessionScope.LaptopImageUrl}" alt="Laptop" class="category-image mouse-image">
+                        </div>
+                    </a>
                 </div>
 
+                <div class="right-col d-flex flex-column gap-3">
+                    <a href="#" class="category-link">
+                        <div class="category-box">
+                            <h4>Tivi</h4>
+                            <img src="${sessionScope.TelevisionImageUrl}" alt="Tivi" class="category-image">
+                        </div>
+                    </a>
+                    <a href="#" class="category-link">
+                        <div class="category-box">
+                            <h4>Máy tính bảng</h4>
+                            <img src="${sessionScope.TabletImageUrl}" alt="Tablet" class="category-image">
+                        </div>
+                    </a>
+                </div>
+
+                <div class="right-col d-flex flex-column gap-3">
+                    <a href="#" class="category-link">
+                        <div class="category-box">
+                            <h4>Máy tính bàn - PC</h4>
+                            <img src="${sessionScope.DesktopPCImageUrl}" alt="Desktop-PC" class="category-image">
+                        </div>
+                    </a>
+                    <a href="#" class="category-link">
+                        <div class="category-box">
+                            <h4>Linh kiện</h4>
+                            <img src="${sessionScope.AccessoriesImageUrl}" alt="Accessories" class="category-image">
+                        </div>
+                    </a>
+                </div>        
             </div>
-        </div>
-
-        <div class="container my-5">
-            <div class="row">
-                <div class="col-12 col-md-4 col-lg-3">
-                    <div class="sidebar list-group" data-aos="fade-up">
-                        <!-- Mega menu chung -->
-                        <div id="mega-menu" class="mega-menu shadow bg-white"></div>
-                        <!-- Mục Laptop -->
-                        <div class="list-group-item list-group-item-action d-flex align-items-center category-item position-relative" data-mega-menu='
-                             <div class="mega-menu-content">
-                             <div class="menu-column">
-                             <h6 class="fw-bold">Thương Hiệu</h6>
-                             <ul class="list-unstyled">
-                             <li><a href="#">Asus</a></li>
-                             <li><a href="#">Acer</a></li>
-                             <li><a href="#">MSI</a></li>
-                             <li><a href="#">Lenovo</a></li>
-                             <li><a href="#">Gigabyte</a></li>
-                             <li><a href="#">Apple</a></li>
-                             <li><a href="#">Dell</a></li>
-                             <li><a href="#">HP</a></li>
-                             </ul>
-                             </div>
-                             <div class="menu-column">
-                             <h6 class="fw-bold">Giá bán</h6>
-                             <ul class="list-unstyled">
-                             <li><a href="#">Dưới 15 triệu</a></li>
-                             <li><a href="#">Từ 15 đến 20 triệu</a></li>
-                             <li><a href="#">Trên 20 triệu</a></li>
-                             </ul>
-                             </div>
-                             <div class="menu-column">
-                             <h6 class="fw-bold">CPU Intel - AMD</h6>
-                             <ul class="list-unstyled">
-                             <li><a href="#">Intel Core i3</a></li>
-                             <li><a href="#">Intel Core i5</a></li>
-                             <li><a href="#">Intel Core i7</a></li>
-                             <li><a href="#">Intel Core i9</a></li>
-                             <li><a href="#">AMD Ryzen 5</a></li>
-                             <li><a href="#">AMD Ryzen 7</a></li>
-                             <li><a href="#">AMD Ryzen 9</a></li>
-                             </ul>
-                             </div>
-                             <div class="menu-column">
-                             <h6 class="fw-bold">Nhu cầu sử dụng</h6>
-                             <ul class="list-unstyled">
-                             <li><a href="#">Đồ họa - Studio</a></li>
-                             <li><a href="#">Học sinh - Sinh viên</a></li>
-                             <li><a href="#">Mỏng nhẹ cao cấp</a></li>
-                             <li><a href="#">Ổ cứng độ bền</a></li>
-                             </ul>
-                             </div>
-                             <div class="menu-column">
-                             <h6 class="fw-bold">Linh phụ kiện Laptop</h6>
-                             <ul class="list-unstyled">
-                             <li><a href="#">Ram laptop</a></li>
-                             <li><a href="#">SSD laptop</a></li>
-                             <li><a href="#">Ổ cứng di động</a></li>
-                             </ul>
-                             </div>
-                             </div>
-                             '>
-                            <a href="#" class="text-decoration-none text-dark flex-grow-1">
-                                <i class="fas fa-laptop me-2"></i> Laptop
-                            </a>
-                        </div>
-                        <!-- Mục PC -->
-                        <div class="list-group-item list-group-item-action d-flex align-items-center category-item position-relative" data-mega-menu='
-                             <div class="mega-menu-content">
-                             <div class="menu-column">
-                             <h6 class="fw-bold">Thương Hiệu</h6>
-                             <ul class="list-unstyled">
-                             <li><a href="#">Asus</a></li>
-                             <li><a href="#">Acer</a></li>
-                             <li><a href="#">MSI</a></li>
-                             <li><a href="#">Lenovo</a></li>
-                             <li><a href="#">Gigabyte</a></li>
-                             <li><a href="#">Apple</a></li>
-                             <li><a href="#">Dell</a></li>
-                             <li><a href="#">HP</a></li>
-                             </ul>
-                             </div>
-                             <div class="menu-column">
-                             <h6 class="fw-bold">Giá bán</h6>
-                             <ul class="list-unstyled">
-                             <li><a href="#">Dưới 15 triệu</a></li>
-                             <li><a href="#">Từ 15 đến 20 triệu</a></li>
-                             <li><a href="#">Trên 20 triệu</a></li>
-                             </ul>
-                             </div>
-                             <div class="menu-column">
-                             <h6 class="fw-bold">CPU Intel - AMD</h6>
-                             <ul class="list-unstyled">
-                             <li><a href="#">Intel Core i3</a></li>
-                             <li><a href="#">Intel Core i5</a></li>
-                             <li><a href="#">Intel Core i7</a></li>
-                             <li><a href="#">Intel Core i9</a></li>
-                             <li><a href="#">AMD Ryzen 5</a></li>
-                             <li><a href="#">AMD Ryzen 7</a></li>
-                             <li><a href="#">AMD Ryzen 9</a></li>
-                             </ul>
-                             </div>
-                             <div class="menu-column">
-                             <h6 class="fw-bold">Nhu cầu sử dụng</h6>
-                             <ul class="list-unstyled">
-                             <li><a href="#">Đồ họa - Studio</a></li>
-                             <li><a href="#">Học sinh - Sinh viên</a></li>
-                             <li><a href="#">Mỏng nhẹ cao cấp</a></li>
-                             <li><a href="#">Ổ cứng độ bền</a></li>
-                             </ul>
-                             </div>
-                             <div class="menu-column">
-                             <h6 class="fw-bold">Linh phụ kiện PC</h6>
-                             <ul class="list-unstyled">
-                             <li><a href="#">Ram PC</a></li>
-                             <li><a href="#">SSD PC</a></li>
-                             <li><a href="#">Ổ cứng di động</a></li>
-                             </ul>
-                             </div>
-                             </div>
-                             '>
-                            <a href="#" class="text-decoration-none text-dark flex-grow-1">
-                                <i class="fas fa-desktop me-2"></i> PC
-                            </a>
-                        </div>
-                        <!-- Mục Điện thoại -->
-                        <div class="list-group-item list-group-item-action d-flex align-items-center category-item position-relative" data-mega-menu='
-                             <div class="mega-menu-content">
-                             <div class="menu-column">
-                             <h6 class="fw-bold">Thương Hiệu</h6>
-                             <ul class="list-unstyled">
-                             <li><a href="#">Apple</a></li>
-                             <li><a href="#">Samsung</a></li>
-                             <li><a href="#">Xiaomi</a></li>
-                             <li><a href="#">Oppo</a></li>
-                             <li><a href="#">Vivo</a></li>
-                             <li><a href="#">Realme</a></li>
-                             <li><a href="#">OnePlus</a></li>
-                             </ul>
-                             </div>
-                             <div class="menu-column">
-                             <h6 class="fw-bold">Khoảng giá</h6>
-                             <ul class="list-unstyled">
-                             <li><a href="#">Dưới 3 triệu</a></li>
-                             <li><a href="#">Từ 3 đến 7 triệu</a></li>
-                             <li><a href="#">Từ 7 đến 15 triệu</a></li>
-                             <li><a href="#">Trên 15 triệu</a></li>
-                             </ul>
-                             </div>
-                             <div class="menu-column">
-                             <h6 class="fw-bold">Hệ điều hành</h6>
-                             <ul class="list-unstyled">
-                             <li><a href="#">Android</a></li>
-                             <li><a href="#">iOS</a></li>
-                             </ul>
-                             </div>
-                             <div class="menu-column">
-                             <h6 class="fw-bold">Tính năng nổi bật</h6>
-                             <ul class="list-unstyled">
-                             <li><a href="#">5G</a></li>
-                             <li><a href="#">Chống nước</a></li>
-                             <li><a href="#">Sạc nhanh</a></li>
-                             <li><a href="#">Màn hình lớn</a></li>
-                             <li><a href="#">Camera chất lượng cao</a></li>
-                             </ul>
-                             </div>
-                             <div class="menu-column">
-                             <h6 class="fw-bold">Phụ kiện điện thoại</h6>
-                             <ul class="list-unstyled">
-                             <li><a href="#">Ốp lưng</a></li>
-                             <li><a href="#">Sạc dự phòng</a></li>
-                             <li><a href="#">Tai nghe Bluetooth</a></li>
-                             </ul>
-                             </div>
-                             </div>
-                             '>
-                            <a href="#" class="text-decoration-none text-dark flex-grow-1">
-                                <i class="fas fa-mobile-alt me-2"></i> Điện thoại
-                            </a>
-                        </div>
-                        <!-- Mục Tai nghe -->
-                        <div class="list-group-item list-group-item-action d-flex align-items-center category-item position-relative" data-mega-menu='
-                             <div class="mega-menu-content">
-                             <div class="menu-column">
-                             <h6 class="fw-bold">Thương Hiệu</h6>
-                             <ul class="list-unstyled">
-                             <li><a href="#">Sony</a></li>
-                             <li><a href="#">Bose</a></li>
-                             <li><a href="#">JBL</a></li>
-                             <li><a href="#">Apple</a></li>
-                             <li><a href="#">Sennheiser</a></li>
-                             <li><a href="#">Anker</a></li>
-                             </ul>
-                             </div>
-                             <div class="menu-column">
-                             <h6 class="fw-bold">Loại tai nghe</h6>
-                             <ul class="list-unstyled">
-                             <li><a href="#">Tai nghe không dây</a></li>
-                             <li><a href="#">Tai nghe có dây</a></li>
-                             <li><a href="#">Tai nghe chống ồn</a></li>
-                             <li><a href="#">Tai nghe gaming</a></li>
-                             </ul>
-                             </div>
-                             <div class="menu-column">
-                             <h6 class="fw-bold">Phụ kiện tai nghe</h6>
-                             <ul class="list-unstyled">
-                             <li><a href="#">Đệm tai</a></li>
-                             <li><a href="#">Cáp sạc</a></li>
-                             <li><a href="#">Bảo vệ case</a></li>
-                             </ul>
-                             </div>
-                             </div>
-                             '>
-                            <a href="#" class="text-decoration-none text-dark flex-grow-1">
-                                <i class="fas fa-headphones-alt me-2"></i> Tai nghe
-                            </a>
-                        </div>
-                        <!-- Mục Bàn phím -->
-                        <div class="list-group-item list-group-item-action d-flex align-items-center category-item position-relative" data-mega-menu='
-                             <div class="mega-menu-content">
-                             <div class="menu-column">
-                             <h6 class="fw-bold">Thương Hiệu</h6>
-                             <ul class="list-unstyled">
-                             <li><a href="#">Logitech</a></li>
-                             <li><a href="#">Razer</a></li>
-                             <li><a href="#">Corsair</a></li>
-                             <li><a href="#">Keychron</a></li>
-                             <li><a href="#">SteelSeries</a></li>
-                             <li><a href="#">Microsoft</a></li>
-                             </ul>
-                             </div>
-                             <div class="menu-column">
-                             <h6 class="fw-bold">Loại bàn phím</h6>
-                             <ul class="list-unstyled">
-                             <li><a href="#">Bàn phím cơ</a></li>
-                             <li><a href="#">Bàn phím membrane</a></li>
-                             <li><a href="#">Bàn phím không dây</a></li>
-                             <li><a href="#">Bàn phím gaming</a></li>
-                             </ul>
-                             </div>
-                             <div class="menu-column">
-                             <h6 class="fw-bold">Phụ kiện bàn phím</h6>
-                             <ul class="list-unstyled">
-                             <li><a href="#">Keycap</a></li>
-                             <li><a href="#">Dây cáp</a></li>
-                             <li><a href="#">Tấm kê tay</a></li>
-                             </ul>
-                             </div>
-                             </div>
-                             '>
-                            <a href="#" class="text-decoration-none text-dark flex-grow-1">
-                                <i class="fas fa-keyboard me-2"></i> Bàn phím
-                            </a>
-                        </div>
-                        <!-- Mục Chuột -->
-                        <div class="list-group-item list-group-item-action d-flex align-items-center category-item position-relative" data-mega-menu='
-                             <div class="mega-menu-content">
-                             <div class="menu-column">
-                             <h6 class="fw-bold">Thương Hiệu</h6>
-                             <ul class="list-unstyled">
-                             <li><a href="#">Logitech</a></li>
-                             <li><a href="#">Razer</a></li>
-                             <li><a href="#">Corsair</a></li>
-                             <li><a href="#">SteelSeries</a></li>
-                             <li><a href="#">Apple</a></li>
-                             <li><a href="#">Microsoft</a></li>
-                             </ul>
-                             </div>
-                             <div class="menu-column">
-                             <h6 class="fw-bold">Loại chuột</h6>
-                             <ul class="list-unstyled">
-                             <li><a href="#">Chuột không dây</a></li>
-                             <li><a href="#">Chuột có dây</a></li>
-                             <li><a href="#">Chuột gaming</a></li>
-                             <li><a href="#">Chuột chuyên dụng đồ họa</a></li>
-                             </ul>
-                             </div>
-                             <div class="menu-column">
-                             <h6 class="fw-bold">Phụ kiện chuột</h6>
-                             <ul class="list-unstyled">
-                             <li><a href="#">Lót chuột</a></li>
-                             <li><a href="#">Dây cáp</a></li>
-                             <li><a href="#">Bảo vệ chuột</a></li>
-                             </ul>
-                             </div>
-                             </div>
-                             '>
-                            <a href="#" class="text-decoration-none text-dark flex-grow-1">
-                                <i class="fas fa-mouse me-2"></i> Chuột
-                            </a>
-                        </div>
-                        <!-- Mục PC - Máy tính bàn -->
-                        <div class="list-group-item list-group-item-action d-flex align-items-center category-item position-relative" data-mega-menu='
-                             <div class="mega-menu-content">
-                             <div class="menu-column">
-                             <h6 class="fw-bold">Thương Hiệu</h6>
-                             <ul class="list-unstyled">
-                             <li><a href="#">Dell</a></li>
-                             <li><a href="#">HP</a></li>
-                             <li><a href="#">Lenovo</a></li>
-                             <li><a href="#">Asus</a></li>
-                             <li><a href="#">Acer</a></li>
-                             <li><a href="#">MSI</a></li>
-                             </ul>
-                             </div>
-                             <div class="menu-column">
-                             <h6 class="fw-bold">Loại PC</h6>
-                             <ul class="list-unstyled">
-                             <li><a href="#">PC Gaming</a></li>
-                             <li><a href="#">PC Văn phòng</a></li>
-                             <li><a href="#">PC Đồ họa - Thiết kế</a></li>
-                             <li><a href="#">PC Server</a></li>
-                             </ul>
-                             </div>
-                             <div class="menu-column">
-                             <h6 class="fw-bold">Phụ kiện PC</h6>
-                             <ul class="list-unstyled">
-                             <li><a href="#">Bàn phím</a></li>
-                             <li><a href="#">Chuột</a></li>
-                             <li><a href="#">Màn hình</a></li>
-                             <li><a href="#">Loa</a></li>
-                             </ul>
-                             </div>
-                             </div>
-                             '>
-                            <a href="#" class="text-decoration-none text-dark flex-grow-1">
-                                <i class="fas fa-desktop me-2"></i> PC - Máy tính bàn
-                            </a>
-                        </div>
-
-                        <!-- Mục Màn hình máy tính -->
-                        <div class="list-group-item list-group-item-action d-flex align-items-center category-item position-relative" data-mega-menu='
-                             <div class="mega-menu-content">
-                             <div class="menu-column">
-                             <h6 class="fw-bold">Thương Hiệu</h6>
-                             <ul class="list-unstyled">
-                             <li><a href="#">Dell</a></li>
-                             <li><a href="#">LG</a></li>
-                             <li><a href="#">Samsung</a></li>
-                             <li><a href="#">Asus</a></li>
-                             <li><a href="#">BenQ</a></li>
-                             </ul>
-                             </div>
-                             <div class="menu-column">
-                             <h6 class="fw-bold">Kích thước màn hình</h6>
-                             <ul class="list-unstyled">
-                             <li><a href="#">Dưới 24 inch</a></li>
-                             <li><a href="#">24 - 27 inch</a></li>
-                             <li><a href="#">Trên 27 inch</a></li>
-                             </ul>
-                             </div>
-                             <div class="menu-column">
-                             <h6 class="fw-bold">Loại màn hình</h6>
-                             <ul class="list-unstyled">
-                             <li><a href="#">IPS</a></li>
-                             <li><a href="#">VA</a></li>
-                             <li><a href="#">TN</a></li>
-                             <li><a href="#">Màn hình cong</a></li>
-                             </ul>
-                             </div>
-                             </div>
-                             '>
-                            <a href="#" class="text-decoration-none text-dark flex-grow-1">
-                                <i class="fas fa-tv me-2"></i> Màn hình máy tính
-                            </a>
-                        </div>
-
-                        <!-- Mục Linh kiện máy tính -->
-                        <div class="list-group-item list-group-item-action d-flex align-items-center category-item position-relative" data-mega-menu='
-                             <div class="mega-menu-content">
-                             <div class="menu-column">
-                             <h6 class="fw-bold">Thành phần linh kiện</h6>
-                             <ul class="list-unstyled">
-                             <li><a href="#">Mainboard</a></li>
-                             <li><a href="#">CPU</a></li>
-                             <li><a href="#">RAM</a></li>
-                             <li><a href="#">Card màn hình</a></li>
-                             <li><a href="#">Ổ cứng SSD/HDD</a></li>
-                             <li><a href="#">Nguồn máy tính</a></li>
-                             </ul>
-                             </div>
-                             <div class="menu-column">
-                             <h6 class="fw-bold">Phụ kiện linh kiện</h6>
-                             <ul class="list-unstyled">
-                             <li><a href="#">Quạt tản nhiệt</a></li>
-                             <li><a href="#">Tản nhiệt nước</a></li>
-                             <li><a href="#">Cáp nối</a></li>
-                             </ul>
-                             </div>
-                             </div>
-                             '>
-                            <a href="#" class="text-decoration-none text-dark flex-grow-1">
-                                <i class="fas fa-microchip me-2"></i> Linh kiện máy tính
-                            </a>
-                        </div>
-
-                        <!-- Mục Phụ kiện máy tính -->
-                        <div class="list-group-item list-group-item-action d-flex align-items-center category-item position-relative" data-mega-menu='
-                             <div class="mega-menu-content">
-                             <div class="menu-column">
-                             <h6 class="fw-bold">Phụ kiện phổ biến</h6>
-                             <ul class="list-unstyled">
-                             <li><a href="#">Dây cáp USB</a></li>
-                             <li><a href="#">Hub USB</a></li>
-                             <li><a href="#">Bàn di chuột</a></li>
-                             <li><a href="#">Sạc dự phòng</a></li>
-                             </ul>
-                             </div>
-                             <div class="menu-column">
-                             <h6 class="fw-bold">Phụ kiện mở rộng</h6>
-                             <ul class="list-unstyled">
-                             <li><a href="#">Đế tản nhiệt</a></li>
-                             <li><a href="#">Tấm chắn bụi</a></li>
-                             <li><a href="#">Kẹp giữ dây</a></li>
-                             </ul>
-                             </div>
-                             </div>
-                             '>
-                            <a href="#" class="text-decoration-none text-dark flex-grow-1">
-                                <i class="fas fa-plug me-2"></i> Phụ kiện máy tính
-                            </a>
-                        </div>
-
-                        <!-- Mục Gaming Gear -->
-                        <div class="list-group-item list-group-item-action d-flex align-items-center category-item position-relative" data-mega-menu='
-                             <div class="mega-menu-content">
-                             <div class="menu-column">
-                             <h6 class="fw-bold">Thiết bị chơi game</h6>
-                             <ul class="list-unstyled">
-                             <li><a href="#">Bàn phím gaming</a></li>
-                             <li><a href="#">Chuột gaming</a></li>
-                             <li><a href="#">Ghế gaming</a></li>
-                             <li><a href="#">Tai nghe gaming</a></li>
-                             </ul>
-                             </div>
-                             <div class="menu-column">
-                             <h6 class="fw-bold">Phụ kiện Gaming</h6>
-                             <ul class="list-unstyled">
-                             <li><a href="#">Mousepad</a></li>
-                             <li><a href="#">Bàn di</a></li>
-                             <li><a href="#">Đèn LED RGB</a></li>
-                             </ul>
-                             </div>
-                             </div>
-                             '>
-                            <a href="#" class="text-decoration-none text-dark flex-grow-1">
-                                <i class="fas fa-gamepad me-2"></i> Gaming Gear
-                            </a>
-                        </div>
-                    </div>
-                </div>
-
-
-                <div class="col-12 col-md-8 col-lg-9">
+                        
+            <div class="row mt-5">
+                <div class="col-12">
                     <div class="content" data-aos="fade-left">
                         <div class="row">
                             <div class="product-grid">
-                                <c:forEach var="product" items="${activeProducts}">
+                                <c:forEach var="product" items="${activeProducts}" varStatus="status">
                                     <div class="product-card card h-100 mb-4" data-aos="zoom-in">
-<!--                                        <a href="<%= ProjectPaths.HREF_TO_PRODUCTPAGE%>&id=${product.productId}" 
-                                           class="stretched-link" style="position: absolute; inset: 0; z-index: 1;"></a>-->
                                         <div class="image-container">
                                             <a href="<%= ProjectPaths.HREF_TO_PRODUCTPAGE%>&id=${product.productId}">
                                                 <img src="${product.imageUrl}" class="product-img card-img-top" alt="${product.name}">
@@ -570,9 +136,111 @@
                                         </div>
                                         <div class="card-body text-center">
                                             <h5 class="product-name card-title">${product.name}</h5>
+
+                                            <!-- Product specs giả lập -->
+                                            <div class="product-specs mb-3">
+                                                <c:choose>
+                                                    <c:when test="${status.index % 6 == 0}">
+                                                        <span class="spec-item">i5 12400F</span>
+                                                        <span class="spec-item">RTX 3060</span>
+                                                        <span class="spec-item">B760</span>
+                                                        <span class="spec-item">16GB</span>
+                                                        <span class="spec-item">500GB</span>
+                                                    </c:when>
+                                                    <c:when test="${status.index % 6 == 1}">
+                                                        <span class="spec-item">i7 13700F</span>
+                                                        <span class="spec-item">RTX 4070</span>
+                                                        <span class="spec-item">B760</span>
+                                                        <span class="spec-item">32GB</span>
+                                                        <span class="spec-item">1TB</span>
+                                                    </c:when>
+                                                    <c:when test="${status.index % 6 == 2}">
+                                                        <span class="spec-item">Ryzen 5 5600X</span>
+                                                        <span class="spec-item">RTX 3070</span>
+                                                        <span class="spec-item">B450</span>
+                                                        <span class="spec-item">16GB</span>
+                                                        <span class="spec-item">500GB</span>
+                                                    </c:when>
+                                                    <c:when test="${status.index % 6 == 3}">
+                                                        <span class="spec-item">i9 14900F</span>
+                                                        <span class="spec-item">RTX 4080</span>
+                                                        <span class="spec-item">Z790</span>
+                                                        <span class="spec-item">32GB</span>
+                                                        <span class="spec-item">1TB</span>
+                                                    </c:when>
+                                                    <c:when test="${status.index % 6 == 4}">
+                                                        <span class="spec-item">Ryzen 7 7700X</span>
+                                                        <span class="spec-item">RTX 4060 Ti</span>
+                                                        <span class="spec-item">B650</span>
+                                                        <span class="spec-item">16GB</span>
+                                                        <span class="spec-item">1TB</span>
+                                                    </c:when>
+                                                    <c:otherwise>
+                                                        <span class="spec-item">i5 13400F</span>
+                                                        <span class="spec-item">RTX 4050</span>
+                                                        <span class="spec-item">B760</span>
+                                                        <span class="spec-item">16GB</span>
+                                                        <span class="spec-item">500GB</span>
+                                                    </c:otherwise>
+                                                </c:choose>
+                                            </div>
+
                                             <p class="card-text text-danger fw-bold">
                                                 <fmt:formatNumber value="${product.price}" type="number" pattern="#,###" currencySymbol="" groupingUsed="true" /> VNĐ
                                             </p>
+
+                                            <!-- Rating giả lập -->
+                                            <div class="rating-section d-flex justify-content-center align-items-center gap-2 mb-3">
+                                                <div class="stars">
+                                                    <c:choose>
+                                                        <c:when test="${status.index % 5 == 0}">
+                                                            <i class="fas fa-star text-warning"></i>
+                                                            <i class="fas fa-star text-warning"></i>
+                                                            <i class="fas fa-star text-warning"></i>
+                                                            <i class="fas fa-star text-warning"></i>
+                                                            <i class="fas fa-star text-warning"></i>
+                                                        </c:when>
+                                                        <c:when test="${status.index % 5 == 1}">
+                                                            <i class="fas fa-star text-warning"></i>
+                                                            <i class="fas fa-star text-warning"></i>
+                                                            <i class="fas fa-star text-warning"></i>
+                                                            <i class="fas fa-star text-warning"></i>
+                                                            <i class="fas fa-star-half-alt text-warning"></i>
+                                                        </c:when>
+                                                        <c:when test="${status.index % 5 == 2}">
+                                                            <i class="fas fa-star text-warning"></i>
+                                                            <i class="fas fa-star text-warning"></i>
+                                                            <i class="fas fa-star text-warning"></i>
+                                                            <i class="fas fa-star text-warning"></i>
+                                                            <i class="far fa-star text-warning"></i>
+                                                        </c:when>
+                                                        <c:when test="${status.index % 5 == 3}">
+                                                            <i class="fas fa-star text-warning"></i>
+                                                            <i class="fas fa-star text-warning"></i>
+                                                            <i class="fas fa-star text-warning"></i>
+                                                            <i class="fas fa-star text-warning"></i>
+                                                            <i class="fas fa-star text-warning"></i>
+                                                        </c:when>
+                                                        <c:otherwise>
+                                                            <i class="fas fa-star text-warning"></i>
+                                                            <i class="fas fa-star text-warning"></i>
+                                                            <i class="fas fa-star text-warning"></i>
+                                                            <i class="fas fa-star text-warning"></i>
+                                                            <i class="fas fa-star-half-alt text-warning"></i>
+                                                        </c:otherwise>
+                                                    </c:choose>
+                                                </div>
+                                                <span class="rating-text text-muted small">
+                                                    <c:choose>
+                                                        <c:when test="${status.index % 5 == 0}">5.0 (${5 + status.index % 20} đánh giá)</c:when>
+                                                        <c:when test="${status.index % 5 == 1}">4.5 (${8 + status.index % 15} đánh giá)</c:when>
+                                                        <c:when test="${status.index % 5 == 2}">4.0 (${3 + status.index % 12} đánh giá)</c:when>
+                                                        <c:when test="${status.index % 5 == 3}">5.0 (${2 + status.index % 8} đánh giá)</c:when>
+                                                        <c:otherwise>4.7 (${10 + status.index % 18} đánh giá)</c:otherwise>
+                                                    </c:choose>
+                                                </span>
+                                            </div>
+
                                             <div class="d-flex justify-content-center gap-2">
                                                 <a href="<%= ProjectPaths.HREF_TO_PRODUCTPAGE%>&id=${product.productId}" class="btn btn-buy text-white">Xem chi tiết</a>
                                                 <button type="button" class="btn btn-cart text-white" onclick="addToCart(${product.productId}, '${product.name}')">
@@ -586,108 +254,30 @@
                         </div>
                     </div>
                 </div>
-            </div>
+            </div>            
         </div>
 
-        <!--Footer-->                                 
+        <!--chat user-->
+        <jsp:include page="/WEB-INF/view/chat/chatUser.jsp" />        
+
         <div class="mt-5">
             <jsp:include page="/WEB-INF/view/components/footer.jsp" />
         </div>
+
         <!-- Bootstrap Bundle JS -->
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" crossorigin="anonymous"></script>
+        <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+        <script> AOS.init();</script>
 
         <!-- Carousel Auto Init -->
         <script>
-                                                    const myCarousel = document.querySelector('#bannerCarousel');
-                                                    new bootstrap.Carousel(myCarousel, {
-                                                        interval: 3000,
-                                                        ride: 'carousel'
-                                                    });
-        </script>
-
-        <!-- Add AOS JS and initialize -->
-        <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
-        <script>
-                                                    AOS.init();
-        </script>
-
-        <!-- JavaScript để điều chỉnh chiều cao và hiển thị mega menu -->
-        <script>
-            document.addEventListener('DOMContentLoaded', function () {
-                const sidebar = document.querySelector('.sidebar');
-                const megaMenu = document.querySelector('#mega-menu');
-                const categoryItems = document.querySelectorAll('.category-item');
-
-                if (sidebar && megaMenu) {
-                    const sidebarHeight = sidebar.offsetHeight;
-                    megaMenu.style.height = sidebarHeight + 'px';
-                }
-
-                let isMouseOverSidebar = false;
-                let isMouseOverMegaMenu = false;
-                let hideTimeout = null;
-
-                function showMegaMenu(content) {
-                    if (hideTimeout) {
-                        clearTimeout(hideTimeout);
-                        hideTimeout = null;
-                    }
-                    megaMenu.innerHTML = content;
-                    megaMenu.style.display = 'block';
-                }
-
-                function tryHideMegaMenu() {
-                    // Delay 200ms trước khi ẩn để tránh ẩn nhầm khi rê nhanh
-                    hideTimeout = setTimeout(() => {
-                        if (!isMouseOverSidebar && !isMouseOverMegaMenu) {
-                            megaMenu.style.display = 'none';
-                            megaMenu.innerHTML = '';
-                        }
-                    }, 200);
-                }
-
-                categoryItems.forEach(item => {
-                    item.addEventListener('mouseenter', function () {
-                        const megaMenuContent = this.getAttribute('data-mega-menu');
-                        if (megaMenuContent) {
-                            showMegaMenu(megaMenuContent);
-                        }
-                        isMouseOverSidebar = true;
-                    });
-
-                    item.addEventListener('mouseleave', function (event) {
-                        isMouseOverSidebar = false;
-                        tryHideMegaMenu();
-                    });
-                });
-
-                sidebar.addEventListener('mouseenter', () => {
-                    isMouseOverSidebar = true;
-                    if (hideTimeout) {
-                        clearTimeout(hideTimeout);
-                        hideTimeout = null;
-                    }
-                });
-
-                sidebar.addEventListener('mouseleave', () => {
-                    isMouseOverSidebar = false;
-                    tryHideMegaMenu();
-                });
-
-                megaMenu.addEventListener('mouseenter', () => {
-                    isMouseOverMegaMenu = true;
-                    if (hideTimeout) {
-                        clearTimeout(hideTimeout);
-                        hideTimeout = null;
-                    }
-                });
-
-                megaMenu.addEventListener('mouseleave', () => {
-                    isMouseOverMegaMenu = false;
-                    tryHideMegaMenu();
-                });
+            const myCarousel = document.querySelector('#bannerCarousel');
+            new bootstrap.Carousel(myCarousel, {
+                interval: 3000,
+                ride: 'carousel'
             });
         </script>
+
         <!-- Add to Cart -->
         <script>
             document.querySelectorAll('.add-to-cart').forEach(button => {
@@ -730,13 +320,11 @@
         <!-- Cart JavaScript -->
         <script>
             function addToCart(productId, productName) {
-                // Show loading state
                 const button = event.target;
                 const originalText = button.innerHTML;
                 button.innerHTML = '<i class="fas fa-spinner fa-spin me-1"></i>Đang thêm...';
                 button.disabled = true;
 
-                // Send AJAX request to add product to cart
                 fetch('/Itel/cart/add', {
                     method: 'POST',
                     headers: {
@@ -758,7 +346,6 @@
                             showCartToast('Có lỗi xảy ra khi thêm sản phẩm vào giỏ hàng!', 'error');
                         })
                         .finally(() => {
-                            // Restore button state
                             button.innerHTML = originalText;
                             button.disabled = false;
                         });
@@ -769,10 +356,8 @@
                 const toastMessage = document.getElementById('cartToastMessage');
                 const toastHeader = toast.querySelector('.toast-header');
 
-                // Update message
                 toastMessage.textContent = message;
 
-                // Update styling based on type
                 if (type === 'success') {
                     toast.className = 'toast';
                     toastHeader.querySelector('i').className = 'fas fa-shopping-cart text-success me-2';
@@ -781,13 +366,11 @@
                     toastHeader.querySelector('i').className = 'fas fa-exclamation-triangle text-danger me-2';
                 }
 
-                // Show toast
                 const bootstrapToast = new bootstrap.Toast(toast);
                 bootstrapToast.show();
             }
 
             function updateCartCount(count) {
-                // Update cart count in navbar if it exists
                 const cartCountElements = document.querySelectorAll('.cart-count');
                 cartCountElements.forEach(element => {
                     element.textContent = count;
@@ -853,105 +436,53 @@
             /* Sidebar */
             .sidebar {
                 background-color: #f0f0f0;
-                position: relative; /* Đặt position: relative để làm tham chiếu cho .mega-menu */
+                position: relative;
                 z-index: 1000;
             }
 
             .list-group-item {
-                background-color: #ffffff; /* Nền trắng mặc định */
-                color: #000000; /* Chữ đen mặc định */
+                background-color: #ffffff;
+                color: #000000;
                 transition: background-color 0.3s, color 0.3s;
-                border-radius: 5px; /* Thêm bo góc nếu cần giống hình */
+                border-radius: 5px;
             }
 
             .list-group-item a {
-                color: #000000; /* Chữ đen cho liên kết */
+                color: #000000;
                 text-decoration: none;
-                width: 100%; /* Đảm bảo <a> chiếm toàn bộ không gian */
+                width: 100%;
             }
 
             .list-group-item i {
-                color: #000000; /* Biểu tượng đen mặc định */
+                color: #000000;
             }
 
             .list-group-item:hover {
-                background-color: #66ccff; /* Nền xanh khi hover */
-                color: #000000; /* Chữ đen khi hover */
+                background-color: #66ccff;
+                color: #000000;
             }
 
             .list-group-item:hover a, .list-group-item:hover i {
-                color: #000000 !important; /* Đảm bảo chữ và biểu tượng đen khi hover */
-            }
-
-            /* Mega menu */
-            .category-item {
-                position: static; /* Không cần position: relative */
-            }
-
-            .mega-menu {
-                margin-left: 10px;
-                display: none;
-                position: absolute;
-                top: 0; /* Cố định ở đỉnh của .sidebar */
-                left: 100%; /* Bên phải sidebar */
-                width: 980px; /* Độ rộng cố định */
-                background: #fff;
-                z-index: 2000; /* Đảm bảo che phủ product-card */
-                border: 1px solid #ddd;
-                border-radius: 1%;
-                box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-                padding: 20px;
-            }
-
-            .mega-menu-content {
-                display: flex;
-                justify-content: space-between;
-                height: 100%;
-            }
-
-            .menu-column {
-                flex: 1;
-                margin-right: 20px;
-            }
-
-            .menu-column h6 {
-                font-size: 14px;
-                font-weight: bold;
-                margin-bottom: 10px;
-            }
-
-            .menu-column ul {
-                list-style: none;
-                padding: 0;
-            }
-
-            .menu-column ul li a {
-                display: block;
-                padding: 5px 0;
-                color: #000;
-                text-decoration: none;
-            }
-
-            .menu-column ul li a:hover {
-                color: #007bff;
+                color: #000000 !important;
             }
 
             .product-grid {
                 display: grid;
-                grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-                gap: 2rem;
+                grid-template-columns: repeat(5, minmax(0, 1fr));
+                gap: 1rem;
+                padding: 0 20px;
             }
 
             .image-container {
                 width: 100%;
-                height: 260px; /* Tăng chiều cao lên 280px */
+                height: 180px; /* Reduced from 200px to make image smaller */
                 overflow: hidden;
                 position: relative;
             }
 
             .product-img {
                 width: 100%;
-                height: 260px; /* Tăng chiều cao lên 280px */
+                height: 180px; /* Reduced to match container */
                 object-fit: cover;
                 transition: transform 0.3s ease;
             }
@@ -966,32 +497,34 @@
             }
 
             .btn-buy {
-                background-color: #66c0ff; /* Màu nền bình thường */
+                background-color: #66c0ff;
                 color: white;
                 border-radius: 4px;
-                padding: 6px 12px;
+                padding: 5px 10px; /* Reduced padding */
                 transition: background-color 0.3s ease;
                 border: none;
                 text-align: center;
                 display: inline-block;
                 cursor: pointer;
                 user-select: none;
+                font-size: 0.85rem; /* Reduced font size */
             }
 
             .btn-buy:hover,
             .btn-buy:focus {
-                background-color: #4aa6f9; /* Màu nền khi hover */
-                color: white; /* Giữ chữ trắng */
-                text-decoration: none; /* Không gạch chân */
-                outline: none; /* Bỏ viền focus mặc định */
+                background-color: #4aa6f9;
+                color: white;
+                text-decoration: none;
+                outline: none;
             }
 
             .btn-cart {
                 background-color: #28a745;
                 border: none;
                 border-radius: 4px;
-                padding: 6px 12px;
+                padding: 5px 10px; /* Reduced padding */
                 transition: background-color 0.3s ease;
+                font-size: 0.85rem; /* Reduced font size */
             }
 
             .btn-cart:hover,
@@ -1005,40 +538,40 @@
             .product-card {
                 position: relative;
                 z-index: 1000;
+                height: 100%;
             }
 
-            /* Cố định layout của card-body */
             .product-card .card-body {
                 display: flex;
                 flex-direction: column;
                 justify-content: space-between;
-                height: 150px;
+                height: 210px; /* Increased by 10px from 200px */
                 padding: 10px;
+                text-align: center;
             }
 
-            /* Cố định chiều cao của tên sản phẩm */
             .product-name {
                 height: 48px;
-                line-height: 24px;
+                line-height: 20px; /* Reduced line height for smaller text */
                 overflow: hidden;
                 text-overflow: ellipsis;
                 display: -webkit-box;
                 -webkit-line-clamp: 2;
                 -webkit-box-orient: vertical;
-                margin-bottom: 10px;
+                margin-bottom: 8px; /* Reduced margin */
+                font-size: 0.9rem; /* Reduced font size */
             }
 
-            /* Giá sản phẩm */
             .card-text {
-                margin-bottom: 10px;
+                margin-bottom: 8px; /* Reduced margin */
+                font-size: 0.9rem; /* Reduced font size */
             }
 
-            /* Cố định vị trí các nút */
             .d-flex.justify-content-center {
                 margin-top: auto;
+                gap: 8px; /* Reduced gap */
             }
 
-            /* Thêm CSS để khớp với giao diện trong ảnh */
             .carousel-control-next-icon,
             .carousel-control-prev-icon {
                 background-color: rgba(0, 0, 0, 0.6);
@@ -1060,16 +593,19 @@
             .layout-3col {
                 display: flex;
                 justify-content: center;
-                gap: 40px; /* Khoảng cách đều 2 bên */
-                flex-wrap: wrap;
+                gap: 30px;
+                flex-wrap: nowrap;
+                max-width: 1400px;
+                margin: 0 auto;
+                padding: 0 20px;
             }
 
             .left-col, .right-col {
-                width: 280px;
+                width: 250px;
             }
 
             .middle-col {
-                width: 240px;
+                width: 250px;
             }
 
             .category-link {
@@ -1080,7 +616,7 @@
             .category-box,
             .category-box-mid {
                 background-color: #fff;
-                padding: 12px 8px;
+                padding: 10px 6px;
                 text-align: center;
                 border-radius: 12px;
                 overflow: hidden;
@@ -1089,6 +625,7 @@
                 justify-content: center;
                 box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
                 transition: transform 0.3s ease, box-shadow 0.3s ease;
+                width: 100%;
             }
 
             .category-box {
@@ -1101,15 +638,15 @@
             }
 
             .category-image {
-                max-width: 80px;
-                max-height: 80px;
+                max-width: 60px;
+                max-height: 60px;
                 object-fit: contain;
                 margin: 6px auto 0;
             }
 
             .mouse-image {
                 width: 80%;
-                height: 250px;
+                height: 200px;
                 max-width: unset;
                 max-height: unset;
             }
@@ -1122,6 +659,221 @@
                 margin-bottom: 6px;
             }
 
+            /* Responsive */
+            @media (max-width: 1024px) {
+                .layout-3col {
+                    flex-wrap: wrap;
+                    gap: 20px;
+                    padding: 0 10px;
+                }
+
+                .left-col, .right-col {
+                    width: 220px;
+                }
+
+                .middle-col {
+                    width: 220px;
+                }
+
+                .product-grid {
+                    grid-template-columns: repeat(3, minmax(0, 1fr));
+                }
+
+                .image-container {
+                    height: 160px; /* Adjusted for smaller screens */
+                }
+
+                .product-img {
+                    height: 160px;
+                }
+
+                .product-card .card-body {
+                    height: 190px; /* Adjusted to match image + 10px */
+                }
+            }
+
+            @media (max-width: 768px) {
+                .layout-3col {
+                    flex-direction: column;
+                    align-items: center;
+                    padding: 0;
+                }
+
+                .left-col, .right-col, .middle-col {
+                    width: 100%;
+                }
+
+                .product-grid {
+                    grid-template-columns: repeat(2, minmax(0, 1fr));
+                }
+
+                .image-container {
+                    height: 130px; /* Further reduced for mobile */
+                }
+
+                .product-img {
+                    height: 130px;
+                }
+
+                .product-card .card-body {
+                    height: 160px; /* Adjusted for mobile + 10px */
+                }
+            }
+
+            #chat-customer-container {
+                display: none;
+                position: fixed;
+                bottom: 90px;
+                right: 24px;
+                width: 450px;
+                max-height: 700px;
+                background: #fff;
+                border-radius: 16px;
+                box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+                z-index: 2002;
+                overflow: hidden;
+            }
+
+            #chat-initial {
+                position: fixed;
+                bottom: 24px;
+                right: 24px;
+                z-index: 2003;
+                background: #007bff;
+                color: #fff;
+                padding: 14px 28px;
+                border-radius: 28px;
+                cursor: pointer;
+                box-shadow: 0 2px 10px rgba(0,0,0,0.3);
+                font-size: 18px;
+                font-weight: bold;
+            }
+
+            #chatbox-container {
+                position: fixed;
+                bottom: 90px;
+                right: 490px;
+                width: 340px;
+                max-height: 480px;
+                background: #fff;
+                border-radius: 12px;
+                box-shadow: 0 2px 16px rgba(0,0,0,0.25);
+                display: none;
+                flex-direction: column;
+                z-index: 2001;
+                overflow: hidden;
+            }
+
+            #chatbox-toggle {
+                position: fixed;
+                bottom: 24px;
+                right: 490px;
+                z-index: 2000;
+                background: #1976d2;
+                color: #fff;
+                border: none;
+                border-radius: 50%;
+                width: 56px;
+                height: 56px;
+                font-size: 28px;
+                cursor: pointer;
+                box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+            }
+
+            @media (max-width: 768px) {
+                #chat-customer-container, #chatbox-container {
+                    width: 320px;
+                    bottom: 10px;
+                }
+                #chat-initial, #chatbox-toggle {
+                    width: 40px;
+                    height: 40px;
+                    font-size: 14px;
+                    line-height: 40px;
+                    padding: 0;
+                    text-align: center;
+                }
+                #chat-initial {
+                    right: 10px;
+                }
+                #chatbox-container {
+                    right: 340px;
+                }
+                #chatbox-toggle {
+                    right: 340px;
+                }
+            }
+            .product-specs {
+                font-size: 0.8rem; /* Reduced font size */
+                color: #666;
+                margin: 6px 0; /* Reduced margin */
+                display: flex;
+                flex-wrap: wrap;
+                justify-content: center;
+                gap: 4px; /* Reduced gap */
+            }
+
+            .spec-item {
+                display: inline-block;
+                margin-right: 6px; /* Reduced margin */
+                padding: 2px 6px; /* Reduced padding */
+                background: #f1f3f4;
+                border-radius: 4px;
+                margin-bottom: 4px;
+                font-size: 0.6rem; /* Reduced font size */
+            }
+
+            .rating-section {
+                margin: 8px 0; /* Reduced margin */
+                justify-content: center;
+            }
+
+            .stars {
+                font-size: 0.85rem; /* Reduced font size */
+            }
+
+            .rating-text {
+                font-size: 0.8rem; /* Reduced font size */
+            }
+
+            .btn-buy {
+                background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+                border: none;
+                padding: 5px 10px;
+                border-radius: 6px;
+                font-size: 0.85rem;
+                font-weight: 500;
+                transition: all 0.3s ease;
+            }
+
+            .btn-buy:hover {
+                transform: translateY(-2px);
+                box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
+            }
+
+            .btn-cart {
+                background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+                border: none;
+                padding: 5px 10px;
+                border-radius: 6px;
+                font-size: 0.85rem;
+                font-weight: 500;
+                transition: all 0.3s ease;
+            }
+
+            .btn-cart:hover {
+                transform: translateY(-2px);
+                box-shadow: 0 4px 12px rgba(245, 87, 108, 0.4);
+            }
+
+            .product-card {
+                transition: all 0.3s ease;
+            }
+
+            .product-card:hover {
+                transform: translateY(-5px);
+                box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+            }
         </style>
     </body>
 </html>

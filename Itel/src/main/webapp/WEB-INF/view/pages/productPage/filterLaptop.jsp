@@ -65,12 +65,6 @@
                                 <span class="text-secondary mx-2">~</span>
                                 <input type="text" id="maxPriceInput" class="form-control form-control-sm text-end border-primary" value="200000000" placeholder="Max">
                             </div>
-                            <!--
-                            <div class="range-slider position-relative">
-                                <input type="range" id="rangeMin" min="0" max="200000000" step="1000000" value="34923000" class="form-range w-100">
-                                <input type="range" id="rangeMax" min="0" max="200000000" step="1000000" value="137161000" class="form-range w-100">
-                            </div>
-                            -->
                         </div>
                     </div>
                 </div>

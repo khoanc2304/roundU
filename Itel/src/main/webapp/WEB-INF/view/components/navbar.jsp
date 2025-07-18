@@ -1,9 +1,3 @@
-<%-- 
-    Document   : navbar
-    Created on : Mar 8, 2025, 5:43:41 PM
-    Author     : ADMIN
---%>
-
 <%@ page import="com.tourismapp.config.ProjectPaths" %>
 <%@ page import="com.tourismapp.controller.mainController.MainControllerServlet" %>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
@@ -13,28 +7,32 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Itel Shop </title>
+    <title>Itel Shop</title>
 
-    <!-- Bootstrap 5.3 CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
 
-    <!-- Font Awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css" integrity="sha512-Kc323vGBEqzTmouAECnVceyQqyqdsSiqLQISBL29aUW4U/M7pSPA/gEUZQqv1cwx4OnYxTxve5UMg5GT6L4JJg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
 
-    <!-- AOS Animation -->
     <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
 
-    <!-- Google Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
 
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css">
-
 </head>
 <header class="header">
     <div class="container d-flex align-items-center justify-content-between">
         <a href="<%= ProjectPaths.HREF_TO_HOMEPAGE %>" class="logo">
             <img src="resources/itel.png" alt="Itel Shop Logo">
         </a>
+            
+        <div class="category-menu position-relative">
+            <button class="category-btn">
+                <span>☰</span>Danh mục
+            </button>
+            <div class="mega-menu-wrapper">
+                <jsp:include page="megamenu.jsp" />
+            </div>
+        </div>
         <div class="search-box">
             <form action="main" method="GET" style="display: flex; width: 100%;">
                 <input type="hidden" name="action" value="searchActiveProduct">
@@ -42,6 +40,7 @@
                 <button type="submit"><i class="fas fa-search"></i></button>
             </form>
         </div>
+        
         <nav class="nav-links d-flex align-items-center gap-3">
             <a href="#" class="nav-link"><i class="fas fa-bell me-1"></i> Thông báo</a>
             <a href="#" class="nav-link"><i class="fas fa-headset me-1"></i> Hỗ trợ</a>
@@ -49,7 +48,6 @@
                 <i class="fas fa-shopping-cart me-1"></i> Giỏ hàng
                 <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger cart-count" style="display: none;">0</span>
             </a>
-
             <c:choose>
                 <c:when test="${not empty sessionScope.loggedUser.role}">
                     <div class="dropdown">
@@ -63,7 +61,6 @@
                             </c:if>
                             <a href="<%= ProjectPaths.PREFIX_WEB_PATH %>/main?action=viewProfile"><i class="fas fa-users"></i> Hello, ${sessionScope.loggedUser.fullName}</a>
                             <a href="<%= ProjectPaths.HREF_TO_ORDERHISTORY %>"><i class="fas fa-shopping-bag"></i> Đơn hàng của tôi</a>
-<!--                            <a href="<%= ProjectPaths.HREF_TO_PROFILEPAGE %>"><i class="fas fa-users"></i> Hello, ${sessionScope.loggedUser.fullName}</a>-->
                             <a href="#"><i class="fas fa-eye"></i> Đã xem gần đây</a>
                             <a href="<%= ProjectPaths.HREF_TO_LOGOUTPAGE %>"><i class="fas fa-sign-out-alt"></i> Đăng xuất</a>
                         </div>
@@ -91,7 +88,6 @@
         position: relative;
     }
 
-    /* Header */
     .header {
         background: linear-gradient(to bottom, #B3E5FC 0%, #E6F4FA 100%);
         padding: 1rem 2rem;
@@ -100,6 +96,13 @@
         top: 0;
         z-index: 1030;
         transition: padding 0.3s ease;
+    }
+
+    .header .container {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        flex-wrap: nowrap;
     }
 
     .header .logo img {
@@ -113,14 +116,13 @@
     }
 
     .search-box {
-        display: flex;
-        align-items: center;
         background: #ffffff;
         padding: 10px 20px;
         border-radius: 25px;
         box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-        width: 400px;
+        width: 350px;
         transition: all 0.4s ease;
+        margin-left: 10px;
     }
 
     .search-box input {
@@ -148,7 +150,46 @@
 
     .search-box:focus-within {
         box-shadow: 0 6px 15px rgba(0, 0, 0, 0.2);
-        width: 400px;
+        width: 350px;
+    }
+
+    .category-btn {
+        background: #8dadc7;
+        border: 1px solid rgba(255,255,255,0.3);
+        color: white;
+        padding: 10px 15px;
+        border-radius: 8px;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        transition: all 0.3s ease;
+    }
+
+    .category-btn:focus {
+        outline: 2px solid #1E90FF;
+        outline-offset: 2px;
+    }
+
+    .mega-menu-wrapper {
+        display: none;
+        position: absolute;
+        top: 100%;
+        left: 0;
+        z-index: 2000;
+    }
+
+    .category-menu:hover .mega-menu-wrapper {
+        display: block;
+    }
+
+    .mega-menu {
+        width: 980px;
+        background: #fff;
+        border: 1px solid #ddd;
+        border-radius: 1%;
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        padding: 20px;
     }
 
     .nav-links .nav-link {
@@ -158,11 +199,11 @@
         border-radius: 25px;
         transition: all 0.3s ease;
         text-decoration: none;
-        display: inline-flex; /* Changed to inline-flex */
+        display: inline-flex;
         align-items: center;
         gap: 5px;
-        white-space: nowrap; /* Prevent text wrapping */
-        min-width: 120px; /* Ensure minimum width to hold text */
+        white-space: nowrap;
+        min-width: 120px;
     }
 
     .nav-links .nav-link:hover {
@@ -170,17 +211,18 @@
         color: #333333;
     }
 
-    /* Dropdown Styles */
     .dropdown {
         position: relative;
         display: inline-block;
     }
+
     .dropdown .dropdown-toggle {
         cursor: pointer;
         display: flex;
         align-items: center;
         gap: 5px;
     }
+
     .dropdown-content {
         display: none;
         position: absolute;
@@ -194,9 +236,11 @@
         z-index: 1000;
         padding: 5px 0;
     }
+
     .dropdown:hover .dropdown-content {
         display: block;
     }
+
     .dropdown-content a {
         color: #000;
         padding: 8px 16px;
@@ -206,16 +250,17 @@
         font-weight: 400;
         transition: background-color 0.2s;
     }
+
     .dropdown-content a:hover {
         background-color: #f8f9fa;
         color: #000;
     }
+
     .dropdown-content a i {
         margin-right: 10px;
         font-size: 14px;
     }
 
-    /* Responsive Design */
     @media (max-width: 768px) {
         .header {
             padding: 0.5rem 1rem;
@@ -223,6 +268,15 @@
         .search-box {
             width: 100%;
             margin: 0 10px;
+        }
+        .category-btn {
+            padding: 8px 12px;
+            font-size: 14px;
+            border-width: 1px;
+        }
+        .mega-menu {
+            width: 100%;
+            left: 0;
         }
         .nav-links .nav-link {
             padding: 0.5rem 1rem;
@@ -235,8 +289,8 @@
         }
     }
 
-    /* Accessibility */
-    .nav-links .nav-link:focus {
+    .nav-links .nav-link:focus,
+    .category-btn:focus {
         outline: 2px solid #1E90FF;
         outline-offset: 2px;
     }
@@ -269,7 +323,6 @@
     function updateCartCount(count) {
         const cartCountElements = document.querySelectorAll('.cart-count');
         cartCountElements.forEach(element => {
-            // Show 9+ if count >= 10
             const displayCount = count >= 10 ? '9+' : count.toString();
             element.textContent = displayCount;
             if (count > 0) {
@@ -280,7 +333,6 @@
         });
     }
 
-    // Function to be called when adding to cart
     function addToCart(productId, quantity = 1) {
         const formData = new FormData();
         formData.append('productId', productId);
@@ -293,10 +345,7 @@
                 .then(response => response.json())
                 .then(data => {
                     if (data.success) {
-                        // Reload cart count
                         loadCartCount();
-
-                        // Show appropriate message
                         if (window.showToast) {
                             if (data.alreadyExists) {
                                 showToast('info', data.message || 'Sản phẩm đã có trong giỏ hàng!');
@@ -318,7 +367,6 @@
                 });
     }
 
-    // Make functions globally available
     window.addToCart = addToCart;
     window.loadCartCount = loadCartCount;
 </script>

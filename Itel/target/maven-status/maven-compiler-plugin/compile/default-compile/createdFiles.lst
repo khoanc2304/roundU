@@ -19,8 +19,10 @@ com\tourismapp\common\MembershipLevel.class
 com\tourismapp\model\Category.class
 com\tourismapp\model\Orders.class
 com\tourismapp\model\Attribute.class
+com\tourismapp\controller\chatController\ChatServlet.class
 com\tourismapp\controller\redirectController\ProductPageServlet.class
 com\tourismapp\controller\redirectController\LoginPageServlet.class
+com\tourismapp\api\ChatApiServlet.class
 com\tourismapp\service\user\UserService.class
 com\tourismapp\dao\brand\BrandDAO.class
 com\tourismapp\model\Cart.class
@@ -75,8 +77,10 @@ com\tourismapp\controller\api\OrderHistoryApiServletDisabled.class
 com\tourismapp\controller\redirectController\dashboard\CategoryManagementServlet.class
 com\tourismapp\service\cart\ICartService.class
 com\tourismapp\dao\product\IProductDAO.class
+com\tourismapp\controller\chatController\ChatHistoryServlet.class
 com\tourismapp\model\FacebookAccount.class
 com\tourismapp\model\CartItem.class
 com\tourismapp\model\OrderDetail.class
 com\tourismapp\dao\brand\IBrandDAO.class
 com\tourismapp\model\ProductDetail.class
+com\tourismapp\controller\chatController\ChatHistoryServlet$ChatHistory.class
