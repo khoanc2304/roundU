@@ -36,7 +36,7 @@ public class ForgotPasswordServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         String action = request.getParameter("action") != null ? request.getParameter("action").trim() : "";
-        ErrDialog.showError("ForgotServlet doPost: " + action);
+//        ErrDialog.showError("ForgotServlet doPost: " + action);
         switch (action) {
             case ACTION_FORGOT_PASSWORD:
                 handleForgotPassword(request, response);
@@ -144,11 +144,11 @@ public class ForgotPasswordServlet extends HttpServlet {
 
         if (otpEntered.equals(otpStored)) {
             // Nếu OTP đúng, chuyển đến trang thay đổi mật khẩu
-            ErrDialog.showError("Đúng otp");
+//            ErrDialog.showError("Đúng otp");
             request.getRequestDispatcher("/WEB-INF/view/pages/forgotPasswordPage/resetPasswordPage.jsp").forward(request, response);
         } else {
             // Nếu OTP sai, hiển thị lỗi
-            ErrDialog.showError("Sai otp");
+//            ErrDialog.showError("Sai otp");
             request.setAttribute("errorMessage", "OTP không đúng.");
             request.getRequestDispatcher("/WEB-INF/view/pages/forgotPasswordPage/otpPage.jsp").forward(request, response);
         }

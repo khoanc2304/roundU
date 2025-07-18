@@ -10,6 +10,8 @@ import com.tourismapp.service.cart.CartService;
 import com.tourismapp.service.order.OrderService;
 import com.tourismapp.service.product.ProductService;
 import com.tourismapp.utils.ErrDialog;
+//import com.tourismapp.utils.MailUtil;
+//import jakarta.mail.MessagingException;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
@@ -21,6 +23,8 @@ import java.io.IOException;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.Random;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * Payment Servlet handles payment processing
@@ -105,7 +109,7 @@ public class PaymentServlet extends HttpServlet {
             Orders order = new Orders(
                 user,
                 LocalDateTime.now(),
-                "PENDING",
+                "pending",
                 cart.getTotalAmount(),
                 fullShippingAddress
             );
@@ -130,6 +134,26 @@ public class PaymentServlet extends HttpServlet {
                         cart.getTotalAmount(),
                         Status.ACTIVE
                     );
+                    
+                    // Gửi email hướng dẫn chuyển khoản nếu chọn BANKING
+//                    if (paymentMethod == PaymentMethod.BANKING) {
+//                        String subject = "Hướng dẫn chuyển khoản đơn hàng #" + createdOrder.getOrderId();
+//                        String content = "<h3>Cảm ơn bạn đã đặt hàng tại Itel Shop!</h3>"
+//                            + "<p>Vui lòng chuyển khoản theo thông tin sau để hoàn tất đơn hàng:</p>"
+//                            + "<b>Ngân hàng:</b> Vietcombank (VCB)<br>"
+//                            + "<b>Số tài khoản:</b> 0123456789<br>"
+//                            + "<b>Chủ tài khoản:</b> NGUYEN VAN A<br>"
+//                            + "<b>Số tiền:</b> " + cart.getTotalAmount() + " VNĐ<br>"
+//                            + "<b>Nội dung chuyển khoản:</b> DH" + createdOrder.getOrderId() + " hoặc số điện thoại của bạn<br>"
+//                            + "<p><i>Vui lòng chuyển khoản đúng nội dung để được xác nhận đơn hàng nhanh nhất.</i></p>";
+//                        try {
+//                            MailUtil.sendMail(email, subject, content);
+//                        } catch (MessagingException e) {
+//                            System.err.println("Gửi email thất bại: " + e.getMessage());
+//                        } catch (Exception ex) {
+//                            Logger.getLogger(PaymentServlet.class.getName()).log(Level.SEVERE, null, ex);
+//                        }
+//                    }
                     
                     // Get original cart from session to modify
                     Cart originalCart = (Cart) session.getAttribute("cart");
@@ -179,10 +203,14 @@ public class PaymentServlet extends HttpServlet {
                     request.setAttribute("order", createdOrder);
                     request.setAttribute("payment", payment);
                     request.setAttribute("paymentResult", paymentResult);
-                    
+                    if (paymentMethod == PaymentMethod.BANKING) {
+                        request.getRequestDispatcher("/WEB-INF/view/pages/thankYouPage/waitingBankTransfer.jsp")
+                            .forward(request, response);
+                        return;
+                    }
                     // Forward to success page
                     request.getRequestDispatcher("/WEB-INF/view/pages/thankYouPage/thankYou.jsp")
-                            .forward(request, response);
+                        .forward(request, response);
                 } else {
                     request.setAttribute("error", "Failed to create order. Please try again.");
                     request.getRequestDispatcher("/WEB-INF/view/pages/checkoutPage/checkoutPage.jsp")

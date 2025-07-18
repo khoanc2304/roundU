@@ -91,4 +91,5 @@ public interface IOrderDAO {
      * @return true if successful
      */
     boolean deleteOrderDetail(int orderDetailId);
+    boolean updateOrderHistory(Orders orders,String status);
 }

@@ -61,7 +61,7 @@
                             </c:if>
                             <a href="<%= ProjectPaths.PREFIX_WEB_PATH %>/main?action=viewProfile"><i class="fas fa-users"></i> Hello, ${sessionScope.loggedUser.fullName}</a>
                             <a href="<%= ProjectPaths.HREF_TO_ORDERHISTORY %>"><i class="fas fa-shopping-bag"></i> Đơn hàng của tôi</a>
-                            <a href="#"><i class="fas fa-eye"></i> Đã xem gần đây</a>
+                            <a href="${pageContext.request.contextPath}/main?action=recentlyViewed"><i class="fas fa-eye"></i> Đã xem gần đây</a>
                             <a href="<%= ProjectPaths.HREF_TO_LOGOUTPAGE %>"><i class="fas fa-sign-out-alt"></i> Đăng xuất</a>
                         </div>
                     </div>

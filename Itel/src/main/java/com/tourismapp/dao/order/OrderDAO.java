@@ -426,4 +426,29 @@ public class OrderDAO implements IOrderDAO {
             return false;
         }
     }
+    
+    @Override
+    public boolean updateOrderHistory(Orders orders,String status) {
+        String sql = "UPDATE Orders SET status = ?";
+
+        try (Connection connection = dbConnection.getConnection(); PreparedStatement statement = connection.prepareStatement(sql)) {
+
+            statement.setString(1, orders.getStatus());
+            int rowsAffected = statement.executeUpdate();
+            return rowsAffected > 0;
+
+        } catch (SQLException e) {
+            ErrDialog.showError("Error updating order detail: " + e.getMessage());
+            return false;
+        }
+    }
+    
+    public static void main(String[] args) {
+        OrderDAO od = new OrderDAO();
+        List<Orders> os = od.findAllOrders();
+        for (Orders o: os) {
+            System.out.println(o);
+        }
+    }
+    
 }

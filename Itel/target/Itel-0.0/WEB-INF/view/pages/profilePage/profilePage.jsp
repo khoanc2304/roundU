@@ -558,7 +558,7 @@
 </html>
         <%-- Navbar --%>
         <jsp:include page="/WEB-INF/view/components/navbar.jsp"/>
-
+        
         <div class="container" style="padding-top: 120px;">
             <div class="profile-card">
                 <!-- Profile Header -->

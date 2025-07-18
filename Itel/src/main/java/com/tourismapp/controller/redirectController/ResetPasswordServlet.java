@@ -98,7 +98,7 @@ public class ResetPasswordServlet extends HttpServlet {
             int updated = stmt.executeUpdate();
 
             if (updated > 0) {
-                ErrDialog.showError("doi mkau thanh cong: "+email);
+//                ErrDialog.showError("doi mkau thanh cong: "+email);
                 session.removeAttribute("email");
                 request.getRequestDispatcher("/WEB-INF/view/pages/loginPage/loginPage.jsp").forward(request, response);
             } else {

@@ -18,6 +18,7 @@ public class Orders {
     private BigDecimal totalAmount;
     private String shippingAddress;
     private List<OrderDetail> orderDetails;
+    private Orders order;
 
     public Orders(int orderId, Users user, LocalDateTime orderDate, String status,
             BigDecimal totalAmount, String shippingAddress) {
@@ -39,6 +40,26 @@ public class Orders {
         this.shippingAddress = shippingAddress;
         this.orderDetails = new ArrayList<>();
     }
+
+    public Orders(int orderId, Users user, LocalDateTime orderDate, String status, BigDecimal totalAmount, String shippingAddress, List<OrderDetail> orderDetails, Orders order) {
+        this.orderId = orderId;
+        this.user = user;
+        this.orderDate = orderDate;
+        this.status = status;
+        this.totalAmount = totalAmount;
+        this.shippingAddress = shippingAddress;
+        this.orderDetails = orderDetails;
+        this.order = order;
+    }
+
+    public Orders getOrder() {
+        return order;
+    }
+
+    public void setOrder(Orders order) {
+        this.order = order;
+    }
+    
 
     public Orders(int orderId) {
         this.orderId = orderId;
@@ -99,6 +120,11 @@ public class Orders {
 
     public void setOrderDetails(List<OrderDetail> orderDetails) {
         this.orderDetails = orderDetails;
+    }
+
+    public String getOrderDateFormatted() {
+        if (orderDate == null) return "";
+        return orderDate.format(java.time.format.DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm"));
     }
 
     @Override

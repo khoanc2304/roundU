@@ -9,6 +9,7 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.ServletContext;
 
 @WebServlet(name = "MainControllerServlet", urlPatterns = {"/main"})
 public class MainControllerServlet extends HttpServlet {
@@ -128,6 +129,9 @@ public class MainControllerServlet extends HttpServlet {
     // NAM dashboard
     public static final String ACTION_MANAGE_BRAND = "manageBrand";
     public static final String ACTION_FIND_BRAND = "findBrand";
+        //NAM dashboard order
+    public static final String ACTION_FIND_ORDERS = "manageOrder";
+    public static final String ACTION_EDIT_ORDER_STATUS = "manageOrder";
 
     // HUY dashboard
     public static final String ACTION_MANAGE_USER = "manageUser";
@@ -189,6 +193,46 @@ public class MainControllerServlet extends HttpServlet {
                 request.getRequestDispatcher(FORGOTPASSWORD_REDIRECT).forward(request, response);
             case "resetPassword" ->
                 request.getRequestDispatcher(FORGOTPASSWORD_REDIRECT).forward(request, response);
+            // NAM
+            case ACTION_EDIT_ORDER_STATUS ->
+                request.getRequestDispatcher(ORDER_MANAGEMENT_SERVLET).forward(request, response);
+            case "updateOrderStatus" -> {
+                try {
+                    int orderId = Integer.parseInt(request.getParameter("orderId"));
+                    String status = request.getParameter("status");
+                    com.tourismapp.service.order.IOrderService orderService = new com.tourismapp.service.order.OrderService();
+                    boolean updated = orderService.updateOrderStatus(orderId, status);
+                    if (updated) {
+                        request.setAttribute("successMessage", "Cập nhật trạng thái thành công!");
+                        // --- Thông báo cho user (application scope) ---
+                        java.util.Optional<com.tourismapp.model.Orders> orderOpt = orderService.findOrderById(orderId);
+                        if (orderOpt.isPresent() && orderOpt.get().getUser() != null) {
+                            com.tourismapp.model.Orders order = orderOpt.get();
+                            ServletContext app = getServletContext();
+                            synchronized (app) {
+                                java.util.Map<Integer, String> notifyMap = (java.util.Map<Integer, String>) app.getAttribute("userNotifyMap");
+                                if (notifyMap == null) {
+                                    notifyMap = new java.util.HashMap<>();
+                                }
+                                String notifyMsg = "Đơn hàng #" + orderId + " của bạn đã được cập nhật trạng thái: " + status;
+                                notifyMap.put(order.getUser().getUserId(), notifyMsg);
+                                app.setAttribute("userNotifyMap", notifyMap);
+                            }
+                        }
+                        // --- END thông báo ---
+                    } else {
+                        request.setAttribute("errorMessage", "Cập nhật trạng thái thất bại!");
+                    }
+                } catch (Exception e) {
+                    request.setAttribute("errorMessage", "Lỗi cập nhật trạng thái: " + e.getMessage());
+                }
+                String from = request.getParameter("from");
+                if ("user".equals(from)) {
+                    request.getRequestDispatcher(ORDERHISTORY_REDIRECT).forward(request, response);
+                } else {
+                    request.getRequestDispatcher(ORDER_MANAGEMENT_REDIRECT).forward(request, response);
+                }
+            }    
             default ->
                 response.sendRedirect("errorAtMainController.jsp");
         }
@@ -258,7 +302,16 @@ public class MainControllerServlet extends HttpServlet {
                 request.getRequestDispatcher(ProjectPaths.JSP_REGISTER_PAGE_PATH).forward(request, response);
 
             case FORGOTPASSWORD_REDIRECT ->
-                request.getRequestDispatcher(FORGOTPASSWORD_REDIRECT).forward(request, response);    
+                request.getRequestDispatcher(FORGOTPASSWORD_REDIRECT).forward(request, response);
+            //Nam Order
+            case ACTION_FIND_ORDERS -> {
+                request.getRequestDispatcher(ORDER_MANAGEMENT_REDIRECT).forward(request, response);
+            }
+            case "recentlyViewed" -> {
+                request.getRequestDispatcher("/WEB-INF/view/pages/recentlyViewed.jsp").forward(request, response);
+            }
+            case "viewOrderDetail" ->
+                request.getRequestDispatcher(ORDER_MANAGEMENT_SERVLET).forward(request, response);    
             default ->
                 response.sendRedirect("errorAtMainController.jsp");
         }

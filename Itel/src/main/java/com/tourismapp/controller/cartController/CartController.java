@@ -119,30 +119,30 @@ public class CartController extends HttpServlet {
     }
     
     private void addToCart(HttpServletRequest request, HttpServletResponse response, Cart cart)
-            throws IOException {
+            throws IOException, ServletException {
         try {
             int productId = Integer.parseInt(request.getParameter("productId"));
             int quantity = Integer.parseInt(request.getParameter("quantity"));
-            
             // Get product from database
             Optional<Product> productOpt = productService.findProductById(productId);
-            
             if (productOpt.isPresent()) {
                 Product product = productOpt.get();
-                
                 // Check stock availability
                 if (product.getStockQuantity() >= quantity) {
                     // Check if item already exists
                     CartItem existingItem = cart.getItem(productId);
                     boolean itemExists = existingItem != null;
-                    
                     // Use addItemWithIncrease to add quantity even if item exists
                     cart.addItemWithIncrease(product, quantity);
-                    
-                    // Return appropriate response
+                    // Nếu là request từ form (không phải AJAX), redirect sang giỏ hàng
+                    String requestedWith = request.getHeader("X-Requested-With");
+                    if (requestedWith == null) {
+                        response.sendRedirect(request.getContextPath() + "/main?action=cartPage");
+                        return;
+                    }
+                    // Nếu là AJAX thì trả về JSON như cũ
                     response.setContentType("application/json");
                     PrintWriter out = response.getWriter();
-                    
                     if (itemExists) {
                         int newQuantity = cart.getItem(productId).getQuantity();
                         out.print("{\"success\":true,\"message\":\"Đã tăng số lượng sản phẩm lên " + newQuantity + "\",\"cartCount\":" + cart.getTotalItems() + ",\"alreadyExists\":true}");
@@ -151,14 +151,12 @@ public class CartController extends HttpServlet {
                     }
                     out.flush();
                 } else {
-                    // Insufficient stock
                     response.setContentType("application/json");
                     PrintWriter out = response.getWriter();
                     out.print("{\"success\":false,\"message\":\"Insufficient stock\"}");
                     out.flush();
                 }
             } else {
-                // Product not found
                 response.setContentType("application/json");
                 PrintWriter out = response.getWriter();
                 out.print("{\"success\":false,\"message\":\"Product not found\"}");

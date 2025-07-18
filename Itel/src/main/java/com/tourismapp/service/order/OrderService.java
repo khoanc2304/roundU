@@ -97,7 +97,11 @@ public class OrderService implements IOrderService {
     @Override
     public List<Orders> findOrdersByUserId(int userId) {
         try {
-            return orderDAO.findOrdersByUserId(userId);
+            List<Orders> orders = orderDAO.findOrdersByUserId(userId);
+            for (Orders order : orders) {
+                order.setOrderDetails(orderDAO.getOrderDetailsByOrderId(order.getOrderId()));
+            }
+            return orders;
         } catch (Exception e) {
             ErrDialog.showError("Error in OrderService.findOrdersByUserId: " + e.getMessage());
             return List.of();
@@ -132,7 +136,11 @@ public class OrderService implements IOrderService {
     @Override
     public List<Orders> findAllOrders() {
         try {
-            return orderDAO.findAllOrders();
+            List<Orders> orders = orderDAO.findAllOrders();
+            for (Orders order : orders) {
+                order.setOrderDetails(orderDAO.getOrderDetailsByOrderId(order.getOrderId()));
+            }
+            return orders;
         } catch (Exception e) {
             ErrDialog.showError("Error in OrderService.findAllOrders: " + e.getMessage());
             return List.of();

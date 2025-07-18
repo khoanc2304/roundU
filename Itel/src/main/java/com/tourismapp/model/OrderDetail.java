@@ -1,6 +1,7 @@
 package com.tourismapp.model;
 
 import java.math.BigDecimal;
+import java.time.LocalDateTime;
 
 public class OrderDetail {
 
@@ -9,6 +10,8 @@ public class OrderDetail {
     private Product product;
     private int quantity;
     private BigDecimal unitPrice;
+    private String status;
+    private LocalDateTime statusUpdateDate;
 
     public OrderDetail() {
     }
@@ -19,6 +22,8 @@ public class OrderDetail {
         this.product = product;
         this.quantity = quantity;
         this.unitPrice = unitPrice;
+        this.status = "PENDING"; // Default status
+        this.statusUpdateDate = LocalDateTime.now();
     }
     
     public OrderDetail(Orders order, Product product, int quantity, BigDecimal unitPrice) {
@@ -26,6 +31,8 @@ public class OrderDetail {
         this.product = product;
         this.quantity = quantity;
         this.unitPrice = unitPrice;
+        this.status = "PENDING"; // Default status
+        this.statusUpdateDate = LocalDateTime.now();
     }
 
     public int getOrderDetailId() {
@@ -72,6 +79,23 @@ public class OrderDetail {
         this.unitPrice = unitPrice;
     }
 
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
+        this.statusUpdateDate = LocalDateTime.now();
+    }
+
+    public LocalDateTime getStatusUpdateDate() {
+        return statusUpdateDate;
+    }
+
+    public void setStatusUpdateDate(LocalDateTime statusUpdateDate) {
+        this.statusUpdateDate = statusUpdateDate;
+    }
+
     @Override
     public String toString() {
         return "OrderDetail{"
@@ -80,6 +104,8 @@ public class OrderDetail {
                 + ", product=" + (product != null ? product.getProductId() : "null")
                 + ", quantity=" + quantity
                 + ", unitPrice=" + unitPrice
+                + ", status='" + status + '\''
+                + ", statusUpdateDate=" + statusUpdateDate
                 + '}';
     }
 }

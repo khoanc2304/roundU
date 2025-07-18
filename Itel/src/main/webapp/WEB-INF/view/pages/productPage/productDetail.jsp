@@ -54,12 +54,17 @@
                                     <strong>Quà tặng khuyến mãi:</strong><br><br> Tặng ngay 1x Bàn Tản Nhiệt Cooler Master NotePal C3 trị giá 230.000đ
                                 </div>
 
-                                <div class="mb-3 button-container">
-                                    <button class="btn btn-custom-buy btn-lg me-2">Mua ngay
-                                        <span class="buy-info">Giao tận nơi hoàn tiền tại cửa hàng</span>
-                                    </button>
-                                    <button class="btn btn-outline-secondary btn-lg" onclick="scrollToProductInfo()">Giới thiệu sản phẩm</button>
+                                <div class="mb-3 button-container d-flex gap-3">
+                                    <form action="${pageContext.request.contextPath}/cart/add" method="post" style="flex:1;">
+                                        <input type="hidden" name="productId" value="${product.productId}" />
+                                        <input type="hidden" name="quantity" value="1" />
+                                        <button type="submit" class="btn btn-custom-buy btn-lg w-100">Mua ngay
+                                            <span class="buy-info">Giao tận nơi hoàn tiền tại cửa hàng</span>
+                                        </button>
+                                    </form>
+                                    <button type="button" class="btn btn-outline-secondary btn-lg w-100" data-bs-toggle="modal" data-bs-target="#shareModal" style="flex:1;">Giới thiệu sản phẩm</button>
                                 </div>
+
                                 <hr class="my-3">
 
                                 <div class="mt-3">
@@ -252,7 +257,26 @@
         <div class="mt-3">
             <jsp:include page="/WEB-INF/view/components/footer.jsp" />
         </div>
-
+        
+        <!-- Modal Giới thiệu sản phẩm -->
+        <div class="modal fade" id="shareModal" tabindex="-1" aria-labelledby="shareModalLabel" aria-hidden="true">
+          <div class="modal-dialog">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h5 class="modal-title" id="shareModalLabel">Chia sẻ sản phẩm</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+              </div>
+              <div class="modal-body">
+                <div class="input-group mb-3">
+                  <input type="text" class="form-control" id="shareLink" value="${pageContext.request.scheme}://${pageContext.request.serverName}:${pageContext.request.serverPort}${pageContext.request.contextPath}/main?action=productPage&id=${product.productId}" readonly>
+                  <button class="btn btn-primary" type="button" id="copyBtn">Copy</button>
+                </div>
+                <div id="copyMsg" class="text-success" style="display:none;">Đã copy link!</div>
+              </div>
+            </div>
+          </div>
+        </div>
+        
         <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
         <script>
             document.addEventListener('DOMContentLoaded', function () {
@@ -309,7 +333,22 @@
                 };
             });
         </script>
-
+        <script>
+document.addEventListener('DOMContentLoaded', function() {
+  var copyBtn = document.getElementById('copyBtn');
+  var shareLink = document.getElementById('shareLink');
+  var copyMsg = document.getElementById('copyMsg');
+  if (copyBtn && shareLink) {
+    copyBtn.onclick = function() {
+      shareLink.select();
+      shareLink.setSelectionRange(0, 99999);
+      document.execCommand('copy');
+      copyMsg.style.display = 'block';
+      setTimeout(function(){ copyMsg.style.display = 'none'; }, 1500);
+    };
+  }
+});
+</script>
     </body>
     <style>
         .product-container {

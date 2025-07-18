@@ -45,7 +45,7 @@
                     <form id="checkoutForm" action="/Itel/payment" method="post">
                         <!-- Hidden input to track checkout type -->
                         <input type="hidden" name="checkoutType" value="${checkoutType}">
-                        
+
                         <!-- Hidden inputs for selected items (when checkoutType is 'selected') -->
                         <c:if test="${checkoutType == 'selected'}">
                             <c:forEach var="item" items="${cart.items}" varStatus="status">
@@ -71,25 +71,25 @@
                                                value="${user.lastName}" required>
                                     </div>
                                 </div>
-                                
+
                                 <div class="mb-3">
                                     <label for="email" class="form-label">Email *</label>
                                     <input type="email" class="form-control" id="email" name="email" 
                                            value="${user.email}" required>
                                 </div>
-                                
+
                                 <div class="mb-3">
                                     <label for="phone" class="form-label">Số điện thoại *</label>
                                     <input type="tel" class="form-control" id="phone" name="phone" 
                                            value="${user.phoneNumber}" required>
                                 </div>
-                                
+
                                 <div class="mb-3">
                                     <label for="address" class="form-label">Địa chỉ *</label>
                                     <textarea class="form-control" id="address" name="address" rows="2" 
                                               placeholder="Nhập địa chỉ của bạn" required>${user.address}</textarea>
                                 </div>
-                                
+
                                 <div class="row">
                                     <div class="col-md-6 mb-3">
                                         <label for="city" class="form-label">Thành phố *</label>
@@ -125,7 +125,7 @@
                                             </div>
                                         </label>
                                     </div>
-                                    
+
                                     <div class="form-check payment-option mb-3">
                                         <input class="form-check-input" type="radio" name="paymentMethod" 
                                                id="banking" value="BANKING">
@@ -139,7 +139,7 @@
                                             </div>
                                         </label>
                                     </div>
-                                    
+
                                     <div class="form-check payment-option">
                                         <input class="form-check-input" type="radio" name="paymentMethod" 
                                                id="card" value="CASH">
@@ -154,7 +154,7 @@
                                         </label>
                                     </div>
                                 </div>
-                                
+
                                 <!-- Fake Card Form (shown when card payment selected) -->
                                 <div id="cardForm" class="mt-3" style="display: none;">
                                     <div class="alert alert-info">
@@ -216,7 +216,7 @@
                                     <small>Bạn đang thanh toán ${cart.totalItems} sản phẩm đã chọn từ giỏ hàng</small>
                                 </div>
                             </c:if>
-                            
+
                             <!-- Cart Items -->
                             <c:forEach var="item" items="${cart.items}">
                                 <div class="d-flex align-items-center mb-3">
@@ -231,34 +231,34 @@
                                     </div>
                                 </div>
                             </c:forEach>
-                            
+
                             <hr>
-                            
+
                             <!-- Order Totals -->
                             <div class="d-flex justify-content-between mb-2">
                                 <span>Tạm tính (${cart.totalItems} sản phẩm):</span>
                                 <span><fmt:formatNumber value="${cart.totalAmount}" pattern="#,###.###"/> VNĐ</span>
                             </div>
-                            
+
                             <div class="d-flex justify-content-between mb-2">
                                 <span>Phí giao hàng:</span>
                                 <span class="text-success">Miễn phí</span>
                             </div>
-                            
+
                             <div class="d-flex justify-content-between mb-2">
                                 <span>Thuế:</span>
                                 <span>0 VNĐ</span>
                             </div>
-                            
+
                             <hr>
-                            
+
                             <div class="d-flex justify-content-between mb-3">
                                 <strong>Tổng cộng:</strong>
                                 <strong class="text-primary">
                                     <fmt:formatNumber value="${cart.totalAmount}" pattern="#,###.###"/> VNĐ
                                 </strong>
                             </div>
-                            
+
                             <!-- Action Buttons -->
                             <button type="submit" form="checkoutForm" class="btn btn-primary w-100 mb-2">
                                 <i class="fas fa-lock"></i> 
@@ -271,11 +271,11 @@
                                     </c:otherwise>
                                 </c:choose>
                             </button>
-                            
+
                             <a href="/Itel/main?action=cartPage" class="btn btn-outline-secondary w-100">
                                 <i class="fas fa-arrow-left"></i> Quay lại giỏ hàng
                             </a>
-                            
+
                             <c:if test="${checkoutType == 'selected'}">
                                 <div class="mt-3">
                                     <small class="text-muted">
@@ -289,20 +289,20 @@
                 </div>
             </div>
         </div>
-        
+
         <!--Footer-->                                 
         <div class="mt-5">
             <jsp:include page="/WEB-INF/view/components/footer.jsp" />
         </div>
-        
+
         <!-- Bootstrap JS -->
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
-        
+
         <!-- Checkout JavaScript -->
         <script>
             // Show/hide card form based on payment method
             document.querySelectorAll('input[name="paymentMethod"]').forEach(radio => {
-                radio.addEventListener('change', function() {
+                radio.addEventListener('change', function () {
                     const cardForm = document.getElementById('cardForm');
                     if (this.value === 'CASH') {
                         cardForm.style.display = 'block';
@@ -311,62 +311,91 @@
                     }
                 });
             });
-            
+
             // Format card number input
-            document.getElementById('cardNumber')?.addEventListener('input', function(e) {
+            document.getElementById('cardNumber')?.addEventListener('input', function (e) {
                 let value = e.target.value.replace(/\s/g, '').replace(/[^0-9]/gi, '');
                 let formattedValue = value.match(/.{1,4}/g)?.join(' ') || value;
                 if (value.length <= 16) {
                     e.target.value = formattedValue;
                 }
             });
-            
+
             // Format expiry date input
-            document.getElementById('expiryDate')?.addEventListener('input', function(e) {
+            document.getElementById('expiryDate')?.addEventListener('input', function (e) {
                 let value = e.target.value.replace(/\D/g, '');
                 if (value.length >= 2) {
                     value = value.substring(0, 2) + '/' + value.substring(2, 4);
                 }
                 e.target.value = value;
             });
-            
+
             // CVV input validation
-            document.getElementById('cvv')?.addEventListener('input', function(e) {
+            document.getElementById('cvv')?.addEventListener('input', function (e) {
                 e.target.value = e.target.value.replace(/[^0-9]/g, '');
             });
-            
+
             // Form validation before submit
-            document.getElementById('checkoutForm').addEventListener('submit', function(e) {
+            document.getElementById('checkoutForm').addEventListener('submit', function (e) {
                 const paymentMethod = document.querySelector('input[name="paymentMethod"]:checked').value;
-                
+
                 if (paymentMethod === 'CASH') {
                     const cardNumber = document.getElementById('cardNumber').value;
                     const expiryDate = document.getElementById('expiryDate').value;
                     const cvv = document.getElementById('cvv').value;
-                    
+
                     if (!cardNumber || cardNumber.replace(/\s/g, '').length < 16) {
                         e.preventDefault();
                         alert('Please enter a valid card number');
                         return;
                     }
-                    
+
                     if (!expiryDate || expiryDate.length < 5) {
                         e.preventDefault();
                         alert('Please enter a valid expiry date');
                         return;
                     }
-                    
+
                     if (!cvv || cvv.length < 3) {
                         e.preventDefault();
                         alert('Please enter a valid CVV');
                         return;
                     }
                 }
-                
+
                 // Show loading state
                 const submitBtn = document.querySelector('button[type="submit"]');
                 submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Processing...';
                 submitBtn.disabled = true;
+            });
+        </script>
+        <div id="bankTransferInfo" class="alert alert-success mt-3" style="display:none;">
+            <strong>Thông tin chuyển khoản:</strong><br>
+            Ngân hàng: <b>Vietcombank (VCB)</b><br>
+            Số tài khoản: <b>0123456789</b><br>
+            Chủ tài khoản: <b>NGUYEN VAN A</b><br>
+            <span style="color:red;">Nội dung chuyển khoản: <b>DH${user.userId}${System.currentTimeMillis()}</b> hoặc số điện thoại của bạn</span>
+            <br><span class="text-muted">Vui lòng chuyển khoản đúng nội dung để được xác nhận đơn hàng nhanh nhất.</span>
+        </div>
+        <script>
+            document.addEventListener('DOMContentLoaded', function () {
+                const bankRadio = document.getElementById('banking');
+                const bankInfo = document.getElementById('bankTransferInfo');
+                if (bankRadio && bankInfo) {
+                    bankRadio.addEventListener('change', function () {
+                        if (this.checked) {
+                            bankInfo.style.display = 'block';
+                        }
+                    });
+                }
+                // Ẩn khi chọn phương thức khác
+                document.querySelectorAll('input[name="paymentMethod"]').forEach(function (radio) {
+                    if (radio.value !== 'BANKING') {
+                        radio.addEventListener('change', function () {
+                            bankInfo.style.display = 'none';
+                        });
+                    }
+                });
             });
         </script>
     </body>
@@ -377,11 +406,11 @@
         margin: 0;
         background-color: #f8f9fa;
     }
-    
+
     .content {
         padding-top: 150px;
     }
-    
+
     .checkout-steps {
         display: flex;
         justify-content: center;
@@ -392,7 +421,7 @@
         border-radius: 8px;
         box-shadow: 0 2px 4px rgba(0,0,0,0.1);
     }
-    
+
     .step {
         display: flex;
         flex-direction: column;
@@ -402,7 +431,7 @@
         position: relative;
         color: #6c757d;
     }
-    
+
     .step i {
         font-size: 1.5rem;
         margin-bottom: 0.5rem;
@@ -415,24 +444,24 @@
         border: 2px solid #dee2e6;
         background: white;
     }
-    
+
     .step.completed i {
         background: #28a745;
         color: white;
         border-color: #28a745;
     }
-    
+
     .step.active i {
         background: #007bff;
         color: white;
         border-color: #007bff;
     }
-    
+
     .step.completed,
     .step.active {
         color: #212529;
     }
-    
+
     .step:not(:last-child):after {
         content: '';
         position: absolute;
@@ -443,63 +472,63 @@
         background: #dee2e6;
         z-index: -1;
     }
-    
+
     .step.completed:not(:last-child):after {
         background: #28a745;
     }
-    
+
     .payment-option {
         border: 2px solid #e9ecef;
         border-radius: 8px;
         padding: 1rem;
         transition: all 0.3s ease;
     }
-    
+
     .payment-option:hover {
         border-color: #007bff;
         background-color: #f8f9ff;
     }
-    
+
     .payment-option input:checked + .payment-label {
         color: #007bff;
     }
-    
+
     .payment-option:has(input:checked) {
         border-color: #007bff;
         background-color: #f8f9ff;
     }
-    
+
     .payment-label {
         width: 100%;
         margin: 0;
         cursor: pointer;
     }
-    
+
     .payment-content {
         display: flex;
         align-items: center;
         gap: 1rem;
     }
-    
+
     .payment-content i {
         font-size: 1.5rem;
         width: 30px;
     }
-    
+
     .card {
         box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
         border: 1px solid rgba(0, 0, 0, 0.125);
     }
-    
+
     @media (max-width: 768px) {
         .checkout-steps {
             flex-direction: column;
         }
-        
+
         .step {
             margin: 0.5rem 0;
         }
-        
+
         .step:not(:last-child):after {
             display: none;
         }

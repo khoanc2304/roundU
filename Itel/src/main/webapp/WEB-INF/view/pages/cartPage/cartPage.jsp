@@ -47,8 +47,8 @@
                                                 Chọn tất cả
                                             </label>
                                         </div>
-                                        <span class="text-muted">(<span id="selectedCount">0</span>/${cart.totalItems} sản phẩm được chọn)</span>
                                     </div>
+                                    <span class="text-muted ms-2">(<span id="selectedCount">0</span>/<span id="totalCount">0</span> sản phẩm được chọn)</span>
                                     <button class="btn btn-outline-danger btn-sm" onclick="removeSelectedItems()" id="removeSelectedBtn" disabled>
                                         <i class="fas fa-trash"></i> Xóa đã chọn
                                     </button>
@@ -239,48 +239,49 @@
                                                     const itemCheckboxes = document.querySelectorAll('.item-checkbox');
                                                     const selectAllCheckbox = document.getElementById('selectAll');
                                                     const selectedCount = document.getElementById('selectedCount');
+                                                    const totalCount = document.getElementById('totalCount');
                                                     const removeSelectedBtn = document.getElementById('removeSelectedBtn');
                                                     const checkoutBtn = document.getElementById('checkoutBtn');
 
-                                                    // Count selected items
+                                                    // Đếm tổng quantity được chọn và tổng quantity trong giỏ
                                                     selectedItems = [];
-                                                    let totalSelected = 0;
+                                                    let totalSelectedQty = 0;
+                                                    let totalQty = 0;
                                                     let totalAmount = 0;
-
                                                     itemCheckboxes.forEach(checkbox => {
+                                                        const quantity = parseInt(checkbox.dataset.quantity);
+                                                        totalQty += quantity;
                                                         if (checkbox.checked) {
                                                             const productId = parseInt(checkbox.dataset.productId);
-                                                            const quantity = parseInt(checkbox.dataset.quantity);
                                                             const price = parseFloat(checkbox.dataset.price);
                                                             const subtotal = parseFloat(checkbox.dataset.subtotal);
-
                                                             selectedItems.push({
                                                                 productId: productId,
                                                                 quantity: quantity,
                                                                 price: price,
                                                                 subtotal: subtotal
                                                             });
-
-                                                            totalSelected++;
+                                                            totalSelectedQty += quantity;
                                                             totalAmount += subtotal;
                                                         }
                                                     });
 
                                                     // Update UI
-                                                    selectedCount.textContent = totalSelected;
-                                                    document.getElementById('selectedItemCount').textContent = totalSelected + ' sản phẩm';
+                                                    selectedCount.textContent = totalSelectedQty;
+                                                    totalCount.textContent = totalQty;
+                                                    document.getElementById('selectedItemCount').textContent = totalSelectedQty + ' sản phẩm';
                                                     document.getElementById('selectedSubtotal').textContent = formatCurrency(totalAmount);
                                                     document.getElementById('selectedTotal').textContent = formatCurrency(totalAmount);
 
                                                     // Update buttons
-                                                    removeSelectedBtn.disabled = totalSelected === 0;
+                                                    removeSelectedBtn.disabled = totalSelectedQty === 0;
                                                     if (checkoutBtn) {
-                                                        checkoutBtn.disabled = totalSelected === 0;
+                                                        checkoutBtn.disabled = totalSelectedQty === 0;
                                                     }
 
                                                     // Update select all checkbox
-                                                    selectAllCheckbox.checked = totalSelected === itemCheckboxes.length && totalSelected > 0;
-                                                    selectAllCheckbox.indeterminate = totalSelected > 0 && totalSelected < itemCheckboxes.length;
+                                                    selectAllCheckbox.checked = totalSelectedQty === totalQty && totalSelectedQty > 0;
+                                                    selectAllCheckbox.indeterminate = totalSelectedQty > 0 && totalSelectedQty < totalQty;
                                                 }
 
                                                 function formatCurrency(amount) {
