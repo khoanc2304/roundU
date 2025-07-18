@@ -121,7 +121,41 @@
                     </a>
                 </div>        
             </div>
-                        
+
+            <!-- Sản phẩm đã xem -->
+            <div class="container my-3">
+                <c:if test="${not empty viewedProducts}">
+                    <div class="card mb-4">
+                        <div class="card-header bg-light fw-bold fs-5">
+                            Sản phẩm đã xem
+                        </div>
+                        <div class="card-body">
+                            <div class="row g-3 align-items-center">
+                                <c:forEach var="vp" items="${viewedProducts}">
+                                    <div class="col-12 col-md-4 col-lg-3">
+                                        <div class="card h-100 viewed-product-card position-relative">
+                                            <a href="<%= ProjectPaths.HREF_TO_PRODUCTPAGE%>&id=${vp.productId}">
+                                                <img src="${vp.imageUrl}" class="card-img-top" alt="${vp.name}">
+                                            </a>
+                                            <div class="card-body p-2">
+                                                <h6 class="card-title mb-1 text-truncate" title="${vp.name}">${vp.name}</h6>
+                                                <div class="text-danger fw-bold mb-2">
+                                                    <fmt:formatNumber value="${vp.price}" type="number" pattern="#,#00" currencySymbol="" groupingUsed="true" /> VNĐ
+                                                </div>
+                                                <div class="btn-group-viewed">
+                                                    <a href="<%= ProjectPaths.HREF_TO_PRODUCTPAGE%>&id=${vp.productId}" class="btn btn-sm btn-outline-primary btn-viewed-action">Xem chi tiết</a>
+                                                    <button type="button" class="btn btn-sm btn-outline-danger btn-viewed-action" onclick="removeViewedProduct(${vp.productId})">Xóa</button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </c:forEach>
+                            </div>
+                        </div>
+                    </div>
+                </c:if>
+            </div>            
+
             <div class="row mt-5">
                 <div class="col-12">
                     <div class="content" data-aos="fade-left">
@@ -378,6 +412,22 @@
                         element.style.display = 'inline';
                     }
                 });
+            }
+        </script>
+        <!-- Thêm script xóa sản phẩm đã xem bằng cookie -->
+        <script>
+            function removeViewedProduct(productId) {
+                // Đọc cookie hiện tại
+                let cookies = document.cookie.split(';').map(c => c.trim());
+                let viewed = cookies.find(c => c.startsWith('viewedProducts='));
+                if (!viewed)
+                    return;
+                let value = decodeURIComponent(viewed.split('=')[1]);
+                let ids = value.split('-').filter(id => id !== String(productId));
+                // Ghi lại cookie mới
+                document.cookie = 'viewedProducts=' + ids.join('-') + ';path=/;max-age=' + (60 * 60 * 24 * 7);
+                // Reload lại trang để cập nhật giao diện
+                location.reload();
             }
         </script>
         <style>
@@ -873,6 +923,30 @@
             .product-card:hover {
                 transform: translateY(-5px);
                 box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+            }
+
+            /* Card sản phẩm đã xem */
+            .viewed-product-card {
+                min-width: 220px;
+                max-width: 250px;
+                min-height: 370px;
+                max-height: 370px;
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                margin: 0 auto;
+            }
+            .viewed-product-card .card-img-top {
+                width: 100%;
+                height: 180px;
+                object-fit: contain;
+                margin-top: 10px;
+            }
+            .viewed-product-card .card-body {
+                flex: 1 1 auto;
+                display: flex;
+                flex-direction: column;
+                justify-content: flex-end;
             }
         </style>
     </body>

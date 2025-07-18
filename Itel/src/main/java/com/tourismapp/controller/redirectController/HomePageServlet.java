@@ -15,6 +15,7 @@ import com.tourismapp.service.relation.BrandCategoryService;
 import com.tourismapp.service.relation.IBrandCategoryService;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
+import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -61,6 +62,28 @@ public class HomePageServlet extends HttpServlet {
         for (Category c : categories){
             request.getSession().setAttribute(c.getName() + "ImageUrl", c.getImageUrl());
         }
+        
+                // Đọc cookie 'viewedProducts' và truy vấn sản phẩm đã xem
+        Cookie[] cookies = request.getCookies();
+        List<Product> viewedProducts = new java.util.ArrayList<>();
+        if (cookies != null) {
+            for (Cookie cookie : cookies) {
+                if ("viewedProducts".equals(cookie.getName())) {
+                    String value = cookie.getValue();
+                    if (value != null && !value.isEmpty()) {
+                        String[] ids = value.split("-");
+                        for (String idStr : ids) {
+                            try {
+                                int pid = Integer.parseInt(idStr);
+                                productService.findProductById(pid).ifPresent(viewedProducts::add);
+                            } catch (NumberFormatException ignored) {}
+                        }
+                    }
+                    break;
+                }
+            }
+        }
+        request.setAttribute("viewedProducts", viewedProducts);
         
         request.getSession().setAttribute("categories", categories);
         request.getSession().setAttribute("activeProducts", activeProducts);

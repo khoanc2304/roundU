@@ -13,6 +13,7 @@ import com.tourismapp.service.relation.IBrandCategoryService;
 import com.tourismapp.utils.ErrDialog;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
+import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -78,6 +79,36 @@ public class ProductPageServlet extends HttpServlet {
             response.sendError(HttpServletResponse.SC_BAD_REQUEST, "ID không hợp lệ");
             return;
         }
+        
+        // Ghi ID sản phẩm vào cookie 'viewedProducts'
+        Cookie[] cookies = request.getCookies();
+        String viewed = null;
+        if (cookies != null) {
+            for (Cookie cookie : cookies) {
+                if ("viewedProducts".equals(cookie.getName())) {
+                    viewed = cookie.getValue();
+                    break;
+                }
+            }
+        }
+        String newViewed = String.valueOf(id);
+        if (viewed != null && !viewed.isEmpty()) {
+            java.util.LinkedHashSet<String> set = new java.util.LinkedHashSet<>();
+            for (String s : viewed.split("-")) {
+                if (!s.equals(newViewed)) set.add(s);
+            }
+            set.add(newViewed); // Đảm bảo không trùng lặp, thêm mới nhất cuối cùng
+            // Giới hạn số lượng sản phẩm đã xem (ví dụ 10)
+            while (set.size() > 10) {
+                set.remove(set.iterator().next());
+            }
+            newViewed = String.join("-", set);
+        }
+        Cookie cookie = new Cookie("viewedProducts", newViewed);
+        cookie.setPath("/");
+        cookie.setMaxAge(60*60*24*7); // 7 ngày
+        response.addCookie(cookie);
+        
         // if product actived -> product no hidden
         Optional<Product> product = productService.findProductById(id);
         Optional<List<ProductImage>> productImages = productService.getProductImagesById(id);
