@@ -25,8 +25,8 @@ public class UserService implements IUserService {
     }
 
     @Override
-    public Optional<Users> findUserByCredentials(String username, String email, String password) {
-        return userDAO.findUserByCredentials(username, email, password);
+    public Optional<Users> findUserByCredentials(String identifier, String password) {
+        return userDAO.findUserByCredentials(identifier, password);
     }
     
     

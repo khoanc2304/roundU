@@ -8,6 +8,7 @@ com\tourismapp\service\user\IUserService.class
 com\tourismapp\dao\user\IUserDAO.class
 com\tourismapp\constant\IConstant.class
 com\tourismapp\service\product\ProductService.class
+com\tourismapp\service\review\IReviewService.class
 com\tourismapp\controller\paymentController\PaymentServlet$PaymentResult.class
 com\tourismapp\model\OrderTracking.class
 com\tourismapp\controller\redirectController\dashboard\OrderManagementServlet.class
@@ -15,6 +16,7 @@ com\tourismapp\dao\category\CategoryDAO.class
 com\tourismapp\controller\mainController\MainControllerServlet.class
 com\tourismapp\service\order\OrderService.class
 com\tourismapp\dao\category\ICategoryDAO.class
+com\tourismapp\dao\review\ReviewDAO.class
 com\tourismapp\common\MembershipLevel.class
 com\tourismapp\model\Category.class
 com\tourismapp\model\Orders.class
@@ -35,6 +37,7 @@ com\tourismapp\controller\cartController\CartController.class
 com\tourismapp\dao\relation\BrandCategoryDAO.class
 com\tourismapp\dto\BrandCategoryDTO.class
 com\tourismapp\utils\ErrDialog.class
+com\tourismapp\dao\review\IReviewDAO.class
 com\tourismapp\model\Users.class
 com\tourismapp\model\Review.class
 com\tourismapp\controller\redirectController\dashboard\DashboardPageServlet.class
@@ -44,6 +47,7 @@ com\tourismapp\model\GoogleAccount.class
 com\tourismapp\service\category\ICategoryService.class
 com\tourismapp\filter\AuthenticationFilter.class
 com\tourismapp\dao\DBConnection.class
+com\tourismapp\service\review\ReviewService.class
 com\tourismapp\service\brand\BrandService.class
 com\tourismapp\service\brand\IBrandService.class
 com\tourismapp\model\Brand.class

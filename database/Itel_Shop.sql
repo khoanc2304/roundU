@@ -3109,7 +3109,7 @@ VALUES
 (127, 'https://www.laptopvip.vn/images/ab__webp/detailed/39/asus-proart-pz13-ht5306-635e444c-5e08-4081-99f1-119085969cae-ci03-yc-www.laptopvip.vn-1727150181.webp', 0, 'active');
 
 
-SELECT order_id, user_id, order_date, status, total_amount, shipping_address FROM Orders
+--SELECT order_id, user_id, order_date, status, total_amount, shipping_address FROM Orders
 
 -- mapping brand_id & category_id -> query
 CREATE TABLE Brand_Category (
@@ -3254,10 +3254,415 @@ SET name = 'DesktopPC'
 WHERE category_id = 8;
 
 
-CREATE TABLE Chat_History (
-    id INT IDENTITY(1,1) PRIMARY KEY,
-    sender VARCHAR(50) NOT NULL,
-    receiver VARCHAR(50) NOT NULL,
-    message NVARCHAR(MAX) NOT NULL,
-    timestamp DATETIME NOT NULL DEFAULT GETDATE()
+--CREATE TABLE Chat_History (
+--   id INT IDENTITY(1,1) PRIMARY KEY,
+--   sender VARCHAR(50) NOT NULL,
+--   receiver VARCHAR(50) NOT NULL,
+--   message NVARCHAR(MAX) NOT NULL,
+--   timestamp DATETIME NOT NULL DEFAULT GETDATE()
+--);
+
+-- Creating the ProductRating table
+CREATE TABLE ProductRating (
+    rating_id INT IDENTITY(1,1) PRIMARY KEY,
+    product_id INT NOT NULL,
+    average_rating DECIMAL(3,2) NOT NULL CHECK (average_rating >= 1.00 AND average_rating <= 5.00),
+    review_count INT NOT NULL DEFAULT 0,
+    last_updated DATETIME DEFAULT GETDATE(),
+    CONSTRAINT FK_ProductRating_Product FOREIGN KEY (product_id) REFERENCES Product(product_id) ON DELETE CASCADE
 );
+
+-- Inserting sample data into ProductRating (covering all products from product_id 1 to 127)
+INSERT INTO ProductRating (product_id, average_rating, review_count)
+VALUES
+(1, 4.50, 3), -- MacBook Pro 13.3 i5 2.3GHz
+(2, 4.20, 2), -- Macbook Air 13.3 i5 1.8GHz 128GB
+(3, 3.80, 2), -- HP 250 G6 i5 7200U
+(4, 4.70, 4), -- MacBook Pro 15.4 i7 2.7GHz
+(5, 4.30, 3), -- MacBook Pro 13.3 i5 3.1GHz
+(6, 4.10, 2), -- MacBook Pro 15.4 i7 2.2GHz
+(7, 4.00, 2), -- Macbook Air 13.3 i5 1.8GHz 256GB
+(8, 4.25, 3), -- ZenBook UX430UN
+(9, 3.90, 2), -- Swift 3
+(10, 3.70, 2), -- HP 250 G6 i3 6006U
+(11, 4.60, 3), -- MacBook Pro 15.4 i7 2.8GHz
+(12, 3.85, 2), -- Inspiron 3567 i3 6006U
+(13, 4.15, 2), -- MacBook 12
+(14, 4.00, 2), -- Inspiron 3567 i7 7500U
+(15, 4.80, 4), -- MacBook Pro 15.4 i7 2.9GHz
+(16, 3.95, 2), -- IdeaPad 320-15IKB
+(17, 4.30, 3), -- XPS 13 i5 8250U
+(18, 3.60, 2), -- Vivobook E200HA
+(19, 4.40, 3), -- Legion Y520-15IKBN
+(20, 3.75, 2), -- HP 255 G6
+(21, 4.10, 2), -- Inspiron 5379
+(22, 3.90, 2), -- HP 15-BS101nv
+(23, 4.00, 2), -- Inspiron 5570
+(24, 4.20, 3), -- Latitude 5590
+(25, 4.05, 2), -- ProBook 470
+(26, 3.80, 2), -- HP 17-ak001nv
+(27, 4.70, 3), -- XPS 13 i7 8550U
+(28, 3.65, 2), -- IdeaPad 120S-14IAP
+(29, 4.00, 2), -- Inspiron 5770
+(30, 3.95, 2), -- ProBook 450
+(31, 3.70, 2), -- X540UA-DM186
+(32, 4.50, 3), -- Inspiron 7577
+(33, 3.85, 2), -- X542UQ-GO005
+(34, 4.10, 2), -- Aspire A515-51G
+(35, 4.20, 3), -- Inspiron 7773
+(36, 4.30, 2), -- MacBook Pro 13.3 i5 2.0GHz
+(37, 3.80, 2), -- IdeaPad 320-15ISK
+(38, 4.40, 3), -- Rog Strix
+(39, 4.00, 2), -- Inspiron 3567 i5 7200U
+(40, 4.60, 3), -- Logitech MX Master 3S
+(41, 4.25, 2), -- ASUS ROG Strix Scope NX TKL Deluxe
+(42, 4.10, 2), -- Logitech Combo Touch iPad Pro
+(43, 4.70, 3), -- Razer DeathAdder V3 Pro
+(44, 4.20, 2), -- Keychron K8 Pro
+(45, 4.50, 3), -- MSI Katana 15
+(46, 4.40, 2), -- MSI Stealth 16
+(47, 4.00, 2), -- MSI Prestige 14 Evo
+(48, 4.60, 3), -- MSI Creator Z17
+(49, 4.70, 3), -- Gigabyte AORUS 17
+(50, 4.50, 2), -- Gigabyte AERO 15 OLED
+(51, 4.00, 2), -- Gigabyte G5
+(52, 4.80, 4), -- Samsung Galaxy S24 Ultra
+(53, 4.10, 2), -- Samsung Galaxy A35
+(54, 4.60, 3), -- Samsung Galaxy Z Fold 6
+(55, 4.20, 2), -- Xiaomi 14 Pro
+(56, 4.00, 2), -- Redmi Note 14 Pro+
+(57, 3.80, 2), -- Redmi A4 5G
+(58, 4.50, 3), -- OPPO Find X7 Ultra
+(59, 4.10, 2), -- OPPO Reno 11 Pro
+(60, 3.90, 2), -- OPPO A79 5G
+(61, 4.60, 3), -- Vivo X100 Pro
+(62, 4.00, 2), -- Vivo V30 Pro
+(63, 3.80, 2), -- Vivo Y28s
+(64, 4.40, 3), -- Realme GT 6
+(65, 4.00, 2), -- Realme Narzo 70 Pro
+(66, 3.90, 2), -- Realme C65
+(67, 4.10, 2), -- Nokia X30
+(68, 3.80, 2), -- Nokia G42
+(69, 3.70, 2), -- Nokia C32
+(70, 4.30, 2), -- Corsair K100 RGB
+(71, 4.20, 2), -- Corsair Scimitar Elite
+(72, 4.00, 2), -- SteelSeries Apex Pro
+(73, 4.50, 3), -- SteelSeries Aerox 9
+(74, 4.20, 2), -- HyperX Alloy Origins
+(75, 4.10, 2), -- HyperX Pulsefire Haste
+(76, 4.60, 3), -- Samsung Galaxy Buds 3
+(77, 4.30, 2), -- Samsung Galaxy Buds 3 Pro
+(78, 4.20, 2), -- MSI Clutch GM41
+(79, 4.40, 3), -- Gigabyte AORUS K9
+(80, 4.30, 2), -- Gigabyte AORUS M5
+(81, 4.50, 3), -- Xiaomi Buds 5
+(82, 4.00, 2), -- Redmi Buds 6 Active
+(83, 4.20, 2), -- OPPO Enco X3
+(84, 4.10, 2), -- OPPO Enco Air 4
+(85, 4.30, 2), -- Vivo TWS 4
+(86, 4.00, 2), -- Vivo TWS Air 2
+(87, 4.40, 3), -- Realme Buds Air 6 Pro
+(88, 4.10, 2), -- Realme Buds T300
+(89, 4.00, 2), -- Nokia Clarity Earbuds 2 Pro
+(90, 3.90, 2), -- Nokia Go Earbuds+
+(91, 4.70, 3), -- MacBook Air 13-inch M4 2025
+(92, 4.80, 4), -- MacBook Pro 14-inch M4 Pro 2024
+(93, 4.60, 3), -- MacBook Air 15-inch M4 2025
+(94, 4.50, 3), -- iPhone 16
+(95, 4.40, 2), -- iPhone 16 Plus
+(96, 4.60, 3), -- iPhone 16 Pro
+(97, 4.80, 4), -- iPhone 16 Pro Max
+(98, 4.50, 3), -- iPhone 17
+(99, 4.40, 2), -- iPhone 17 Plus
+(100, 4.60, 3), -- iPhone 17 Pro
+(101, 4.80, 4), -- iPhone 17 Pro Max
+(102, 4.20, 2), -- iPhone 16e
+(103, 4.30, 2), -- iPhone 17 Air
+(104, 4.10, 2), -- iPhone 16 Mini
+(105, 4.20, 2), -- iPhone 17 Slim
+(106, 4.60, 3), -- Samsung Galaxy S25
+(107, 4.50, 3), -- Samsung Galaxy S25 Plus
+(108, 4.80, 4), -- Samsung Galaxy S25 Ultra
+(109, 4.70, 3), -- Samsung Galaxy Z Fold 7
+(110, 4.40, 2), -- Samsung Galaxy Z Flip 7
+(111, 4.00, 2), -- Samsung Galaxy A56
+(112, 3.90, 2), -- Samsung Galaxy A36
+(113, 4.10, 2), -- Samsung Galaxy M55
+(114, 4.20, 2), -- Samsung Galaxy S25 FE
+(115, 4.50, 3), -- DELL XPS 15 2024
+(116, 4.60, 3), -- DELL XPS 17 2025
+(117, 4.30, 2), -- DELL Inspiron 13 Plus 2024
+(118, 4.20, 2), -- DELL Latitude 7455 2024
+(119, 4.50, 3), -- ASUS Zenbook S 15 2024
+(120, 4.60, 3), -- ASUS ROG Zephyrus G17 2024
+(121, 4.30, 2), -- ASUS Vivobook 17 2024
+(122, 4.40, 2), -- ASUS ProArt P17 2024
+(123, 4.30, 2), -- Additional product placeholder 1
+(124, 4.20, 2), -- Additional product placeholder 2
+(125, 4.30, 2), -- Additional product placeholder 3
+(126, 4.40, 2), -- Additional product placeholder 4
+(127, 4.50, 3); -- Additional product placeholder 5
+
+-- Inserting sample data into Review (covering all products from product_id 1 to 127)
+INSERT INTO Review (product_id, user_id, rating, comment, created_at)
+VALUES
+(1, 1, 5, N'Excellent performance, sleek design, worth the price!', '2025-02-01 10:00:00'),
+(1, 2, 4, N'Great laptop but battery life could be better.', '2025-02-02 12:00:00'),
+(1, 3, 4, N'Smooth macOS experience, very fast.', '2025-02-03 14:00:00'),
+(2, 4, 4, N'Lightweight and portable, perfect for travel.', '2025-02-04 09:00:00'),
+(2, 5, 4, N'Good for daily tasks, but a bit pricey.', '2025-02-05 11:00:00'),
+(3, 6, 4, N'Decent performance for the price, reliable.', '2025-02-06 13:00:00'),
+(3, 7, 3, N'Okay for basic use, but not for heavy tasks.', '2025-02-07 15:00:00'),
+(4, 8, 5, N'Powerful laptop, great for video editing.', '2025-02-08 10:00:00'),
+(4, 9, 5, N'Love the Retina display, very crisp!', '2025-02-09 12:00:00'),
+(4, 10, 4, N'High performance but quite expensive.', '2025-02-10 14:00:00'),
+(5, 11, 4, N'Great for professionals, fast processor.', '2025-02-11 09:00:00'),
+(5, 12, 5, N'Solid build quality, highly recommend.', '2025-02-12 11:00:00'),
+(6, 13, 4, N'Good performance, but fan noise is noticeable.', '2025-02-13 13:00:00'),
+(6, 14, 4, N'Reliable for daily use, good display.', '2025-02-14 15:00:00'),
+(7, 15, 4, N'Perfect for students, lightweight.', '2025-02-15 10:00:00'),
+(7, 1, 4, N'Great value for a MacBook.', '2025-02-16 12:00:00'),
+(8, 2, 4, N'Slim design, good for multitasking.', '2025-02-17 14:00:00'),
+(8, 3, 5, N'Love the Nvidia graphics, smooth experience.', '2025-02-18 09:00:00'),
+(9, 4, 4, N'Good budget laptop, decent display.', '2025-02-19 11:00:00'),
+(9, 5, 3, N'Average performance, expected more.', '2025-02-20 13:00:00'),
+(10, 6, 4, N'Affordable and reliable for basic tasks.', '2025-02-21 15:00:00'),
+(10, 7, 3, N'Not great for multitasking.', '2025-02-22 10:00:00'),
+(11, 8, 5, N'Fantastic performance, premium build.', '2025-02-23 12:00:00'),
+(11, 9, 4, N'Great for professionals, bit pricey.', '2025-02-24 14:00:00'),
+(12, 10, 4, N'Good for students, decent performance.', '2025-02-25 09:00:00'),
+(12, 11, 3, N'Slightly outdated hardware.', '2025-02-26 11:00:00'),
+(13, 12, 4, N'Compact and lightweight, great for travel.', '2025-02-27 13:00:00'),
+(13, 13, 4, N'Nice display, but limited ports.', '2025-02-28 15:00:00'),
+(14, 14, 4, N'Good performance for the price.', '2025-03-01 10:00:00'),
+(14, 15, 4, N'Reliable laptop, decent graphics.', '2025-03-02 12:00:00'),
+(15, 1, 5, N'Top-tier performance, worth every penny.', '2025-03-03 14:00:00'),
+(15, 2, 5, N'Best MacBook for professionals.', '2025-03-04 09:00:00'),
+(16, 3, 4, N'Good for casual use, decent specs.', '2025-03-05 11:00:00'),
+(16, 4, 3, N'Not great for gaming.', '2025-03-06 13:00:00'),
+(17, 5, 4, N'Sleek design, great touchscreen.', '2025-03-07 15:00:00'),
+(17, 6, 4, N'Fast processor, good for work.', '2025-03-08 10:00:00'),
+(18, 7, 3, N'Basic laptop, good for light tasks.', '2025-03-09 12:00:00'),
+(18, 8, 4, N'Great for budget users.', '2025-03-10 14:00:00'),
+(19, 9, 5, N'Awesome gaming laptop, runs smoothly.', '2025-03-11 09:00:00'),
+(19, 10, 4, N'Good for gaming, but a bit heavy.', '2025-03-12 11:00:00'),
+(20, 11, 4, N'Affordable, decent for daily use.', '2025-03-13 13:00:00'),
+(20, 12, 3, N'Not very powerful.', '2025-03-14 15:00:00'),
+(21, 13, 4, N'Nice 2-in-1, versatile design.', '2025-03-15 10:00:00'),
+(21, 14, 4, N'Good touchscreen, reliable.', '2025-03-16 12:00:00'),
+(22, 15, 4, N'Solid performance for the price.', '2025-03-17 14:00:00'),
+(22, 1, 3, N'Display could be better.', '2025-03-18 09:00:00'),
+(23, 2, 4, N'Good for multitasking, nice graphics.', '2025-03-19 11:00:00'),
+(23, 3, 4, N'Reliable laptop, good value.', '2025-03-20 13:00:00'),
+(24, 4, 4, N'Great for business, fast SSD.', '2025-03-21 15:00:00'),
+(24, 5, 4, N'Solid build, good for work.', '2025-03-22 10:00:00'),
+(25, 6, 4, N'Large display, good for productivity.', '2025-03-23 12:00:00'),
+(25, 7, 4, N'Reliable, good for office use.', '2025-03-24 14:00:00'),
+(26, 8, 4, N'Affordable, decent performance.', '2025-03-25 09:00:00'),
+(26, 9, 3, N'Not great for heavy tasks.', '2025-03-26 11:00:00'),
+(27, 10, 5, N'Fantastic display, very fast.', '2025-03-27 13:00:00'),
+(27, 11, 4, N'Great laptop, but expensive.', '2025-03-28 15:00:00'),
+(28, 12, 3, N'Basic laptop, good for light use.', '2025-03-29 10:00:00'),
+(28, 13, 4, N'Affordable and reliable.', '2025-03-30 12:00:00'),
+(29, 14, 4, N'Good for daily tasks, nice design.', '2025-03-31 14:00:00'),
+(29, 15, 4, N'Reliable, good storage options.', '2025-04-01 09:00:00'),
+(30, 1, 4, N'Good performance, nice keyboard.', '2025-04-02 11:00:00'),
+(30, 2, 3, N'Could use better graphics.', '2025-04-03 13:00:00'),
+(31, 3, 4, N'Affordable, good for students.', '2025-04-04 15:00:00'),
+(31, 4, 3, N'Basic specs, not for heavy use.', '2025-04-05 10:00:00'),
+(32, 5, 5, N'Great gaming laptop, high performance.', '2025-04-06 12:00:00'),
+(32, 6, 4, N'Smooth gaming experience.', '2025-04-07 14:00:00'),
+(33, 7, 4, N'Good for casual use, decent graphics.', '2025-04-08 09:00:00'),
+(33, 8, 3, N'Average performance.', '2025-04-09 11:00:00'),
+(34, 9, 4, N'Nice display, good for work.', '2025-04-10 13:00:00'),
+(34, 10, 4, N'Reliable, good value.', '2025-04-11 15:00:00'),
+(35, 11, 4, N'Versatile 2-in-1, good performance.', '2025-04-12 10:00:00'),
+(35, 12, 4, N'Great touchscreen, nice design.', '2025-04-13 12:00:00'),
+(36, 13, 4, N'Solid MacBook, good for daily use.', '2025-04-14 14:00:00'),
+(36, 14, 4, N'Nice display, reliable.', '2025-04-15 09:00:00'),
+(37, 15, 4, N'Affordable, good for students.', '2025-04-16 11:00:00'),
+(37, 1, 3, N'Basic specs, not for heavy tasks.', '2025-04-17 13:00:00'),
+(38, 2, 5, N'Great gaming laptop, awesome performance.', '2025-04-18 15:00:00'),
+(38, 3, 4, N'Smooth gaming, nice design.', '2025-04-19 10:00:00'),
+(39, 4, 4, N'Good for work, reliable.', '2025-04-20 12:00:00'),
+(39, 5, 4, N'Decent performance, good value.', '2025-04-21 14:00:00'),
+(40, 6, 5, N'Excellent mouse, very precise.', '2025-04-22 09:00:00'),
+(40, 7, 4, N'Great for productivity, comfortable.', '2025-04-23 11:00:00'),
+(41, 8, 4, N'Awesome keyboard, great for gaming.', '2025-04-24 13:00:00'),
+(41, 9, 4, N'Nice RGB lighting, responsive.', '2025-04-25 15:00:00'),
+(42, 10, 4, N'Great for iPad, very versatile.', '2025-04-26 10:00:00'),
+(42, 11, 4, N'Good build quality, reliable.', '2025-04-27 12:00:00'),
+(43, 12, 5, N'Perfect gaming mouse, very light.', '2025-04-28 14:00:00'),
+(43, 13, 4, N'Great precision, good for eSports.', '2025-04-29 09:00:00'),
+(44, 14, 4, N'Nice keyboard, great for typing.', '2025-04-30 11:00:00'),
+(44, 15, 4, N'Solid build, good for macOS.', '2025-05-01 13:00:00'),
+(45, 1, 5, N'Powerful gaming laptop, great display.', '2025-05-02 15:00:00'),
+(45, 2, 4, N'Smooth gaming, good value.', '2025-05-03 10:00:00'),
+(46, 3, 4, N'Sleek gaming laptop, high performance.', '2025-05-04 12:00:00'),
+(46, 4, 4, N'Great for gaming, lightweight.', '2025-05-05 14:00:00'),
+(47, 5, 4, N'Good for business, reliable.', '2025-05-06 09:00:00'),
+(47, 6, 4, N'Solid performance, nice design.', '2025-05-07 11:00:00'),
+(48, 7, 5, N'Excellent for creators, high-end specs.', '2025-05-08 13:00:00'),
+(48, 8, 4, N'Great 4K display, powerful.', '2025-05-09 15:00:00'),
+(49, 9, 5, N'Awesome gaming laptop, fast refresh rate.', '2025-05-10 10:00:00'),
+(49, 10, 4, N'Great for gaming, solid build.', '2025-05-11 12:00:00'),
+(50, 11, 4, N'Beautiful OLED display, great for creators.', '2025-05-12 14:00:00'),
+(50, 12, 4, N'Solid performance, nice design.', '2025-05-13 09:00:00'),
+(51, 13, 4, N'Good budget gaming laptop.', '2025-05-14 11:00:00'),
+(51, 14, 4, N'Decent performance, good value.', '2025-05-15 13:00:00'),
+(52, 15, 5, N'Best flagship phone, amazing camera.', '2025-05-16 15:00:00'),
+(52, 1, 5, N'Great performance, sleek design.', '2025-05-17 10:00:00'),
+(53, 2, 4, N'Good mid-range phone, nice display.', '2025-05-18 12:00:00'),
+(53, 3, 4, N'Reliable, good for daily use.', '2025-05-19 14:00:00'),
+(54, 4, 5, N'Fantastic foldable phone, great display.', '2025-05-20 09:00:00'),
+(54, 5, 4, N'Smooth performance, innovative design.', '2025-05-21 11:00:00'),
+(55, 6, 4, N'Great flagship phone, fast processor.', '2025-05-22 13:00:00'),
+(55, 7, 4, N'Nice display, good camera.', '2025-05-23 15:00:00'),
+(56, 8, 4, N'Solid mid-range phone, good value.', '2025-05-24 10:00:00'),
+(56, 9, 4, N'Great AMOLED display, reliable.', '2025-05-25 12:00:00'),
+(57, 10, 4, N'Affordable 5G phone, decent specs.', '2025-05-26 14:00:00'),
+(57, 11, 3, N'Basic phone, good for budget users.', '2025-05-27 09:00:00'),
+(58, 12, 5, N'Excellent camera, great performance.', '2025-05-28 11:00:00'),
+(58, 13, 4, N'Solid flagship, nice design.', '2025-05-29 13:00:00'),
+(59, 14, 4, N'Good mid-range phone, reliable.', '2025-05-30 15:00:00'),
+(59, 15, 4, N'Nice performance, good value.', '2025-05-31 10:00:00'),
+(60, 1, 4, N'Affordable, good for daily use.', '2025-06-01 12:00:00'),
+(60, 2, 3, N'Basic specs, not for heavy tasks.', '2025-06-02 14:00:00'),
+(61, 3, 5, N'Great flagship phone, awesome camera.', '2025-06-03 09:00:00'),
+(61, 4, 4, N'Solid performance, nice design.', '2025-06-04 11:00:00'),
+(62, 5, 4, N'Good mid-range phone, reliable.', '2025-06-05 13:00:00'),
+(62, 6, 4, N'Nice display, good value.', '2025-06-06 15:00:00'),
+(63, 7, 4, N'Affordable, decent performance.', '2025-06-07 10:00:00'),
+(63, 8, 3, N'Basic phone, good for budget users.', '2025-06-08 12:00:00'),
+(64, 9, 5, N'Great flagship phone, fast processor.', '2025-06-09 14:00:00'),
+(64, 10, 4, N'Solid performance, good display.', '2025-06-10 09:00:00'),
+(65, 11, 4, N'Good mid-range phone, nice camera.', '2025-06-11 11:00:00'),
+(65, 12, 4, N'Reliable, good value.', '2025-06-12 13:00:00'),
+(66, 13, 4, N'Affordable, decent specs.', '2025-06-13 15:00:00'),
+(66, 14, 3, N'Basic phone, good for budget users.', '2025-06-14 10:00:00'),
+(67, 15, 4, N'Solid mid-range phone, reliable.', '2025-06-15 12:00:00'),
+(67, 1, 4, N'Good performance, nice display.', '2025-06-16 14:00:00'),
+(68, 2, 4, N'Affordable 5G phone, decent specs.', '2025-06-17 09:00:00'),
+(68, 3, 3, N'Basic phone, good for light use.', '2025-06-18 11:00:00'),
+(69, 4, 4, N'Entry-level phone, good value.', '2025-06-19 13:00:00'),
+(69, 5, 3, N'Not great for heavy tasks.', '2025-06-20 15:00:00'),
+(70, 6, 4, N'Great keyboard, awesome for gaming.', '2025-06-21 10:00:00'),
+(70, 7, 4, N'Solid build, nice RGB.', '2025-06-22 12:00:00'),
+(71, 8, 4, N'Good gaming mouse, very responsive.', '2025-06-23 14:00:00'),
+(71, 9, 4, N'Nice design, good for gaming.', '2025-06-24 09:00:00'),
+(72, 10, 4, N'Excellent keyboard, great for gaming.', '2025-06-25 11:00:00'),
+(72, 11, 4, N'Solid performance, nice switches.', '2025-06-26 13:00:00'),
+(73, 12, 5, N'Awesome gaming mouse, very light.', '2025-06-27 15:00:00'),
+(73, 13, 4, N'Great for eSports, precise.', '2025-06-28 10:00:00'),
+(74, 14, 4, N'Nice keyboard, great for typing.', '2025-06-29 12:00:00'),
+(74, 15, 4, N'Solid build, reliable.', '2025-06-30 14:00:00'),
+(75, 1, 4, N'Good gaming mouse, very comfortable.', '2025-07-01 09:00:00'),
+(75, 2, 4, N'Nice design, good precision.', '2025-07-02 11:00:00'),
+(76, 3, 5, N'Great earbuds, excellent sound quality.', '2025-07-03 13:00:00'),
+(76, 4, 4, N'Comfortable fit, good for music.', '2025-07-04 15:00:00'),
+(77, 5, 4, N'Awesome earbuds, great noise cancellation.', '2025-07-05 10:00:00'),
+(77, 6, 4, N'Solid sound, nice design.', '2025-07-06 12:00:00'),
+(78, 7, 4, N'Good gaming mouse, responsive.', '2025-07-07 14:00:00'),
+(78, 8, 4, N'Nice design, good for gaming.', '2025-07-08 09:00:00'),
+(79, 9, 5, N'Excellent keyboard, great for gaming.', '2025-07-09 11:00:00'),
+(79, 10, 4, N'Solid build, nice switches.', '2025-07-10 13:00:00'),
+(80, 11, 4, N'Great gaming mouse, very precise.', '2025-07-11 15:00:00'),
+(80, 12, 4, N'Nice design, good for eSports.', '2025-07-12 10:00:00'),
+(81, 13, 5, N'Excellent earbuds, great sound.', '2025-07-13 12:00:00'),
+(81, 14, 4, N'Comfortable, good for daily use.', '2025-07-14 14:00:00'),
+(82, 15, 4, N'Good earbuds, nice price.', '2025-07-15 09:00:00'),
+(82, 1, 4, N'Solid sound quality, reliable.', '2025-07-16 11:00:00'),
+(83, 2, 4, N'Great earbuds, good noise cancellation.', '2025-07-17 13:00:00'),
+(83, 3, 4, N'Nice design, comfortable fit.', '2025-07-18 15:00:00'),
+(84, 4, 4, N'Good earbuds, nice sound.', '2025-07-19 10:00:00'),
+(84, 5, 4, N'Affordable, reliable.', '2025-07-20 12:00:00'),
+(85, 6, 4, N'Great earbuds, solid performance.', '2025-07-21 14:00:00'),
+(85, 7, 4, N'Nice sound quality, good fit.', '2025-07-22 09:00:00'),
+(86, 8, 4, N'Good earbuds, nice design.', '2025-07-23 11:00:00'),
+(86, 9, 4, N'Solid performance, affordable.', '2025-07-24 13:00:00'),
+(87, 10, 5, N'Excellent earbuds, great ANC.', '2025-07-25 15:00:00'),
+(87, 11, 4, N'Nice sound, good for music.', '2025-07-26 10:00:00'),
+(88, 12, 4, N'Good earbuds, nice price.', '2025-07-27 12:00:00'),
+(88, 13, 4, N'Solid sound quality, reliable.', '2025-07-28 14:00:00'),
+(89, 14, 4, N'Good earbuds, comfortable fit.', '2025-07-29 09:00:00'),
+(89, 15, 4, N'Nice design, good value.', '2025-07-30 11:00:00'),
+(90, 1, 4, N'Affordable earbuds, decent sound.', '2025-07-31 13:00:00'),
+(90, 2, 3, N'Basic earbuds, good for budget users.', '2025-08-01 15:00:00'),
+(91, 3, 5, N'Excellent MacBook, great performance.', '2025-08-02 10:00:00'),
+(91, 4, 4, N'Smooth experience, nice display.', '2025-08-03 12:00:00'),
+(92, 5, 5, N'Best MacBook Pro, high performance.', '2025-08-04 14:00:00'),
+(92, 6, 5, N'Great for professionals, awesome display.', '2025-08-05 09:00:00'),
+(93, 7, 5, N'Large display, great for work.', '2025-08-06 11:00:00'),
+(93, 8, 4, N'Solid performance, nice design.', '2025-08-07 13:00:00'),
+(94, 9, 5, N'Great iPhone, awesome camera.', '2025-08-08 15:00:00'),
+(94, 10, 4, N'Smooth performance, nice display.', '2025-08-09 10:00:00'),
+(95, 11, 4, N'Good iPhone, large display.', '2025-08-10 12:00:00'),
+(95, 12, 4, N'Reliable, good for daily use.', '2025-08-11 14:00:00'),
+(96, 13, 5, N'Excellent iPhone, great performance.', '2025-08-12 09:00:00'),
+(96, 14, 4, N'Smooth experience, nice camera.', '2025-08-13 11:00:00'),
+(97, 15, 5, N'Best iPhone, awesome display.', '2025-08-14 13:00:00'),
+(97, 1, 5, N'Great performance, worth the price.', '2025-08-15 15:00:00'),
+(98, 2, 5, N'Great iPhone, fast processor.', '2025-08-16 10:00:00'),
+(98, 3, 4, N'Solid performance, nice design.', '2025-08-17 12:00:00'),
+(99, 4, 4, N'Good iPhone, large display.', '2025-08-18 14:00:00'),
+(99, 5, 4, N'Reliable, good for daily use.', '2025-08-19 09:00:00'),
+(100, 6, 5, N'Excellent iPhone, great camera.', '2025-08-20 11:00:00'),
+(100, 7, 4, N'Smooth performance, nice display.', '2025-08-21 13:00:00'),
+(101, 8, 5, N'Best iPhone, awesome performance.', '2025-08-22 15:00:00'),
+(101, 9, 5, N'Great display, worth the price.', '2025-08-23 10:00:00'),
+(102, 10, 4, N'Good iPhone, nice camera.', '2025-08-24 12:00:00'),
+(102, 11, 4, N'Solid performance, reliable.', '2025-08-25 14:00:00'),
+(103, 12, 4, N'Great iPhone, sleek design.', '2025-08-26 09:00:00'),
+(103, 13, 4, N'Smooth experience, nice display.', '2025-08-27 11:00:00'),
+(104, 14, 4, N'Compact iPhone, good performance.', '2025-08-28 13:00:00'),
+(104, 15, 4, N'Reliable, good for daily use.', '2025-08-29 15:00:00'),
+(105, 1, 4, N'Good iPhone, nice design.', '2025-08-30 10:00:00'),
+(105, 2, 4, N'Solid performance, good value.', '2025-08-31 12:00:00'),
+(106, 3, 5, N'Excellent Samsung phone, great camera.', '2025-09-01 14:00:00'),
+(106, 4, 4, N'Smooth performance, nice display.', '2025-09-02 09:00:00'),
+(107, 5, 5, N'Great Samsung phone, large display.', '2025-09-03 11:00:00'),
+(107, 6, 4, N'Reliable, good for daily use.', '2025-09-04 13:00:00'),
+(108, 7, 5, N'Best Samsung phone, awesome performance.', '2025-09-05 15:00:00'),
+(108, 8, 5, N'Great display, worth the price.', '2025-09-06 10:00:00'),
+(109, 9, 5, N'Excellent foldable phone, great display.', '2025-09-07 12:00:00'),
+(109, 10, 4, N'Smooth performance, innovative design.', '2025-09-08 14:00:00'),
+(110, 11, 4, N'Great flip phone, nice design.', '2025-09-09 09:00:00'),
+(110, 12, 4, N'Reliable, good for daily use.', '2025-09-10 11:00:00'),
+(111, 13, 4, N'Good mid-range phone, nice camera.', '2025-09-11 13:00:00'),
+(111, 14, 4, N'Solid performance, good value.', '2025-09-12 15:00:00'),
+(112, 15, 4, N'Affordable, decent specs.', '2025-09-13 10:00:00'),
+(112, 1, 3, N'Basic phone, good for budget users.', '2025-09-14 12:00:00'),
+(113, 2, 4, N'Good mid-range phone, reliable.', '2025-09-15 14:00:00'),
+(113, 3, 4, N'Nice display, good value.', '2025-09-16 09:00:00'),
+(114, 4, 4, N'Good Samsung phone, nice camera.', '2025-09-17 11:00:00'),
+(114, 5, 4, N'Solid performance, reliable.', '2025-09-18 13:00:00'),
+(115, 6, 5, N'Excellent Dell laptop, great performance.', '2025-09-19 15:00:00'),
+(115, 7, 4, N'Smooth experience, nice display.', '2025-09-20 10:00:00'),
+(116, 8, 5, N'Great Dell laptop, high performance.', '2025-09-21 12:00:00'),
+(116, 9, 4, N'Solid build, good for work.', '2025-09-22 14:00:00'),
+(117, 10, 4, N'Good Dell laptop, nice design.', '2025-09-23 09:00:00'),
+(117, 11, 4, N'Reliable, good for daily use.', '2025-09-24 11:00:00'),
+(118, 12, 4, N'Solid Dell laptop, good performance.', '2025-09-25 13:00:00'),
+(118, 13, 4, N'Nice display, reliable.', '2025-09-26 15:00:00'),
+(119, 14, 5, N'Excellent ASUS laptop, great performance.', '2025-09-27 10:00:00'),
+(119, 15, 4, N'Smooth experience, nice design.', '2025-09-28 12:00:00'),
+(120, 1, 5, N'Great gaming laptop, high performance.', '2025-09-29 14:00:00'),
+(120, 2, 4, N'Smooth gaming, nice display.', '2025-09-30 09:00:00'),
+(121, 3, 4, N'Good ASUS laptop, reliable.', '2025-10-01 11:00:00'),
+(121, 4, 4, N'Nice design, good value.', '2025-10-02 13:00:00'),
+(122, 5, 4, N'Excellent ASUS laptop, great for creators.', '2025-10-03 15:00:00'),
+(122, 6, 4, N'Solid performance, nice display.', '2025-10-04 10:00:00'),
+(123, 7, 4, N'Good laptop, reliable performance.', '2025-10-05 12:00:00'),
+(123, 8, 4, N'Nice design, good for daily use.', '2025-10-06 14:00:00'),
+(124, 9, 4, N'Solid laptop, good value.', '2025-10-07 09:00:00'),
+(124, 10, 4, N'Reliable, nice display.', '2025-10-08 11:00:00'),
+(125, 11, 4, N'Good laptop, great performance.', '2025-10-09 13:00:00'),
+(125, 12, 4, N'Smooth experience, nice design.', '2025-10-10 15:00:00'),
+(126, 13, 4, N'Reliable laptop, good for work.', '2025-10-11 10:00:00'),
+(126, 14, 4, N'Nice display, solid performance.', '2025-10-12 12:00:00'),
+(127, 15, 5, N'Excellent laptop, great for professionals.', '2025-10-13 14:00:00'),
+(127, 1, 4, N'Smooth performance, nice design.', '2025-10-14 09:00:00');
+
+INSERT INTO MembershipLevel (level_name, discount_percent)
+VALUES
+('Standard', 0);

@@ -1015,9 +1015,6 @@
         </div>-->
             </div>
             <button onclick="window.location.href = '#chat'" style="padding: 10px 20px; background: #ff4444; color: #fff; border: none; cursor: pointer;">Thông báo Message (<span id="message-count">0</span>)</button>
-            <div id="chat" style="display: none;">
-                <jsp:include page="/WEB-INF/view/chat/chatAdmin.jsp" />
-            </div>
 
             <script>
                 let messageCount = 0;

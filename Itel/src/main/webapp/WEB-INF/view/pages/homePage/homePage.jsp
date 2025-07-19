@@ -293,8 +293,7 @@
             </div>            
         </div>
 
-        <!--chat user-->
-        <jsp:include page="/WEB-INF/view/chat/chatUser.jsp" />        
+<!--        <jsp:include page="/WEB-INF/view/chat/chatUser.jsp" />        -->
 
         <div class="mt-5">
             <jsp:include page="/WEB-INF/view/components/footer.jsp" />

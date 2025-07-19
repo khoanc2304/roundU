@@ -21,8 +21,8 @@ import org.mindrot.jbcrypt.BCrypt;
 @WebServlet(name = "ForgotPasswordServlet", urlPatterns = {MainControllerServlet.FORGOTPASSWORD_SERVLET})
 public class ForgotPasswordServlet extends HttpServlet {
 
-    private static final String FROM_EMAIL = "huyhntde180836@fpt.edu.vn"; // Thay bằng email của bạn
-    private static final String PASSWORD = "pyhg btpo uppz mibh";
+    private static final String FROM_EMAIL = "nteo9820@gmail.com"; // Thay bằng email của bạn
+    private static final String PASSWORD = "cjxy fpgh ivyd emrk";
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {

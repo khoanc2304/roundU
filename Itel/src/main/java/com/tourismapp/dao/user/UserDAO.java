@@ -49,13 +49,13 @@ public class UserDAO implements IUserDAO {
     }
 
     @Override
-    public Optional<Users> findUserByCredentials(String username, String email, String password) {
+    public Optional<Users> findUserByCredentials(String identifier, String password) {
         Users user = null;
 
         try (Connection connection = DBConnection.getConnection();) {
             try (PreparedStatement stmt = connection.prepareStatement(FIND_USER_BY_CREDENTIALS)) {
-                stmt.setString(1, username);
-                stmt.setString(2, email);
+                stmt.setString(1, identifier);
+                stmt.setString(2, identifier);
                 stmt.setString(3, password);
 
                 ResultSet rs = stmt.executeQuery();
@@ -331,12 +331,11 @@ public class UserDAO implements IUserDAO {
         UserDAO ud = new UserDAO(); // Thay bằng cách khởi tạo thực tế
 
         // Dữ liệu kiểm tra
-        String username = "";
-        String email = "user1@example.com";
+        String identifier = "user1@example.com";
         String password = "user1";
 
         // Gọi phương thức
-        Optional<Users> loggedUser = ud.findUserByCredentials(username, email, password);
+        Optional<Users> loggedUser = ud.findUserByCredentials(identifier, password);
 
         // Kiểm tra kết quả
         if (loggedUser.isPresent()) {

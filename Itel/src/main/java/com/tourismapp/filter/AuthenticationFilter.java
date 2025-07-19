@@ -12,13 +12,13 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import com.tourismapp.controller.mainController.MainControllerServlet;
+import com.tourismapp.utils.ErrDialog;
 
-@WebFilter("/mainMMM")
+@WebFilter({"/main", "/userManagement", "/orderManagement", "/brandManagement", "/categoryManagement"})
 public class AuthenticationFilter implements Filter {
 
     @Override
     public void init(FilterConfig filterConfig) throws ServletException {
-        // Khởi tạo nếu cần thiết
     }
 
     @Override
@@ -27,12 +27,22 @@ public class AuthenticationFilter implements Filter {
         HttpServletRequest req = (HttpServletRequest) request;
         HttpServletResponse res = (HttpServletResponse) response;
         String action = req.getParameter("action");
-        if (action != null && action.equals(MainControllerServlet.ACTION_LOGIN)) {
-            chain.doFilter(request, response); // Cho phép request đi qua
+//        ErrDialog.showError("Filter action: " + action);
+        if (action != null
+                && (action.equals(MainControllerServlet.ACTION_LOGIN)
+                || action.equals(MainControllerServlet.HOMEPAGE_REDIRECT)
+                || action.equals(MainControllerServlet.PRODUCTPAGE_REDIRECT)
+                || action.equals(MainControllerServlet.CARTPAGE_REDIRECT)
+                || action.equals(MainControllerServlet.FORGOTPASSWORD_REDIRECT)
+                || action.equals(MainControllerServlet.REGISTERPAGE_REDIRECT)
+                || action.equals(MainControllerServlet.ACTION_FORGOT_PASSWORD)
+                || action.equalsIgnoreCase("verifyOtp"))) {
+            chain.doFilter(request, response);
             return;
         }
+
         HttpSession session = req.getSession(false);
-        if (session == null || session.getAttribute("user") == null) {
+        if (session == null || session.getAttribute("loggedUser") == null) {
             res.sendRedirect(MainControllerServlet.LOGINPAGE_REDIRECT);
             return;
         }
@@ -42,6 +52,5 @@ public class AuthenticationFilter implements Filter {
 
     @Override
     public void destroy() {
-        // Dọn dẹp nếu cần thiết
     }
 }

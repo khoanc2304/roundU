@@ -69,7 +69,7 @@ public class RegisterServlet extends HttpServlet {
                     phone,
                     address,
                     UserRole.CUSTOMER, // Mặc định
-                    MembershipLevel.BRONZE, // Mặc định
+                    MembershipLevel.STANDARD, // Mặc định
                     null, // imageUrl
                     Status.ACTIVE, // Mặc định
                     LocalDateTime.now(), // createdAt

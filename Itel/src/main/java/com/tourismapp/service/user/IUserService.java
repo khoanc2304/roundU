@@ -16,7 +16,7 @@ public interface IUserService {
     // KHOA
     List< Users> getAllUsers();
 
-    Optional<Users> findUserByCredentials(String username, String email, String password);
+    Optional<Users> findUserByCredentials(String identifier, String password);
     
     
     // HUY

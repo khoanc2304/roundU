@@ -581,10 +581,10 @@
                                 </div>
                                 <div class="detail-label">Cấp độ thành viên</div>
                                 <div class="detail-value">
-                                    <span class="membership-badge membership-${user.membershipLevel.levelId == 1 ? 'bronze' : user.membershipLevel.levelId == 2 ? 'silver' : user.membershipLevel.levelId == 3 ? 'gold' : 'diamond'}">
+                                    <span class="membership-badge membership-${user.membershipLevel.levelId == 1 ? 'bronze' : user.membershipLevel.levelId == 2 ? 'silver' : user.membershipLevel.levelId == 3 ? 'gold' : user.membershipLevel.levelId == 4 ? 'diamond' : 'standard'}">
                                         <c:choose>
                                             <c:when test="${not empty user.membershipLevel}">
-                                                ${user.membershipLevel.levelId == 1 ? '🥉 Đồng' : user.membershipLevel.levelId == 2 ? '🥈 Bạc' : user.membershipLevel.levelId == 3 ? '🥇 Vàng' : '💎 Kim Cương'}
+                                                ${user.membershipLevel.levelId == 1 ? '🥉 Đồng' : user.membershipLevel.levelId == 2 ? '🥈 Bạc' : user.membershipLevel.levelId == 3 ? '🥇 Vàng' : user.membershipLevel.levelId == 4 ? '💎 Kim Cương' : '👤 Tiêu chuẩn'}
                                             </c:when>
                                             <c:otherwise>
                                                 Không có cấp độ

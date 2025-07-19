@@ -39,13 +39,13 @@ public class LoginPageServlet extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         String action = request.getParameter("action").trim();
-        String username = request.getParameter("username");
-        String email = request.getParameter("email");
+        String identifier = request.getParameter("identifier");
+//        String email = request.getParameter("email");
         String password = request.getParameter("password");
         HttpSession session = request.getSession(true);
 
         if (action != null && action.equals(MainControllerServlet.ACTION_LOGIN)) {
-            Optional<Users> loggedUser = userService.findUserByCredentials(username, email, password);
+            Optional<Users> loggedUser = userService.findUserByCredentials(identifier, password);
 //            ErrDialog.showError("loggedUser: " + loggedUser);
             if (loggedUser.isPresent()) {
                 Users user = loggedUser.get();

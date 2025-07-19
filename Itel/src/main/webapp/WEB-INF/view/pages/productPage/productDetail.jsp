@@ -253,7 +253,13 @@
                 </div>
             </div>
         </div>
-
+                                         
+        <section class="review-products mt-3">
+                <div class="container">
+                    <h3 class="section-title">Đánh giá và bình luận</h3>
+                </div>
+        </section>
+                                         
         <div class="mt-3">
             <jsp:include page="/WEB-INF/view/components/footer.jsp" />
         </div>
@@ -1064,7 +1070,25 @@ document.addEventListener('DOMContentLoaded', function() {
         }
 
 
-
+        .review-products {
+            background-color: #ffffff;
+            padding: 20px;
+            border: 1px solid #dee2e6;
+            border-radius: 5px;
+            margin-top: 20px;
+        }
+        .review-products {
+            max-width: 1240px;
+            margin: 0 auto;
+        }
+        .review-products .section-title {
+            background-color: #ffffff;
+            color: #000000;
+            padding: 10px 10px;
+            font-weight: bold;
+            border-radius: 5px;
+            margin-bottom: 20px;
+        }
 
 
     </style>

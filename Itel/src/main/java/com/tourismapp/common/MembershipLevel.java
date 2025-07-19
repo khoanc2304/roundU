@@ -14,7 +14,8 @@ public enum MembershipLevel {
     BRONZE(1, "đồng"),
     SILVER(2, "bạc"),
     GOLD(3, "vàng"),
-    DIAMOND(4, "kim cương");
+    DIAMOND(4, "kim cương"),
+    STANDARD(5, "tiêu chuẩn");
 
     private final int id;
     private final String value;
