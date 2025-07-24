@@ -91,4 +91,7 @@ public interface IOrderService {
      * @return true if successful
      */
     boolean shipOrder(int orderId);
+    
+    List<Orders> findOrdersByStatus(String status);
+
 }

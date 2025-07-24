@@ -16,7 +16,7 @@
                 background: #f4f6fb;
             }
             #main-content {
-                margin-left: 50px;
+                margin-left: 120px;
                 padding: 72px 0 32px 0;
                 width: calc(100% - 250px);
                 min-height: 100vh;
@@ -200,6 +200,13 @@
         <jsp:include page="../../components/toast.jsp" />
         <div id="main-content">
             <h4 class="order-title">Order Management Page</h4>
+            <div class="mb-4 d-flex gap-2 flex-wrap" style="justify-content:center;">
+                <a href="orderManagement?status=all" class="btn btn-outline-primary btn-sm ${param.status == 'all' || empty param.status ? 'active' : ''}">All</a>
+                <a href="orderManagement?status=pending" class="btn btn-outline-secondary btn-sm ${param.status == 'pending' ? 'active' : ''}">Pending</a>
+                <a href="orderManagement?status=shipped" class="btn btn-outline-info btn-sm ${param.status == 'shipped' ? 'active' : ''}">Shipped</a>
+                <a href="orderManagement?status=completed" class="btn btn-outline-success btn-sm ${param.status == 'completed' ? 'active' : ''}">Completed</a>
+                <a href="orderManagement?status=canceled" class="btn btn-outline-danger btn-sm ${param.status == 'canceled' ? 'active' : ''}">Canceled</a>
+            </div>
             <table class="order-table">
                 <thead>
                     <tr>

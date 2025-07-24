@@ -31,6 +31,7 @@ public class ProjectPaths {
     public static final String HREF_TO_COMPARE = HREF_TO_MAINCONTROLLER + MainControllerServlet.COMPARE_REDIRECT;
     public static final String HREF_TO_REGISTERPAGE = HREF_TO_MAINCONTROLLER + MainControllerServlet.REGISTERPAGE_REDIRECT;
     public static final String HREF_TO_FORGOTPASSWORD = HREF_TO_MAINCONTROLLER + MainControllerServlet.FORGOTPASSWORD_REDIRECT;
+    public static final String HREF_TO_CHANGEPASSWORD = HREF_TO_MAINCONTROLLER + MainControllerServlet.CHANGEPASSWORD_REDIRECT;
 
     // RedirectServlets -> JSP pages
     public static final String JSP_PATH_VIEW = "/WEB-INF/view/pages/";
@@ -61,6 +62,7 @@ public class ProjectPaths {
     public static final String JSP_USERMANAGEMENT_PATH = JSP_PATH_DASHBOARD + "userManagement/userManagement.jsp";
 
     public static final String JSP_EDIT_PROFILEPAGE_PATH = "/WEB-INF/view/pages/profilePage/editProfilePage.jsp";
+    public static final String JSP_CHANGE_PASSWORD_PATH = "/WEB-INF/view/pages/profilePage/changePasswordPage.jsp";
     
                         // REGISTER
     public static final String JSP_REGISTER_PAGE_PATH = JSP_PATH_VIEW + "registerPage/registerPage.jsp";

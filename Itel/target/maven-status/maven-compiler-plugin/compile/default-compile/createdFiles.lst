@@ -26,6 +26,7 @@ com\tourismapp\dao\product\ProductDAO.class
 com\tourismapp\model\GoogleAccount.class
 com\tourismapp\service\category\ICategoryService.class
 com\tourismapp\filter\AuthenticationFilter.class
+com\tourismapp\controller\redirectController\ChangePasswordServlet.class
 com\tourismapp\service\review\ReviewService.class
 com\tourismapp\controller\paymentController\BankTransferNotifyServlet.class
 com\tourismapp\model\Brand.class

@@ -35,6 +35,7 @@ public class MainControllerServlet extends HttpServlet {
     public static final String ORDERHISTORY_REDIRECT = "orderHistory";
     public static final String COMPARE_REDIRECT = "compare";
     public static final String REGISTERPAGE_REDIRECT = "registerPage";
+    public static final String CHANGEPASSWORDPAGE_REDIRECT = "changePassword";
 
     // redirect to each servlets
     // dashboard
@@ -56,6 +57,7 @@ public class MainControllerServlet extends HttpServlet {
     public static final String CARTPAGE_SERVLET = "/" + CARTPAGE_REDIRECT;
     public static final String ORDERHISTORY_SERVLET = "/" + ORDERHISTORY_REDIRECT;
     public static final String COMPARE_SERVLET = "/" + COMPARE_REDIRECT;
+    public static final String CHANGEPASSWORD_SERVLET = "/" + CHANGEPASSWORDPAGE_REDIRECT;
 
     // main?action=
     // doPost (Action)
@@ -140,12 +142,14 @@ public class MainControllerServlet extends HttpServlet {
     // HUY register and forgot_password
     public static final String ACTION_NAVIGATE_REGISTER_PAGE = "navigateToRegisterPage";
     public static final String FORGOTPASSWORD_REDIRECT = "forgot-password";  // Đặt tên cho URL của servlet
+    public static final String CHANGEPASSWORD_REDIRECT = "changePassword";
     public static final String ACTION_FORGOT_PASSWORD = "forgotPassword";
     public static final String FORGOTPASSWORD_SERVLET = "/" + FORGOTPASSWORD_REDIRECT;  // Trỏ đến servlet xử lý quên mật khẩu
 
     // Profile actions
     public static final String ACTION_VIEW_PROFILE = "viewProfile";
     public static final String ACTION_EDIT_PROFILE = "editProfile";
+    public static final String ACTION_CHANGE_PASSWORD = "changePassword";
 
     // HIEU    
     public static final String ACTION_VIEW_COMMENT = "viewComment";
@@ -298,7 +302,10 @@ public class MainControllerServlet extends HttpServlet {
             }
             case ACTION_PAYMENT_PROCESSING -> {
                 request.getRequestDispatcher("paymentProcessing.jsp").forward(request, response);
-            }  
+            } 
+            // CHANGE PASSWORD
+            case CHANGEPASSWORDPAGE_REDIRECT ->
+                request.getRequestDispatcher(ProjectPaths.JSP_CHANGE_PASSWORD_PATH).forward(request, response);
             case ACTION_VIEW_PROFILE, ACTION_EDIT_PROFILE ->
                 request.getRequestDispatcher(PROFILEPAGE_SERVLET).forward(request, response);
             //REGISTER

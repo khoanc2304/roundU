@@ -66,7 +66,7 @@ public class UserService implements IUserService {
     }
 
     private boolean isValidMembershipLevel(int levelId) {
-        return levelId >= 1 && levelId <= 4;
+        return levelId >= 1 && levelId <= 5;
     }
 
     private boolean isUsernameExists(String username) {

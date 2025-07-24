@@ -188,15 +188,15 @@ VALUES
 ('hieu', 'hieu', 'Ngo Hieu', 'hieu@gmail.com', '0909876543', '12 Đường D, Hải Phòng', 'admin', 4, 'https://i.pinimg.com/736x/bf/50/e2/bf50e22082af5810b2976308c721ee5b.jpg'),
 ('huy', 'huy', 'Huynh Huy', 'huy@gmail.com', '0999888777', '345 Đường E, Cần Thơ', 'admin', 4, 'https://i.pinimg.com/736x/6f/d4/ee/6fd4ee9b13076f991aab35529bc71644.jpg'),
 ('admin', 'admin', 'Vu Van F', 'admin@gmail.com', '0966778899', '678 Đường F, Huế', 'admin', 4, 'https://i.pinimg.com/736x/5c/3b/62/5c3b6262a1850c17d2b4350ee22de1fc.jpg'),
-('user1', 'user1', 'Dang Thi G', 'user1@gmail.com', '0933445566', '901 Đường G, Vinh', 'customer', null, 'https://i.pinimg.com/736x/d5/c9/d7/d5c9d700340d8eb6122485602e42b578.jpg'),
+('user1', 'user1', 'Dang Thi G', 'user1@gmail.com', '0933445566', '901 Đường G, Vinh', 'customer',5, 'https://i.pinimg.com/736x/d5/c9/d7/d5c9d700340d8eb6122485602e42b578.jpg'),
 ('user2', 'user2', 'Bui Van H', 'user2@gmail.com', '0977555333', '234 Đường H, Nha Trang', 'customer', 2, 'https://i.pinimg.com/736x/82/26/96/822696099c99ecca6054821746001a8b.jpg'),
 ('user3', 'user3', 'Nguyen Thi I', 'user3@gmail.com', '0988123456', '567 Đường I, Phan Thiết', 'customer', 3, 'https://i.pinimg.com/736x/bb/6a/fd/bb6afdb250780ae260d010278381e31b.jpg'),
 ('user4', 'user4', 'Tran Van J', 'user4@gmail.com', '0911222333', '890 Đường J, Quy Nhơn', 'customer', 4, 'https://i.pinimg.com/736x/f1/52/b6/f152b6a30a837fe8f3c0211cd1f6da25.jpg'),
 ('user5', 'user5', 'Le Thi K', 'user5@gmail.com', '0933555777', '123 Đường K, Buôn Ma Thuột', 'customer', 3, 'https://i.pinimg.com/736x/3f/01/86/3f01867f8c79b33506f19d2a58d7c446.jpg'),
 ('user6', 'user6', 'Pham Van L', 'user6@gmail.com', '0922333444', '456 Đường L, Vũng Tàu', 'customer', 2, 'https://i.pinimg.com/736x/d1/9d/f6/d19df63ed0a685cb54f2a0b368af201b.jpg'),
 ('user7', 'user7', 'Hoang Thi M', 'user7@gmail.com', '0977666555', '789 Đường M, Pleiku', 'customer', 1, 'https://i.pinimg.com/736x/6b/5a/a1/6b5aa17b15866cc9d758310d659adf94.jpg'),
-('user8', 'user8', 'Vu Van N', 'user8@gmail.com', '0966443322', '123 Đường N, Cao Lãnh', 'customer', null, 'https://i.pinimg.com/736x/28/bb/13/28bb13d3081336fa6ac50dd208d0fb9f.jpg'),
-('user9', 'user9', 'Dang Thi O', 'user9@gmail.com', '0955777999', '456 Đường O, Tây Ninh', 'customer', null, 'https://i.pinimg.com/736x/17/a8/03/17a8037acfc725075a8f0899b960c717.jpg');
+('user8', 'user8', 'Vu Van N', 'user8@gmail.com', '0966443322', '123 Đường N, Cao Lãnh', 'customer', 5, 'https://i.pinimg.com/736x/28/bb/13/28bb13d3081336fa6ac50dd208d0fb9f.jpg'),
+('user9', 'user9', 'Dang Thi O', 'user9@gmail.com', '0955777999', '456 Đường O, Tây Ninh', 'customer', 5, 'https://i.pinimg.com/736x/17/a8/03/17a8037acfc725075a8f0899b960c717.jpg');
 
 --Category
 INSERT INTO Category (name, description, image_url)

@@ -92,4 +92,6 @@ public interface IOrderDAO {
      */
     boolean deleteOrderDetail(int orderDetailId);
     boolean updateOrderHistory(Orders orders,String status);
+    List<Orders> findOrdersByStatus(String status);
+
 }

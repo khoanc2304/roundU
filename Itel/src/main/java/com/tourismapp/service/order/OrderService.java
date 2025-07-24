@@ -233,4 +233,8 @@ public class OrderService implements IOrderService {
             return false;
         }
     }
+    
+    public List<Orders> findOrdersByStatus(String status) {
+        return orderDAO.findOrdersByStatus(status);
+    }
 }
