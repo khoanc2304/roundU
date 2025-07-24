@@ -15,6 +15,7 @@ C:\Users\Admin\Desktop\webapp\roundU\Itel\src\main\java\com\tourismapp\common\Us
 C:\Users\Admin\Desktop\webapp\roundU\Itel\src\main\java\com\tourismapp\service\order\OrderService.java
 C:\Users\Admin\Desktop\webapp\roundU\Itel\src\main\java\com\tourismapp\utils\MailUtil.java
 C:\Users\Admin\Desktop\webapp\roundU\Itel\src\main\java\com\tourismapp\controller\redirectController\LoginFacebookServlet.java
+C:\Users\Admin\Desktop\webapp\roundU\Itel\src\main\java\com\tourismapp\dao\review\ReviewDAO.java
 C:\Users\Admin\Desktop\webapp\roundU\Itel\src\main\java\com\tourismapp\controller\cartController\CartController.java
 C:\Users\Admin\Desktop\webapp\roundU\Itel\src\main\java\com\tourismapp\model\Brand.java
 C:\Users\Admin\Desktop\webapp\roundU\Itel\src\main\java\com\tourismapp\controller\chatController\ChatServlet.java
@@ -39,6 +40,7 @@ C:\Users\Admin\Desktop\webapp\roundU\Itel\src\main\java\com\tourismapp\service\u
 C:\Users\Admin\Desktop\webapp\roundU\Itel\src\main\java\com\tourismapp\constant\IConstant.java
 C:\Users\Admin\Desktop\webapp\roundU\Itel\src\main\java\com\tourismapp\controller\redirectController\CartPageServlet.java
 C:\Users\Admin\Desktop\webapp\roundU\Itel\src\main\java\com\tourismapp\model\FacebookAccount.java
+C:\Users\Admin\Desktop\webapp\roundU\Itel\src\main\java\com\tourismapp\service\review\ReviewService.java
 C:\Users\Admin\Desktop\webapp\roundU\Itel\src\main\java\com\tourismapp\constant\GoogleLogin.java
 C:\Users\Admin\Desktop\webapp\roundU\Itel\src\main\java\com\tourismapp\dao\cart\CartDAO.java
 C:\Users\Admin\Desktop\webapp\roundU\Itel\src\main\java\com\tourismapp\dao\user\UserDAO.java
@@ -53,6 +55,7 @@ C:\Users\Admin\Desktop\webapp\roundU\Itel\src\main\java\com\tourismapp\model\Use
 C:\Users\Admin\Desktop\webapp\roundU\Itel\src\main\java\com\tourismapp\controller\redirectController\HomePageServlet.java
 C:\Users\Admin\Desktop\webapp\roundU\Itel\src\main\java\com\tourismapp\service\category\CategoryService.java
 C:\Users\Admin\Desktop\webapp\roundU\Itel\src\main\java\com\tourismapp\model\Cart.java
+C:\Users\Admin\Desktop\webapp\roundU\Itel\src\main\java\com\tourismapp\service\review\IReviewService.java
 C:\Users\Admin\Desktop\webapp\roundU\Itel\src\main\java\com\tourismapp\controller\paymentController\PaymentServlet.java
 C:\Users\Admin\Desktop\webapp\roundU\Itel\src\main\java\com\tourismapp\controller\redirectController\LoginGoogleServlet.java
 C:\Users\Admin\Desktop\webapp\roundU\Itel\src\main\java\com\tourismapp\controller\redirectController\OrderHistoryServlet.java
@@ -78,6 +81,7 @@ C:\Users\Admin\Desktop\webapp\roundU\Itel\src\main\java\com\tourismapp\model\Ord
 C:\Users\Admin\Desktop\webapp\roundU\Itel\src\main\java\com\tourismapp\model\CartItem.java
 C:\Users\Admin\Desktop\webapp\roundU\Itel\src\main\java\com\tourismapp\common\PaymentMethod.java
 C:\Users\Admin\Desktop\webapp\roundU\Itel\src\main\java\com\tourismapp\dao\product\IProductDAO.java
+C:\Users\Admin\Desktop\webapp\roundU\Itel\src\main\java\com\tourismapp\dao\review\IReviewDAO.java
 C:\Users\Admin\Desktop\webapp\roundU\Itel\src\main\java\com\tourismapp\controller\redirectController\LoginPageServlet.java
 C:\Users\Admin\Desktop\webapp\roundU\Itel\src\main\java\com\tourismapp\model\ProductImage.java
 C:\Users\Admin\Desktop\webapp\roundU\Itel\src\main\java\com\tourismapp\service\product\ProductService.java
@@ -85,4 +89,5 @@ C:\Users\Admin\Desktop\webapp\roundU\Itel\src\main\java\com\tourismapp\api\ChatA
 C:\Users\Admin\Desktop\webapp\roundU\Itel\src\main\java\com\tourismapp\controller\redirectController\dashboard\ProductManagementServlet.java
 C:\Users\Admin\Desktop\webapp\roundU\Itel\src\main\java\com\tourismapp\dao\category\ICategoryDAO.java
 C:\Users\Admin\Desktop\webapp\roundU\Itel\src\main\java\com\tourismapp\controller\redirectController\dashboard\UserManagementServlet.java
+C:\Users\Admin\Desktop\webapp\roundU\Itel\src\main\java\com\tourismapp\model\StatisticReview.java
 C:\Users\Admin\Desktop\webapp\roundU\Itel\src\main\java\com\tourismapp\model\ProductDetail.java

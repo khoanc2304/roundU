@@ -86,12 +86,13 @@ public class MainControllerServlet extends HttpServlet {
     public static final String ACTION_EDIT_CATEGORY = "editCategory";
     public static final String ACTION_DELETE_CATEGORY = "deleteCategory";
 
-    // HIEU
+    // KHOA
     public static final String ACTION_CREATE_REVIEW = "createReview";
     public static final String ACTION_EDIT_REVIEW = "editReview";
     public static final String ACTION_DELETE_REVIEW = "deleteReview";
-    // cart 
     
+
+    // HIEU cart 
     public static final String ACTION_REMOVE_FROM_CART = "removeFromCart";
     public static final String ACTION_GET_CART_COUNT = "getCartCount";
     public static final String ACTION_GET_CART_ITEMS = "getCartItems";
@@ -161,11 +162,14 @@ public class MainControllerServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         String action = request.getParameter("action") != null ? request.getParameter("action").trim() : "";
+//        ErrDialog.showError("doPost: " + action);
         switch (action) {
             case ACTION_LOGIN ->
                 request.getRequestDispatcher(LOGINPAGE_REDIRECT).forward(request, response);
             case ACTION_CREATE_PRODUCT, ACTION_EDIT_PRODUCT, ACTION_DELETE_PRODUCT ->
                 request.getRequestDispatcher(PRODUCT_MANAGEMENT_REDIRECT).forward(request, response);
+            case ACTION_CREATE_REVIEW, ACTION_EDIT_REVIEW, ACTION_DELETE_REVIEW ->
+                request.getRequestDispatcher(PRODUCTPAGE_REDIRECT).forward(request, response);    
             //USER HUY
             case ACTION_CREATE_USER, ACTION_EDIT_USER, ACTION_DELETE_USER ->
                 request.getRequestDispatcher(USER_MANAGEMENT_SERVLET).forward(request, response);

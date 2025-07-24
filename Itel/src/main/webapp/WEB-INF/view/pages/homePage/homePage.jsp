@@ -23,7 +23,7 @@
 
     <body>
         <% request.getRequestDispatcher("/WEB-INF/view/components/navbar.jsp").include(request, response); %>
-        
+
         <div class="banner-wrapper">
             <div id="bannerCarousel" class="carousel slide banner-container" data-bs-ride="carousel" data-bs-interval="3000">
                 <div class="carousel-inner">
