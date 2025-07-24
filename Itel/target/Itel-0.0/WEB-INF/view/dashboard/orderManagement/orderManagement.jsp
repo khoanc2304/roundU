@@ -266,7 +266,10 @@
                                             <input type="hidden" name="orderId" value="${order.orderId}"/>
                                             <select name="status" style="padding:4px 8px; border-radius:8px;" 
                                                     <c:if test="${order.status eq 'completed' || order.status eq 'canceled'}">disabled</c:if>>
-                                                <option value="pending" ${order.status eq 'pending' ? 'selected' : ''}>Pending</option>
+                                                <option value="pending" 
+                                                    <c:if test="${order.status eq 'pending'}">selected</c:if>
+                                                    <c:if test="${order.status eq 'shipped' || order.status eq 'completed' || order.status eq 'canceled'}">disabled</c:if>
+                                                >Pending</option>
                                                 <option value="shipped" ${order.status eq 'shipped' ? 'selected' : ''}>Shipped</option>
                                                 <option value="completed" disabled ${order.status eq 'completed' ? 'selected' : ''}>Completed</option>
                                                 <option value="canceled" disabled ${order.status eq 'canceled' ? 'selected' : ''}>Canceled</option>
