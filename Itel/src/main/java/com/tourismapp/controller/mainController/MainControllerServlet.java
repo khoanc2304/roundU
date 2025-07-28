@@ -3,6 +3,8 @@ package com.tourismapp.controller.mainController;
 import com.tourismapp.model.Users;
 import com.tourismapp.utils.ErrDialog;
 import com.tourismapp.config.ProjectPaths;
+import com.tourismapp.service.user.IUserService;
+import com.tourismapp.service.user.UserService;
 import java.io.IOException;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
@@ -10,6 +12,7 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.ServletContext;
+import jakarta.servlet.http.HttpSession;
 
 @WebServlet(name = "MainControllerServlet", urlPatterns = {"/main"})
 public class MainControllerServlet extends HttpServlet {
@@ -88,12 +91,13 @@ public class MainControllerServlet extends HttpServlet {
     public static final String ACTION_EDIT_CATEGORY = "editCategory";
     public static final String ACTION_DELETE_CATEGORY = "deleteCategory";
 
-    // HIEU
+    // KHOA
     public static final String ACTION_CREATE_REVIEW = "createReview";
     public static final String ACTION_EDIT_REVIEW = "editReview";
     public static final String ACTION_DELETE_REVIEW = "deleteReview";
-    // cart 
     
+
+    // HIEU cart 
     public static final String ACTION_REMOVE_FROM_CART = "removeFromCart";
     public static final String ACTION_GET_CART_COUNT = "getCartCount";
     public static final String ACTION_GET_CART_ITEMS = "getCartItems";
@@ -161,15 +165,42 @@ public class MainControllerServlet extends HttpServlet {
     public static final String ACTION_UPDATE_CATEGORY_FORM = "updateCategoryForm";
     public static final String ACTION_CREATE_CATEGORY_FORM = "createCategoryForm";
     public static final String ACTION_SEARCH_CATEGORY = "searchCategory";
-
+    
+    private void refreshUserInfo(HttpServletRequest request) {
+        HttpSession session = request.getSession();
+        Users user = (Users) session.getAttribute("user");
+        Users loggedUser = (Users) session.getAttribute("loggedUser");
+        
+        if (user != null || loggedUser != null) {
+            IUserService userService = new UserService();
+            int userId = user != null ? user.getUserId() : loggedUser.getUserId();
+            
+            Users updatedUser = userService.getUserById(userId);
+            if (updatedUser != null) {
+                System.out.println("MainController: Tải lại thông tin người dùng từ DB");
+                System.out.println("Hạng mức hiện tại: " + updatedUser.getMembershipLevel().getValue());
+                
+                if (user != null) {
+                    session.setAttribute("user", updatedUser);
+                }
+                if (loggedUser != null) {
+                    session.setAttribute("loggedUser", updatedUser);
+                }
+            }
+        }
+    }
+    
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         String action = request.getParameter("action") != null ? request.getParameter("action").trim() : "";
+//        ErrDialog.showError("doPost: " + action);
         switch (action) {
             case ACTION_LOGIN ->
                 request.getRequestDispatcher(LOGINPAGE_REDIRECT).forward(request, response);
             case ACTION_CREATE_PRODUCT, ACTION_EDIT_PRODUCT, ACTION_DELETE_PRODUCT ->
                 request.getRequestDispatcher(PRODUCT_MANAGEMENT_REDIRECT).forward(request, response);
+            case ACTION_CREATE_REVIEW, ACTION_EDIT_REVIEW, ACTION_DELETE_REVIEW ->
+                request.getRequestDispatcher(PRODUCTPAGE_REDIRECT).forward(request, response);    
             //USER HUY
             case ACTION_CREATE_USER, ACTION_EDIT_USER, ACTION_DELETE_USER ->
                 request.getRequestDispatcher(USER_MANAGEMENT_SERVLET).forward(request, response);
@@ -245,6 +276,13 @@ public class MainControllerServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {        
         String action = request.getParameter("action") != null ? request.getParameter("action") : "";
+        
+        // Tải lại thông tin người dùng cho các trang quan trọng
+        if ("homePage".equals(action) || "cartPage".equals(action) || "checkoutPage".equals(action) || 
+            "profilePage".equals(action) || "orderHistory".equals(action)) {
+            refreshUserInfo(request);
+        }
+        
         switch (action) {
             case //DIRECT TO BROWSER
                     LOGINPAGE_REDIRECT, 
@@ -298,11 +336,12 @@ public class MainControllerServlet extends HttpServlet {
             }
             case ACTION_PAYMENT_PROCESSING -> {
                 request.getRequestDispatcher("paymentProcessing.jsp").forward(request, response);
-            }  
-            case ACTION_VIEW_PROFILE, ACTION_EDIT_PROFILE ->
-                request.getRequestDispatcher(PROFILEPAGE_SERVLET).forward(request, response);
+            } 
+            // CHANGE PASSWORD
             case CHANGEPASSWORDPAGE_REDIRECT ->
                 request.getRequestDispatcher(ProjectPaths.JSP_CHANGE_PASSWORD_PATH).forward(request, response);
+            case ACTION_VIEW_PROFILE, ACTION_EDIT_PROFILE ->
+                request.getRequestDispatcher(PROFILEPAGE_SERVLET).forward(request, response);
             //REGISTER
             case REGISTERPAGE_REDIRECT ->
                 request.getRequestDispatcher(ProjectPaths.JSP_REGISTER_PAGE_PATH).forward(request, response);

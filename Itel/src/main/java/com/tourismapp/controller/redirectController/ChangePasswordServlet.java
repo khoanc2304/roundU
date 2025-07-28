@@ -23,7 +23,7 @@ public class ChangePasswordServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp)
             throws ServletException, IOException {
-        ErrDialog.showError("changeServPost");
+//        ErrDialog.showError("changeServPost");
 
         req.setCharacterEncoding("UTF-8");
 

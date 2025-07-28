@@ -10,6 +10,9 @@ import jakarta.servlet.http.HttpSession;
 import com.tourismapp.config.ProjectPaths;
 import com.tourismapp.controller.mainController.MainControllerServlet;
 import com.tourismapp.model.Cart;
+import com.tourismapp.model.Users;
+import com.tourismapp.service.user.IUserService;
+import com.tourismapp.service.user.UserService;
 
 /**
  *
@@ -29,6 +32,19 @@ public class CartPageServlet extends HttpServlet {
         if (cart == null) {
             cart = new Cart();
             session.setAttribute("cart", cart);
+        }
+        
+        // Get user from session
+        Users user = (Users) session.getAttribute("user");
+        
+        // If user is logged in, reload the latest user info from the database
+        if (user != null) {
+            IUserService userService = new UserService();
+            Users updatedUser = userService.getUserById(user.getUserId());
+            if (updatedUser != null) {
+                session.setAttribute("user", updatedUser);
+                user = updatedUser;
+            }
         }
         
         // Set cart as request attribute for JSP

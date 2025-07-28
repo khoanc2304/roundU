@@ -443,6 +443,37 @@ public class OrderDAO implements IOrderDAO {
         }
     }
     
+    @Override
+    public List<Orders> findOrdersByStatus(String status) {
+        List<Orders> orders = new ArrayList<>();
+        String sql = "SELECT o.order_id, o.user_id, o.order_date, o.status, o.total_amount, o.shipping_address, "
+               + "u.username, u.fullName, u.email "
+               + "FROM Orders o JOIN Users u ON o.user_id = u.user_id WHERE o.status = ? ORDER BY o.order_date DESC";
+        try (Connection connection = dbConnection.getConnection(); PreparedStatement statement = connection.prepareStatement(sql)) {
+            statement.setString(1, status);
+            ResultSet resultSet = statement.executeQuery();
+            while (resultSet.next()) {
+                Users user = new Users();
+                user.setUserId(resultSet.getInt("user_id"));
+                user.setUsername(resultSet.getString("username"));
+                user.setFullName(resultSet.getString("fullName"));
+                user.setEmail(resultSet.getString("email"));
+                Orders order = new Orders(
+                    resultSet.getInt("order_id"),
+                    user,
+                    resultSet.getTimestamp("order_date").toLocalDateTime(),
+                    resultSet.getString("status"),
+                    resultSet.getBigDecimal("total_amount"),
+                    resultSet.getString("shipping_address")
+                );
+                orders.add(order);
+            }
+        } catch (SQLException e) {
+            ErrDialog.showError("Error finding orders by status: " + e.getMessage());
+        }
+        return orders;
+    }
+    
     public static void main(String[] args) {
         OrderDAO od = new OrderDAO();
         List<Orders> os = od.findAllOrders();

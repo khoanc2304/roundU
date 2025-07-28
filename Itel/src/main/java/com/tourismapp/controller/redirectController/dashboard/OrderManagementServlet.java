@@ -31,6 +31,7 @@ public class OrderManagementServlet extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         String action = request.getParameter("action");
+        String status = request.getParameter("status");
         if ("viewOrderDetail".equals(action)) {
             String orderIdStr = request.getParameter("orderId");
             if (orderIdStr != null) {
@@ -55,13 +56,13 @@ public class OrderManagementServlet extends HttpServlet {
                 request.setAttribute("errorMessage", "Thiếu mã đơn hàng.");
             }
             // Nếu lỗi, forward về trang quản lý đơn hàng
-            List<Orders> orders = orderService.findAllOrders();
+            List<Orders> orders = (status == null || status.equals("all") || status.isEmpty()) ? orderService.findAllOrders() : orderService.findOrdersByStatus(status);
             request.setAttribute("orders", orders);
             request.getRequestDispatcher(com.tourismapp.config.ProjectPaths.JSP_ORDERMANAGEMENT_PATH).forward(request, response);
             return;
         }
-        // Lấy danh sách tất cả đơn hàng
-        List<Orders> orders = orderService.findAllOrders();
+        // Lấy danh sách đơn hàng theo filter
+        List<Orders> orders = (status == null || status.equals("all") || status.isEmpty()) ? orderService.findAllOrders() : orderService.findOrdersByStatus(status);
         request.setAttribute("orders", orders);
         System.out.println("DEBUG: orders.size() = " + (orders != null ? orders.size() : "null"));
         // Forward sang trang quản lý đơn hàng
@@ -73,6 +74,7 @@ public class OrderManagementServlet extends HttpServlet {
             throws ServletException, IOException {
         String orderIdStr = request.getParameter("orderId");
         String status = request.getParameter("status");
+        String filterStatus = request.getParameter("filterStatus"); // Để giữ filter sau khi cập nhật
         if (orderIdStr != null && status != null) {
             try {
                 int orderId = Integer.parseInt(orderIdStr);
@@ -86,8 +88,8 @@ public class OrderManagementServlet extends HttpServlet {
                 request.setAttribute("errorMessage", "Lỗi cập nhật trạng thái: " + e.getMessage());
             }
         }
-        // Lấy lại danh sách đơn hàng và forward về trang quản lý
-        List<Orders> orders = orderService.findAllOrders();
+        // Lấy lại danh sách đơn hàng theo filter hiện tại
+        List<Orders> orders = (filterStatus == null || filterStatus.equals("all") || filterStatus.isEmpty()) ? orderService.findAllOrders() : orderService.findOrdersByStatus(filterStatus);
         request.setAttribute("orders", orders);
         request.getRequestDispatcher(com.tourismapp.config.ProjectPaths.JSP_ORDERMANAGEMENT_PATH).forward(request, response);
     }

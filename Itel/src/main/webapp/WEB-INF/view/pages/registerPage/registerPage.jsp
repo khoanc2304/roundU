@@ -231,7 +231,8 @@
         <form action="${pageContext.request.contextPath}/register" method="post">
             <div class="form-group">
                 <label for="username">Tên đăng nhập</label>
-                <input type="text" id="username" name="username" required />
+                <input type="text" id="username" name="username" required 
+                       value="${requestScope.username != null ? requestScope.username : ''}" />
             </div>
 
             <div class="form-group">
@@ -241,22 +242,26 @@
 
             <div class="form-group">
                 <label for="fullName">Họ tên</label>
-                <input type="text" id="fullName" name="fullName" required />
+                <input type="text" id="fullName" name="fullName" required 
+                       value="${requestScope.fullName != null ? requestScope.fullName : ''}" />
             </div>
 
             <div class="form-group">
                 <label for="email">Email</label>
-                <input type="email" id="email" name="email" required />
+                <input type="email" id="email" name="email" required 
+                       value="${requestScope.email != null ? requestScope.email : ''}" />
             </div>
 
             <div class="form-group">
                 <label for="phone">Số điện thoại</label>
-                <input type="text" id="phone" name="phone" required />
+                <input type="text" id="phone" name="phone" required 
+                       value="${requestScope.phone != null ? requestScope.phone : ''}" />
             </div>
 
             <div class="form-group">
                 <label for="address">Địa chỉ</label>
-                <input type="text" id="address" name="address" required />
+                <input type="text" id="address" name="address" required 
+                       value="${requestScope.address != null ? requestScope.address : ''}" />
             </div>
 
             <div class="button-group">
@@ -266,4 +271,5 @@
         </form>
     </div>
 </body>
+
 </html>

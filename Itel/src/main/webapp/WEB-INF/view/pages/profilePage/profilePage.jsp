@@ -698,12 +698,12 @@
                                             <c:when test="${user.membershipLevel.levelId == 2}">🥈 Bạc</c:when>
                                             <c:when test="${user.membershipLevel.levelId == 3}">🥇 Vàng</c:when>
                                             <c:when test="${user.membershipLevel.levelId == 4}">💎 Kim Cương</c:when>
-                                            <c:otherwise>Tiêu chuẩn</c:otherwise>
+                                            <c:otherwise>👤 Tiêu chuẩn</c:otherwise>
                                         </c:choose>
                                     </span>
                                 </c:when>
                                 <c:otherwise>
-                                    <span class="membership-badge membership-bronze">🥉 Đồng</span>
+                                    <span class="membership-badge membership-bronze">👤 Tiêu chuẩn</span>
                                 </c:otherwise>
                             </c:choose>
                         </div>

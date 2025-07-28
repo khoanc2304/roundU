@@ -6,10 +6,17 @@ import com.tourismapp.controller.mainController.MainControllerServlet;
 import com.tourismapp.dto.BrandCategoryDTO;
 import com.tourismapp.model.Product;
 import com.tourismapp.model.ProductImage;
+import com.tourismapp.model.Review;
+import com.tourismapp.model.StatisticReview;
+import com.tourismapp.model.Users;
 import com.tourismapp.service.product.IProductService;
 import com.tourismapp.service.product.ProductService;
 import com.tourismapp.service.relation.BrandCategoryService;
 import com.tourismapp.service.relation.IBrandCategoryService;
+import com.tourismapp.service.review.IReviewService;
+import com.tourismapp.service.review.ReviewService;
+import com.tourismapp.service.user.IUserService;
+import com.tourismapp.service.user.UserService;
 import com.tourismapp.utils.ErrDialog;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
@@ -17,9 +24,11 @@ import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
 import java.io.IOException;
 import java.util.LinkedHashMap;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -29,6 +38,8 @@ public class ProductPageServlet extends HttpServlet {
 
     private final IProductService productService = new ProductService();
     private final IBrandCategoryService brandCategoryService = new BrandCategoryService();
+    private final IReviewService reviewService = new ReviewService();
+    private final IUserService userService = new UserService();
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
@@ -60,10 +71,94 @@ public class ProductPageServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        request.getRequestDispatcher(ProjectPaths.JSP_HOMEPAGE_PATH).forward(request, response);
+        String action = request.getParameter("action");
+
+//        ErrDialog.showError("Servlet P : action " + action);
+        if (action == null) {
+            action = "";
+        }
+        switch (action) {
+            case MainControllerServlet.ACTION_CREATE_REVIEW ->
+                createReview(request, response);
+            case MainControllerServlet.ACTION_EDIT_REVIEW ->
+                editReview(request, response);
+            case MainControllerServlet.ACTION_DELETE_REVIEW ->
+                deleteReview(request, response);
+            default ->
+                request.getRequestDispatcher(ProjectPaths.JSP_HOMEPAGE_PATH).forward(request, response);
+
+        }
     }
 
 // <editor-fold defaultstate="collapsed" desc=" functional ... ">
+    private void createReview(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+        request.setCharacterEncoding("UTF-8");
+
+        String userIdStr = request.getParameter("userId");
+        String productIdStr = request.getParameter("productId");
+        String ratingStr = request.getParameter("rating");
+        String comment = request.getParameter("comment");
+        String parentReviewIdStr = request.getParameter("parent_review_id");
+
+        try {
+            int userId = Integer.parseInt(userIdStr);
+            int productId = Integer.parseInt(productIdStr);
+            int rating = Integer.parseInt(ratingStr);
+            Integer parent_review_id = (parentReviewIdStr != null && !parentReviewIdStr.isEmpty() && !"null".equals(parentReviewIdStr))
+                    ? Integer.parseInt(parentReviewIdStr)
+                    : null;
+
+            Review review = new Review(new Product(productId), new Users(userId), rating, comment, parent_review_id);
+            boolean success = reviewService.addReview(review);
+
+            if (success) {
+                request.getSession().setAttribute("successMessage", "Review sản phẩm thành công.");
+            } else {
+                request.getSession().setAttribute("errorMessage", "Review sản phẩm không thành công!");
+            }
+            response.sendRedirect(ProjectPaths.HREF_TO_PRODUCTPAGE + "&id=" + productId);
+        } catch (Exception e) {
+            request.getSession().setAttribute("errorMessage", "Dữ liệu truyền vào không hợp lệ!");
+            ErrDialog.showError("createReview(): " + e.getMessage());
+            response.sendRedirect(ProjectPaths.HREF_TO_HOMEPAGE);
+        }
+    }
+
+    private void editReview(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+        request.setCharacterEncoding("UTF-8");
+        HttpSession session = request.getSession(true);
+        String action = request.getParameter("action");
+        int rating = Integer.parseInt(request.getParameter("rating"));
+        int reviewId = Integer.parseInt(request.getParameter("reviewId"));
+        String comment = request.getParameter("comment");
+        int productId = Integer.parseInt(request.getParameter("productId"));
+        boolean success = reviewService.updateReview(new Review(reviewId, rating, comment));
+
+        if (success) {
+            session.setAttribute("successMessage", "Cập nhập review sản phẩm thành công.");
+        } else {
+            session.setAttribute("errorMessage", "Cập nhập review sản phẩm không thành công!");
+        }
+        response.sendRedirect(ProjectPaths.HREF_TO_PRODUCTPAGE + "&id=" + productId);
+    }
+
+    private void deleteReview(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+        request.setCharacterEncoding("UTF-8");
+        HttpSession session = request.getSession(true);
+        int reviewId = Integer.parseInt(request.getParameter("reviewId"));
+        int productId = Integer.parseInt(request.getParameter("productId"));
+        boolean success = reviewService.deleteReview(reviewId);
+        if (success) {
+            session.setAttribute("successMessage", "Xoá review sản phẩm thành công.");
+        } else {
+            session.setAttribute("errorMessage", "Xoá review sản phẩm không thành công!");
+        }
+        response.sendRedirect(ProjectPaths.HREF_TO_PRODUCTPAGE + "&id=" + productId);
+    }
+
     private void showActiveProductDetail(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         String idParam = request.getParameter("id");
@@ -79,7 +174,8 @@ public class ProductPageServlet extends HttpServlet {
             response.sendError(HttpServletResponse.SC_BAD_REQUEST, "ID không hợp lệ");
             return;
         }
-        
+
+        //VINH
         // Ghi ID sản phẩm vào cookie 'viewedProducts'
         Cookie[] cookies = request.getCookies();
         String viewed = null;
@@ -95,7 +191,9 @@ public class ProductPageServlet extends HttpServlet {
         if (viewed != null && !viewed.isEmpty()) {
             java.util.LinkedHashSet<String> set = new java.util.LinkedHashSet<>();
             for (String s : viewed.split("-")) {
-                if (!s.equals(newViewed)) set.add(s);
+                if (!s.equals(newViewed)) {
+                    set.add(s);
+                }
             }
             set.add(newViewed); // Đảm bảo không trùng lặp, thêm mới nhất cuối cùng
             // Giới hạn số lượng sản phẩm đã xem (ví dụ 10)
@@ -106,13 +204,19 @@ public class ProductPageServlet extends HttpServlet {
         }
         Cookie cookie = new Cookie("viewedProducts", newViewed);
         cookie.setPath("/");
-        cookie.setMaxAge(60*60*24*7); // 7 ngày
+        cookie.setMaxAge(60 * 60 * 24 * 7); // 7 ngày
         response.addCookie(cookie);
-        
+
+        //KHOA
         // if product actived -> product no hidden
         Optional<Product> product = productService.findProductById(id);
         Optional<List<ProductImage>> productImages = productService.getProductImagesById(id);
         Map<String, String> infoProduct = productService.getInforProductById(id);
+
+        StatisticReview statisticReview = reviewService.getRatingCountByProductId(id);
+        List<Review> reviewProductId = reviewService.getReviewsByProductId(id);
+        int totalComments = reviewService.getTotalCommentsByProductId(id);
+        Collections.reverse(reviewProductId);
 
         //HUY
         List<Product> sameCategoryProducts = productService.getProductsByCategory(product.get().getCategory().getCategoryId());
@@ -139,11 +243,14 @@ public class ProductPageServlet extends HttpServlet {
         request.setAttribute("suggestionMap", productSuggestionMap);
         request.setAttribute("attributeNames", attributeNames);
 
-        //------------------------------------------------------------------------
+        //-----------------------KHOA-------------------------------------------------
+        request.setAttribute("statisticReview", statisticReview);
+        request.setAttribute("reviewProductId", reviewProductId);
+        request.setAttribute("totalComments", totalComments);
         request.setAttribute("product", product.get());
         request.setAttribute("productImages", productImages.get());
         request.setAttribute("infoProduct", infoProduct);
-        
+
         request.getRequestDispatcher(ProjectPaths.JSP_PRODUCTDETAILPAGE_PATH).forward(request, response);
     }
 

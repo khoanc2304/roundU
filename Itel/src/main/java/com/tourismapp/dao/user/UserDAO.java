@@ -199,6 +199,8 @@ public class UserDAO implements IUserDAO {
         if (user.getMembershipLevel() != null) {
             updates.add("membership_level_id=?");
             params.add(user.getMembershipLevel().getId());
+            System.out.println("UserDAO: Cập nhật hạng mức thành viên thành " + user.getMembershipLevel().getValue() + 
+                              " (ID: " + user.getMembershipLevel().getId() + ")");
         }
         if (user.getStatus() != null) {
             updates.add("status=?");
@@ -207,7 +209,7 @@ public class UserDAO implements IUserDAO {
         updates.add("updated_at=GETDATE()");
 
         if (updates.isEmpty()) {
-            System.out.println("No fields to update for user ID: " + user.getUserId());
+            System.out.println("UserDAO: Không có trường nào cần cập nhật cho user ID: " + user.getUserId());
             return false;
         }
 
@@ -216,15 +218,16 @@ public class UserDAO implements IUserDAO {
         params.add(user.getUserId());
 
         try (Connection conn = DBConnection.getConnection(); PreparedStatement ps = conn.prepareStatement(sql.toString())) {
-            System.out.println("SQL: " + sql);
-            System.out.println("Parameters: " + params);
+            System.out.println("UserDAO: SQL cập nhật: " + sql);
+            System.out.println("UserDAO: Parameters: " + params);
             for (int i = 0; i < params.size(); i++) {
                 ps.setObject(i + 1, params.get(i));
             }
             int rowsAffected = ps.executeUpdate();
-            System.out.println("Rows affected: " + rowsAffected);
+            System.out.println("UserDAO: Số dòng bị ảnh hưởng: " + rowsAffected);
             return rowsAffected > 0;
         } catch (SQLException e) {
+            System.out.println("UserDAO: Lỗi SQL khi cập nhật người dùng: " + e.getMessage());
             e.printStackTrace();
             throw new RuntimeException("Lỗi khi cập nhật người dùng: " + e.getMessage());
         }

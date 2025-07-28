@@ -36,6 +36,7 @@ public class RegisterServlet extends HttpServlet {
         if (username.isEmpty() || password.isEmpty() || fullName.isEmpty() ||
                 email.isEmpty() || phone.isEmpty() || address.isEmpty()) {
             req.setAttribute("errorMessage", "Tất cả các trường đều phải được điền đầy đủ.");
+            preserveFormData(req, username, fullName, email, phone, address);
             req.getRequestDispatcher("/WEB-INF/view/pages/registerPage/registerPage.jsp").forward(req, resp);
             return;
         }
@@ -43,6 +44,7 @@ public class RegisterServlet extends HttpServlet {
         // Kiểm tra định dạng email
         if (!isValidEmail(email)) {
             req.setAttribute("errorMessage", "Địa chỉ email không hợp lệ.");
+            preserveFormData(req, username, fullName, email, phone, address);
             req.getRequestDispatcher("/WEB-INF/view/pages/registerPage/registerPage.jsp").forward(req, resp);
             return;
         }
@@ -50,6 +52,7 @@ public class RegisterServlet extends HttpServlet {
         // Kiểm tra định dạng số điện thoại (10-11 số và chỉ là số)
         if (!phone.matches("^\\d{10,11}$")) {
             req.setAttribute("errorMessage", "Số điện thoại phải gồm 10 hoặc 11 chữ số.");
+            preserveFormData(req, username, fullName, email, phone, address);
             req.getRequestDispatcher("/WEB-INF/view/pages/registerPage/registerPage.jsp").forward(req, resp);
             return;
         }
@@ -63,6 +66,7 @@ public class RegisterServlet extends HttpServlet {
                 ResultSet rs = stmt.executeQuery();
                 if (rs.next() && rs.getInt(1) > 0) {
                     req.setAttribute("errorMessage", "Tên đăng nhập đã được sử dụng, vui lòng chọn tên khác.");
+                    preserveFormData(req, username, fullName, email, phone, address);
                     req.getRequestDispatcher("/WEB-INF/view/pages/registerPage/registerPage.jsp").forward(req, resp);
                     return;
                 }
@@ -75,6 +79,7 @@ public class RegisterServlet extends HttpServlet {
                 ResultSet rs = stmt.executeQuery();
                 if (rs.next() && rs.getInt(1) > 0) {
                     req.setAttribute("errorMessage", "Số điện thoại đã được sử dụng, vui lòng dùng số khác.");
+                    preserveFormData(req, username, fullName, email, phone, address);
                     req.getRequestDispatcher("/WEB-INF/view/pages/registerPage/registerPage.jsp").forward(req, resp);
                     return;
                 }
@@ -87,6 +92,7 @@ public class RegisterServlet extends HttpServlet {
                 ResultSet rs = stmt.executeQuery();
                 if (rs.next() && rs.getInt(1) > 0) {
                     req.setAttribute("errorMessage", "Email đã được sử dụng, vui lòng chọn email khác.");
+                    preserveFormData(req, username, fullName, email, phone, address);
                     req.getRequestDispatcher("/WEB-INF/view/pages/registerPage/registerPage.jsp").forward(req, resp);
                     return;
                 }
@@ -135,6 +141,7 @@ public class RegisterServlet extends HttpServlet {
         } catch (Exception e) {
             e.printStackTrace();
             req.setAttribute("errorMessage", "Đã xảy ra lỗi: " + e.getMessage());
+            preserveFormData(req, username, fullName, email, phone, address);
             req.getRequestDispatcher("/WEB-INF/view/pages/registerPage/registerPage.jsp").forward(req, resp);
         }
     }
@@ -142,5 +149,14 @@ public class RegisterServlet extends HttpServlet {
     private boolean isValidEmail(String email) {
         String emailRegex = "^[a-zA-Z0-9_+&*-]+(?:\\.[a-zA-Z0-9_+&*-]+)*@(?:[a-zA-Z0-9-]+\\.)+[a-zA-Z]{2,7}$";
         return email.matches(emailRegex);
+    }
+
+    // Hàm phụ để set lại các giá trị nhập đúng
+    private void preserveFormData(HttpServletRequest req, String username, String fullName, String email, String phone, String address) {
+        req.setAttribute("username", username);
+        req.setAttribute("fullName", fullName);
+        req.setAttribute("email", email);
+        req.setAttribute("phone", phone);
+        req.setAttribute("address", address);
     }
 }
