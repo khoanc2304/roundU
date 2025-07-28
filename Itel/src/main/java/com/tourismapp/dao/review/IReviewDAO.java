@@ -4,11 +4,29 @@
  */
 package com.tourismapp.dao.review;
 
+import com.tourismapp.model.Review;
+import com.tourismapp.model.StatisticReview;
+import java.util.List;
+
 /**
  *
  * @author Admin
  */
 public interface IReviewDAO {
+    int getTotalCommentsByProductId(int productId);
+
+    StatisticReview getRatingCountByProductId(int productId);
     
+    List<Review> getAllActiveReviews();
+    
+    Review getReviewById(int viewId);
+    
+    List<Review> getReviewsByProductId(int productId);
+    
+    boolean addReview(Review review);
+    
+    boolean updateReview(Review review);
+    
+    boolean deleteReview(int id);
 
 }

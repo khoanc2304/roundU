@@ -443,14 +443,6 @@ public class OrderDAO implements IOrderDAO {
         }
     }
     
-    public static void main(String[] args) {
-        OrderDAO od = new OrderDAO();
-        List<Orders> os = od.findAllOrders();
-        for (Orders o: os) {
-            System.out.println(o);
-        }
-    }
-    
     @Override
     public List<Orders> findOrdersByStatus(String status) {
         List<Orders> orders = new ArrayList<>();
@@ -481,4 +473,13 @@ public class OrderDAO implements IOrderDAO {
         }
         return orders;
     }
+    
+    public static void main(String[] args) {
+        OrderDAO od = new OrderDAO();
+        List<Orders> os = od.findAllOrders();
+        for (Orders o: os) {
+            System.out.println(o);
+        }
+    }
+    
 }

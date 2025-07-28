@@ -1,6 +1,7 @@
 com\tourismapp\common\PaymentMethod.class
 com\tourismapp\model\Product.class
 com\tourismapp\model\ProductImage.class
+com\tourismapp\dao\coupon\ICouponDAO.class
 com\tourismapp\service\user\IUserService.class
 com\tourismapp\dao\user\IUserDAO.class
 com\tourismapp\controller\paymentController\PaymentServlet$PaymentResult.class
@@ -26,12 +27,14 @@ com\tourismapp\dao\product\ProductDAO.class
 com\tourismapp\model\GoogleAccount.class
 com\tourismapp\service\category\ICategoryService.class
 com\tourismapp\filter\AuthenticationFilter.class
+com\tourismapp\controller\redirectController\ChangePasswordServlet.class
 com\tourismapp\service\review\ReviewService.class
 com\tourismapp\controller\paymentController\BankTransferNotifyServlet.class
 com\tourismapp\model\Brand.class
 com\tourismapp\controller\redirectController\ResetPasswordServlet.class
 com\tourismapp\dao\relation\IBrandCategoryDAO.class
 com\tourismapp\utils\MailUtil.class
+com\tourismapp\model\Coupon.class
 com\tourismapp\controller\redirectController\CartPageServlet.class
 com\tourismapp\controller\redirectController\dashboard\ProductManagementServlet.class
 com\tourismapp\constant\FacebookLogin.class
@@ -52,6 +55,8 @@ com\tourismapp\model\CartItem.class
 com\tourismapp\dao\brand\IBrandDAO.class
 com\tourismapp\model\ProductDetail.class
 com\tourismapp\controller\paymentController\PaymentServlet.class
+com\tourismapp\service\coupon\CouponService.class
+com\tourismapp\model\StatisticReview.class
 com\tourismapp\service\relation\IBrandCategoryService.class
 com\tourismapp\controller\redirectController\SimpleOrderHistoryServlet.class
 com\tourismapp\constant\IConstant.class
@@ -72,6 +77,7 @@ com\tourismapp\controller\redirectController\LoginGoogleServlet.class
 com\tourismapp\controller\cartController\CartController.class
 com\tourismapp\dao\review\IReviewDAO.class
 com\tourismapp\model\Review.class
+com\tourismapp\service\coupon\ICouponService.class
 com\tourismapp\dao\DBConnection.class
 com\tourismapp\service\brand\BrandService.class
 com\tourismapp\service\brand\IBrandService.class
@@ -91,6 +97,7 @@ com\tourismapp\service\order\IOrderService.class
 com\tourismapp\config\ProjectPaths.class
 com\tourismapp\controller\paymentController\PaymentServlet$1.class
 com\tourismapp\controller\redirectController\dashboard\CategoryManagementServlet.class
+com\tourismapp\dao\coupon\CouponDAO.class
 com\tourismapp\dao\product\IProductDAO.class
 com\tourismapp\model\FacebookAccount.class
 com\tourismapp\model\OrderDetail.class

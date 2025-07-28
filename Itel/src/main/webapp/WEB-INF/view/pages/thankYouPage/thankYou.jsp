@@ -29,6 +29,21 @@
                                 <p class="lead">Your order has been received and is being processed.</p>
                             </div>
                             
+                            <!-- Membership Upgrade Notification -->
+                            <c:if test="${membershipUpgraded == true}">
+                                <div class="alert alert-success mb-4">
+                                    <div class="d-flex align-items-center">
+                                        <div class="me-3">
+                                            <i class="fas fa-crown fa-2x"></i>
+                                        </div>
+                                        <div>
+                                            <h5 class="alert-heading mb-1">Nâng cấp thành viên!</h5>
+                                            <p class="mb-0">${upgradeMessage}</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </c:if>
+                            
                             <!-- Order Information -->
                             <div class="row mb-4">
                                 <div class="col-md-6">
@@ -50,6 +65,20 @@
                                         <p class="mb-1"><strong>Status:</strong> 
                                             <span class="badge bg-warning text-dark">${order.status}</span>
                                         </p>
+                                        <c:if test="${originalAmount != finalAmount}">
+                                            <p class="mb-1"><strong>Original Amount:</strong> 
+                                                <span class="text-muted text-decoration-line-through">
+                                                    <fmt:formatNumber value="${originalAmount}" type="currency" 
+                                                                      currencySymbol="₫" maxFractionDigits="0"/>
+                                                </span>
+                                            </p>
+                                            <p class="mb-1"><strong>Discount:</strong> 
+                                                <span class="text-danger">
+                                                    -<fmt:formatNumber value="${discountAmount}" type="currency" 
+                                                                     currencySymbol="₫" maxFractionDigits="0"/>
+                                                </span>
+                                            </p>
+                                        </c:if>
                                         <p class="mb-0"><strong>Total Amount:</strong> 
                                             <span class="text-success fw-bold">
                                                 <fmt:formatNumber value="${order.totalAmount}" type="currency" 

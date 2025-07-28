@@ -40,7 +40,6 @@ public class LoginPageServlet extends HttpServlet {
             throws ServletException, IOException {
         String action = request.getParameter("action").trim();
         String identifier = request.getParameter("identifier");
-//        String email = request.getParameter("email");
         String password = request.getParameter("password");
         HttpSession session = request.getSession(true);
 
@@ -55,7 +54,6 @@ public class LoginPageServlet extends HttpServlet {
 
                 switch (role) {
                     case "admin" -> {
-//                        request.getRequestDispatcher(ProjectPaths.JSP_DASHBOARDPAGE_PATH).forward(request, response);
                           response.sendRedirect(ProjectPaths.HREF_TO_DASHBOARDPAGE);
                     }
                     case "staff" -> {

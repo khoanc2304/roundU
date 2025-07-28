@@ -127,31 +127,48 @@
             <!-- Sản phẩm đã xem -->
             <div class="container my-3">
                 <c:if test="${not empty viewedProducts}">
-                    <div class="card mb-4">
-                        <div class="card-header bg-light fw-bold fs-5">
-                            Sản phẩm đã xem
+                                        <div class="card mb-4">
+                        <div class="card-header bg-light fw-bold fs-5 d-flex justify-content-between align-items-center">
+                            <span>Sản phẩm đã xem</span>
+                            <div class="viewed-products-nav">
+                                <button type="button" class="btn btn-sm btn-outline-secondary me-2 viewed-nav-prev" disabled onclick="event.preventDefault();">
+                                    <i class="fas fa-chevron-left"></i>
+                                </button>
+                                <button type="button" class="btn btn-sm btn-outline-secondary viewed-nav-next" onclick="event.preventDefault();">
+                                    <i class="fas fa-chevron-right"></i>
+                                </button>
+                            </div>
                         </div>
-                        <div class="card-body">
-                            <div class="row g-3 align-items-center">
-                                <c:forEach var="vp" items="${viewedProducts}">
-                                    <div class="col-12 col-md-4 col-lg-3">
-                                        <div class="card h-100 viewed-product-card position-relative">
-                                            <a href="<%= ProjectPaths.HREF_TO_PRODUCTPAGE%>&id=${vp.productId}">
-                                                <img src="${vp.imageUrl}" class="card-img-top" alt="${vp.name}">
-                                            </a>
-                                            <div class="card-body p-2">
-                                                <h6 class="card-title mb-1 text-truncate" title="${vp.name}">${vp.name}</h6>
-                                                <div class="text-danger fw-bold mb-2">
-                                                    <fmt:formatNumber value="${vp.price}" type="number" pattern="#,#00" currencySymbol="" groupingUsed="true" /> VNĐ
-                                                </div>
-                                                <div class="btn-group-viewed">
-                                                    <a href="<%= ProjectPaths.HREF_TO_PRODUCTPAGE%>&id=${vp.productId}" class="btn btn-sm btn-outline-primary btn-viewed-action">Xem chi tiết</a>
-                                                    <button type="button" class="btn btn-sm btn-outline-danger btn-viewed-action" onclick="removeViewedProduct(${vp.productId})">Xóa</button>
-                                                </div>
+                        <div class="card-body pt-3 pb-2">
+                            <div class="viewed-products-container position-relative">
+                                <!-- Nút điều hướng trong container -->
+                                <button type="button" class="nav-arrow nav-prev" onclick="event.preventDefault(); document.querySelector('.viewed-nav-prev').click();">
+                                    <i class="fas fa-chevron-left"></i>
+                                </button>
+                                <button type="button" class="nav-arrow nav-next" onclick="event.preventDefault(); document.querySelector('.viewed-nav-next').click();">
+                                    <i class="fas fa-chevron-right"></i>
+                                </button>
+                                <div class="viewed-products-wrapper d-flex">
+                                    <c:forEach var="vp" items="${viewedProducts}" varStatus="status">
+                                        <div class="viewed-product-item">
+                                            <div class="card viewed-product-card position-relative">
+                                                <a href="<%= ProjectPaths.HREF_TO_PRODUCTPAGE%>&id=${vp.productId}" class="text-decoration-none">
+                                                    <img src="${vp.imageUrl}" class="card-img-top" alt="${vp.name}">
+                                                    <div class="card-body">
+                                                        <h6 class="card-title mb-1 text-truncate" title="${vp.name}">${vp.name}</h6>
+                                                        <div class="text-danger fw-bold">
+                                                            <fmt:formatNumber value="${vp.price}" type="number" pattern="#,#00" currencySymbol="" groupingUsed="true" /> VNĐ
+                                                        </div>
+                                                    </div>
+                                                </a>
+                                                <a href="#" class="remove-viewed-product position-absolute top-0 end-0 m-2" 
+                                                   onclick="event.preventDefault(); removeViewedProduct(${vp.productId});">
+                                                    <i class="fas fa-times-circle"></i>
+                                                </a>
                                             </div>
                                         </div>
-                                    </div>
-                                </c:forEach>
+                                    </c:forEach>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -453,7 +470,7 @@
                         });
             }
         </script>
-        <!-- Thêm script xóa sản phẩm đã xem bằng cookie -->
+        <!-- Thêm script xóa sản phẩm đã xem bằng cookie và điều hướng carousel -->
         <script>
             function removeViewedProduct(productId) {
                 // Đọc cookie hiện tại
@@ -468,8 +485,219 @@
                 // Reload lại trang để cập nhật giao diện
                 location.reload();
             }
+            
+            // Đảm bảo script chạy sau khi trang đã tải xong
+            window.onload = function() {
+                initViewedProductsCarousel();
+            };
+            
+            // Xử lý carousel sản phẩm đã xem
+            function initViewedProductsCarousel() {
+                // Lấy các phần tử DOM
+                var viewedProductsWrapper = document.querySelector('.viewed-products-wrapper');
+                var prevBtn = document.querySelector('.viewed-nav-prev');
+                var nextBtn = document.querySelector('.viewed-nav-next');
+                var container = document.querySelector('.viewed-products-container');
+                
+                // Kiểm tra xem các phần tử có tồn tại không
+                if (!viewedProductsWrapper || !prevBtn || !nextBtn || !container) {
+                    console.log('Không tìm thấy các phần tử carousel');
+                    return;
+                }
+                
+                // Lấy các giá trị kích thước
+                var itemWidth = 235; // Chiều rộng item + khoảng cách
+                var containerWidth = container.offsetWidth;
+                var items = document.querySelectorAll('.viewed-product-item');
+                var itemsCount = items.length;
+                var visibleItems = Math.floor(containerWidth / itemWidth);
+                var maxScrollPosition = Math.max(0, (itemsCount - visibleItems) * itemWidth);
+                
+                // Biến lưu vị trí hiện tại
+                var currentPosition = 0;
+                
+                console.log('Carousel initialized with:', {
+                    itemWidth: itemWidth,
+                    containerWidth: containerWidth,
+                    itemsCount: itemsCount,
+                    visibleItems: visibleItems,
+                    maxScrollPosition: maxScrollPosition
+                });
+                
+                // Cập nhật trạng thái nút
+                function updateButtonStates() {
+                    prevBtn.disabled = currentPosition <= 0;
+                    nextBtn.disabled = currentPosition >= maxScrollPosition;
+                }
+                
+                // Xử lý sự kiện nút prev
+                prevBtn.addEventListener('click', function() {
+                    currentPosition = Math.max(0, currentPosition - itemWidth);
+                    viewedProductsWrapper.style.transform = 'translateX(-' + currentPosition + 'px)';
+                    console.log('Prev clicked, new position:', currentPosition);
+                    updateButtonStates();
+                });
+                
+                // Xử lý sự kiện nút next
+                nextBtn.addEventListener('click', function() {
+                    currentPosition = Math.min(maxScrollPosition, currentPosition + itemWidth);
+                    viewedProductsWrapper.style.transform = 'translateX(-' + currentPosition + 'px)';
+                    console.log('Next clicked, new position:', currentPosition);
+                    updateButtonStates();
+                });
+                
+                // Cập nhật ban đầu
+                updateButtonStates();
+                
+                // Ẩn nút điều hướng nếu không đủ sản phẩm để cuộn
+                if (itemsCount <= visibleItems) {
+                    document.querySelector('.viewed-products-nav').style.display = 'none';
+                }
+                
+                // Thêm sự kiện resize để cập nhật khi kích thước màn hình thay đổi
+                window.addEventListener('resize', function() {
+                    containerWidth = container.offsetWidth;
+                    visibleItems = Math.floor(containerWidth / itemWidth);
+                    maxScrollPosition = Math.max(0, (itemsCount - visibleItems) * itemWidth);
+                    
+                    // Reset vị trí nếu cần
+                    if (currentPosition > maxScrollPosition) {
+                        currentPosition = maxScrollPosition;
+                        viewedProductsWrapper.style.transform = 'translateX(-' + currentPosition + 'px)';
+                    }
+                    
+                    updateButtonStates();
+                });
+            }
         </script>
         <style>
+            /* Styling for viewed products close button */
+            .remove-viewed-product {
+                background-color: rgba(255, 255, 255, 0.8);
+                border-radius: 50%;
+                width: 22px;
+                height: 22px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                box-shadow: 0 1px 3px rgba(0,0,0,0.2);
+                color: #666;
+                transition: all 0.2s;
+                z-index: 100;
+                text-decoration: none;
+            }
+            
+            .remove-viewed-product:hover {
+                background-color: rgba(255, 255, 255, 1);
+                transform: scale(1.1);
+                color: #dc3545;
+            }
+            
+            .remove-viewed-product i {
+                font-size: 14px;
+            }
+            
+            /* Viewed products carousel */
+            .viewed-products-container {
+                position: relative;
+                overflow: hidden;
+                width: 100%;
+                padding: 5px 0;
+            }
+            
+            .viewed-products-wrapper {
+                display: flex;
+                transition: transform 0.3s ease;
+                gap: 15px;
+                will-change: transform;
+            }
+            
+            .viewed-product-item {
+                min-width: 220px;
+                width: 220px;
+                flex-shrink: 0;
+            }
+            
+            .viewed-product-card {
+                transition: all 0.3s;
+                max-height: 280px;
+                overflow: hidden;
+                margin-bottom: 0;
+                padding-bottom: 0;
+                display: flex;
+                flex-direction: column;
+                border: 1px solid #e0e0e0;
+            }
+            
+            .viewed-product-card .card-body {
+                padding: 0.5rem 0.75rem !important;
+                flex-grow: 0;
+            }
+            
+            .viewed-product-card img {
+                max-height: 160px;
+                object-fit: contain;
+                padding: 0.5rem;
+                margin-bottom: -0.5rem;
+            }
+            
+            .viewed-product-card h6 {
+                font-size: 0.9rem;
+                line-height: 1.2;
+                margin-bottom: 0.3rem;
+            }
+            
+            .viewed-product-card .text-danger {
+                font-size: 0.95rem;
+            }
+            
+            /* Navigation buttons */
+            .viewed-products-nav .btn {
+                width: 32px;
+                height: 32px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                padding: 0;
+                cursor: pointer;
+                z-index: 10;
+            }
+            
+            .viewed-products-nav .btn:disabled {
+                opacity: 0.5;
+                cursor: not-allowed;
+            }
+            
+            /* Absolute positioned navigation buttons */
+            .viewed-products-container .nav-arrow {
+                position: absolute;
+                top: 50%;
+                transform: translateY(-50%);
+                width: 40px;
+                height: 40px;
+                background: rgba(255,255,255,0.8);
+                border-radius: 50%;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                cursor: pointer;
+                z-index: 10;
+                box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+                border: none;
+            }
+            
+            .viewed-products-container .nav-prev {
+                left: -5px;
+            }
+            
+            .viewed-products-container .nav-next {
+                right: -5px;
+            }
+            
+            .viewed-product-card:hover {
+                box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+            }
+            
             .sidebar {
                 background-color: #f0f0f0;
                 position: relative;
@@ -988,5 +1216,20 @@
                 justify-content: flex-end;
             }
         </style>
+        
+        <!-- Khởi tạo carousel sau khi trang tải xong -->
+        <script>
+            // Đảm bảo carousel được khởi tạo khi trang đã tải xong
+            document.addEventListener('DOMContentLoaded', function() {
+                setTimeout(function() {
+                    console.log('Trying to initialize carousel...');
+                    if (typeof initViewedProductsCarousel === 'function') {
+                        initViewedProductsCarousel();
+                    } else {
+                        console.log('initViewedProductsCarousel function not found');
+                    }
+                }, 500);
+            });
+        </script>
     </body>
 </html>

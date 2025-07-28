@@ -1,5 +1,6 @@
 package com.tourismapp.model;
 
+import com.tourismapp.common.Status;
 import java.time.LocalDateTime;
 
 /**
@@ -13,6 +14,8 @@ public class Review {
     private Users user;
     private int rating;
     private String comment;
+    private Integer parent_review_id;
+    private Status status;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
 
@@ -20,22 +23,40 @@ public class Review {
     }
 
     public Review(int reviewId, Product product, Users user, int rating,
-            String comment, LocalDateTime createdAt, LocalDateTime updatedAt) {
+            String comment, Integer parent_review_id, Status status, LocalDateTime createdAt, LocalDateTime updatedAt) {
         this.reviewId = reviewId;
         this.product = product;
         this.user = user;
         this.rating = rating;
         this.comment = comment;
+        this.parent_review_id = parent_review_id;
+        this.status = status;
         this.createdAt = createdAt;
         this.updatedAt = updatedAt;
     }
     
     public Review(Product product, Users user, int rating,
-            String comment, LocalDateTime createdAt, LocalDateTime updatedAt) {
+            String comment, Integer parent_review_id) {
         this.product = product;
         this.user = user;
         this.rating = rating;
         this.comment = comment;
+        this.parent_review_id = parent_review_id;
+    }
+    
+    public Review(int reviewId, int rating, String comment) {
+        this.reviewId = reviewId;
+        this.rating = rating;
+        this.comment = comment;
+    }
+
+    public Review(Product product, Users user, int rating,
+            String comment, Integer parent_review_id, LocalDateTime createdAt, LocalDateTime updatedAt) {
+        this.product = product;
+        this.user = user;
+        this.rating = rating;
+        this.comment = comment;
+        this.parent_review_id = parent_review_id;
         this.createdAt = createdAt;
         this.updatedAt = updatedAt;
     }
@@ -80,6 +101,22 @@ public class Review {
         this.comment = comment;
     }
 
+    public Integer getParent_review_id() {
+        return parent_review_id;
+    }
+
+    public void setParent_review_id(Integer parent_review_id) {
+        this.parent_review_id = parent_review_id;
+    }
+
+    public Status getStatus() {
+        return status;
+    }
+
+    public void setStatus(Status status) {
+        this.status = status;
+    }
+
     public LocalDateTime getCreatedAt() {
         return createdAt;
     }
@@ -104,6 +141,8 @@ public class Review {
                 + ", user=" + (user != null ? user.getUserId() : "null")
                 + ", rating=" + rating
                 + ", comment='" + comment + '\''
+                + ", parent_review_id='" + parent_review_id + '\''
+                + ", status='" + status + '\''
                 + ", createdAt=" + createdAt
                 + ", updatedAt=" + updatedAt
                 + '}';

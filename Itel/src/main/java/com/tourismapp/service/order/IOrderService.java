@@ -97,5 +97,6 @@ public interface IOrderService {
      * @param status Order status
      * @return List of orders with the specified status
      */
-    List<com.tourismapp.model.Orders> findOrdersByStatus(String status);
+    List<Orders> findOrdersByStatus(String status);
+
 }
