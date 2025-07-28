@@ -6,7 +6,7 @@ END
 GO
 
 -- Tạo lại database
-CREATE DATABASE Itel_Shop;
+CREATE DATABASE Itel_Shop3;
 GO
 
 USE Itel_Shop;

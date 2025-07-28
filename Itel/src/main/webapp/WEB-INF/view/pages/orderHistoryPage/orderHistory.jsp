@@ -108,6 +108,7 @@
         <div class="mb-4 d-flex gap-2 flex-wrap">
             <a href="orderHistory?status=all" class="btn btn-outline-primary btn-sm ${param.status == 'all' || empty param.status ? 'active' : ''}">Tất cả</a>
             <a href="orderHistory?status=pending" class="btn btn-outline-secondary btn-sm ${param.status == 'pending' ? 'active' : ''}">Đang xử lý</a>
+            <a href="orderHistory?status=shipped" class="btn btn-outline-info btn-sm ${param.status == 'shipped' ? 'active' : ''}">Đang giao</a>
             <a href="orderHistory?status=completed" class="btn btn-outline-success btn-sm ${param.status == 'completed' ? 'active' : ''}">Đã giao</a>
             <a href="orderHistory?status=canceled" class="btn btn-outline-danger btn-sm ${param.status == 'canceled' ? 'active' : ''}">Đã hủy</a>
         </div>

@@ -134,6 +134,18 @@ public class DashboardPageServlet extends HttpServlet {
         request.setAttribute("revenueStatsByMonth", revenueStatsByMonth);
         // Lấy orderStatsByMonth để filter tháng/năm
         List<com.tourismapp.model.OrderStat> orderStatsByMonth = (List<com.tourismapp.model.OrderStat>) request.getAttribute("orderStatsByMonth");
+        
+        // Tạo danh sách năm duy nhất từ orderStatsByMonth
+        java.util.Set<Integer> uniqueYears = new java.util.HashSet<>();
+        if (orderStatsByMonth != null) {
+            for (com.tourismapp.model.OrderStat stat : orderStatsByMonth) {
+                uniqueYears.add(stat.getYear());
+            }
+        }
+        java.util.List<Integer> sortedYears = new java.util.ArrayList<>(uniqueYears);
+        java.util.Collections.sort(sortedYears, java.util.Collections.reverseOrder()); // Sắp xếp giảm dần
+        request.setAttribute("uniqueYears", sortedYears);
+        
         // Truyền selectedMonth, selectedYear lên JSP
         request.setAttribute("selectedMonth", selectedMonth);
         request.setAttribute("selectedYear", selectedYear);

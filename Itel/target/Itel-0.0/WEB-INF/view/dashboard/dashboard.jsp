@@ -6,6 +6,7 @@
 <%@ page import="java.util.*, java.text.SimpleDateFormat" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
+<fmt:setLocale value="en_US"/>
 <!DOCTYPE html>
 <html lang="vi">
     <head>
@@ -36,7 +37,7 @@
                 left: 0;
                 width: 260px;
                 height: 100%;
-                background: #2c3e50;
+/*                background: #2c3e50;*/
                 color: #fff;
                 padding-top: 20px;
                 transition: all 0.3s ease;
@@ -45,7 +46,7 @@
 
             /* Improved Main Content */
             #main-content {
-                margin-left: 260px;
+                margin-left: 20px;
                 min-height: 100vh;
                 background: #f8fafc;
                 transition: all 0.3s ease;
@@ -629,50 +630,153 @@
                 padding: 1.5rem 1rem;
                 margin-top: 0;
                 margin-bottom: 0;
+                transition: all 0.3s ease;
+                position: relative;
+                overflow: hidden;
+            }
+
+            .filter-card::before {
+                content: '';
+                position: absolute;
+                top: 0;
+                left: 0;
+                right: 0;
+                height: 4px;
+                background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
+            }
+
+            .filter-card:hover {
+                transform: translateY(-2px);
+                box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
             }
 
             .filter-form {
                 display: flex;
                 flex-direction: column;
-                gap: 0.75rem;
+                gap: 1rem;
                 align-items: flex-start;
                 width: 100%;
             }
 
             .filter-form label {
-                font-size: 0.95rem;
-                color: #64748b;
+                font-size: 0.875rem;
+                color: #374151;
                 font-weight: 600;
-                margin-right: 0.5rem;
+                margin-bottom: 0.25rem;
+                display: block;
             }
 
             .filter-form select {
-                padding: 0.4rem 1.2rem 0.4rem 0.5rem;
+                width: 100%;
+                padding: 0.75rem 1rem;
                 border-radius: 0.5rem;
-                border: 1px solid #e2e8f0;
-                background: #f8fafc;
-                font-size: 1rem;
+                border: 1px solid #d1d5db;
+                background: #ffffff;
+                font-size: 0.875rem;
                 color: #374151;
                 outline: none;
-                margin-right: 0.5rem;
-                margin-bottom: 0.2rem;
+                transition: all 0.2s ease;
+                box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+            }
+
+            .filter-form select:focus {
+                border-color: #3b82f6;
+                box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+            }
+
+            .filter-form select:hover {
+                border-color: #9ca3af;
             }
 
             .filter-btn {
-                padding: 0.5rem 1.5rem;
+                width: 100%;
+                padding: 0.75rem 1.5rem;
                 border-radius: 0.5rem;
-                background: #3b82f6;
+                background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
                 color: #fff;
                 border: none;
                 font-weight: 600;
-                font-size: 1rem;
-                transition: background 0.2s;
-                margin-top: 0.5rem;
+                font-size: 0.875rem;
+                transition: all 0.2s ease;
                 cursor: pointer;
+                box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1);
             }
 
             .filter-btn:hover {
-                background: #2563eb;
+                background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%);
+                transform: translateY(-1px);
+                box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+            }
+
+            .filter-btn:active {
+                transform: translateY(0);
+            }
+
+            /* Search functionality styles */
+            .search-section {
+                background: white;
+                border-radius: 1rem;
+                padding: 2rem;
+                box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+                border: 1px solid #e2e8f0;
+                margin-bottom: 2rem;
+            }
+
+            .search-form {
+                display: flex;
+                gap: 1rem;
+                align-items: end;
+                flex-wrap: wrap;
+            }
+
+            .search-input {
+                flex: 1;
+                min-width: 200px;
+                padding: 0.75rem 1rem;
+                border-radius: 0.5rem;
+                border: 1px solid #d1d5db;
+                font-size: 0.875rem;
+                transition: all 0.2s ease;
+            }
+
+            .search-input:focus {
+                border-color: #3b82f6;
+                box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+                outline: none;
+            }
+
+            .search-btn {
+                padding: 0.75rem 1.5rem;
+                border-radius: 0.5rem;
+                background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+                color: #fff;
+                border: none;
+                font-weight: 600;
+                font-size: 0.875rem;
+                cursor: pointer;
+                transition: all 0.2s ease;
+            }
+
+            .search-btn:hover {
+                background: linear-gradient(135deg, #059669 0%, #047857 100%);
+                transform: translateY(-1px);
+            }
+
+            /* Responsive improvements */
+            @media (max-width: 768px) {
+                .filter-card {
+                    min-width: 100%;
+                    max-width: 100%;
+                }
+                
+                .search-form {
+                    flex-direction: column;
+                    align-items: stretch;
+                }
+                
+                .search-input {
+                    min-width: 100%;
+                }
             }
         </style>
     </head>
@@ -711,6 +815,24 @@
                     <h2 class="welcome-title">Dashboard</h2>
                     <p class="welcome-subtitle">Theo dõi và quản lý hoạt động kinh doanh của bạn một cách hiệu quả</p>
                 </div>
+
+                <!-- Search Section -->
+<!--                <div class="search-section">
+                    <h3 style="margin-bottom: 1rem; color: #1a202c; font-size: 1.25rem;">
+                        <i class="fas fa-search" style="color: #3b82f6; margin-right: 0.5rem;"></i>
+                        Tìm kiếm nhanh
+                    </h3>
+                    <form class="search-form" action="main" method="get">
+                        <input type="hidden" name="action" value="searchDashboard" />
+                        <input type="text" name="searchQuery" class="search-input" 
+                               placeholder="Tìm kiếm đơn hàng, sản phẩm, khách hàng..." 
+                               value="${param.searchQuery}">
+                        <button type="submit" class="search-btn">
+                            <i class="fas fa-search" style="margin-right: 0.5rem;"></i>
+                            Tìm kiếm
+                        </button>
+                    </form>
+                </div>-->
 
                 <!-- Error Display -->
                 <c:if test="${not empty error}">
@@ -819,7 +941,7 @@
                                 <div class="stat-value">
                                     <c:choose>
                                         <c:when test="${not empty revenueOfMonth}">
-                                            ₫${revenueOfMonth}
+                                            <fmt:formatNumber value="${revenueOfMonth}" type="currency" currencySymbol="₫" maxFractionDigits="0"/>
                                         </c:when>
                                         <c:otherwise>₫0</c:otherwise>
                                     </c:choose>
@@ -849,13 +971,15 @@
                             <label for="month">Tháng:</label>
                             <select name="month" id="month">
                                 <c:forEach var="stat" items="${orderStatsByMonth}">
+                                    <c:if test="${stat.year == selectedYear || selectedYear == null}">
                                     <option value="${stat.month}" <c:if test="${stat.month == selectedMonth}">selected</c:if>>Tháng ${stat.month}</option>
+                                    </c:if>
                                 </c:forEach>
                             </select>
                             <label for="year">Năm:</label>
                             <select name="year" id="year">
-                                <c:forEach var="stat" items="${orderStatsByMonth}">
-                                    <option value="${stat.year}" <c:if test="${stat.year == selectedYear}">selected</c:if>>${stat.year}</option>
+                                <c:forEach var="year" items="${uniqueYears}">
+                                    <option value="${year}" <c:if test="${year == selectedYear}">selected</c:if>>${year}</option>
                                 </c:forEach>
                             </select>
                             <button type="submit" class="filter-btn">Xem</button>
@@ -1082,8 +1206,6 @@
             { productId: ${stat.productId}, productName: "${fn:replace(stat.productName, '"', '\\"')}", count: ${stat.orderCount} }<c:if test="${!loop.last}">,</c:if>
             </c:forEach>
             ];
-            // Debug
-            console.log("statsProduct:", statsProduct);
 
             // Filter valid data
             var validStatsMonth = statsMonth.filter(stat =>
@@ -1300,6 +1422,43 @@
                         card.style.animationDelay = `${index * 0.1}s`;
                     });
                 }, 100);
+
+                // Handle year change to update month options
+                const yearSelect = document.getElementById('year');
+                const monthSelect = document.getElementById('month');
+                
+                if (yearSelect && monthSelect) {
+                    yearSelect.addEventListener('change', function() {
+                        const selectedYear = this.value;
+                        const form = this.closest('form');
+                        
+                        // Show loading state
+                        const submitBtn = form.querySelector('.filter-btn');
+                        const originalText = submitBtn.textContent;
+                        submitBtn.textContent = 'Đang tải...';
+                        submitBtn.disabled = true;
+                        
+                        // Submit form to get updated data
+                        setTimeout(() => {
+                            form.submit();
+                        }, 300);
+                    });
+                }
+
+                // Add form validation
+                const filterForm = document.querySelector('.filter-form');
+                if (filterForm) {
+                    filterForm.addEventListener('submit', function(e) {
+                        const monthSelect = this.querySelector('#month');
+                        const yearSelect = this.querySelector('#year');
+                        
+                        if (!monthSelect.value || !yearSelect.value) {
+                            e.preventDefault();
+                            alert('Vui lòng chọn cả tháng và năm!');
+                            return false;
+                        }
+                    });
+                }
             });
         </script>
     </body>

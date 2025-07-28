@@ -134,26 +134,34 @@ public class PaymentServlet extends HttpServlet {
                         cart.getTotalAmount(),
                         Status.ACTIVE
                     );
-                    
-                    // Gửi email hướng dẫn chuyển khoản nếu chọn BANKING
-//                    if (paymentMethod == PaymentMethod.BANKING) {
-//                        String subject = "Hướng dẫn chuyển khoản đơn hàng #" + createdOrder.getOrderId();
-//                        String content = "<h3>Cảm ơn bạn đã đặt hàng tại Itel Shop!</h3>"
-//                            + "<p>Vui lòng chuyển khoản theo thông tin sau để hoàn tất đơn hàng:</p>"
-//                            + "<b>Ngân hàng:</b> Vietcombank (VCB)<br>"
-//                            + "<b>Số tài khoản:</b> 0123456789<br>"
-//                            + "<b>Chủ tài khoản:</b> NGUYEN VAN A<br>"
-//                            + "<b>Số tiền:</b> " + cart.getTotalAmount() + " VNĐ<br>"
-//                            + "<b>Nội dung chuyển khoản:</b> DH" + createdOrder.getOrderId() + " hoặc số điện thoại của bạn<br>"
-//                            + "<p><i>Vui lòng chuyển khoản đúng nội dung để được xác nhận đơn hàng nhanh nhất.</i></p>";
-//                        try {
-//                            MailUtil.sendMail(email, subject, content);
-//                        } catch (MessagingException e) {
-//                            System.err.println("Gửi email thất bại: " + e.getMessage());
-//                        } catch (Exception ex) {
-//                            Logger.getLogger(PaymentServlet.class.getName()).log(Level.SEVERE, null, ex);
-//                        }
-//                    }
+
+                    // Gửi email xác nhận đơn hàng thành công cho mọi phương thức thanh toán
+                    try {
+                        String subject = "Đặt hàng thành công tại Itel Shop";
+                        StringBuilder content = new StringBuilder();
+                        content.append("<h3>Cảm ơn bạn đã đặt hàng tại Itel Shop!</h3>");
+                        content.append("<p>Đơn hàng #").append(createdOrder.getOrderId()).append(" đã được ghi nhận.</p>");
+                        content.append("<p><b>Ngày đặt hàng:</b> ").append(createdOrder.getOrderDateFormatted()).append("</p>");
+                        content.append("<p><b>Địa chỉ nhận hàng:</b> ").append(createdOrder.getShippingAddress()).append("</p>");
+                        content.append("<h4>Chi tiết đơn hàng:</h4>");
+                        content.append("<table border='1' cellpadding='6' cellspacing='0' style='border-collapse:collapse;'>");
+                        content.append("<tr><th>Sản phẩm</th><th>Số lượng</th><th>Đơn giá</th><th>Thành tiền</th></tr>");
+                        for (com.tourismapp.model.OrderDetail detail : createdOrder.getOrderDetails()) {
+                            content.append("<tr>")
+                                .append("<td>").append(detail.getProduct().getName()).append("</td>")
+                                .append("<td align='center'>").append(detail.getQuantity()).append("</td>")
+                                .append("<td align='right'>").append(String.format("%,.0f", detail.getUnitPrice())).append(" ₫</td>")
+                                .append("<td align='right'>").append(String.format("%,.0f", detail.getUnitPrice().multiply(new java.math.BigDecimal(detail.getQuantity())))).append(" ₫</td>")
+                                .append("</tr>");
+                        }
+                        content.append("<tr><td colspan='3' align='right'><b>Tổng tiền:</b></td><td align='right'><b>")
+                            .append(String.format("%,.0f", createdOrder.getTotalAmount())).append(" ₫</b></td></tr>");
+                        content.append("</table>");
+                        content.append("<p>Chúng tôi sẽ xử lý và giao hàng sớm nhất cho bạn.</p>");
+                        com.tourismapp.utils.MailUtil.sendMail(email, subject, content.toString());
+                    } catch (Exception ex) {
+                        System.err.println("Gửi email xác nhận đơn hàng thất bại: " + ex.getMessage());
+                    }
                     
                     // Get original cart from session to modify
                     Cart originalCart = (Cart) session.getAttribute("cart");

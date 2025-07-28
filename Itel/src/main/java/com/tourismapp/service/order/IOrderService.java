@@ -91,4 +91,11 @@ public interface IOrderService {
      * @return true if successful
      */
     boolean shipOrder(int orderId);
+
+    /**
+     * Find orders by status
+     * @param status Order status
+     * @return List of orders with the specified status
+     */
+    List<com.tourismapp.model.Orders> findOrdersByStatus(String status);
 }
