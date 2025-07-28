@@ -9,6 +9,7 @@ import com.tourismapp.model.Cart;
 import com.tourismapp.model.Product;
 import com.tourismapp.model.Users;
 import com.tourismapp.service.product.ProductService;
+import com.tourismapp.service.user.IUserService;
 import com.tourismapp.service.user.UserService;
 
 import jakarta.servlet.ServletException;
@@ -45,6 +46,16 @@ public class CheckoutPageServlet extends HttpServlet {
             System.out.println("User not logged in, redirecting to login");
             response.sendRedirect("/Itel/main?action=loginPage");
             return;
+        }
+
+        // Nếu người dùng đã đăng nhập, tải lại thông tin mới nhất từ cơ sở dữ liệu
+        if (user != null) {
+            IUserService userService = new UserService();
+            Users updatedUser = userService.getUserById(user.getUserId());
+            if (updatedUser != null) {
+                session.setAttribute("loggedUser", updatedUser);
+                user = updatedUser;
+            }
         }
 
         // Get cart from session
