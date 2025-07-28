@@ -47,6 +47,7 @@ com\tourismapp\model\GoogleAccount.class
 com\tourismapp\service\category\ICategoryService.class
 com\tourismapp\filter\AuthenticationFilter.class
 com\tourismapp\dao\DBConnection.class
+com\tourismapp\controller\redirectController\ChangePasswordServlet.class
 com\tourismapp\service\review\ReviewService.class
 com\tourismapp\service\brand\BrandService.class
 com\tourismapp\service\brand\IBrandService.class

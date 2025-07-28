@@ -556,355 +556,359 @@
         </style>
     </head>
 </html>
-        <%-- Navbar --%>
-        <jsp:include page="/WEB-INF/view/components/navbar.jsp"/>
-        
-        <div class="container" style="padding-top: 120px;">
-            <div class="profile-card">
-                <!-- Profile Header -->
-                <div class="profile-header">
-                    <div class="avatar" onclick="changeAvatar()">
-                        <svg width="60" height="60" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2">
-                        <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
-                        <circle cx="12" cy="7" r="4"/>
-                        </svg>
-                    </div>
-                    <h1 class="profile-name">${user.fullName}</h1>
-                    <p class="profile-role">
-                        <c:choose>
-                            <c:when test="${user.role == 'ADMIN'}">Quản trị viên</c:when>
-                            <c:when test="${user.role == 'STAFF'}">Nhân viên</c:when>
-                            <c:otherwise>Khách hàng</c:otherwise>
-                        </c:choose>
-                    </p>
-                    <div class="status-badge ${user.status == 'ACTIVE' ? 'status-active' : 'status-inactive'}">
-                        <span style="width: 8px; height: 8px; background: ${user.status == 'ACTIVE' ? '#22c55e' : '#ef4444'}; border-radius: 50%; display: inline-block;"></span>
-                        ${user.status == 'ACTIVE' ? 'Hoạt động' : 'Không hoạt động'}
-                    </div>
-                </div>
+<%-- Navbar --%>
+<jsp:include page="/WEB-INF/view/components/navbar.jsp"/>
 
-                <!-- Profile Content -->
-                <div class="profile-content">
-                    <!-- Personal Information -->
-                    <div class="section">
-                        <h2 class="section-title">
-                            <svg class="section-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+<div class="container" style="padding-top: 120px;">
+    <div class="profile-card">
+        <!-- Profile Header -->
+        <div class="profile-header">
+            <div class="avatar" onclick="changeAvatar()">
+                <svg width="60" height="60" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2">
+                <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
+                <circle cx="12" cy="7" r="4"/>
+                </svg>
+            </div>
+            <h1 class="profile-name">${user.fullName}</h1>
+            <p class="profile-role">
+                <c:choose>
+                    <c:when test="${user.role == 'ADMIN'}">Quản trị viên</c:when>
+                    <c:when test="${user.role == 'STAFF'}">Nhân viên</c:when>
+                    <c:otherwise>Khách hàng</c:otherwise>
+                </c:choose>
+            </p>
+            <div class="status-badge ${user.status == 'ACTIVE' ? 'status-active' : 'status-inactive'}">
+                <span style="width: 8px; height: 8px; background: ${user.status == 'ACTIVE' ? '#22c55e' : '#ef4444'}; border-radius: 50%; display: inline-block;"></span>
+                ${user.status == 'ACTIVE' ? 'Hoạt động' : 'Không hoạt động'}
+            </div>
+        </div>
+
+        <!-- Profile Content -->
+        <div class="profile-content">
+            <!-- Personal Information -->
+            <div class="section">
+                <h2 class="section-title">
+                    <svg class="section-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
+                    <circle cx="12" cy="7" r="4"/>
+                    </svg>
+                    Thông tin cá nhân
+                </h2>
+                <div class="details-grid">
+                    <div class="detail-item">
+                        <div class="detail-icon">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                             <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
                             <circle cx="12" cy="7" r="4"/>
                             </svg>
-                            Thông tin cá nhân
-                        </h2>
-                        <div class="details-grid">
-                            <div class="detail-item">
-                                <div class="detail-icon">
-                                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                    <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
-                                    <circle cx="12" cy="7" r="4"/>
-                                    </svg>
-                                </div>
-                                <div class="detail-label">Tên đăng nhập</div>
-                                <div class="detail-value">${user.username}</div>
-                            </div>
-
-                            <div class="detail-item">
-                                <div class="detail-icon">
-                                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                    <path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
-                                    <circle cx="8.5" cy="7" r="4"/>
-                                    <path d="m20 8-6 6"/>
-                                    <path d="m14 8 6 6"/>
-                                    </svg>
-                                </div>
-                                <div class="detail-label">Họ và tên</div>
-                                <div class="detail-value">${user.fullName}</div>
-                            </div>
-
-                            <div class="detail-item">
-                                <div class="detail-icon">
-                                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                    <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/>
-                                    <polyline points="22,6 12,13 2,6"/>
-                                    </svg>
-                                </div>
-                                <div class="detail-label">Email</div>
-                                <div class="detail-value clickable" data-copy="${user.email}">${user.email}</div>
-                            </div>
-
-                            <div class="detail-item">
-                                <div class="detail-icon">
-                                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                    <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/>
-                                    </svg>
-                                </div>
-                                <div class="detail-label">Số điện thoại</div>
-                                <div class="detail-value clickable" data-copy="${user.phone}">${user.phone}</div>
-                            </div>
-
-                            <div class="detail-item">
-                                <div class="detail-icon">
-                                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                    <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/>
-                                    <circle cx="12" cy="10" r="3"/>
-                                    </svg>
-                                </div>
-                                <div class="detail-label">Địa chỉ</div>
-                                <div class="detail-value">${user.address}</div>
-                            </div>
                         </div>
+                        <div class="detail-label">Tên đăng nhập</div>
+                        <div class="detail-value">${user.username}</div>
                     </div>
 
-                    <!-- Account Information -->
-                    <div class="section">
-                        <h2 class="section-title">
-                            <svg class="section-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <div class="detail-item">
+                        <div class="detail-icon">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
+                            <circle cx="8.5" cy="7" r="4"/>
+                            <path d="m20 8-6 6"/>
+                            <path d="m14 8 6 6"/>
+                            </svg>
+                        </div>
+                        <div class="detail-label">Họ và tên</div>
+                        <div class="detail-value">${user.fullName}</div>
+                    </div>
+
+                    <div class="detail-item">
+                        <div class="detail-icon">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/>
+                            <polyline points="22,6 12,13 2,6"/>
+                            </svg>
+                        </div>
+                        <div class="detail-label">Email</div>
+                        <div class="detail-value clickable" data-copy="${user.email}">${user.email}</div>
+                    </div>
+
+                    <div class="detail-item">
+                        <div class="detail-icon">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/>
+                            </svg>
+                        </div>
+                        <div class="detail-label">Số điện thoại</div>
+                        <div class="detail-value clickable" data-copy="${user.phone}">${user.phone}</div>
+                    </div>
+
+                    <div class="detail-item">
+                        <div class="detail-icon">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/>
+                            <circle cx="12" cy="10" r="3"/>
+                            </svg>
+                        </div>
+                        <div class="detail-label">Địa chỉ</div>
+                        <div class="detail-value">${user.address}</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Account Information -->
+            <div class="section">
+                <h2 class="section-title">
+                    <svg class="section-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M9 12l2 2 4-4"/>
+                    <path d="M21 12c.552 0 1-.448 1-1V5c0-.552-.448-1-1-1H3c-.552 0-1 .448-1 1v6c0 .552.448 1 1 1h18z"/>
+                    <path d="M21 16H3c-.552 0-1 .448-1 1v2c0 .552.448 1 1 1h18c.552 0 1-.448 1-1v-2c0-.552-.448-1-1-1z"/>
+                    </svg>
+                    Tài khoản
+                </h2>
+                <div class="details-grid">
+                    <div class="detail-item">
+                        <div class="detail-icon">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                             <path d="M9 12l2 2 4-4"/>
                             <path d="M21 12c.552 0 1-.448 1-1V5c0-.552-.448-1-1-1H3c-.552 0-1 .448-1 1v6c0 .552.448 1 1 1h18z"/>
                             <path d="M21 16H3c-.552 0-1 .448-1 1v2c0 .552.448 1 1 1h18c.552 0 1-.448 1-1v-2c0-.552-.448-1-1-1z"/>
                             </svg>
-                            Tài khoản
-                        </h2>
-                        <div class="details-grid">
-                            <div class="detail-item">
-                                <div class="detail-icon">
-                                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                    <path d="M9 12l2 2 4-4"/>
-                                    <path d="M21 12c.552 0 1-.448 1-1V5c0-.552-.448-1-1-1H3c-.552 0-1 .448-1 1v6c0 .552.448 1 1 1h18z"/>
-                                    <path d="M21 16H3c-.552 0-1 .448-1 1v2c0 .552.448 1 1 1h18c.552 0 1-.448 1-1v-2c0-.552-.448-1-1-1z"/>
-                                    </svg>
-                                </div>
-                                <div class="detail-label">Vai trò</div>
-                                <div class="detail-value">
-                                    <c:choose>
-                                        <c:when test="${user.role == 'ADMIN'}">Quản trị viên</c:when>
-                                        <c:when test="${user.role == 'STAFF'}">Nhân viên</c:when>
-                                        <c:otherwise>Khách hàng</c:otherwise>
-                                    </c:choose>
-                                </div>
-                            </div>
+                        </div>
+                        <div class="detail-label">Vai trò</div>
+                        <div class="detail-value">
+                            <c:choose>
+                                <c:when test="${user.role == 'ADMIN'}">Quản trị viên</c:when>
+                                <c:when test="${user.role == 'STAFF'}">Nhân viên</c:when>
+                                <c:otherwise>Khách hàng</c:otherwise>
+                            </c:choose>
+                        </div>
+                    </div>
 
-                            <div class="detail-item">
-                                <div class="detail-icon">
-                                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                    <polygon points="12,2 15.09,8.26 22,9.27 17,14.14 18.18,21.02 12,17.77 5.82,21.02 7,14.14 2,9.27 8.91,8.26"/>
-                                    </svg>
-                                </div>
-                                <div class="detail-label">Cấp độ thành viên</div>
-                                <div class="detail-value">
-                                    <c:choose>
-                                        <c:when test="${not empty user.membershipLevel}">
-                                            <span class="membership-badge membership-${user.membershipLevel.levelId == 1 ? 'bronze' : user.membershipLevel.levelId == 2 ? 'silver' : user.membershipLevel.levelId == 3 ? 'gold' : 'diamond'}">
-                                                <c:choose>
-                                                    <c:when test="${user.membershipLevel.levelId == 1}">🥉 Đồng</c:when>
-                                                    <c:when test="${user.membershipLevel.levelId == 2}">🥈 Bạc</c:when>
-                                                    <c:when test="${user.membershipLevel.levelId == 3}">🥇 Vàng</c:when>
-                                                    <c:otherwise>💎 Kim Cương</c:otherwise>
-                                                </c:choose>
-                                            </span>
-                                        </c:when>
-                                        <c:otherwise>
-                                            <span class="membership-badge membership-bronze">🥉 Đồng</span>
-                                        </c:otherwise>
-                                    </c:choose>
-                                </div>
-                            </div>
-
-                            <div class="detail-item">
-                                <div class="detail-icon">
-                                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                    <circle cx="12" cy="12" r="10"/>
-                                    <path d="M9 12l2 2 4-4"/>
-                                    </svg>
-                                </div>
-                                <div class="detail-label">Trạng thái</div>
-                                <div class="detail-value">
-                                    <span class="status-badge ${user.status == 'ACTIVE' ? 'status-active' : 'status-inactive'}">
-                                        <span style="width: 6px; height: 6px; background: ${user.status == 'ACTIVE' ? '#22c55e' : '#ef4444'}; border-radius: 50%; display: inline-block;"></span>
-                                        ${user.status == 'ACTIVE' ? 'Hoạt động' : 'Không hoạt động'}
+                    <div class="detail-item">
+                        <div class="detail-icon">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <polygon points="12,2 15.09,8.26 22,9.27 17,14.14 18.18,21.02 12,17.77 5.82,21.02 7,14.14 2,9.27 8.91,8.26"/>
+                            </svg>
+                        </div>
+                        <div class="detail-label">Cấp độ thành viên</div>
+                        <div class="detail-value">
+                            <c:choose>
+                                <c:when test="${not empty user.membershipLevel}">
+                                    <span class="membership-badge membership-${user.membershipLevel.levelId == 1 ? 'bronze' : user.membershipLevel.levelId == 2 ? 'silver' : user.membershipLevel.levelId == 3 ? 'gold' : 'diamond'}">
+                                        <c:choose>
+                                            <c:when test="${user.membershipLevel.levelId == 1}">🥉 Đồng</c:when>
+                                            <c:when test="${user.membershipLevel.levelId == 2}">🥈 Bạc</c:when>
+                                            <c:when test="${user.membershipLevel.levelId == 3}">🥇 Vàng</c:when>
+                                            <c:when test="${user.membershipLevel.levelId == 4}">💎 Kim Cương</c:when>
+                                            <c:otherwise>Tiêu chuẩn</c:otherwise>
+                                        </c:choose>
                                     </span>
-                                </div>
-                            </div>
+                                </c:when>
+                                <c:otherwise>
+                                    <span class="membership-badge membership-bronze">🥉 Đồng</span>
+                                </c:otherwise>
+                            </c:choose>
                         </div>
                     </div>
 
-                    <!-- Time Information -->
-                    <div class="section">
-                        <h2 class="section-title">
-                            <svg class="section-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <div class="detail-item">
+                        <div class="detail-icon">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                             <circle cx="12" cy="12" r="10"/>
-                            <polyline points="12,6 12,12 16,14"/>
+                            <path d="M9 12l2 2 4-4"/>
                             </svg>
-                            Thông tin thời gian
-                        </h2>
-                        <div class="details-grid">
-                            <div class="detail-item">
-                                <div class="detail-icon">
-                                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                    <circle cx="12" cy="12" r="10"/>
-                                    <polyline points="12,6 12,12 16,14"/>
-                                    </svg>
-                                </div>
-                                <div class="detail-label">Ngày tạo</div>
-                                <div class="detail-value timestamp">${user.createdAt}</div>
-                            </div>
-
-                            <div class="detail-item">
-                                <div class="detail-icon">
-                                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                    <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/>
-                                    <path d="m18.5 2.5 3 3L12 15l-4 1 1-4 9.5-9.5z"/>
-                                    </svg>
-                                </div>
-                                <div class="detail-label">Cập nhật gần nhất</div>
-                                <div class="detail-value timestamp">${user.updatedAt}</div>
-                            </div>
                         </div>
-                    </div>
-
-                    <!-- Action Buttons -->
-                    <div class="action-buttons">
-                        <a href="${pageContext.request.contextPath}/profilePage?action=editProfile" class="btn btn-primary">
-                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                            <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/>
-                            <path d="m18.5 2.5 3 3L12 15l-4 1 1-4 9.5-9.5z"/>
-                            </svg>
-                            Chỉnh sửa thông tin
-                        </a>
-
-<!--                        <button class="btn btn-secondary" onclick="changePassword()">
-                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                            <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/>
-                            <circle cx="12" cy="16" r="1"/>
-                            <path d="m7 11V7a5 5 0 0 1 10 0v4"/>
-                            </svg>
-                            Đổi mật khẩu
-                        </button>-->
+                        <div class="detail-label">Trạng thái</div>
+                        <div class="detail-value">
+                            <span class="status-badge ${user.status == 'ACTIVE' ? 'status-active' : 'status-inactive'}">
+                                <span style="width: 6px; height: 6px; background: ${user.status == 'ACTIVE' ? '#22c55e' : '#ef4444'}; border-radius: 50%; display: inline-block;"></span>
+                                ${user.status == 'ACTIVE' ? 'Hoạt động' : 'Không hoạt động'}
+                            </span>
+                        </div>
                     </div>
                 </div>
             </div>
+
+            <!-- Time Information -->
+            <div class="section">
+                <h2 class="section-title">
+                    <svg class="section-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <circle cx="12" cy="12" r="10"/>
+                    <polyline points="12,6 12,12 16,14"/>
+                    </svg>
+                    Thông tin thời gian
+                </h2>
+                <div class="details-grid">
+                    <div class="detail-item">
+                        <div class="detail-icon">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <circle cx="12" cy="12" r="10"/>
+                            <polyline points="12,6 12,12 16,14"/>
+                            </svg>
+                        </div>
+                        <div class="detail-label">Ngày tạo</div>
+                        <div class="detail-value timestamp">${user.createdAt}</div>
+                    </div>
+
+                    <div class="detail-item">
+                        <div class="detail-icon">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/>
+                            <path d="m18.5 2.5 3 3L12 15l-4 1 1-4 9.5-9.5z"/>
+                            </svg>
+                        </div>
+                        <div class="detail-label">Cập nhật gần nhất</div>
+                        <div class="detail-value timestamp">${user.updatedAt}</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Action Buttons -->
+            <div class="action-buttons">
+                <a href="${pageContext.request.contextPath}/profilePage?action=editProfile" class="btn btn-primary">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/>
+                    <path d="m18.5 2.5 3 3L12 15l-4 1 1-4 9.5-9.5z"/>
+                    </svg>
+                    Chỉnh sửa thông tin
+                </a>
+
+                <a href="<%= ProjectPaths.HREF_TO_CHANGEPASSWORD %>" class="btn btn-secondary">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/>
+                    <circle cx="12" cy="16" r="1"/>
+                    <path d="m7 11V7a5 5 0 0 1 10 0v4"/>
+                    </svg>
+                    Đổi mật khẩu
+                </a>
+
+
+            </div>
+
         </div>
+    </div>
+</div>
 
-        <jsp:include page="/WEB-INF/view/components/footer.jsp" />
+<jsp:include page="/WEB-INF/view/components/footer.jsp" />
 
-        <!-- Toast Notification -->
-        <div class="toast toast-success" id="toast">
-            <div class="toast-icon">✓</div>
-            <div class="toast-message">Đã sao chép thành công!</div>
-        </div>
+<!-- Toast Notification -->
+<div class="toast toast-success" id="toast">
+    <div class="toast-icon">✓</div>
+    <div class="toast-message">Đã sao chép thành công!</div>
+</div>
 
-        <script>
-            // Copy to clipboard functionality
-            document.addEventListener('DOMContentLoaded', function () {
-                document.querySelectorAll('.detail-value.clickable').forEach(element => {
-                    element.title = 'Click để sao chép';
+<script>
+    // Copy to clipboard functionality
+    document.addEventListener('DOMContentLoaded', function () {
+        document.querySelectorAll('.detail-value.clickable').forEach(element => {
+            element.title = 'Click để sao chép';
 
-                    element.addEventListener('click', function () {
-                        const text = this.getAttribute('data-copy') || this.textContent.trim();
+            element.addEventListener('click', function () {
+                const text = this.getAttribute('data-copy') || this.textContent.trim();
 
-                        if (navigator.clipboard) {
-                            navigator.clipboard.writeText(text).then(() => {
-                                showToast('Đã sao chép: ' + text);
+                if (navigator.clipboard) {
+                    navigator.clipboard.writeText(text).then(() => {
+                        showToast('Đã sao chép: ' + text);
 
-                                // Visual feedback
-                                const original = this.textContent;
-                                const originalColor = this.style.color;
-                                this.textContent = 'Đã sao chép!';
-                                this.style.color = '#22c55e';
+                        // Visual feedback
+                        const original = this.textContent;
+                        const originalColor = this.style.color;
+                        this.textContent = 'Đã sao chép!';
+                        this.style.color = '#22c55e';
 
-                                setTimeout(() => {
-                                    this.textContent = original;
-                                    this.style.color = originalColor;
-                                }, 2000);
-                            }).catch(() => {
-                                showToast('Không thể sao chép', 'error');
-                            });
-                        } else {
-                            // Fallback for older browsers
-                            const textArea = document.createElement('textarea');
-                            textArea.value = text;
-                            document.body.appendChild(textArea);
-                            textArea.select();
-                            try {
-                                document.execCommand('copy');
-                                showToast('Đã sao chép: ' + text);
-                            } catch (err) {
-                                showToast('Không thể sao chép', 'error');
-                            }
-                            document.body.removeChild(textArea);
-                        }
-                    });
-                });
-            });
-
-            function showToast(message, type = 'success') {
-                const toast = document.getElementById('toast');
-                const toastMessage = toast.querySelector('.toast-message');
-                const toastIcon = toast.querySelector('.toast-icon');
-
-                toastMessage.textContent = message;
-                toast.className = `toast toast-${type}`;
-
-                if (type === 'success') {
-                    toastIcon.textContent = '✓';
-                } else if (type === 'error') {
-                    toastIcon.textContent = '✕';
-                }
-
-                toast.classList.add('show');
-
-                setTimeout(() => {
-                    toast.classList.remove('show');
-                }, 3000);
-            }
-
-
-            function changeAvatar() {
-                // Future implementation for avatar upload
-                showToast('Tính năng thay đổi ảnh đại diện sẽ được cập nhật sớm!', 'info');
-            }
-
-            // Add some interactivity
-            document.addEventListener('DOMContentLoaded', function () {
-                // Animate detail items on scroll
-                const observer = new IntersectionObserver((entries) => {
-                    entries.forEach(entry => {
-                        if (entry.isIntersecting) {
-                            entry.target.style.animationPlayState = 'running';
-                        }
-                    });
-                });
-
-                document.querySelectorAll('.detail-item').forEach(item => {
-                    observer.observe(item);
-                });
-
-                // Add keyboard navigation for clickable elements
-                document.querySelectorAll('.detail-value.clickable').forEach(element => {
-                    element.setAttribute('tabindex', '0');
-                    element.addEventListener('keydown', function (e) {
-                        if (e.key === 'Enter' || e.key === ' ') {
-                            e.preventDefault();
-                            this.click();
-                        }
-                    });
-                });
-            });
-
-            // Add loading state for buttons
-            document.querySelectorAll('.btn').forEach(btn => {
-                btn.addEventListener('click', function (e) {
-                    if (this.classList.contains('btn-primary')) {
-                        const originalContent = this.innerHTML;
-                        this.innerHTML = '<div class="loading"></div> Đang xử lý...';
-                        this.disabled = true;
-
-                        // Re-enable after navigation (this won't execute if page changes)
                         setTimeout(() => {
-                            this.innerHTML = originalContent;
-                            this.disabled = false;
+                            this.textContent = original;
+                            this.style.color = originalColor;
                         }, 2000);
+                    }).catch(() => {
+                        showToast('Không thể sao chép', 'error');
+                    });
+                } else {
+                    // Fallback for older browsers
+                    const textArea = document.createElement('textarea');
+                    textArea.value = text;
+                    document.body.appendChild(textArea);
+                    textArea.select();
+                    try {
+                        document.execCommand('copy');
+                        showToast('Đã sao chép: ' + text);
+                    } catch (err) {
+                        showToast('Không thể sao chép', 'error');
                     }
-                });
+                    document.body.removeChild(textArea);
+                }
             });
-        </script>
-    </body>
+        });
+    });
+
+    function showToast(message, type = 'success') {
+        const toast = document.getElementById('toast');
+        const toastMessage = toast.querySelector('.toast-message');
+        const toastIcon = toast.querySelector('.toast-icon');
+
+        toastMessage.textContent = message;
+        toast.className = `toast toast-${type}`;
+
+        if (type === 'success') {
+            toastIcon.textContent = '✓';
+        } else if (type === 'error') {
+            toastIcon.textContent = '✕';
+        }
+
+        toast.classList.add('show');
+
+        setTimeout(() => {
+            toast.classList.remove('show');
+        }, 3000);
+    }
+
+
+    function changeAvatar() {
+        // Future implementation for avatar upload
+        showToast('Tính năng thay đổi ảnh đại diện sẽ được cập nhật sớm!', 'info');
+    }
+
+    // Add some interactivity
+    document.addEventListener('DOMContentLoaded', function () {
+        // Animate detail items on scroll
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.style.animationPlayState = 'running';
+                }
+            });
+        });
+
+        document.querySelectorAll('.detail-item').forEach(item => {
+            observer.observe(item);
+        });
+
+        // Add keyboard navigation for clickable elements
+        document.querySelectorAll('.detail-value.clickable').forEach(element => {
+            element.setAttribute('tabindex', '0');
+            element.addEventListener('keydown', function (e) {
+                if (e.key === 'Enter' || e.key === ' ') {
+                    e.preventDefault();
+                    this.click();
+                }
+            });
+        });
+    });
+
+    // Add loading state for buttons
+    document.querySelectorAll('.btn').forEach(btn => {
+        btn.addEventListener('click', function (e) {
+            if (this.classList.contains('btn-primary')) {
+                const originalContent = this.innerHTML;
+                this.innerHTML = '<div class="loading"></div> Đang xử lý...';
+                this.disabled = true;
+
+                // Re-enable after navigation (this won't execute if page changes)
+                setTimeout(() => {
+                    this.innerHTML = originalContent;
+                    this.disabled = false;
+                }, 2000);
+            }
+        });
+    });
+</script>
+</body>
 </html>

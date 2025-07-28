@@ -4,6 +4,7 @@ import com.tourismapp.config.ProjectPaths;
 import com.tourismapp.controller.mainController.MainControllerServlet;
 import com.tourismapp.model.Users;
 import com.tourismapp.service.user.UserService;
+import com.tourismapp.utils.ErrDialog;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
@@ -15,6 +16,7 @@ import java.util.regex.Pattern;
 
 @WebServlet(name = "ProfilePageServlet", urlPatterns = {MainControllerServlet.PROFILEPAGE_SERVLET})
 public class ProfilePageServlet extends HttpServlet {
+
     private UserService userService;
 
     @Override
@@ -34,6 +36,7 @@ public class ProfilePageServlet extends HttpServlet {
         }
 
         String action = request.getParameter("action") != null ? request.getParameter("action") : MainControllerServlet.ACTION_VIEW_PROFILE;
+//        ErrDialog.showError("ProServlet: " + action);
 
         switch (action) {
             case MainControllerServlet.ACTION_VIEW_PROFILE:
@@ -44,6 +47,11 @@ public class ProfilePageServlet extends HttpServlet {
                 request.setAttribute("user", loggedUser);
                 request.getRequestDispatcher(ProjectPaths.JSP_EDIT_PROFILEPAGE_PATH).forward(request, response);
                 break;
+            case MainControllerServlet.ACTION_CHANGE_PASSWORD:
+                request.setAttribute("user", loggedUser);
+                request.getRequestDispatcher(ProjectPaths.JSP_CHANGE_PASSWORD_PATH).forward(request, response);
+                break;
+
             default:
                 response.sendRedirect("errorAtMainController.jsp");
         }
