@@ -97,9 +97,9 @@
                                                placeholder="Thành phố" required>
                                     </div>
                                     <div class="col-md-6 mb-3">
-                                        <label for="district" class="form-label">Quận/Huyện *</label>
+                                        <label for="district" class="form-label">Xã *</label>
                                         <input type="text" class="form-control" id="district" name="district" 
-                                               placeholder="Quận/Huyện" required>
+                                               placeholder="Xã" required>
                                     </div>
                                 </div>
                             </div>
@@ -818,3 +818,6 @@
         }
     }
 </style>
+
+    <!-- Chatbox AI -->
+    <jsp:include page="/WEB-INF/view/components/chatbox.jsp" />

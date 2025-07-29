@@ -270,6 +270,9 @@
             </div>
         </form>
     </div>
+    
+    <!-- Chatbox AI -->
+    <jsp:include page="/WEB-INF/view/components/chatbox.jsp" />
 </body>
 
 </html>

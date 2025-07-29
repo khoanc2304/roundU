@@ -223,5 +223,8 @@
     </div>
 <!-- Bootstrap JS (v5) for collapse functionality -->
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+
+<!-- Chatbox AI -->
+<jsp:include page="/WEB-INF/view/components/chatbox.jsp" />
 </body>
 </html>

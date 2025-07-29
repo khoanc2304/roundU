@@ -125,6 +125,9 @@
         </section>
 
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+        
+        <!-- Chatbox AI -->
+        <jsp:include page="/WEB-INF/view/components/chatbox.jsp" />
     </body>
 </html>
 
