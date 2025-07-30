@@ -36,6 +36,7 @@ public class AuthenticationFilter implements Filter {
                 || action.equals(MainControllerServlet.FORGOTPASSWORD_REDIRECT)
                 || action.equals(MainControllerServlet.REGISTERPAGE_REDIRECT)
                 || action.equals(MainControllerServlet.ACTION_FORGOT_PASSWORD)
+                || action.equals(MainControllerServlet.ACTION_SEARCH_ACTIVE_PRODUCT)
                 || action.equalsIgnoreCase("verifyOtp"))) {
             chain.doFilter(request, response);
             return;

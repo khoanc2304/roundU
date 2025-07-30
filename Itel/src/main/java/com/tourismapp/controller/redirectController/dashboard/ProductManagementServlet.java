@@ -194,9 +194,10 @@ public class ProductManagementServlet extends HttpServlet {
         findProduct.get().setBrand(new Brand(Integer.parseInt(request.getParameter("brandId"))));
         findProduct.get().setCategory(new Category(Integer.parseInt(request.getParameter("categoryId"))));
         findProduct.get().setStatus(Status.valueOf(request.getParameter("status").toUpperCase()));
-//        findProduct.get().setImageUrl(imageUrl);
+        findProduct.get().setImageUrl(request.getParameter("imageUrl"));
 
         boolean isUpdated = productService.editProduct(findProduct.get());
+
         if (isUpdated) {
             request.getSession().setAttribute("successMessage", "Cập nhập sản phẩm thành công.");
             response.sendRedirect(ProjectPaths.HREF_TO_MAINCONTROLLER + MainControllerServlet.ACTION_MANAGE_PRODUCT + "&id=" + productId);

@@ -424,14 +424,14 @@
                                         </div>
 
                                         <div class="comment-actions">
-                                            <button class="action-btn">
+<!--                                            <button class="action-btn">
                                                 <span>👍</span>
                                                 <span>0</span>
                                             </button>
                                             <button class="action-btn">
                                                 <span>💬</span>
                                                 <span>Trả lời</span>
-                                            </button>
+                                            </button>-->
                                             <c:if test="${review.user.userId == sessionScope.loggedUser.userId}">
                                                 <button class="action-btn edit-btn" onclick="toggleEditMode(this)">🖊 Sửa</button>
                                             </c:if>

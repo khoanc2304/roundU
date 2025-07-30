@@ -382,7 +382,8 @@
                         filterProducts();
                     });
                 });
-
+                
+//COMPARE
                 const addProductBtn = document.querySelectorAll('.add-to-compare');
                 let hasAddedProduct = false;
                 const addedProductsSet = new Set();
@@ -487,12 +488,12 @@
                     compareToggle.style.display = 'none';
                     updateCompareButton();
                 });
-
+///nhảy sang COMPARE servlet
                 compareNowBtn.addEventListener('click', () => {
-                if (!compareNowBtn.disabled) {
-                    const productIds = Array.from(addedProductsSet).join('-');
-                    console.log("list productid: " + productIds);
-                    window.location.href = `compare?productIds=` + productIds;
+                    if (!compareNowBtn.disabled) {
+                        const productIds = Array.from(addedProductsSet).join('-');
+                        console.log("list productid: " + productIds);
+                        window.location.href = `compare?productIds=` + productIds;
                     }
                 });
 
@@ -844,5 +845,5 @@
     }
 </style>
 
-        <!-- Chatbox AI -->
-        <jsp:include page="/WEB-INF/view/components/chatbox.jsp" />
+<!-- Chatbox AI -->
+<jsp:include page="/WEB-INF/view/components/chatbox.jsp" />

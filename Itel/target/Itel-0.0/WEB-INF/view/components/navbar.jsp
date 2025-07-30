@@ -1,9 +1,18 @@
 <%@ page import="com.tourismapp.config.ProjectPaths" %>
 <%@ page import="com.tourismapp.controller.mainController.MainControllerServlet" %>
-<%@page contentType="text/html" pageEncoding="UTF-8"%>
+<%@ page contentType="text/html" pageEncoding="UTF-8"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+<%@ page import="com.tourismapp.model.Users" %>
 <%@ page session="true" %>
-
+<%
+    Users loggedUser = (Users) session.getAttribute("loggedUser");
+    String fullName = loggedUser != null ? loggedUser.getFullName() : "";
+    String lastName = "";
+    if (fullName != null && !fullName.trim().isEmpty()) {
+        String[] parts = fullName.trim().split("\\s+");
+        lastName = parts[parts.length - 1]; 
+    }
+%>
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -24,7 +33,7 @@
         <a href="<%= ProjectPaths.HREF_TO_HOMEPAGE %>" class="logo">
             <img src="resources/itel.png" alt="Itel Shop Logo">
         </a>
-            
+
         <div class="category-menu position-relative">
             <button class="category-btn">
                 <span>☰</span>Danh mục
@@ -40,7 +49,7 @@
                 <button type="submit"><i class="fas fa-search"></i></button>
             </form>
         </div>
-        
+
         <nav class="nav-links d-flex align-items-center gap-3">
             <a href="#" class="nav-link"><i class="fas fa-bell me-1"></i> Thông báo</a>
             <a href="#" class="nav-link"><i class="fas fa-headset me-1"></i> Hỗ trợ</a>
@@ -53,7 +62,8 @@
                     <div class="dropdown">
                         <div class="dropdown-toggle d-flex align-items-center gap-2">
                             <img src="${sessionScope.loggedUser.imageUrl}" alt="Avatar" class="rounded-circle" style="width: 35px; height: 35px;">
-                            <span class="text-black fw-bold">Xin chào, ${sessionScope.loggedUser.fullName}</span>
+<!--                            <span class="text-black fw-bold">Xin chào, ${sessionScope.loggedUser.fullName}</span>-->
+                            <span class="text-black fw-bold">Xin chào, <%= lastName %></span>
                         </div>
                         <div class="dropdown-content">
                             <c:if test="${sessionScope.loggedUser.role.getValue() == 'admin' || sessionScope.loggedUser.role.getValue() == 'staff'}">

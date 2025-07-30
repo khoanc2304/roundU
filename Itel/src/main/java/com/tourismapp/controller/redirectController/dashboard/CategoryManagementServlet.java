@@ -133,7 +133,7 @@ public class CategoryManagementServlet extends HttpServlet {
     private void editCategory(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         String idParam = request.getParameter("categoryId");
-        ErrDialog.showError("idpara: " + idParam);
+//        ErrDialog.showError("idpara: " + idParam);
         if (idParam == null || idParam.isEmpty()) {
             response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Thiếu tham số ID category");
             return;
