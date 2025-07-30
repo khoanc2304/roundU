@@ -89,7 +89,7 @@
                                                         <button class="btn btn-outline-secondary btn-sm qty-btn" type="button" onclick="updateQuantity(${item.product.productId}, ${item.quantity - 1})">
                                                             <i class="fas fa-minus"></i>
                                                         </button>
-                                                        <input type="number" class="form-control form-control-sm text-center" value="${item.quantity}" min="1" onchange="updateQuantity(${item.product.productId}, this.value)">
+                                                        <input type="number" class="form-control form-control-sm text-center" value="${item.quantity}" min="1" data-stock="${item.product.stockQuantity}" onchange="updateQuantity(${item.product.productId}, this.value)">
                                                         <button class="btn btn-outline-secondary btn-sm qty-btn" type="button" onclick="updateQuantity(${item.product.productId}, ${item.quantity + 1})">
                                                             <i class="fas fa-plus"></i>
                                                         </button>
@@ -362,14 +362,28 @@
                                                             .then(response => response.json())
                                                             .then(data => {
                                                                 if (data.success) {
-                                                                    location.reload(); // Reload to update totals
+                                                                    location.reload(); // Reload để cập nhật tổng
                                                                 } else {
-                                                                    alert('Error updating cart');
+                                                                    alert(data.message); // Hiển thị thông báo lỗi từ server
+                                                                    location.reload();
+
+                                                                    const input = document.querySelector(`.cart-item[data-product-id="${productId}"] input[type="number"]`);
+                                                                    let stock = parseInt(input.dataset.stock) || 1; // Fallback từ data-stock
+
+                                                                    // Parse stock từ message (ví dụ: lấy 45 từ "Số lượng vượt quá tồn kho (45)!")
+                                                                    const match = data.message.match(/\(\d+\)/);
+                                                                    if (match) {
+                                                                        stock = parseInt(match[0].replace(/\(|\)/g, '')); // Lấy số từ ngoặc đơn
+                                                                    }
+
+                                                                    if (input) {
+                                                                        input.value = stock; // Nhảy về stock sau khi nhấn OK
+                                                                    }
+                                                                    updateSelection(); // Cập nhật tổng tiền sau khi thay đổi
                                                                 }
                                                             })
                                                             .catch(error => {
                                                                 console.error('Error:', error);
-                                                                alert('Error updating cart');
                                                             });
                                                 }
 
@@ -422,7 +436,7 @@
                                                     updateSelection();
                                                 });
         </script>
-        
+
         <!-- Chatbox AI -->
         <jsp:include page="/WEB-INF/view/components/chatbox.jsp" />
     </body>
