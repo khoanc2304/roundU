@@ -79,15 +79,11 @@ public class PaymentServlet extends HttpServlet {
             String checkoutType = request.getParameter("checkoutType"); // "all" or "selected"
             
             // Get discount information ====== VINH ==============================
-            String couponCode = request.getParameter("appliedCouponCode");
             String membershipDiscountPercentStr = request.getParameter("membershipDiscountPercent");
-            String couponDiscountPercentStr = request.getParameter("couponDiscountPercent");
             String finalAmountStr = request.getParameter("finalAmount");
             
             System.out.println("Payment processing - checkoutType: " + checkoutType);
-            System.out.println("Coupon code: " + couponCode);
             System.out.println("Membership discount: " + membershipDiscountPercentStr + "%");
-            System.out.println("Coupon discount: " + couponDiscountPercentStr + "%");
             System.out.println("Final amount: " + finalAmountStr);
             //================================================================//
             
@@ -126,73 +122,20 @@ public class PaymentServlet extends HttpServlet {
                 }
             }
             
-            // Calculate final amount with discounts          VINH ===============================
+            // Calculate final amount with discounts using OrderDAO function
             BigDecimal originalAmount = cart.getTotalAmount();
             BigDecimal finalAmount = originalAmount;
             
-            // Apply membership discount if available
-            if (membershipDiscountPercentStr != null && !membershipDiscountPercentStr.isEmpty()) {
-                try {
-                    double membershipDiscountPercent = Double.parseDouble(membershipDiscountPercentStr);
-                    if (membershipDiscountPercent > 0) {
-                        BigDecimal discountFactor = BigDecimal.valueOf(membershipDiscountPercent / 100.0);
-                        BigDecimal membershipDiscount = originalAmount.multiply(discountFactor).setScale(0, RoundingMode.HALF_UP);
-                        finalAmount = finalAmount.subtract(membershipDiscount);
-                        System.out.println("Applied membership discount: " + membershipDiscount);
-                    }
-                } catch (NumberFormatException e) {
-                    System.err.println("Invalid membership discount: " + e.getMessage());
-                }
+            // Get user's membership level ID
+            int membershipLevelId = 5; // Default to standard level
+            if (user.getMembershipLevel() != null) {
+                membershipLevelId = user.getMembershipLevel().getLevelId();
             }
             
-            // Apply coupon discount if available
-            if (couponCode != null && !couponCode.isEmpty() && couponDiscountPercentStr != null && !couponDiscountPercentStr.isEmpty()) {
-                try {
-                    String couponDiscountType = request.getParameter("couponDiscountType");
-                    double couponDiscountValue = Double.parseDouble(couponDiscountPercentStr);
-                    
-                    if (couponDiscountValue > 0) {
-                        // Validate coupon (basic validation)
-                        if (couponCode.equals("BACKTOSCHOOL10") || couponCode.equals("BACKTOSCHOOL15") || 
-                            couponCode.equals("AUGUST10") || couponCode.equals("AUGUST15") ||
-                            couponCode.equals("FRESHMAN") || couponCode.equals("BLACKFRIDAY") ||
-                            couponCode.equals("FIRSTORDER") || couponCode.equals("SCHOOL1M")) {
-                            
-                            BigDecimal couponDiscount;
-                            
-                            // Calculate discount based on type
-                            if ("fixed".equals(couponDiscountType)) {
-                                // Fixed amount discount
-                                couponDiscount = BigDecimal.valueOf(couponDiscountValue);
-                                System.out.println("Applied fixed coupon discount: " + couponDiscount);
-                            } else {
-                                // Percentage discount
-                                BigDecimal discountFactor = BigDecimal.valueOf(couponDiscountValue / 100.0);
-                                couponDiscount = originalAmount.multiply(discountFactor).setScale(0, RoundingMode.HALF_UP);
-                                System.out.println("Applied percentage coupon discount: " + couponDiscount);
-                            }
-                            
-                            finalAmount = finalAmount.subtract(couponDiscount);
-                        }
-                    }
-                } catch (NumberFormatException e) {
-                    System.err.println("Invalid coupon discount: " + e.getMessage());
-                }
-            }
+            // Calculate discounted total using OrderService function (no coupon code)
+            finalAmount = orderService.calculateDiscountedTotal(originalAmount, membershipLevelId, null);
             
-            // Use the provided final amount if available
-            if (finalAmountStr != null && !finalAmountStr.isEmpty()) {
-                try {
-                    finalAmount = new BigDecimal(finalAmountStr);
-                } catch (NumberFormatException e) {
-                    System.err.println("Invalid final amount: " + e.getMessage());
-                }
-            }
-            
-            // Ensure final amount is not negative
-            if (finalAmount.compareTo(BigDecimal.ZERO) < 0) {
-                finalAmount = BigDecimal.ZERO;
-            }
+            System.out.println("Original amount: " + originalAmount + ", Final amount after discount: " + finalAmount);
             //======================================================================================
             
             
@@ -217,6 +160,16 @@ public class PaymentServlet extends HttpServlet {
                 System.out.println("Order creation result: " + (createdOrder != null ? "Success, ID: " + createdOrder.getOrderId() : "Failed"));
                 
                 if (createdOrder != null) {
+                    // Update order total amount with discounted amount
+                    boolean updateSuccess = orderService.updateOrderTotalAmount(createdOrder.getOrderId(), finalAmount);
+                    if (updateSuccess) {
+                        System.out.println("Successfully updated order total amount to: " + finalAmount);
+                        // Update the created order object with new total amount
+                        createdOrder.setTotalAmount(finalAmount);
+                    } else {
+                        System.out.println("Failed to update order total amount");
+                    }
+                    
                     // Create payment record
                     Payment payment = new Payment(
                         createdOrder,

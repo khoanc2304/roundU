@@ -236,4 +236,25 @@ public class OrderService implements IOrderService {
     public List<Orders> findOrdersByStatus(String status) {
         return orderDAO.findOrdersByStatus(status);
     }
+    
+    /**
+     * Calculate discounted total amount for an order
+     * @param originalAmount Original order amount
+     * @param membershipLevelId User's membership level ID
+     * @param couponCode Applied coupon code (can be null)
+     * @return Discounted total amount
+     */
+    public java.math.BigDecimal calculateDiscountedTotal(java.math.BigDecimal originalAmount, int membershipLevelId, String couponCode) {
+        return orderDAO.calculateDiscountedTotal(originalAmount, membershipLevelId, couponCode);
+    }
+    
+    /**
+     * Update order total amount after applying discounts
+     * @param orderId Order ID
+     * @param discountedTotal New total amount after discount
+     * @return true if successful
+     */
+    public boolean updateOrderTotalAmount(int orderId, java.math.BigDecimal discountedTotal) {
+        return orderDAO.updateOrderTotalAmount(orderId, discountedTotal);
+    }
 }

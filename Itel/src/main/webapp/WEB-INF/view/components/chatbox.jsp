@@ -319,7 +319,7 @@
             e.preventDefault();
             const text = input.value.trim();
             if (!text || isTyping) return;
-
+            
             // Thêm tin nhắn của user
             appendMsg(text, 'user');
             input.value = '';

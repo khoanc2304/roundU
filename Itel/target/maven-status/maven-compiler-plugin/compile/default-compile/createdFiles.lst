@@ -20,8 +20,10 @@ com\tourismapp\controller\redirectController\ProfilePageServlet.class
 com\tourismapp\dao\relation\BrandCategoryDAO.class
 com\tourismapp\dto\BrandCategoryDTO.class
 com\tourismapp\utils\ErrDialog.class
+com\tourismapp\service\chat\ChatDatabaseService$StatisticsData.class
 com\tourismapp\model\Users.class
 com\tourismapp\controller\redirectController\dashboard\DashboardPageServlet.class
+com\tourismapp\service\chat\ChatDatabaseService$DatabaseResponse.class
 com\tourismapp\service\cart\CartService.class
 com\tourismapp\dao\product\ProductDAO.class
 com\tourismapp\model\GoogleAccount.class
@@ -56,6 +58,7 @@ com\tourismapp\dao\brand\IBrandDAO.class
 com\tourismapp\api\TestServlet.class
 com\tourismapp\model\ProductDetail.class
 com\tourismapp\controller\paymentController\PaymentServlet.class
+com\tourismapp\service\chat\ChatDatabaseService.class
 com\tourismapp\service\coupon\CouponService.class
 com\tourismapp\model\StatisticReview.class
 com\tourismapp\service\relation\IBrandCategoryService.class

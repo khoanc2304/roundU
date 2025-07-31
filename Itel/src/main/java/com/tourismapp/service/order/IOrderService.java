@@ -98,5 +98,22 @@ public interface IOrderService {
      * @return List of orders with the specified status
      */
     List<Orders> findOrdersByStatus(String status);
+    
+    /**
+     * Calculate discounted total amount for an order
+     * @param originalAmount Original order amount
+     * @param membershipLevelId User's membership level ID
+     * @param couponCode Applied coupon code (can be null)
+     * @return Discounted total amount
+     */
+    java.math.BigDecimal calculateDiscountedTotal(java.math.BigDecimal originalAmount, int membershipLevelId, String couponCode);
+    
+    /**
+     * Update order total amount after applying discounts
+     * @param orderId Order ID
+     * @param discountedTotal New total amount after discount
+     * @return true if successful
+     */
+    boolean updateOrderTotalAmount(int orderId, java.math.BigDecimal discountedTotal);
 
 }

@@ -6,10 +6,10 @@ END
 GO
 
 -- Tạo lại database
-CREATE DATABASE Itel_Shop3;
+CREATE DATABASE Itel_Shop20;
 GO
 
-USE Itel_Shop;
+USE Itel_Shop20;
 GO
 
 -- Xóa bảng theo thứ tự tránh lỗi ràng buộc

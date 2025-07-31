@@ -1,5 +1,6 @@
 <%@ page contentType="text/html;charset=UTF-8" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
 <html>
 <head>
     <title>Chi tiết đơn hàng</title>
@@ -23,7 +24,24 @@
             <p><strong>Trạng thái:</strong> ${order.status}</p>
             <p><strong>Ngày đặt:</strong> ${order.orderDateFormatted}</p>
             <p><strong>Địa chỉ giao hàng:</strong> ${order.shippingAddress}</p>
-            <p><strong>Tổng tiền:</strong> <span style="color:#2c7bb8; font-weight:700;">${order.totalAmount}</span></p>
+            
+            <!-- Tính toán và hiển thị discount breakdown -->
+            <c:set var="subtotal" value="0"/>
+            <c:forEach var="detail" items="${order.orderDetails}">
+                <c:set var="subtotal" value="${subtotal + (detail.unitPrice * detail.quantity)}"/>
+            </c:forEach>
+            
+            <c:if test="${subtotal != order.totalAmount}">
+                <p><strong>Tạm tính:</strong> <span style="color:#666; text-decoration:line-through;">
+                    <fmt:formatNumber value="${subtotal}" pattern="#,###.###"/> VNĐ
+                </span></p>
+                <p><strong>Giảm giá:</strong> <span style="color:#e74c3c; font-weight:700;">
+                    -<fmt:formatNumber value="${subtotal - order.totalAmount}" pattern="#,###.###"/> VNĐ
+                </span></p>
+            </c:if>
+            <p><strong>Tổng tiền:</strong> <span style="color:#2c7bb8; font-weight:700;">
+                <fmt:formatNumber value="${order.totalAmount}" pattern="#,###.###"/> VNĐ
+            </span></p>
         </div>
         <c:if test="${not empty order.orderDetails}">
             <div class="order-products">
@@ -42,8 +60,8 @@
                             <tr>
                                 <td>${detail.product.name}</td>
                                 <td>${detail.quantity}</td>
-                                <td>${detail.unitPrice}</td>
-                                <td>${detail.unitPrice * detail.quantity}</td>
+                                <td><fmt:formatNumber value="${detail.unitPrice}" pattern="#,###.###"/> VNĐ</td>
+                                <td><fmt:formatNumber value="${detail.unitPrice * detail.quantity}" pattern="#,###.###"/> VNĐ</td>
                             </tr>
                         </c:forEach>
                     </tbody>

@@ -9,13 +9,18 @@ import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 
 import com.tourismapp.dao.DBConnection;
+import com.tourismapp.dao.coupon.CouponDAO;
+import com.tourismapp.dao.coupon.ICouponDAO;
 import com.tourismapp.model.OrderDetail;
 import com.tourismapp.model.OrderStat;
 import com.tourismapp.model.Orders;
 import com.tourismapp.model.Product;
 import com.tourismapp.model.Users;
+import com.tourismapp.model.Coupon;
 import com.tourismapp.utils.ErrDialog;
 import java.util.logging.Logger;
 
@@ -480,6 +485,91 @@ public class OrderDAO implements IOrderDAO {
         for (Orders o: os) {
             System.out.println(o);
         }
+    }
+    
+    @Override
+    public boolean updateOrderTotalAmount(int orderId, BigDecimal discountedTotal) {
+        String sql = "UPDATE Orders SET total_amount = ? WHERE order_id = ?";
+        
+        try (Connection connection = dbConnection.getConnection(); 
+             PreparedStatement statement = connection.prepareStatement(sql)) {
+            
+            statement.setBigDecimal(1, discountedTotal);
+            statement.setInt(2, orderId);
+            
+            int rowsAffected = statement.executeUpdate();
+            return rowsAffected > 0;
+            
+        } catch (SQLException e) {
+            LOGGER.severe("Error updating order total amount: " + e.getMessage());
+            ErrDialog.showError("Error updating order total amount: " + e.getMessage());
+            return false;
+        }
+    }
+    
+    @Override
+    public BigDecimal calculateDiscountedTotal(BigDecimal originalAmount, int membershipLevelId, String couponCode) {
+        BigDecimal finalAmount = originalAmount;
+        
+        // Apply membership level discount
+        if (membershipLevelId > 0 && membershipLevelId <= 4) {
+            BigDecimal discountPercent = BigDecimal.ZERO;
+            
+            switch (membershipLevelId) {
+                case 1: // Đồng
+                    discountPercent = new BigDecimal("3");
+                    break;
+                case 2: // Bạc
+                    discountPercent = new BigDecimal("5");
+                    break;
+                case 3: // Vàng
+                    discountPercent = new BigDecimal("7");
+                    break;
+                case 4: // Kim cương
+                    discountPercent = new BigDecimal("10");
+                    break;
+                default:
+                    discountPercent = BigDecimal.ZERO;
+            }
+            
+            if (discountPercent.compareTo(BigDecimal.ZERO) > 0) {
+                BigDecimal discountFactor = discountPercent.divide(new BigDecimal("100"), 4, RoundingMode.HALF_UP);
+                BigDecimal membershipDiscount = originalAmount.multiply(discountFactor).setScale(0, RoundingMode.HALF_UP);
+                finalAmount = finalAmount.subtract(membershipDiscount);
+                
+                LOGGER.info("Applied membership discount: " + membershipDiscount + " (" + discountPercent + "%)");
+            }
+        }
+        
+        // Apply coupon discount if provided
+        if (couponCode != null && !couponCode.trim().isEmpty()) {
+            try {
+                ICouponDAO couponDAO = new CouponDAO();
+                Optional<Coupon> couponOpt = couponDAO.findCouponByCode(couponCode);
+                
+                if (couponOpt.isPresent()) {
+                    Coupon coupon = couponOpt.get();
+                    if (coupon.isActive() && coupon.isValid()) {
+                        BigDecimal couponDiscountPercent = coupon.getDiscountPercent();
+                        BigDecimal discountFactor = couponDiscountPercent.divide(new BigDecimal("100"), 4, RoundingMode.HALF_UP);
+                        BigDecimal couponDiscount = originalAmount.multiply(discountFactor).setScale(0, RoundingMode.HALF_UP);
+                        finalAmount = finalAmount.subtract(couponDiscount);
+                        
+                        LOGGER.info("Applied coupon discount: " + couponDiscount + " (" + couponDiscountPercent + "%)");
+                    }
+                }
+            } catch (Exception e) {
+                LOGGER.warning("Error applying coupon discount: " + e.getMessage());
+            }
+        }
+        
+        // Ensure final amount is not negative
+        if (finalAmount.compareTo(BigDecimal.ZERO) < 0) {
+            finalAmount = BigDecimal.ZERO;
+        }
+        
+        LOGGER.info("Original amount: " + originalAmount + ", Final amount after discount: " + finalAmount);
+        return finalAmount;
     }
     
 }

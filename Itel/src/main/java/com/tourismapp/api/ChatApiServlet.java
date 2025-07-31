@@ -11,11 +11,14 @@ import org.json.JSONObject;
 import org.json.JSONArray;
 import org.apache.http.client.fluent.Request;
 import org.apache.http.entity.ContentType;
+import com.tourismapp.service.chat.ChatDatabaseService;
+import com.tourismapp.service.chat.ChatDatabaseService.DatabaseResponse;
 
-// @WebServlet(name = "ChatApiServlet", urlPatterns = {"/Itel/api/chat"})
+@WebServlet(name = "ChatApiServlet", urlPatterns = {"/Itel/api/chat"})
 public class ChatApiServlet extends HttpServlet {
-    private static final String GEMINI_API_KEY = "GEMINI_API_KEY";
+    private static final String GEMINI_API_KEY = "AIzaSyAQOhALT1ZFY8t80YSXmEIZ54AKZK_3WSA";
     private static final String GEMINI_API_URL = "https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash-latest:generateContent?key=" + GEMINI_API_KEY;
+    private final ChatDatabaseService chatDatabaseService = new ChatDatabaseService();
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -77,7 +80,20 @@ public class ChatApiServlet extends HttpServlet {
                 return;
             }
             
-            String answer = callGeminiApi(userInput);
+            // Phân tích câu hỏi và kiểm tra xem có liên quan đến database không
+            DatabaseResponse dbResponse = chatDatabaseService.analyzeQuestion(userInput);
+            
+            String answer;
+            if (dbResponse.hasData()) {
+                // Câu hỏi liên quan đến database, tạo prompt với dữ liệu từ DB
+                String enhancedPrompt = chatDatabaseService.createAIPrompt(userInput, dbResponse);
+                System.out.println("Enhanced Prompt: " + enhancedPrompt);
+                answer = callGeminiApi(enhancedPrompt);
+            } else {
+                // Câu hỏi không liên quan đến database, sử dụng câu hỏi gốc
+                answer = callGeminiApi(userInput);
+            }
+            
             System.out.println("AI Answer: " + answer);
             sendSuccessResponse(response, answer);
             
