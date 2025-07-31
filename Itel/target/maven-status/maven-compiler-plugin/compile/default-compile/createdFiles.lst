@@ -53,6 +53,7 @@ com\tourismapp\service\cart\ICartService.class
 com\tourismapp\controller\chatController\ChatHistoryServlet.class
 com\tourismapp\model\CartItem.class
 com\tourismapp\dao\brand\IBrandDAO.class
+com\tourismapp\api\TestServlet.class
 com\tourismapp\model\ProductDetail.class
 com\tourismapp\controller\paymentController\PaymentServlet.class
 com\tourismapp\service\coupon\CouponService.class

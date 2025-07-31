@@ -1,29 +1,19 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package com.tourismapp.dao.user;
 
-import com.sun.tools.xjc.reader.xmlschema.bindinfo.BIConversion.User;
 import com.tourismapp.model.Users;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.List;
 import java.util.Optional;
 
-/**
- *
- * @author Admin
- */
 public interface IUserDAO {
-    
+
     Users mapUser(ResultSet rs) throws SQLException;
 
-    List< Users> getAllUsers();
+    List<Users> getAllUsers();
 
     Optional<Users> findUserByCredentials(String identifier, String password);
-    
-    
+
     // HUY
     Users getUserById(int userId);
 
@@ -34,5 +24,18 @@ public interface IUserDAO {
     boolean deleteUser(int userId);
 
     List<Users> searchUsers(String username, String status);
+
+    // EXTENSION - bổ sung để kiểm tra từng field trùng lặp
+    boolean usernameExists(String username);
+
+    boolean emailExists(String email);
+
+    boolean phoneExists(String phone);
+
+    Optional<Users> findUserByUsername(String username);
+
+    Optional<Users> findUserByEmail(String email);
+
+    Optional<Users> findUserByPhone(String phone);
 
 }

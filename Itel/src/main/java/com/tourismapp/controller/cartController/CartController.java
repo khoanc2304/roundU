@@ -119,74 +119,97 @@ public class CartController extends HttpServlet {
     }
     
     private void addToCart(HttpServletRequest request, HttpServletResponse response, Cart cart)
-            throws IOException, ServletException {
-        try {
-            int productId = Integer.parseInt(request.getParameter("productId"));
-            int quantity = Integer.parseInt(request.getParameter("quantity"));
-            // Get product from database
-            Optional<Product> productOpt = productService.findProductById(productId);
-            if (productOpt.isPresent()) {
-                Product product = productOpt.get();
-                // Check stock availability
-                if (product.getStockQuantity() >= quantity) {
-                    // Check if item already exists
-                    CartItem existingItem = cart.getItem(productId);
-                    boolean itemExists = existingItem != null;
-                    // Use addItemWithIncrease to add quantity even if item exists
-                    cart.addItemWithIncrease(product, quantity);
-                    // Nếu là request từ form (không phải AJAX), redirect sang giỏ hàng
-                    String requestedWith = request.getHeader("X-Requested-With");
-                    if (requestedWith == null) {
-                        response.sendRedirect(request.getContextPath() + "/main?action=cartPage");
-                        return;
-                    }
-                    // Nếu là AJAX thì trả về JSON như cũ
-                    response.setContentType("application/json");
-                    PrintWriter out = response.getWriter();
-                    if (itemExists) {
-                        int newQuantity = cart.getItem(productId).getQuantity();
-                        out.print("{\"success\":true,\"message\":\"Đã tăng số lượng sản phẩm lên " + newQuantity + "\",\"cartCount\":" + cart.getTotalItems() + ",\"alreadyExists\":true}");
-                    } else {
-                        out.print("{\"success\":true,\"message\":\"Đã thêm sản phẩm vào giỏ hàng\",\"cartCount\":" + cart.getTotalItems() + ",\"alreadyExists\":false}");
-                    }
-                    out.flush();
-                } else {
-                    response.setContentType("application/json");
-                    PrintWriter out = response.getWriter();
-                    out.print("{\"success\":false,\"message\":\"Insufficient stock\"}");
-                    out.flush();
+        throws IOException, ServletException {
+    try {
+        int productId = Integer.parseInt(request.getParameter("productId"));
+        int quantity = Integer.parseInt(request.getParameter("quantity"));
+        // Get product from database
+        Optional<Product> productOpt = productService.findProductById(productId);
+        if (productOpt.isPresent()) {
+            Product product = productOpt.get();
+            // Lấy số lượng hiện tại trong giỏ (nếu có)
+            CartItem existingItem = cart.getItem(productId);
+            int currentQuantity = (existingItem != null) ? existingItem.getQuantity() : 0;
+            int newTotalQuantity = currentQuantity + quantity;
+
+            // Kiểm tra stock availability với tổng số lượng mới
+            if (newTotalQuantity <= product.getStockQuantity()) {
+                // Use addItemWithIncrease to add or increase quantity
+                cart.addItemWithIncrease(product, quantity);
+                // Nếu là request từ form (không phải AJAX), redirect sang giỏ hàng
+                String requestedWith = request.getHeader("X-Requested-With");
+                if (requestedWith == null) {
+                    response.sendRedirect(request.getContextPath() + "/main?action=cartPage");
+                    return;
                 }
+                // Nếu là AJAX thì trả về JSON
+                response.setContentType("application/json");
+                PrintWriter out = response.getWriter();
+                if (existingItem != null) {
+                    int newQuantity = cart.getItem(productId).getQuantity();
+                    out.print("{\"success\":true,\"message\":\"Đã tăng số lượng sản phẩm lên " + newQuantity + "\",\"cartCount\":" + cart.getTotalItems() + ",\"alreadyExists\":true}");
+                } else {
+                    out.print("{\"success\":true,\"message\":\"Đã thêm sản phẩm vào giỏ hàng\",\"cartCount\":" + cart.getTotalItems() + ",\"alreadyExists\":false}");
+                }
+                out.flush();
             } else {
                 response.setContentType("application/json");
                 PrintWriter out = response.getWriter();
-                out.print("{\"success\":false,\"message\":\"Product not found\"}");
+                out.print("{\"success\":false,\"message\":\"Số lượng vượt quá tồn kho! Chỉ có thể đặt " + product.getStockQuantity() + " sản phẩm.\",\"stock\":" + product.getStockQuantity() + "}");
                 out.flush();
             }
-        } catch (NumberFormatException e) {
-            response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Invalid parameters");
-        } catch (Exception e) {
-            ErrDialog.showError("Error adding to cart: " + e.getMessage());
-            response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "Server error");
-        }
-    }
-    
-    private void updateCart(HttpServletRequest request, HttpServletResponse response, Cart cart)
-            throws IOException {
-        try {
-            int productId = Integer.parseInt(request.getParameter("productId"));
-            int quantity = Integer.parseInt(request.getParameter("quantity"));
-            
-            cart.updateItem(productId, quantity);
-            
-            // Return updated cart info
+        } else {
             response.setContentType("application/json");
             PrintWriter out = response.getWriter();
-            out.print("{\"success\":true,\"cartCount\":" + cart.getTotalItems() + ",\"total\":\"" + cart.getTotalAmount() + "\"}");
+            out.print("{\"success\":false,\"message\":\"Sản phẩm không tồn tại!\",\"stock\":0}");
             out.flush();
-        } catch (NumberFormatException e) {
-            response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Invalid parameters");
         }
+    } catch (NumberFormatException e) {
+        response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Invalid parameters");
+    } catch (Exception e) {
+        ErrDialog.showError("Error adding to cart: " + e.getMessage());
+        response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "Server error");
     }
+}
+    
+    private void updateCart(HttpServletRequest request, HttpServletResponse response, Cart cart)
+        throws IOException {
+    try {
+        int productId = Integer.parseInt(request.getParameter("productId"));
+        int quantity = Integer.parseInt(request.getParameter("quantity"));
+
+        // Lấy sản phẩm từ database để kiểm tra stock
+        Optional<Product> productOpt = productService.findProductById(productId);
+        if (productOpt.isPresent()) {
+            Product product = productOpt.get();
+            if (quantity > product.getStockQuantity()) {
+                // Trả về lỗi nếu vượt stock
+                response.setContentType("application/json");
+                PrintWriter out = response.getWriter();
+                out.print("{\"success\":false,\"message\":\"Số lượng đặt vượt quá tồn kho! Chỉ có thể đặt " + product.getStockQuantity() + " sản phẩm.\"}");
+                out.flush();
+                return;
+            }
+        } else {
+            response.setContentType("application/json");
+            PrintWriter out = response.getWriter();
+            out.print("{\"success\":false,\"message\":\"Sản phẩm không tồn tại!\"}");
+            out.flush();
+            return;
+        }
+
+        // Nếu hợp lệ, update cart
+        cart.updateItem(productId, quantity);
+
+        // Return updated cart info
+        response.setContentType("application/json");
+        PrintWriter out = response.getWriter();
+        out.print("{\"success\":true,\"cartCount\":" + cart.getTotalItems() + ",\"total\":\"" + cart.getTotalAmount() + "\"}");
+        out.flush();
+    } catch (NumberFormatException e) {
+        response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Invalid parameters");
+    }
+}
     
     private void removeFromCart(HttpServletRequest request, HttpServletResponse response, Cart cart)
             throws IOException {

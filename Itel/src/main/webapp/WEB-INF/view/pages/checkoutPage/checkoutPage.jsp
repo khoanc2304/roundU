@@ -97,9 +97,9 @@
                                                placeholder="Thành phố" required>
                                     </div>
                                     <div class="col-md-6 mb-3">
-                                        <label for="district" class="form-label">Quận/Huyện *</label>
+                                        <label for="district" class="form-label">Xã *</label>
                                         <input type="text" class="form-control" id="district" name="district" 
-                                               placeholder="Quận/Huyện" required>
+                                               placeholder="Xã" required>
                                     </div>
                                 </div>
                             </div>
@@ -191,7 +191,7 @@
                                           placeholder="Các yêu cầu đặc biệt cho đơn hàng của bạn..."></textarea>
                             </div>
                         </div>
-                        
+
                         <!-- Discount Code -->
                         <div class="card mb-4">
                             <div class="card-header">
@@ -304,7 +304,7 @@
                                 <input type="hidden" id="couponCode" name="couponCode" value="">
                                 <input type="hidden" id="couponDiscountType" name="couponDiscountType" value="percent">
                                 <div id="couponMessage" class="mt-2" style="display: none;"></div>
-                                
+
                                 <c:if test="${not empty user.membershipLevel && user.membershipLevel.levelId != 5}">
                                     <div class="alert alert-info mt-3">
                                         <div class="d-flex align-items-center">
@@ -384,7 +384,7 @@
                                 <span>Phí giao hàng:</span>
                                 <span class="text-success">Miễn phí</span>
                             </div>
-                            
+
                             <!-- Membership Discount -->
                             <c:if test="${not empty user.membershipLevel && user.membershipLevel.levelId != 5}">
                                 <div class="d-flex justify-content-between mb-2 text-success">
@@ -400,7 +400,7 @@
                                     <span>-<span id="membershipDiscountAmount"><fmt:formatNumber value="${cart.totalAmount * (user.membershipLevel.levelId == 1 ? 0.03 : user.membershipLevel.levelId == 2 ? 0.05 : user.membershipLevel.levelId == 3 ? 0.07 : 0.1)}" pattern="#,###.###"/></span> VNĐ</span>
                                 </div>
                             </c:if>
-                            
+
                             <!-- Coupon Discount -->
                             <div class="d-flex justify-content-between mb-2 text-success" id="couponDiscountRow" style="display: none !important;">
                                 <span>Mã giảm giá (<span id="couponDiscountPercent">0</span>%):</span>
@@ -511,18 +511,18 @@
             document.getElementById('cvv')?.addEventListener('input', function (e) {
                 e.target.value = e.target.value.replace(/[^0-9]/g, '');
             });
-            
+
             // Coupon selection and application
             document.querySelectorAll('.coupon-item').forEach(item => {
-                item.addEventListener('click', function(e) {
+                item.addEventListener('click', function (e) {
                     e.preventDefault();
-                    
+
                     // Get coupon data from data attributes
                     const couponCode = this.dataset.code;
                     const discountValue = parseFloat(this.dataset.discount);
                     const minPurchase = parseFloat(this.dataset.min || 0);
                     const discountType = this.dataset.type || 'percent'; // 'percent' or 'fixed'
-                    
+
                     // Get UI elements
                     const couponMessageDiv = document.getElementById('couponMessage');
                     const couponDiscountRow = document.getElementById('couponDiscountRow');
@@ -530,48 +530,48 @@
                     const couponDiscountAmount = document.getElementById('couponDiscountAmount');
                     const finalTotal = document.getElementById('finalTotal');
                     const selectedCouponText = document.getElementById('selectedCouponText');
-                    
+
                     // Get original amount and membership discount
                     const originalAmount = parseFloat(document.querySelector('input[name="originalAmount"]').value);
                     const membershipDiscountPercent = parseFloat(document.querySelector('input[name="membershipDiscountPercent"]').value);
-                    
+
                     // Clear previous message
                     couponMessageDiv.style.display = 'none';
-                    
+
                     // If no coupon selected or clearing coupon
                     if (!couponCode) {
                         // Reset UI
                         selectedCouponText.textContent = 'Chọn mã giảm giá';
                         couponDiscountRow.style.display = 'none';
-                        
+
                         // Calculate final amount with only membership discount
                         const membershipDiscount = (originalAmount * membershipDiscountPercent / 100).toFixed(0);
                         const finalAmount = originalAmount - parseFloat(membershipDiscount);
-                        
+
                         // Update UI
                         finalTotal.textContent = new Intl.NumberFormat('vi-VN').format(finalAmount);
-                        
+
                         // Update hidden fields
                         document.getElementById('couponCode').value = '';
                         document.getElementById('couponDiscountType').value = 'percent';
                         document.querySelector('input[name="finalAmount"]').value = finalAmount;
-                        
+
                         // Remove coupon discount input if exists
                         let couponDiscountInput = document.querySelector('input[name="couponDiscountPercent"]');
                         if (couponDiscountInput) {
                             couponDiscountInput.value = '0';
                         }
-                        
+
                         return;
                     }
-                    
+
                     // Check minimum purchase requirement
                     if (originalAmount < minPurchase) {
                         couponMessageDiv.innerHTML = '<div class="alert alert-warning">Đơn hàng tối thiểu ' + new Intl.NumberFormat('vi-VN').format(minPurchase) + 'đ để sử dụng mã này</div>';
                         couponMessageDiv.style.display = 'block';
                         return;
                     }
-                    
+
                     // Calculate discount amount
                     let couponDiscount;
                     if (discountType === 'fixed') {
@@ -581,23 +581,23 @@
                         couponDiscount = (originalAmount * discountValue / 100).toFixed(0);
                         couponDiscountPercent.textContent = discountValue + '%';
                     }
-                    
+
                     const membershipDiscount = (originalAmount * membershipDiscountPercent / 100).toFixed(0);
                     const totalDiscount = parseFloat(couponDiscount) + parseFloat(membershipDiscount);
                     const finalAmount = originalAmount - totalDiscount;
-                    
+
                     // Update UI
                     selectedCouponText.textContent = couponCode;
                     couponDiscountAmount.textContent = new Intl.NumberFormat('vi-VN').format(couponDiscount);
                     finalTotal.textContent = new Intl.NumberFormat('vi-VN').format(finalAmount);
                     couponDiscountRow.style.display = 'flex !important';
                     couponDiscountRow.setAttribute('style', 'display: flex !important');
-                    
+
                     // Update hidden fields
                     document.getElementById('couponCode').value = couponCode;
                     document.getElementById('couponDiscountType').value = discountType;
                     document.querySelector('input[name="finalAmount"]').value = finalAmount;
-                    
+
                     // Add hidden field for coupon discount
                     let couponDiscountInput = document.querySelector('input[name="couponDiscountPercent"]');
                     if (!couponDiscountInput) {
@@ -606,13 +606,13 @@
                         couponDiscountInput.name = 'couponDiscountPercent';
                         document.getElementById('checkoutForm').appendChild(couponDiscountInput);
                     }
-                    
+
                     if (discountType === 'fixed') {
                         couponDiscountInput.value = discountValue;
                     } else {
                         couponDiscountInput.value = discountValue;
                     }
-                    
+
                     // Show success message
                     couponMessageDiv.innerHTML = '<div class="alert alert-success">Mã giảm giá đã được áp dụng thành công!</div>';
                     couponMessageDiv.style.display = 'block';
@@ -777,7 +777,7 @@
         color: #007bff;
     }
 
-    .payment-option:has(input:checked) {
+    .payment-option.checked {
         border-color: #007bff;
         background-color: #f8f9ff;
     }
@@ -818,3 +818,6 @@
         }
     }
 </style>
+
+<!-- Chatbox AI -->
+<jsp:include page="/WEB-INF/view/components/chatbox.jsp" />

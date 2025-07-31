@@ -19,6 +19,6 @@
     </servlet>
     <servlet-mapping>
         <servlet-name>ChatApiServlet</servlet-name>
-        <url-pattern>/Itel/api/chat</url-pattern>
+        <url-pattern>/api/chat-ai</url-pattern>
     </servlet-mapping>
 </web-app>

@@ -5,7 +5,9 @@ import com.tourismapp.dao.cart.ICartDAO;
 import com.tourismapp.model.Cart;
 import com.tourismapp.model.CartItem;
 import com.tourismapp.model.Product;
+import com.tourismapp.service.product.ProductService;
 import com.tourismapp.utils.ErrDialog;
+import java.util.Optional;
 
 /**
  * Cart Service Implementation
@@ -66,14 +68,25 @@ public class CartService implements ICartService {
     }
     
     @Override
-    public boolean updateUserCartItem(int userId, int productId, int quantity) {
-        try {
-            return cartDAO.updateCartItem(userId, productId, quantity);
-        } catch (Exception e) {
-            ErrDialog.showError("Error in CartService.updateUserCartItem: " + e.getMessage());
+public boolean updateUserCartItem(int userId, int productId, int quantity) {
+    try {
+        // Lấy sản phẩm để kiểm tra stock
+        Optional<Product> productOpt = new ProductService().findProductById(productId); // Giả sử bạn inject ProductService
+        if (productOpt.isPresent()) {
+            Product product = productOpt.get();
+            if (quantity > product.getStockQuantity()) {
+                return false; // Không update nếu vượt stock
+            }
+        } else {
             return false;
         }
+
+        return cartDAO.updateCartItem(userId, productId, quantity);
+    } catch (Exception e) {
+        ErrDialog.showError("Error in CartService.updateUserCartItem: " + e.getMessage());
+        return false;
     }
+}
     
     @Override
     public boolean removeItemFromUserCart(int userId, int productId) {
