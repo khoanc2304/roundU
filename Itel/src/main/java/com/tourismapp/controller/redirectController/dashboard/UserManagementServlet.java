@@ -7,8 +7,8 @@ import com.tourismapp.config.ProjectPaths;
 import com.tourismapp.controller.mainController.MainControllerServlet;
 import static com.tourismapp.controller.mainController.MainControllerServlet.*;
 import com.tourismapp.model.Users;
-import com.tourismapp.service.user.IUserService;
 import com.tourismapp.service.user.UserService;
+import com.tourismapp.utils.ErrDialog;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
@@ -17,12 +17,14 @@ import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 
 @WebServlet(name = "UserManagementServlet", urlPatterns = {MainControllerServlet.USER_MANAGEMENT_SERVLET})
 public class UserManagementServlet extends HttpServlet {
 
     private static final String ACTION_SEARCH_USERS = "searchUsers";
-    private IUserService userService;
+    private UserService userService;
 
     @Override
     public void init() throws ServletException {
@@ -92,29 +94,91 @@ public class UserManagementServlet extends HttpServlet {
             switch (action) {
                 case ACTION_CREATE_USER:
                     Users newUser = extractUserFromRequest(request);
-                    System.out.println("User to create: " + newUser);
-                    if (userService.createUser(newUser)) {
-                        request.getSession().setAttribute("toastMessage", "Tạo người dùng thành công!");
-                    } else {
-                        request.getSession().setAttribute("toastMessage", "Lỗi khi tạo người dùng!");
+                    Map<String, String> errors = userService.validateUserData(newUser, Boolean.FALSE);
+
+                    if (!errors.isEmpty()) {
+                        request.setAttribute("errors", errors);
+                        // Gửi lại các field đúng
+                        request.setAttribute("username", newUser.getUsername());
+                        request.setAttribute("fullName", newUser.getFullName());
+                        request.setAttribute("email", newUser.getEmail());
+                        request.setAttribute("phone", newUser.getPhone());
+                        request.setAttribute("address", newUser.getAddress());
+                        request.setAttribute("role", newUser.getRole().getValue());
+                        request.setAttribute("membershipLevelId", String.valueOf(newUser.getMembershipLevel().getId()));
+
+                        request.getRequestDispatcher(ProjectPaths.JSP_PATH_DASHBOARD + "userManagement/createUser.jsp")
+                                .forward(request, response);
+                        return;
                     }
-                    break;
+
+                    boolean success = userService.createUser(newUser);
+
+                    if (success) {
+                        request.getSession().setAttribute("toastMessage", "Tạo người dùng thành công!");
+                        response.sendRedirect(ProjectPaths.HREF_TO_USERMANAGEMENT);
+                    } else {
+                        request.setAttribute("errorMessage", "Không thể tạo người dùng. Có thể username/email đã tồn tại trong DB.");
+                        // Giữ lại dữ liệu
+                        request.setAttribute("username", newUser.getUsername());
+                        request.setAttribute("fullName", newUser.getFullName());
+                        request.setAttribute("email", newUser.getEmail());
+                        request.setAttribute("phone", newUser.getPhone());
+                        request.setAttribute("address", newUser.getAddress());
+                        request.setAttribute("role", newUser.getRole().getValue());
+                        request.setAttribute("membershipLevelId", String.valueOf(newUser.getMembershipLevel().getId()));
+
+                        request.getRequestDispatcher(ProjectPaths.JSP_PATH_DASHBOARD + "userManagement/createUser.jsp")
+                                .forward(request, response);
+                    }
+                    return;
+
                 case ACTION_EDIT_USER:
                     int userId = Integer.parseInt(request.getParameter("id"));
                     Users existingUser = userService.getUserById(userId);
+
                     if (existingUser == null) {
                         request.getSession().setAttribute("toastMessage", "Không tìm thấy người dùng!");
                         response.sendRedirect(ProjectPaths.HREF_TO_USERMANAGEMENT);
                         return;
                     }
+
                     Users updatedUser = updateUserFromRequest(request, existingUser);
-                    System.out.println("User to update: " + updatedUser);
+
+                    // Kiểm tra trùng lặp username, email, phone trong DB (trừ chính user đang sửa)
+                    errors = userService.validateUserData(updatedUser, true);
+
+                    Optional<Users> userByUsername = userService.findUserByUsername(updatedUser.getUsername());
+                    if (userByUsername.isPresent() && userByUsername.get().getUserId() != updatedUser.getUserId()) {
+                        errors.put("username", "Tên đăng nhập đã tồn tại.");
+                    }
+
+                    Optional<Users> userByEmail = userService.findUserByEmail(updatedUser.getEmail());
+                    if (userByEmail.isPresent() && userByEmail.get().getUserId() != updatedUser.getUserId()) {
+                        errors.put("email", "Email đã tồn tại.");
+                    }
+
+                    Optional<Users> userByPhone = userService.findUserByPhone(updatedUser.getPhone());
+                    if (userByPhone.isPresent() && userByPhone.get().getUserId() != updatedUser.getUserId()) {
+                        errors.put("phone", "Số điện thoại đã tồn tại.");
+                    }
+
+                    if (!errors.isEmpty()) {
+                        request.setAttribute("errors", errors);
+                        request.setAttribute("user", updatedUser);
+                        request.getRequestDispatcher(ProjectPaths.JSP_PATH_DASHBOARD + "userManagement/editUser.jsp").forward(request, response);
+                        return;
+                    }
+
                     if (userService.updateUser(updatedUser)) {
                         request.getSession().setAttribute("toastMessage", "Cập nhật người dùng thành công!");
                     } else {
                         request.getSession().setAttribute("toastMessage", "Lỗi khi cập nhật người dùng!");
                     }
-                    break;
+                    response.sendRedirect(ProjectPaths.HREF_TO_USERMANAGEMENT);
+                    
+                    return;
+
                 case ACTION_DELETE_USER:
                     String userIdStr = request.getParameter("userId");
                     System.out.println("Deleting user with ID: " + userIdStr);
@@ -149,79 +213,62 @@ public class UserManagementServlet extends HttpServlet {
     private Users extractUserFromRequest(HttpServletRequest request) {
         Users user = new Users();
 
-        try {
-            String username = request.getParameter("username");
-            String password = request.getParameter("password");
-            String fullName = request.getParameter("fullName");
-            String email = request.getParameter("email");
-            String phone = request.getParameter("phone");
-            String address = request.getParameter("address");
-            String roleStr = request.getParameter("role");
-            String statusStr = request.getParameter("status");
-            String membershipLevelIdStr = request.getParameter("membershipLevelId");
+        String username = request.getParameter("username");
+        String password = request.getParameter("password");
+        String fullName = request.getParameter("fullName");
+        String email = request.getParameter("email");
+        String phone = request.getParameter("phone");
+        String address = request.getParameter("address");
+        String roleStr = request.getParameter("role");
+        String statusStr = request.getParameter("status");
+        String membershipLevelIdStr = request.getParameter("membershipLevelId");
 
-            System.out.println("DEBUG: username=" + username);
-            System.out.println("DEBUG: password=" + password);
-            System.out.println("DEBUG: fullName=" + fullName);
-            System.out.println("DEBUG: email=" + email);
-            System.out.println("DEBUG: phone=" + phone);
-            System.out.println("DEBUG: address=" + address);
-            System.out.println("DEBUG: role=" + roleStr);
-            System.out.println("DEBUG: status=" + statusStr);
-            System.out.println("DEBUG: membershipLevelId=" + membershipLevelIdStr);
+        user.setUsername(username);
+        user.setPassword(password);
+        user.setFullName(fullName);
+        user.setEmail(email);
+        user.setPhone(phone);
+        user.setAddress(address);
 
-            user.setUsername(username);
-            user.setPassword(password);
-            user.setFullName(fullName);
-            user.setEmail(email);
-            user.setPhone(phone);
-            user.setAddress(address);
-
-            if (roleStr != null && !roleStr.trim().isEmpty()) {
-                try {
-                    user.setRole(UserRole.valueOf(roleStr.toUpperCase()));
-                } catch (IllegalArgumentException e) {
-                    throw new IllegalArgumentException("Vai trò không hợp lệ: " + roleStr);
-                }
-            } else {
-                throw new IllegalArgumentException("Vai trò là bắt buộc.");
+        // ✅ Mặc định role là CUSTOMER nếu không có hoặc sai
+        UserRole role = UserRole.CUSTOMER;
+        if (roleStr != null && !roleStr.trim().isEmpty()) {
+            try {
+                role = UserRole.fromString(roleStr);
+            } catch (IllegalArgumentException e) {
+                System.out.println("Role không hợp lệ: " + roleStr + " → fallback CUSTOMER");
             }
-
-            if (statusStr != null && !statusStr.trim().isEmpty()) {
-                try {
-                    user.setStatus(Status.valueOf(statusStr.toUpperCase()));
-                } catch (IllegalArgumentException e) {
-                    throw new IllegalArgumentException("Trạng thái không hợp lệ: " + statusStr);
-                }
-            } else {
-                user.setStatus(Status.ACTIVE);
-            }
-
-            if (membershipLevelIdStr != null && !membershipLevelIdStr.trim().isEmpty()) {
-                try {
-                    int levelId = Integer.parseInt(membershipLevelIdStr);
-                    MembershipLevel level = MembershipLevel.fromId(levelId);
-                    if (level != null) {
-                        user.setMembershipLevel(level);
-                    } else {
-                        throw new IllegalArgumentException("Cấp độ thành viên không hợp lệ: " + levelId);
-                    }
-                } catch (NumberFormatException e) {
-                    throw new IllegalArgumentException("ID cấp độ thành viên phải là số.");
-                }
-            } else {
-                throw new IllegalArgumentException("Cấp độ thành viên là bắt buộc.");
-            }
-
-            LocalDateTime now = LocalDateTime.now();
-            user.setCreatedAt(now);
-            user.setUpdatedAt(now);
-
-        } catch (Exception e) {
-            System.out.println("LỖI khi tạo user: " + e.getMessage());
-            e.printStackTrace();
-            throw e;
         }
+        user.setRole(role);
+
+        // ✅ Mặc định status là ACTIVE nếu không có
+        Status status = Status.ACTIVE;
+        if (statusStr != null && !statusStr.trim().isEmpty()) {
+            try {
+                status = Status.valueOf(statusStr.toUpperCase());
+            } catch (IllegalArgumentException e) {
+                System.out.println("Status không hợp lệ: " + statusStr + " → fallback ACTIVE");
+            }
+        }
+        user.setStatus(status);
+
+        // ✅ Mặc định membershipLevel là STANDARD nếu không có hoặc sai
+        MembershipLevel membershipLevel = MembershipLevel.STANDARD;
+        if (membershipLevelIdStr != null && !membershipLevelIdStr.trim().isEmpty()) {
+            try {
+                int levelId = Integer.parseInt(membershipLevelIdStr);
+                MembershipLevel parsed = MembershipLevel.fromId(levelId);
+                if (parsed != null) {
+                    membershipLevel = parsed;
+                }
+            } catch (NumberFormatException e) {
+                System.out.println("Membership level không hợp lệ: " + membershipLevelIdStr + " → fallback STANDARD");
+            }
+        }
+        user.setMembershipLevel(membershipLevel);
+
+        user.setCreatedAt(LocalDateTime.now());
+        user.setUpdatedAt(LocalDateTime.now());
 
         return user;
     }
@@ -269,7 +316,7 @@ public class UserManagementServlet extends HttpServlet {
         }
 
         String membershipLevelId = request.getParameter("membershipLevelId");
-        System.out.println("Membership Level ID from form: " + membershipLevelId);
+        ErrDialog.showError("Membership Level ID from form: " + membershipLevelId);
         try {
             if (membershipLevelId != null && !membershipLevelId.trim().isEmpty()) {
                 int id = Integer.parseInt(membershipLevelId);
@@ -291,5 +338,4 @@ public class UserManagementServlet extends HttpServlet {
         return user;
     }
     // </editor-fold>
-
 }

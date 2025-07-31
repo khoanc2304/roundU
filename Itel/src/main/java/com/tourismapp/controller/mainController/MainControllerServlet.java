@@ -193,7 +193,6 @@ public class MainControllerServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         String action = request.getParameter("action") != null ? request.getParameter("action").trim() : "";
-//        ErrDialog.showError("doPost: " + action);
         switch (action) {
             case ACTION_LOGIN ->
                 request.getRequestDispatcher(LOGINPAGE_REDIRECT).forward(request, response);

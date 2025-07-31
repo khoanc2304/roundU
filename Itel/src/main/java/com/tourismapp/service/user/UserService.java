@@ -1,31 +1,25 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package com.tourismapp.service.user;
 
 import com.tourismapp.common.MembershipLevel;
+import com.tourismapp.common.Status;
+import com.tourismapp.common.UserRole;
 import com.tourismapp.dao.DBConnection;
 import com.tourismapp.dao.user.IUserDAO;
 import com.tourismapp.dao.user.UserDAO;
 import com.tourismapp.model.Users;
+
 import java.math.BigDecimal;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.List;
-import java.util.Optional;
+import java.time.LocalDateTime;
+import java.util.*;
 
-/**
- *
- * @author Admin
- */
 public class UserService implements IUserService {
 
     private final IUserDAO userDAO = new UserDAO();
-    
-    // KHOA
+
     @Override
     public List<Users> getAllUsers() {
         return userDAO.getAllUsers();
@@ -35,9 +29,7 @@ public class UserService implements IUserService {
     public Optional<Users> findUserByCredentials(String identifier, String password) {
         return userDAO.findUserByCredentials(identifier, password);
     }
-    
-    
-    //========================================================= HUY====================================================
+
     @Override
     public Users getUserById(int userId) {
         return userDAO.getUserById(userId);
@@ -45,13 +37,67 @@ public class UserService implements IUserService {
 
     @Override
     public boolean createUser(Users user) {
+        // Nếu không validate trước thì vẫn cần check lại membership
         if (!isValidMembershipLevel(user.getMembershipLevel().getId())) {
-            throw new IllegalArgumentException("Cấp độ thành viên không tồn tại: " + user.getMembershipLevel().getId());
-        }
-        if (isUsernameExists(user.getUsername())) {
-            throw new IllegalArgumentException("Tên đăng nhập đã tồn tại: " + user.getUsername());
+            throw new IllegalArgumentException("Cấp độ thành viên không tồn tại.");
         }
         return userDAO.createUser(user);
+    }
+
+// ✅ Hàm validate logic như ở Servlet trước đây
+    public Map<String, String> validateUserData(Users user, boolean isUpdate) {
+        Map<String, String> errors = new HashMap<>();
+
+        if (user.getUsername() == null || user.getUsername().trim().isEmpty()) {
+            errors.put("username", "Tên đăng nhập không được để trống.");
+        }
+
+        if (!isUpdate && (user.getPassword() == null || user.getPassword().trim().isEmpty())) {
+            errors.put("password", "Mật khẩu không được để trống.");
+        }
+
+        if (user.getFullName() == null || user.getFullName().trim().isEmpty()) {
+            errors.put("fullName", "Họ tên không được để trống.");
+        }
+
+        if (user.getEmail() == null || user.getEmail().trim().isEmpty()) {
+            errors.put("email", "Email không được để trống.");
+        } else if (!user.getEmail().matches("^[\\w-.]+@([\\w-]+\\.)+[\\w-]{2,4}$")) {
+            errors.put("email", "Email không hợp lệ.");
+        }
+
+        if (user.getPhone() == null || !user.getPhone().matches("^\\d{10,11}$")) {
+            errors.put("phone", "Số điện thoại phải gồm 10 hoặc 11 chữ số.");
+        }
+
+        if (user.getAddress() == null || user.getAddress().trim().isEmpty()) {
+            errors.put("address", "Địa chỉ không được để trống.");
+        }
+
+        if (user.getRole() == null) {
+            errors.put("role", "Vai trò là bắt buộc.");
+        }
+
+        if (user.getMembershipLevel() == null) {
+            user.setMembershipLevel(MembershipLevel.STANDARD);
+        }
+
+        return errors;
+    }
+
+    @Override
+    public Optional<Users> findUserByUsername(String username) {
+        return userDAO.findUserByUsername(username);
+    }
+
+    @Override
+    public Optional<Users> findUserByEmail(String email) {
+        return userDAO.findUserByEmail(email);
+    }
+
+    @Override
+    public Optional<Users> findUserByPhone(String phone) {
+        return userDAO.findUserByPhone(phone);
     }
 
     @Override
@@ -72,133 +118,156 @@ public class UserService implements IUserService {
         return userDAO.searchUsers(username, status);
     }
 
-    private boolean isValidMembershipLevel(int levelId) {
-        return levelId >= 1 && levelId <= 5;
-    }
-
-    private boolean isUsernameExists(String username) {
-        String sql = "SELECT COUNT(*) FROM Users WHERE username = ?";
-        try (java.sql.Connection conn = com.tourismapp.dao.DBConnection.getConnection(); java.sql.PreparedStatement ps = conn.prepareStatement(sql)) {
-            ps.setString(1, username);
-            try (java.sql.ResultSet rs = ps.executeQuery()) {
-                if (rs.next()) {
-                    return rs.getInt(1) > 0;
-                }
-            }
-        } catch (java.sql.SQLException e) {
-            e.printStackTrace();
-        }
-        return false;
-    }
-    
-    
-    //===============================================VINH===============================================
     @Override
     public BigDecimal getTotalPurchaseAmount(int userId) {
-        String sql = "SELECT SUM(total_amount) FROM Orders " +
-                     "WHERE user_id = ? AND order_date >= DATEADD(MONTH, -12, GETDATE()) " +
-                     "AND status IN ('completed', 'shipped', 'pending')";
-        
-        System.out.println("Tính tổng giá trị đơn hàng cho userId: " + userId);
-        System.out.println("SQL: " + sql);
-        
-        try (Connection conn = DBConnection.getConnection();
-             PreparedStatement ps = conn.prepareStatement(sql)) {
-            
+        String sql = "SELECT SUM(total_amount) FROM Orders "
+                + "WHERE user_id = ? AND order_date >= DATEADD(MONTH, -12, GETDATE()) "
+                + "AND status IN ('completed', 'shipped', 'pending')";
+        try (Connection conn = DBConnection.getConnection(); PreparedStatement ps = conn.prepareStatement(sql)) {
             ps.setInt(1, userId);
-            
             try (ResultSet rs = ps.executeQuery()) {
                 if (rs.next()) {
                     BigDecimal total = rs.getBigDecimal(1);
-                    if (total == null) {
-                        System.out.println("Không có đơn hàng nào trong 12 tháng qua, trả về 0");
-                        return BigDecimal.ZERO;
-                    }
-                    System.out.println("Tổng giá trị đơn hàng tìm thấy: " + total);
-                    return total;
+                    return total != null ? total : BigDecimal.ZERO;
                 }
             }
         } catch (SQLException e) {
-            System.out.println("Lỗi SQL khi tính tổng giá trị đơn hàng: " + e.getMessage());
             e.printStackTrace();
         }
-        
-        System.out.println("Không tìm thấy đơn hàng nào, trả về 0");
         return BigDecimal.ZERO;
     }
-    
+
     @Override
     public boolean checkAndUpgradeMembership(int userId, BigDecimal orderAmount) {
         try {
-            // Lấy thông tin người dùng hiện tại
             Users user = getUserById(userId);
             if (user == null) {
-                System.out.println("Không tìm thấy người dùng với ID: " + userId);
                 return false;
             }
-            
-            // Lấy hạng mức hiện tại
+
             MembershipLevel currentLevel = user.getMembershipLevel();
             if (currentLevel == null) {
                 currentLevel = MembershipLevel.STANDARD;
-                System.out.println("Người dùng " + userId + " không có hạng mức, đặt mặc định là STANDARD");
             }
-            
-            System.out.println("Kiểm tra nâng cấp cho người dùng: " + user.getUsername());
-            System.out.println("Hạng mức hiện tại: " + currentLevel.getValue() + " (ID: " + currentLevel.getId() + ")");
-            System.out.println("Giá trị đơn hàng mới: " + orderAmount);
-            
-            // Lấy tổng giá trị đơn hàng (bao gồm đơn hàng mới)
-            BigDecimal previousPurchase = getTotalPurchaseAmount(userId);
-            BigDecimal totalPurchase = previousPurchase.add(orderAmount);
-            
-            System.out.println("Tổng giá trị đơn hàng trước đây: " + previousPurchase);
-            System.out.println("Tổng giá trị đơn hàng sau khi cộng: " + totalPurchase);
-            
-            // Ngưỡng nâng cấp (30 triệu cho mỗi cấp)
-            BigDecimal silverThreshold = new BigDecimal("30000000");  // 30 triệu
-            BigDecimal goldThreshold = new BigDecimal("60000000");    // 60 triệu
-            BigDecimal diamondThreshold = new BigDecimal("90000000"); // 90 triệu
-            
-            // Xác định hạng mức mới dựa trên tổng giá trị đơn hàng
+
+            BigDecimal totalPurchase = getTotalPurchaseAmount(userId).add(orderAmount);
+            BigDecimal silver = new BigDecimal("30000000");
+            BigDecimal gold = new BigDecimal("60000000");
+            BigDecimal diamond = new BigDecimal("90000000");
+
             MembershipLevel newLevel = currentLevel;
-            
-            if (totalPurchase.compareTo(diamondThreshold) >= 0) {
+            if (totalPurchase.compareTo(diamond) >= 0) {
                 newLevel = MembershipLevel.DIAMOND;
-            } else if (totalPurchase.compareTo(goldThreshold) >= 0) {
+            } else if (totalPurchase.compareTo(gold) >= 0) {
                 newLevel = MembershipLevel.GOLD;
-            } else if (totalPurchase.compareTo(silverThreshold) >= 0) {
+            } else if (totalPurchase.compareTo(silver) >= 0) {
                 newLevel = MembershipLevel.SILVER;
             } else {
                 newLevel = MembershipLevel.BRONZE;
             }
-            
-            System.out.println("Hạng mức mới xác định: " + newLevel.getValue() + " (ID: " + newLevel.getId() + ")");
-            
-            // Nếu hạng mức không thay đổi hoặc bị giảm, không cập nhật
+
             if (newLevel.getId() <= currentLevel.getId()) {
-                System.out.println("Không cần nâng cấp hạng mức thành viên");
                 return false;
             }
-            
-            // Cập nhật hạng mức thành viên mới
+
             user.setMembershipLevel(newLevel);
-            boolean updated = updateUser(user);
-            
-            if (updated) {
-                System.out.println("ĐÃ NÂNG CẤP thành viên " + user.getUsername() + 
-                                  " từ " + currentLevel.getValue() + 
-                                  " lên " + newLevel.getValue() +
-                                  " với tổng giá trị đơn hàng: " + totalPurchase);
-            } else {
-                System.out.println("LỖI khi cập nhật hạng mức thành viên trong cơ sở dữ liệu");
-            }
-            
-            return updated;
+            return updateUser(user);
         } catch (Exception e) {
-            System.out.println("LỖI trong quá trình nâng cấp hạng mức thành viên: " + e.getMessage());
             e.printStackTrace();
             return false;
         }
+    }
+
+    // ----------------------
+    // ADDITIONAL METHODS
+    // ----------------------
+    public boolean isUsernameExists(String username) {
+        String sql = "SELECT COUNT(*) FROM Users WHERE username = ?";
+        return checkExistence(sql, username);
+    }
+
+    public boolean isEmailExists(String email) {
+        String sql = "SELECT COUNT(*) FROM Users WHERE email = ?";
+        return checkExistence(sql, email);
+    }
+
+    public boolean isPhoneExists(String phone) {
+        String sql = "SELECT COUNT(*) FROM Users WHERE phone = ?";
+        return checkExistence(sql, phone);
+    }
+
+    private boolean checkExistence(String sql, String value) {
+        try (Connection conn = DBConnection.getConnection(); PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setString(1, value);
+            try (ResultSet rs = ps.executeQuery()) {
+                return rs.next() && rs.getInt(1) > 0;
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
+
+    public boolean insertUser(Users user) {
+        String sql = "INSERT INTO Users (username, password, fullName, email, phone, address, role, membership_level_id, image_url, status, created_at, updated_at) "
+                + "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+        try (Connection conn = DBConnection.getConnection(); PreparedStatement ps = conn.prepareStatement(sql)) {
+
+            ps.setString(1, user.getUsername());
+            ps.setString(2, user.getPassword());
+            ps.setString(3, user.getFullName());
+            ps.setString(4, user.getEmail());
+            ps.setString(5, user.getPhone());
+            ps.setString(6, user.getAddress());
+            ps.setString(7, user.getRole().getValue());
+            ps.setInt(8, user.getMembershipLevel().getId());
+            ps.setString(9, user.getImageUrl());
+            ps.setString(10, Status.ACTIVE.toString());
+            ps.setObject(11, LocalDateTime.now());
+            ps.setObject(12, LocalDateTime.now());
+
+            return ps.executeUpdate() > 0;
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
+
+    private boolean isValidMembershipLevel(int levelId) {
+        return levelId >= 1 && levelId <= 5;
+    }
+
+    // Optional: if still needed
+    public Map<String, String> createUserWithValidation(Users user) {
+        Map<String, String> errors = new HashMap<>();
+
+        if (user.getUsername() == null || user.getUsername().trim().isEmpty()) {
+            errors.put("username", "Tên đăng nhập không được để trống");
+        } else if (isUsernameExists(user.getUsername())) {
+            errors.put("username", "Tên đăng nhập đã tồn tại");
+        }
+
+        if (user.getEmail() == null || user.getEmail().trim().isEmpty()) {
+            errors.put("email", "Email không được để trống");
+        } else if (isEmailExists(user.getEmail())) {
+            errors.put("email", "Email đã tồn tại");
+        }
+
+        if (user.getPhone() != null && isPhoneExists(user.getPhone())) {
+            errors.put("phone", "Số điện thoại đã tồn tại");
+        }
+
+        if (!isValidMembershipLevel(user.getMembershipLevel().getId())) {
+            errors.put("membershipLevel", "Cấp độ thành viên không hợp lệ");
+        }
+
+        if (errors.isEmpty()) {
+            boolean created = insertUser(user);
+            if (!created) {
+                errors.put("general", "Lỗi hệ thống khi tạo người dùng");
+            }
+        }
+
+        return errors;
     }
 }
