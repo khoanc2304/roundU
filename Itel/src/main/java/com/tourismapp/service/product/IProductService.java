@@ -72,5 +72,7 @@ public interface IProductService {
     List<Product> getSimilarProductsByPrice(BigDecimal productPrice, int excludeProductId, int limit);
 
     List<Product> getSimilarProductsByBrand(int brandId, BigDecimal productPrice, int excludeProductId, int limit);
+    
+    Product getProductById(int id);
 
 }

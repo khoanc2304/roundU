@@ -12,7 +12,9 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -26,35 +28,6 @@ public class ComparePageServlet extends HttpServlet {
     private IProductService productService = new ProductService();
     private IBrandCategoryService brandCategoryService = new BrandCategoryService();
 
-//    @Override
-//    protected void doGet(HttpServletRequest request, HttpServletResponse response)
-//            throws ServletException, IOException {
-//        String category = request.getParameter("c");
-//        int id = productService.mapCategoryId(category);
-//        List<Product> categoryProducts = productService.getProductsByCategory(id);// lấy List<Product> cùng category từ category_id
-//        List<BrandCategoryDTO> brandCategoryDTOs = brandCategoryService.getBrandsByCategoryId(id);
-//        HttpSession session = request.getSession();
-//        List<Product> compareList = (List<Product>) session.getAttribute("compareList");
-//
-//        if (compareList == null || compareList.isEmpty()) {
-//            // Redirect to product page if no items to compare
-//            response.sendRedirect(request.getContextPath() + ProjectPaths.HREF_TO_PRODUCTPAGE);
-//            return;
-//        }
-//
-//        Map<Product, List<String>> mapProduct_Detail = new LinkedHashMap<>();
-//        for (Product categoryProduct : categoryProducts) {
-//            List<String> productDetail = productService.getProductDetailByIdTop5(categoryProduct.getProductId());
-//            mapProduct_Detail.put(categoryProduct, productDetail);
-//        }
-//
-//        // Set attributes for JSP
-//        request.setAttribute("mapProduct_Detail", mapProduct_Detail);
-//        request.setAttribute("compareList", compareList);
-//
-//        // Forward to compareProduct.jsp
-//        request.getRequestDispatcher(ProjectPaths.JSP_COMPARE_PATH).forward(request, response);
-//    }
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
@@ -63,24 +36,45 @@ public class ComparePageServlet extends HttpServlet {
         List<Product> compareProducts = Arrays.stream(ids)
                 .map(Integer::parseInt)
                 .map(productService::findProductById)
-                .flatMap(opt -> opt.map(Stream::of).orElseGet(Stream::empty))                
+                .flatMap(opt -> opt.map(Stream::of).orElseGet(Stream::empty))
                 .collect(Collectors.toList());
 
-        
-        Map<Product, List<String>> compateDetails = new LinkedHashMap<>();
+        Map<Product, List<String>> compareDetails = new LinkedHashMap<>();
         for (Product compareProduct : compareProducts) {
             List<String> productDetail = productService.getProductDetailByIdTop5(compareProduct.getProductId());
-            compateDetails.put(compareProduct, productDetail);
+            compareDetails.put(compareProduct, productDetail);
         }
-        
-        request.setAttribute("compareDetails", compateDetails);
-        
+
+        HttpSession session = request.getSession();
+        session.setAttribute("compareDetails", compareDetails);
+
         request.getRequestDispatcher(ProjectPaths.JSP_COMPARE_PATH).forward(request, response);
     }
 
     @Override
-    protected void doPost(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
-        response.sendRedirect(request.getContextPath() + MainControllerServlet.COMPARE_SERVLET);
+    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        HttpSession session = request.getSession();
+        String action = request.getParameter("action");
+        String productId = request.getParameter("productId");
+
+        List<String> compareList = (List<String>) session.getAttribute("compareList");
+        if (compareList == null) {
+            compareList = new ArrayList<>();
+        }
+
+        if ("addCompare".equals(action) && productId != null && !compareList.contains(productId)) {
+            if (compareList.size() < 3) { 
+                compareList.add(productId);
+            }
+        } else if ("removeCompare".equals(action) && productId != null) {
+            compareList.remove(productId);
+        } else if ("clearCompare".equals(action)) {
+            compareList.clear();
+        }
+
+        session.setAttribute("compareList", compareList);
+
+        response.setContentType("application/json");
+        response.getWriter().write("{\"compareList\": [" + String.join(",", compareList.stream().map(id -> "\"" + id + "\"").toArray(String[]::new)) + "]}");
     }
 }

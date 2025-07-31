@@ -130,5 +130,10 @@ public class ProductService implements IProductService {
     public List<Product> getSimilarProductsByBrand(int brandId, BigDecimal productPrice, int excludeProductId, int limit) {
         return productDAO.getSimilarProductsByBrand(brandId, productPrice, excludeProductId, limit);
     }
+    
+    @Override
+    public Product getProductById(int id) {
+        return findProductById(id).orElse(null);
+    }
 
 }

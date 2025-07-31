@@ -58,4 +58,18 @@ public class ReviewService implements IReviewService {
         return reviewDAO.deleteReview(id);
     }
 
+    @Override
+    public List<StatisticReview> getStatisticReview() {
+        return reviewDAO.getStatisticReview();
+    }
+    
+    @Override
+    public boolean hasUserPurchasedProduct(int userId, int productId) {
+        return reviewDAO.hasUserPurchasedProduct(userId, productId);
+    }
+
+    @Override
+    public List<Review> getReviewsByProductIdAndRating(int productId, int rating) {
+        return reviewDAO.getReviewsByProductIdAndRating(productId, rating);
+    }
 }

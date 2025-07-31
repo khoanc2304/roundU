@@ -121,9 +121,10 @@ public class DashboardPageServlet extends HttpServlet {
         }
         // Tính tổng doanh thu
         java.math.BigDecimal totalRevenue = java.math.BigDecimal.ZERO;
+        totalRevenue = orderDAO.calculateTotalRevenue();
         if (allOrders != null) {
             for (Orders o : allOrders) {
-                if (o.getTotalAmount() != null) {
+                if (o.getTotalAmount() != null && "Completed".equals(o.getStatus())) {
                     totalRevenue = totalRevenue.add(o.getTotalAmount());
                 }
             }
@@ -221,11 +222,17 @@ public class DashboardPageServlet extends HttpServlet {
                 if (o.getOrderDate() != null &&
                     o.getOrderDate().getMonthValue() == selectedMonth &&
                     o.getOrderDate().getYear() == selectedYear) {
+                    // Lấy tất cả đơn hàng trong tháng, không chỉ Completed
                     ordersOfMonth.add(o);
                 }
             }
         }
         request.setAttribute("ordersOfMonth", ordersOfMonth);
+        
+        // Debug logging
+        LOGGER.info("ordersOfMonth size: " + (ordersOfMonth != null ? ordersOfMonth.size() : 0));
+        LOGGER.info("selectedMonth: " + selectedMonth + ", selectedYear: " + selectedYear);
+        
         // Lấy doanh thu tháng từ revenueStatsByMonth
         java.math.BigDecimal revenueOfMonth = java.math.BigDecimal.ZERO;
         if (revenueStatsByMonth != null && selectedMonth != null && selectedYear != null) {
@@ -237,7 +244,8 @@ public class DashboardPageServlet extends HttpServlet {
             }
         }
         request.setAttribute("revenueOfMonth", revenueOfMonth);
-        // Sau khi đã có ordersOfMonth
+        
+        // Sau khi đã có ordersOfMonth - đếm tất cả khách hàng có đơn hàng trong tháng
         Set<Integer> customerIdsOfMonth = new HashSet<>();
         for (Orders o : ordersOfMonth) {
             if (o.getUser() != null) {
@@ -246,6 +254,11 @@ public class DashboardPageServlet extends HttpServlet {
         }
         int activeCustomerCount = customerIdsOfMonth.size();
         request.setAttribute("activeCustomerCount", activeCustomerCount);
+        
+        // Debug logging
+        LOGGER.info("activeCustomerCount: " + activeCustomerCount);
+        LOGGER.info("customerIdsOfMonth: " + customerIdsOfMonth);
+        
         // Tính phần trăm tăng/giảm active customers so với tháng trước
         Double activeCustomerPercent = null;
         if (idx > 0 && orderStatsByMonth != null && idx < orderStatsByMonth.size()) {

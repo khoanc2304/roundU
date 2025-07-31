@@ -83,8 +83,7 @@ public class UserDAO implements IUserDAO {
         }
         return users;
     }
- 
-    
+
 /////////////////////////////////////////////////// HUY /////////////////////////////////////////////////////
     @Override
     public List<Users> getAllUsers() {
@@ -199,8 +198,8 @@ public class UserDAO implements IUserDAO {
         if (user.getMembershipLevel() != null) {
             updates.add("membership_level_id=?");
             params.add(user.getMembershipLevel().getId());
-            System.out.println("UserDAO: Cập nhật hạng mức thành viên thành " + user.getMembershipLevel().getValue() + 
-                              " (ID: " + user.getMembershipLevel().getId() + ")");
+            System.out.println("UserDAO: Cập nhật hạng mức thành viên thành " + user.getMembershipLevel().getValue()
+                    + " (ID: " + user.getMembershipLevel().getId() + ")");
         }
         if (user.getStatus() != null) {
             updates.add("status=?");
@@ -231,6 +230,96 @@ public class UserDAO implements IUserDAO {
             e.printStackTrace();
             throw new RuntimeException("Lỗi khi cập nhật người dùng: " + e.getMessage());
         }
+    }
+
+    @Override
+    public Optional<Users> findUserByUsername(String username) {
+        String sql = "SELECT * FROM Users WHERE username = ?";
+        try (Connection conn = DBConnection.getConnection(); PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setString(1, username);
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    return Optional.of(mapResultSetToUser(rs));
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return Optional.empty();
+    }
+
+    @Override
+    public Optional<Users> findUserByEmail(String email) {
+        String sql = "SELECT * FROM Users WHERE email = ?";
+        try (Connection conn = DBConnection.getConnection(); PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setString(1, email);
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    return Optional.of(mapResultSetToUser(rs));
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return Optional.empty();
+    }
+
+    @Override
+    public Optional<Users> findUserByPhone(String phone) {
+        String sql = "SELECT * FROM Users WHERE phone = ?";
+        try (Connection conn = DBConnection.getConnection(); PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setString(1, phone);
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    return Optional.of(mapResultSetToUser(rs));
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return Optional.empty();
+    }
+
+    @Override
+    public boolean usernameExists(String username) {
+        String sql = "SELECT COUNT(*) FROM Users WHERE username = ?";
+        try (Connection conn = DBConnection.getConnection(); PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setString(1, username);
+            try (ResultSet rs = ps.executeQuery()) {
+                return rs.next() && rs.getInt(1) > 0;
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
+
+    @Override
+    public boolean emailExists(String email) {
+        String sql = "SELECT COUNT(*) FROM Users WHERE email = ?";
+        try (Connection conn = DBConnection.getConnection(); PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setString(1, email);
+            try (ResultSet rs = ps.executeQuery()) {
+                return rs.next() && rs.getInt(1) > 0;
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
+
+    @Override
+    public boolean phoneExists(String phone) {
+        String sql = "SELECT COUNT(*) FROM Users WHERE phone = ?";
+        try (Connection conn = DBConnection.getConnection(); PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setString(1, phone);
+            try (ResultSet rs = ps.executeQuery()) {
+                return rs.next() && rs.getInt(1) > 0;
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return false;
     }
 
     @Override

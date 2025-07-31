@@ -101,12 +101,50 @@ public class BrandDAO implements IBrandDAO {
 // =========================================== NAM =============================================
     @Override
     public void createBrand(Brand brand) {
+        // Validate input
+        if (brand == null) {
+            throw new IllegalArgumentException("Brand cannot be null");
+        }
+        
+        if (brand.getName() == null || brand.getName().trim().isEmpty()) {
+            throw new IllegalArgumentException("Brand name cannot be null or empty");
+        }
+        
+        if (brand.getName().trim().length() > 100) {
+            throw new IllegalArgumentException("Brand name cannot exceed 100 characters");
+        }
+        
+        if (brand.getCountry() == null || brand.getCountry().trim().isEmpty()) {
+            throw new IllegalArgumentException("Country cannot be null or empty");
+        }
+        
+        if (brand.getCountry().trim().length() > 50) {
+            throw new IllegalArgumentException("Country name cannot exceed 50 characters");
+        }
+        
+        if (brand.getDescription() == null || brand.getDescription().trim().isEmpty()) {
+            throw new IllegalArgumentException("Description cannot be null or empty");
+        }
+        
+        if (brand.getDescription().trim().length() > 500) {
+            throw new IllegalArgumentException("Description cannot exceed 500 characters");
+        }
+        
+        if (brand.getImageUrl() == null || brand.getImageUrl().trim().isEmpty()) {
+            throw new IllegalArgumentException("Image URL cannot be null or empty");
+        }
+        
+        if (brand.getStatus() == null) {
+            throw new IllegalArgumentException("Status cannot be null");
+        }
+        
         validateBrandStatus(brand.getStatus());
+        
         try (Connection conn = DBConnection.getConnection(); PreparedStatement stmt = conn.prepareStatement(INSERT_BRAND)) {
-            stmt.setString(1, brand.getName());
-            stmt.setString(2, brand.getCountry());
-            stmt.setString(3, brand.getDescription());
-            stmt.setString(4, brand.getImageUrl());
+            stmt.setString(1, brand.getName().trim());
+            stmt.setString(2, brand.getCountry().trim());
+            stmt.setString(3, brand.getDescription().trim());
+            stmt.setString(4, brand.getImageUrl().trim());
             stmt.setString(5, brand.getStatus().getValue());
             stmt.executeUpdate();
             LOGGER.info("Created brand: " + brand.getName());
@@ -118,6 +156,11 @@ public class BrandDAO implements IBrandDAO {
 
     @Override
     public Brand getBrandById(int brandId) {
+        // Validate input
+        if (brandId <= 0) {
+            throw new IllegalArgumentException("Invalid brand ID");
+        }
+        
         try (Connection conn = DBConnection.getConnection(); PreparedStatement stmt = conn.prepareStatement(SELECT_BRAND_BY_ID)) {
             stmt.setInt(1, brandId);
             try (ResultSet rs = stmt.executeQuery()) {
@@ -141,9 +184,26 @@ public class BrandDAO implements IBrandDAO {
 
     @Override
     public List<Brand> findBrandsByName(String name) {
+        // Validate input
+        if (name == null) {
+            throw new IllegalArgumentException("Search name cannot be null");
+        }
+        
+        if (name.trim().isEmpty()) {
+            throw new IllegalArgumentException("Search name cannot be empty");
+        }
+        
+        if (name.trim().length() < 2) {
+            throw new IllegalArgumentException("Search name must be at least 2 characters");
+        }
+        
+        if (name.trim().length() > 50) {
+            throw new IllegalArgumentException("Search name cannot exceed 50 characters");
+        }
+        
         List<Brand> brands = new ArrayList<>();
         try (Connection conn = DBConnection.getConnection(); PreparedStatement stmt = conn.prepareStatement(SELECT_BRANDS_BY_NAME)) {
-            stmt.setString(1, "%" + name + "%");
+            stmt.setString(1, "%" + name.trim() + "%");
             try (ResultSet rs = stmt.executeQuery()) {
                 while (rs.next()) {
                     brands.add(new Brand(
@@ -165,43 +225,70 @@ public class BrandDAO implements IBrandDAO {
 
     @Override
     public void updateBrand(Brand brand) {
+        // Validate input
+        if (brand == null) {
+            throw new IllegalArgumentException("Brand cannot be null");
+        }
+        
+        if (brand.getBrandId() <= 0) {
+            throw new IllegalArgumentException("Invalid brand ID");
+        }
+        
+        if (brand.getName() == null || brand.getName().trim().isEmpty()) {
+            throw new IllegalArgumentException("Brand name cannot be null or empty");
+        }
+        
+        if (brand.getName().trim().length() > 100) {
+            throw new IllegalArgumentException("Brand name cannot exceed 100 characters");
+        }
+        
+        if (brand.getStatus() == null) {
+            throw new IllegalArgumentException("Status cannot be null");
+        }
+        
+        if (brand.getCountry() != null && brand.getCountry().trim().length() > 50) {
+            throw new IllegalArgumentException("Country name cannot exceed 50 characters");
+        }
+        
+        if (brand.getDescription() != null && brand.getDescription().trim().length() > 500) {
+            throw new IllegalArgumentException("Description cannot exceed 500 characters");
+        }
+        
         validateBrandStatus(brand.getStatus());
+        
         Connection conn = null;
         try {
             conn = DBConnection.getConnection();
             conn.setAutoCommit(false); // Bắt đầu transaction
 
+            // Check if brand exists
+            Brand existingBrand = getBrandById(brand.getBrandId());
+            if (existingBrand == null) {
+                throw new IllegalArgumentException("Brand not found with ID: " + brand.getBrandId());
+            }
+
             // Lấy trạng thái hiện tại của brand
-            Brand currentBrand = getBrandById(brand.getBrandId());
-            Status currentStatus = (currentBrand != null) ? currentBrand.getStatus() : null;
+            Status currentStatus = existingBrand.getStatus();
 
             // Cập nhật brand
             try (PreparedStatement stmt = conn.prepareStatement(UPDATE_BRAND)) {
-                stmt.setString(1, brand.getName());
-                stmt.setString(2, brand.getCountry());
-                stmt.setString(3, brand.getDescription());
-                stmt.setString(4, brand.getImageUrl());
+                stmt.setString(1, brand.getName().trim());
+                stmt.setString(2, brand.getCountry() != null ? brand.getCountry().trim() : "");
+                stmt.setString(3, brand.getDescription() != null ? brand.getDescription().trim() : "");
+                stmt.setString(4, brand.getImageUrl() != null ? brand.getImageUrl().trim() : "");
                 stmt.setString(5, brand.getStatus().getValue());
                 stmt.setInt(6, brand.getBrandId());
                 stmt.executeUpdate();
             }
 
             // Xử lý trạng thái sản phẩm dựa trên trạng thái mới của brand
-            if (brand.getStatus() == Status.INACTIVE && (currentStatus == null || currentStatus == Status.ACTIVE)) {
-                // Chuyển sang INACTIVE, cập nhật tất cả product thành INACTIVE
+            if (brand.getStatus() == Status.INACTIVE &&
+                currentStatus == Status.ACTIVE) {
+                // Nếu brand chuyển từ ACTIVE sang INACTIVE, cập nhật tất cả sản phẩm của brand này thành INACTIVE
                 try (PreparedStatement stmt = conn.prepareStatement(UPDATE_PRODUCT_STATUS)) {
                     stmt.setString(1, Status.INACTIVE.getValue());
                     stmt.setInt(2, brand.getBrandId());
                     stmt.executeUpdate();
-                    LOGGER.info("Updated all products' status to INACTIVE for brand ID: " + brand.getBrandId());
-                }
-            } else if (brand.getStatus() == Status.ACTIVE && currentStatus == Status.INACTIVE) {
-                // Chuyển sang ACTIVE, cập nhật tất cả product thành ACTIVE
-                try (PreparedStatement stmt = conn.prepareStatement(UPDATE_PRODUCT_STATUS)) {
-                    stmt.setString(1, Status.ACTIVE.getValue());
-                    stmt.setInt(2, brand.getBrandId());
-                    stmt.executeUpdate();
-                    LOGGER.info("Updated all products' status to ACTIVE for brand ID: " + brand.getBrandId());
                 }
             }
 
@@ -210,12 +297,12 @@ public class BrandDAO implements IBrandDAO {
         } catch (SQLException e) {
             if (conn != null) {
                 try {
-                    conn.rollback(); // Rollback nếu có lỗi
+                    conn.rollback(); // Hoàn tác nếu có lỗi
                 } catch (SQLException ex) {
                     LOGGER.severe("Error rolling back transaction: " + ex.getMessage());
                 }
             }
-            LOGGER.severe("Error updating brand with ID " + brand.getBrandId() + ": " + e.getMessage());
+            LOGGER.severe("Error updating brand: " + e.getMessage());
             throw new RuntimeException("Error updating brand", e);
         } finally {
             if (conn != null) {
@@ -231,9 +318,31 @@ public class BrandDAO implements IBrandDAO {
 
     @Override
     public void deleteBrand(int brandId) {
+        // Validate input
+        if (brandId <= 0) {
+            throw new IllegalArgumentException("Invalid brand ID");
+        }
+        
+        // Check if brand exists
+        Brand existingBrand = getBrandById(brandId);
+        if (existingBrand == null) {
+            throw new IllegalArgumentException("Brand not found with ID: " + brandId);
+        }
+        
+        // Check if brand has associated products
+        List<Product> products = getProductsByBrandId(brandId);
+        if (!products.isEmpty()) {
+            throw new IllegalArgumentException("Cannot delete brand. It has " + products.size() + " associated product(s)");
+        }
+        
         try (Connection conn = DBConnection.getConnection(); PreparedStatement stmt = conn.prepareStatement(DELETE_BRAND)) {
             stmt.setInt(1, brandId);
-            stmt.executeUpdate();
+            int rowsAffected = stmt.executeUpdate();
+            
+            if (rowsAffected == 0) {
+                throw new IllegalArgumentException("No brand was deleted. Brand ID: " + brandId);
+            }
+            
             LOGGER.info("Deleted brand with ID: " + brandId);
         } catch (SQLException e) {
             LOGGER.severe("Error deleting brand with ID " + brandId + ": " + e.getMessage());
@@ -258,9 +367,22 @@ public class BrandDAO implements IBrandDAO {
 
     @Override
     public List<Brand> findBrandsByCountry(String country) {
+        // Validate input
+        if (country == null) {
+            throw new IllegalArgumentException("Country name cannot be null");
+        }
+        
+        if (country.trim().isEmpty()) {
+            throw new IllegalArgumentException("Country name cannot be empty");
+        }
+        
+        if (country.trim().length() > 50) {
+            throw new IllegalArgumentException("Country name cannot exceed 50 characters");
+        }
+        
         List<Brand> brands = new ArrayList<>();
         try (Connection conn = DBConnection.getConnection(); PreparedStatement stmt = conn.prepareStatement(SELECT_BRANDS_BY_COUNTRY)) {
-            stmt.setString(1, "%" + country + "%");
+            stmt.setString(1, "%" + country.trim() + "%");
             try (ResultSet rs = stmt.executeQuery()) {
                 while (rs.next()) {
                     brands.add(mapBrand(rs));
@@ -275,6 +397,11 @@ public class BrandDAO implements IBrandDAO {
 
     @Override
     public List<Product> getProductsByBrandId(int brandId) {
+        // Validate input
+        if (brandId <= 0) {
+            throw new IllegalArgumentException("Invalid brand ID");
+        }
+        
         List<Product> products = new ArrayList<>();
         try (Connection conn = DBConnection.getConnection(); PreparedStatement stmt = conn.prepareStatement(SELECT_PRODUCTS_BY_BRAND_ID)) {
             stmt.setInt(1, brandId);

@@ -191,8 +191,6 @@
                                           placeholder="Các yêu cầu đặc biệt cho đơn hàng của bạn..."></textarea>
                             </div>
                         </div>
-                        
-
                     </form>
                 </div>
 
@@ -246,7 +244,7 @@
                                 <span>Phí giao hàng:</span>
                                 <span class="text-success">Miễn phí</span>
                             </div>
-                            
+
                             <!-- Membership Discount -->
                             <c:if test="${not empty user.membershipLevel && user.membershipLevel.levelId != 5}">
                                 <div class="d-flex justify-content-between mb-2 text-success">
@@ -262,8 +260,6 @@
                                     <span>-<span id="membershipDiscountAmount"><fmt:formatNumber value="${cart.totalAmount * (user.membershipLevel.levelId == 1 ? 0.03 : user.membershipLevel.levelId == 2 ? 0.05 : user.membershipLevel.levelId == 3 ? 0.07 : 0.1)}" pattern="#,###.###"/></span> VNĐ</span>
                                 </div>
                             </c:if>
-                            
-
 
                             <div class="d-flex justify-content-between mb-2">
                                 <span>Thuế:</span>
@@ -369,8 +365,6 @@
             document.getElementById('cvv')?.addEventListener('input', function (e) {
                 e.target.value = e.target.value.replace(/[^0-9]/g, '');
             });
-            
-
 
             // Form validation before submit
             document.getElementById('checkoutForm').addEventListener('submit', function (e) {
@@ -530,7 +524,7 @@
         color: #007bff;
     }
 
-    .payment-option:has(input:checked) {
+    .payment-option.checked {
         border-color: #007bff;
         background-color: #f8f9ff;
     }
@@ -572,5 +566,5 @@
     }
 </style>
 
-    <!-- Chatbox AI -->
-    <jsp:include page="/WEB-INF/view/components/chatbox.jsp" />
+<!-- Chatbox AI -->
+<jsp:include page="/WEB-INF/view/components/chatbox.jsp" />

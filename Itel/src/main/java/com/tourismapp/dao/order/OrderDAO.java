@@ -40,7 +40,10 @@ public class OrderDAO implements IOrderDAO {
             + "WHERE order_date IS NOT NULL "
             + "GROUP BY YEAR(order_date), MONTH(order_date) "
             + "ORDER BY year, month";
-    private static final String GET_ALL_ORDERS = "SELECT order_id, user_id, order_date, status, total_amount, shipping_address FROM Orders";
+    private static final String GET_ALL_ORDERS = "SELECT o.order_id, o.user_id, o.order_date, o.status, o.total_amount, o.shipping_address, " +
+            "u.username, u.fullName, u.email " +
+            "FROM Orders o " +
+            "LEFT JOIN Users u ON o.user_id = u.user_id";
     private static final String GET_ORDERS_BY_STATUS = "SELECT status, COUNT(order_id) AS order_count "
             + "FROM Orders "
             + "GROUP BY status";
@@ -76,7 +79,13 @@ public class OrderDAO implements IOrderDAO {
                 LOGGER.warning("Không có dữ liệu đơn hàng trong database.");
             }
             while (rs.next()) {
-                Users user = new Users(rs.getInt("user_id")); // Giả định có constructor
+                // Tạo user object với thông tin đầy đủ
+                Users user = new Users();
+                user.setUserId(rs.getInt("user_id"));
+                user.setUsername(rs.getString("username"));
+                user.setFullName(rs.getString("fullName"));
+                user.setEmail(rs.getString("email"));
+                
                 Orders order = new Orders(rs.getInt("order_id"), user,
                         rs.getTimestamp("order_date") != null ? rs.getTimestamp("order_date").toLocalDateTime() : null,
                         rs.getString("status"), rs.getBigDecimal("total_amount"), rs.getString("shipping_address"));
@@ -135,7 +144,7 @@ public class OrderDAO implements IOrderDAO {
 
     public List<OrderStat> getRevenueStatsByMonth() {
         String sql = "SELECT YEAR(order_date) AS year, MONTH(order_date) AS month, SUM(total_amount) AS revenue "
-                + "FROM Orders WHERE order_date IS NOT NULL "
+                + "FROM Orders WHERE order_date IS NOT NULL and status = 'Completed' "
                 + "GROUP BY YEAR(order_date), MONTH(order_date) ORDER BY year, month";
         List<OrderStat> stats = new ArrayList<>();
         try (Connection conn = DBConnection.getConnection(); PreparedStatement stmt = conn.prepareStatement(sql); ResultSet rs = stmt.executeQuery()) {
@@ -148,6 +157,21 @@ public class OrderDAO implements IOrderDAO {
             throw new RuntimeException(e);
         }
         return stats;
+    }
+    
+    public java.math.BigDecimal calculateTotalRevenue() {
+        java.math.BigDecimal totalRevenue = java.math.BigDecimal.ZERO;
+        String sql = "SELECT SUM(total_amount) AS total_revenue FROM Orders WHERE status = 'Completed'";
+        try (Connection conn = dbConnection.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql);
+             ResultSet rs = stmt.executeQuery()) {
+            if (rs.next()) {
+                totalRevenue = rs.getBigDecimal("total_revenue") != null ? rs.getBigDecimal("total_revenue") : java.math.BigDecimal.ZERO;
+            }
+        } catch (SQLException e) {
+            ErrDialog.showError("Error calculating total revenue: " + e.getMessage());
+        }
+        return totalRevenue;
     }
 
     
@@ -304,19 +328,74 @@ public class OrderDAO implements IOrderDAO {
 
     @Override
     public boolean updateOrderStatus(int orderId, String status) {
-        String sql = "UPDATE Orders SET status = ? WHERE order_id = ?";
+        String sqlUpdateOrder = "UPDATE Orders SET status = ? WHERE order_id = ?";
+        String sqlGetOrderDetails = "SELECT product_id, quantity FROM Order_Detail WHERE order_id = ?";
+        String sqlUpdateStock = "UPDATE Product SET stock_quantity = stock_quantity + ? WHERE product_id = ?";
+        Connection conn = null;
+        try {
+            conn = dbConnection.getConnection();
+            conn.setAutoCommit(false); // Bắt đầu giao dịch
 
-        try (Connection connection = dbConnection.getConnection(); PreparedStatement statement = connection.prepareStatement(sql)) {
+            // Cập nhật trạng thái đơn hàng
+            PreparedStatement stmtUpdateOrder = conn.prepareStatement(sqlUpdateOrder);
+            stmtUpdateOrder.setString(1, status);
+            stmtUpdateOrder.setInt(2, orderId);
+            int rowsAffected = stmtUpdateOrder.executeUpdate();
+            if (rowsAffected == 0) {
+                conn.rollback();
+                return false;
+            }
 
-            statement.setString(1, status);
-            statement.setInt(2, orderId);
+            // Nếu trạng thái là "Canceled" hoặc "Pending" bị hủy, cộng lại stock
+            if ("canceled".equals(status) || ("pending".equals(status) && !isOrderAlreadyProcessed(orderId))) { // [NOTE] Thêm kiểm tra trạng thái
+                PreparedStatement stmtGetDetails = conn.prepareStatement(sqlGetOrderDetails);
+                stmtGetDetails.setInt(1, orderId);
+                ResultSet rs = stmtGetDetails.executeQuery();
+                List<OrderDetail> orderDetails = new ArrayList<>();
+                while (rs.next()) {
+                    OrderDetail detail = new OrderDetail();
+                    detail.setProduct(new Product()); // Tạo đối tượng Product tạm
+                    detail.getProduct().setProductId(rs.getInt("product_id")); // [NOTE] Sửa cách lấy product_id
+                    detail.setQuantity(rs.getInt("quantity"));
+                    orderDetails.add(detail);
+                }
+                rs.close();
 
-            int rowsAffected = statement.executeUpdate();
-            return rowsAffected > 0;
+                if (!orderDetails.isEmpty()) {
+                    PreparedStatement stmtUpdateStock = conn.prepareStatement(sqlUpdateStock);
+                    for (OrderDetail detail : orderDetails) {
+                        stmtUpdateStock.setInt(1, detail.getQuantity());
+                        stmtUpdateStock.setInt(2, detail.getProduct().getProductId()); // [NOTE] Sử dụng getProduct().getProductId()
+                        stmtUpdateStock.addBatch();
+                    }
+                    int[] updateCounts = stmtUpdateStock.executeBatch(); // [NOTE] Lưu kết quả batch để kiểm tra
+                    if (updateCounts.length != orderDetails.size()) {
+                        throw new SQLException("Not all stock updates were successful");
+                    }
+                }
+            }
 
+            conn.commit(); // Hoàn tất giao dịch
+            return true;
         } catch (SQLException e) {
+            if (conn != null) {
+                try {
+                    conn.rollback(); // Hoàn tác nếu có lỗi
+                } catch (SQLException ex) {
+                    ErrDialog.showError("Error rolling back: " + ex.getMessage());
+                }
+            }
             ErrDialog.showError("Error updating order status: " + e.getMessage());
             return false;
+        } finally {
+            if (conn != null) {
+                try {
+                    conn.setAutoCommit(true);
+                    conn.close();
+                } catch (SQLException e) {
+                    ErrDialog.showError("Error closing connection: " + e.getMessage());
+                }
+            }
         }
     }
 
@@ -481,9 +560,29 @@ public class OrderDAO implements IOrderDAO {
     
     public static void main(String[] args) {
         OrderDAO od = new OrderDAO();
-        List<Orders> os = od.findAllOrders();
-        for (Orders o: os) {
-            System.out.println(o);
+        
+        // Test getAllOrders
+        System.out.println("=== Testing getAllOrders ===");
+        List<Orders> allOrders = od.getAllOrders();
+        System.out.println("Total orders: " + allOrders.size());
+        for (Orders o: allOrders) {
+            System.out.println("Order: " + o);
+        }
+        
+        // Test getOrderStatsByMonth
+        System.out.println("\n=== Testing getOrderStatsByMonth ===");
+        List<OrderStat> monthStats = od.getOrderStatsByMonth();
+        System.out.println("Month stats: " + monthStats.size());
+        for (OrderStat stat: monthStats) {
+            System.out.println("Stat: " + stat);
+        }
+        
+        // Test getRevenueStatsByMonth
+        System.out.println("\n=== Testing getRevenueStatsByMonth ===");
+        List<OrderStat> revenueStats = od.getRevenueStatsByMonth();
+        System.out.println("Revenue stats: " + revenueStats.size());
+        for (OrderStat stat: revenueStats) {
+            System.out.println("Revenue stat: " + stat);
         }
     }
     
@@ -572,4 +671,21 @@ public class OrderDAO implements IOrderDAO {
         return finalAmount;
     }
     
+
+    @Override
+    public boolean isOrderAlreadyProcessed(int orderId) {
+        String sql = "SELECT COUNT(*) FROM Order_Detail od JOIN Orders o ON od.order_id = o.order_id WHERE o.order_id = ? AND o.status NOT IN ('Pending', 'Canceled')";
+        try (Connection conn = dbConnection.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setInt(1, orderId);
+            ResultSet rs = stmt.executeQuery();
+            if (rs.next()) {
+                return rs.getInt(1) > 0;
+            }
+        } catch (SQLException e) {
+            ErrDialog.showError("Error checking order status: " + e.getMessage());
+        }
+        return false;
+    }
 }
+    

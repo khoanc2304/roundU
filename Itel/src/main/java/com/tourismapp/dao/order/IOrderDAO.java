@@ -110,4 +110,6 @@ public interface IOrderDAO {
      * @return Discounted total amount
      */
     java.math.BigDecimal calculateDiscountedTotal(java.math.BigDecimal originalAmount, int membershipLevelId, String couponCode);
+    java.math.BigDecimal calculateTotalRevenue();
+    boolean isOrderAlreadyProcessed(int orderId);
 }

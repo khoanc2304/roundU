@@ -6,10 +6,17 @@ END
 GO
 
 -- Tạo lại database
+<<<<<<< HEAD
 CREATE DATABASE Itel_Shop20;
 GO
 
 USE Itel_Shop20;
+=======
+CREATE DATABASE Itel_Shop4;
+GO
+
+USE Itel_Shop4;
+>>>>>>> 5aff56bdfd8808daeefd57d27f52c3efd274396e
 GO
 
 -- Xóa bảng theo thứ tự tránh lỗi ràng buộc
@@ -3666,3 +3673,19 @@ VALUES
 (127, 15, 5, N'Excellent laptop, great for professionals.', 0, '2025-10-13 14:00:00'),
 (127, 1, 4, N'Smooth performance, nice design.', 0, '2025-10-14 09:00:00');
 
+SELECT 
+    o.order_id,
+    o.status,
+    o.total_amount,
+    (SELECT SUM(od.quantity) FROM Order_Detail od WHERE od.order_id = o.order_id) AS total_quantity
+FROM Orders o
+WHERE YEAR(o.order_date) = 2025 AND MONTH(o.order_date) = 7;
+
+SELECT order_id, status, total_amount
+FROM Orders
+WHERE order_date >= '2025-07-30';
+
+SELECT product_id, quantity FROM Order_Detail WHERE order_id = 1;
+
+select * from Orders;
+select * from Users;

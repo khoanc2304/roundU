@@ -107,8 +107,7 @@ public class CheckoutPageServlet extends HttpServlet {
 
         // Handle different parameter name formats
         if (productIds == null) {
-            // Try alternative parameter names
-            String[] altProductIds = new String[100]; // Max 100 items
+            String[] altProductIds = new String[100];
             String[] altQuantities = new String[100];
             int count = 0;
 
@@ -139,7 +138,6 @@ public class CheckoutPageServlet extends HttpServlet {
 
         System.out.println("Selected items count: " + productIds.length);
 
-        // Create a temporary cart with only selected items
         Cart selectedCart = new Cart();
 
         for (int i = 0; i < productIds.length; i++) {
@@ -147,9 +145,6 @@ public class CheckoutPageServlet extends HttpServlet {
                 int productId = Integer.parseInt(productIds[i]);
                 int quantity = Integer.parseInt(quantities[i]);
 
-                System.out.println("Processing selected item: Product ID " + productId + ", Quantity " + quantity);
-
-                // Get product from database
                 Optional<Product> productOpt = productService.findProductById(productId);
                 if (productOpt.isPresent()) {
                     Product product = productOpt.get();
@@ -169,7 +164,6 @@ public class CheckoutPageServlet extends HttpServlet {
 
         System.out.println("Selected cart created with " + selectedCart.getTotalItems() + " items, total: " + selectedCart.getTotalAmount());
 
-        // Get updated user info
         try {
             Users fullUser = userService.getUserById(user.getUserId());
             request.setAttribute("user", fullUser != null ? fullUser : user);
@@ -177,14 +171,16 @@ public class CheckoutPageServlet extends HttpServlet {
             request.setAttribute("user", user);
         }
 
+        // ✅ Ghi lại selected cart để dùng tiếp trong bước đặt hàng
+        session.setAttribute("selectedCart", selectedCart);
+
         // Set selected cart and checkout type
         request.setAttribute("cart", selectedCart);
         request.setAttribute("checkoutType", "selected");
         request.setAttribute("selectedItemsCount", selectedCart.getTotalItems());
 
         System.out.println("Forwarding to checkout page with selected items");
-
-        // Forward to checkout page
         request.getRequestDispatcher(ProjectPaths.JSP_CHECKOUTPAGE_PATH).forward(request, response);
     }
+
 }
