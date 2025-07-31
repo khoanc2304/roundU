@@ -211,8 +211,8 @@ public class PaymentServlet extends HttpServlet {
                     }
                     ////////////////////////////////////////////////////////////////////////////////////////////////////
 
-                    // Gửi email hướng dẫn chuyển khoản nếu chọn BANKING
-                    if (paymentMethod == PaymentMethod.BANKING) {
+                    // Gửi email hướng dẫn chuyển khoản
+                    if (paymentMethod == PaymentMethod.BANKING || paymentMethod == PaymentMethod.CASH_ON_DELIVERY) {
                         String subject = "Hướng dẫn chuyển khoản đơn hàng #" + createdOrder.getOrderId();
                         String content = "<h3>Cảm ơn bạn đã đặt hàng tại Itel Shop!</h3>"
                                 + "<p>Vui lòng chuyển khoản theo thông tin sau để hoàn tất đơn hàng:</p>"

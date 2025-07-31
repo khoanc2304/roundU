@@ -33,7 +33,7 @@ public class GoogleLogin {
                 .execute()
                 .returnContent()
                 .asString();
-        ErrDialog.showError("resp: " + response);
+//        ErrDialog.showError("resp: " + response);
         JsonObject obj = new Gson().fromJson(response, JsonObject.class);
         String accessToken = obj.get("access_token").toString().replaceAll("\"", "");
         return accessToken;

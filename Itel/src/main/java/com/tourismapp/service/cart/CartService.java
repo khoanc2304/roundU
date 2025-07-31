@@ -48,6 +48,7 @@ public class CartService implements ICartService {
     }
     
     @Override
+    //xử lý Id người dùng thuộc về ai, sản phẩm nào được thêm và số lượng là bao nhiêu
     public boolean addItemToUserCart(int userId, Product product, int quantity) {
         try {
             // Validate input

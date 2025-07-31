@@ -1021,19 +1021,7 @@
                     </div>
                 </div>
             </div>
-            <button onclick="window.location.href = '#chat'" style="padding: 10px 20px; background: #ff4444; color: #fff; border: none; cursor: pointer;">Thông báo Message (<span id="message-count">0</span>)</button>
 
-            <script>
-                let messageCount = 0;
-                setInterval(() => {
-                    messageCount = Math.floor(Math.random() * 5);
-                    document.getElementById('message-count').textContent = messageCount;
-                }, 5000);
-
-                document.querySelector('button').addEventListener('click', () => {
-                    document.getElementById('chat').style.display = 'block';
-                });
-            </script>
         </div>
 
         <script>

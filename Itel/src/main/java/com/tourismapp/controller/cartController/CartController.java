@@ -210,7 +210,7 @@ public class CartController extends HttpServlet {
         response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Invalid parameters");
     }
 }
-    
+    //xoá 1 sản phẩm cụ thể 
     private void removeFromCart(HttpServletRequest request, HttpServletResponse response, Cart cart)
             throws IOException {
         try {
@@ -227,7 +227,7 @@ public class CartController extends HttpServlet {
             response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Invalid parameters");
         }
     }
-    
+    //xoá toàn bộ sản phẩm
     private void clearCart(HttpServletRequest request, HttpServletResponse response, Cart cart)
             throws IOException {
         cart.clear();

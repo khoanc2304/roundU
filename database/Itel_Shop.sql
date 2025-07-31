@@ -7,6 +7,7 @@ GO
 
 -- Tạo lại database
 <<<<<<< HEAD
+<<<<<<< HEAD
 CREATE DATABASE Itel_Shop20;
 GO
 
@@ -17,6 +18,13 @@ GO
 
 USE Itel_Shop4;
 >>>>>>> 5aff56bdfd8808daeefd57d27f52c3efd274396e
+=======
+
+CREATE DATABASE Itel_Shop;
+GO
+
+USE Itel_Shop;
+>>>>>>> cb80144 (WIP)
 GO
 
 -- Xóa bảng theo thứ tự tránh lỗi ràng buộc

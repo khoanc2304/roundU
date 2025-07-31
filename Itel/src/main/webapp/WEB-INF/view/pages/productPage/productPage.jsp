@@ -427,7 +427,7 @@
                         button.classList.add('btn-success', 'added');
                         button.innerHTML = '<i class="fas fa-check me-1"></i> Đã thêm vào so sánh';
                         button.removeAttribute('data-action');
-                        addedProductsSet.add(productId);
+                        addedProductsSet.add(productId); // 1,2,3
 
                         if (!hasAddedProduct) {
                             addedProducts.style.display = 'flex';
@@ -493,7 +493,7 @@
                     if (!compareNowBtn.disabled) {
                         const productIds = Array.from(addedProductsSet).join('-');
                         console.log("list productid: " + productIds);
-                        window.location.href = `compare?productIds=` + productIds;
+                        window.location.href = `compare?productIds=` + productIds;//doGet
                     }
                 });
 

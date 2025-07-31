@@ -38,7 +38,7 @@ public class CartDAO implements ICartDAO {
                 return true;
             }
         } catch (SQLException e) {
-            ErrDialog.showError("Error saving cart: " + e.getMessage());
+//            ErrDialog.showError("Error saving cart: " + e.getMessage());
             return false;
         }
     }
@@ -67,7 +67,7 @@ public class CartDAO implements ICartDAO {
             
             return cart;
         } catch (SQLException e) {
-            ErrDialog.showError("Error loading cart: " + e.getMessage());
+//            ErrDialog.showError("Error loading cart: " + e.getMessage());
             return new Cart();
         }
     }
@@ -83,14 +83,14 @@ public class CartDAO implements ICartDAO {
             statement.executeUpdate();
             return true;
         } catch (SQLException e) {
-            ErrDialog.showError("Error clearing cart: " + e.getMessage());
+//            ErrDialog.showError("Error clearing cart: " + e.getMessage());
             return false;
         }
     }
     
-    @Override
+    @Override //lưu vào database nếu đã đăng nhập, chưa thì bắt buộc đăng nhập
+    //kiểm tra sp có trong giỏ hàng hay chưa, nếu chưa thì thêm mới, có rồi thì cộng dồn 
     public boolean addItemToCart(int userId, int productId, int quantity) {
-        // Check if item already exists in cart
         String checkSql = "SELECT quantity FROM Cart WHERE user_id = ? AND product_id = ?";
         String insertSql = "INSERT INTO Cart (user_id, product_id, quantity) VALUES (?, ?, ?)";
         String updateSql = "UPDATE Cart SET quantity = quantity + ? WHERE user_id = ? AND product_id = ?";
@@ -122,12 +122,13 @@ public class CartDAO implements ICartDAO {
                 return true;
             }
         } catch (SQLException e) {
-            ErrDialog.showError("Error adding item to cart: " + e.getMessage());
+//            ErrDialog.showError("Error adding item to cart: " + e.getMessage());
             return false;
         }
     }
     
-    @Override
+    @Override 
+    // cập nhật số lượng sản phẩm trong giỏ hàng của người dùng
     public boolean updateCartItem(int userId, int productId, int quantity) {
         if (quantity <= 0) {
             return removeCartItem(userId, productId);
@@ -163,7 +164,7 @@ public class CartDAO implements ICartDAO {
             int rowsAffected = statement.executeUpdate();
             return rowsAffected > 0;
         } catch (SQLException e) {
-            ErrDialog.showError("Error removing cart item: " + e.getMessage());
+//            ErrDialog.showError("Error removing cart item: " + e.getMessage());
             return false;
         }
     }
