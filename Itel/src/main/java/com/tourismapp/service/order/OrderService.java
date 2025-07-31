@@ -150,9 +150,40 @@ public class OrderService implements IOrderService {
     @Override
     public boolean updateOrderStatus(int orderId, String status) {
         try {
-            return orderDAO.updateOrderStatus(orderId, status);
+//            ErrDialog.showError("OrderService.updateOrderStatus called for orderId: " + orderId + ", status: " + status);
+            // Get order details to restore stock if canceled
+            if ("Canceled".equalsIgnoreCase(status)) {
+                List<OrderDetail> orderDetails = orderDAO.getOrderDetailsByOrderId(orderId);
+                if (orderDetails != null && !orderDetails.isEmpty()) {
+                    for (OrderDetail detail : orderDetails) {
+                        try {
+                            // Lấy stock hiện tại từ cơ sở dữ liệu để đảm bảo chính xác
+                            int currentStock = productService.getProductById(detail.getProduct().getProductId()).getStockQuantity();
+//                            productService.updateProductStock(
+//                                    detail.getProduct().getProductId(),
+//                                    currentStock + detail.getQuantity()
+//                            );
+//                            ErrDialog.showError("Restored stock for productId: " + detail.getProduct().getProductId() + ", quantity: " + detail.getQuantity());
+                        } catch (Exception e) {
+                            ErrDialog.showError("Failed to restore stock for product: " + detail.getProduct().getName());
+                            ErrDialog.showError("Stock restoration failed: " + e.getMessage());
+                        }
+                    }
+                }
+            }
+
+            // Update order status
+            boolean updated = orderDAO.updateOrderStatus(orderId, status);
+            if (updated) {
+                System.out.println("Successfully updated orderId: " + orderId + " to status: " + status);
+//                ErrDialog.showError("Successfully updated orderId: " + orderId + " to status: " + status);
+            } else {
+                ErrDialog.showError("Failed to update orderId: " + orderId + " to status: " + status);
+            }
+            return updated;
         } catch (Exception e) {
             ErrDialog.showError("Error in OrderService.updateOrderStatus: " + e.getMessage());
+            ErrDialog.showError("Exception in updateOrderStatus: " + e.getMessage());
             return false;
         }
     }
@@ -160,24 +191,8 @@ public class OrderService implements IOrderService {
     @Override
     public boolean cancelOrder(int orderId) {
         try {
-            // Get order details to restore stock
-            List<OrderDetail> orderDetails = orderDAO.getOrderDetailsByOrderId(orderId);
-
-            // Restore product stock
-            for (OrderDetail detail : orderDetails) {
-                try {
-                    int currentStock = detail.getProduct().getStockQuantity();
-                    productService.updateProductStock(
-                            detail.getProduct().getProductId(),
-                            currentStock + detail.getQuantity()
-                    );
-                } catch (Exception e) {
-                    ErrDialog.showError("Failed to restore stock for product: " + detail.getProduct().getName());
-                }
-            }
-
-            // Update order status to canceled
-            return orderDAO.updateOrderStatus(orderId, "canceled");
+//            ErrDialog.showError("OrderService.cancelOrder called for orderId: " + orderId);
+            return updateOrderStatus(orderId, "canceled"); // Sử dụng updateOrderStatus để tái sử dụng logic
         } catch (Exception e) {
             ErrDialog.showError("Error in OrderService.cancelOrder: " + e.getMessage());
             return false;

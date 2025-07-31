@@ -14,6 +14,7 @@ import com.tourismapp.service.brand.BrandService;
 import com.tourismapp.service.brand.IBrandService;
 import com.tourismapp.utils.ErrDialog;
 import java.util.List;
+import com.tourismapp.model.Product;
 
 /**
  *
@@ -60,7 +61,7 @@ public class BrandManagementServlet extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         String action = request.getParameter("action") != null ? request.getParameter("action").trim() : "";
-        ErrDialog.showError("brand management action error: " + action);
+//        ErrDialog.showError("brand management action error: " + action);
         switch (action) {
             case MainControllerServlet.ACTION_CREATE_BRAND:
                 handleCreateBrand(request, response);
@@ -106,51 +107,373 @@ public class BrandManagementServlet extends HttpServlet {
 
     private void handleFindBrand(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        String searchName = request.getParameter("searchName");
-        if (searchName != null && !searchName.trim().isEmpty()) {
-            List<Brand> brands = brandService.findBrandsByName(searchName);
+        try {
+            String searchName = request.getParameter("searchName");
+            
+            // Validation
+            if (searchName == null || searchName.trim().isEmpty()) {
+                request.setAttribute("error", "Search name cannot be empty");
+                // Load all brands when search is empty
+                List<Brand> allBrands = brandService.getAllBrands();
+                request.setAttribute("brands", allBrands);
+                request.getRequestDispatcher(ProjectPaths.JSP_BRANDMANAGEMENT_PATH).forward(request, response);
+                return;
+            }
+            
+            if (searchName.trim().length() < 2) {
+                request.setAttribute("error", "Search name must be at least 2 characters");
+                List<Brand> allBrands = brandService.getAllBrands();
+                request.setAttribute("brands", allBrands);
+                request.getRequestDispatcher(ProjectPaths.JSP_BRANDMANAGEMENT_PATH).forward(request, response);
+                return;
+            }
+            
+            if (searchName.trim().length() > 50) {
+                request.setAttribute("error", "Search name cannot exceed 50 characters");
+                List<Brand> allBrands = brandService.getAllBrands();
+                request.setAttribute("brands", allBrands);
+                request.getRequestDispatcher(ProjectPaths.JSP_BRANDMANAGEMENT_PATH).forward(request, response);
+                return;
+            }
+            
+            List<Brand> brands = brandService.findBrandsByName(searchName.trim());
             request.setAttribute("brands", brands);
-        } else {
-            request.setAttribute("error", "Search name cannot be empty");
+            request.setAttribute("searchTerm", searchName.trim());
+            
+            if (brands.isEmpty()) {
+                request.setAttribute("info", "No brands found matching '" + searchName.trim() + "'");
+            }
+            
+        } catch (IllegalArgumentException e) {
+            request.setAttribute("error", e.getMessage());
+            List<Brand> allBrands = brandService.getAllBrands();
+            request.setAttribute("brands", allBrands);
+        } catch (Exception e) {
+            request.setAttribute("error", "Error searching brands: " + e.getMessage());
+            List<Brand> allBrands = brandService.getAllBrands();
+            request.setAttribute("brands", allBrands);
         }
+        
         request.getRequestDispatcher(ProjectPaths.JSP_BRANDMANAGEMENT_PATH).forward(request, response);
     }
 
     // doPost methods
     private void handleCreateBrand(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        Brand brand = new Brand(
+        try {
+            // Validate input parameters
+            String name = request.getParameter("name");
+            String country = request.getParameter("country");
+            String description = request.getParameter("description");
+            String imageUrl = request.getParameter("imageUrl");
+            String statusParam = request.getParameter("status");
+            
+            // Validation for required fields - ALL FIELDS ARE REQUIRED
+            if (name == null || name.trim().isEmpty()) {
+                request.setAttribute("error", "Brand name is required");
+                request.getRequestDispatcher(ProjectPaths.JSP_CREATEBRAND_PATH).forward(request, response);
+                return;
+            }
+            
+            if (name.trim().length() > 100) {
+                request.setAttribute("error", "Brand name cannot exceed 100 characters");
+                request.getRequestDispatcher(ProjectPaths.JSP_CREATEBRAND_PATH).forward(request, response);
+                return;
+            }
+            
+            // Country is required
+            if (country == null || country.trim().isEmpty()) {
+                request.setAttribute("error", "Country is required");
+                request.getRequestDispatcher(ProjectPaths.JSP_CREATEBRAND_PATH).forward(request, response);
+                return;
+            }
+            
+            if (country.trim().length() > 50) {
+                request.setAttribute("error", "Country name cannot exceed 50 characters");
+                request.getRequestDispatcher(ProjectPaths.JSP_CREATEBRAND_PATH).forward(request, response);
+                return;
+            }
+            
+            // Description is required
+            if (description == null || description.trim().isEmpty()) {
+                request.setAttribute("error", "Description is required");
+                request.getRequestDispatcher(ProjectPaths.JSP_CREATEBRAND_PATH).forward(request, response);
+                return;
+            }
+            
+            if (description.trim().length() > 500) {
+                request.setAttribute("error", "Description cannot exceed 500 characters");
+                request.getRequestDispatcher(ProjectPaths.JSP_CREATEBRAND_PATH).forward(request, response);
+                return;
+            }
+            
+            // Image URL is required
+            if (imageUrl == null || imageUrl.trim().isEmpty()) {
+                request.setAttribute("error", "Image URL is required");
+                request.getRequestDispatcher(ProjectPaths.JSP_CREATEBRAND_PATH).forward(request, response);
+                return;
+            }
+            
+            if (!isValidUrl(imageUrl.trim())) {
+                request.setAttribute("error", "Please enter a valid image URL");
+                request.getRequestDispatcher(ProjectPaths.JSP_CREATEBRAND_PATH).forward(request, response);
+                return;
+            }
+            
+            // Validate status is required
+            if (statusParam == null || statusParam.trim().isEmpty()) {
+                request.setAttribute("error", "Status is required");
+                request.getRequestDispatcher(ProjectPaths.JSP_CREATEBRAND_PATH).forward(request, response);
+                return;
+            }
+            
+            // Validate status value
+            Status status;
+            try {
+                status = Status.valueOf(statusParam.trim());
+            } catch (IllegalArgumentException e) {
+                request.setAttribute("error", "Invalid status value. Please select ACTIVE or INACTIVE");
+                request.getRequestDispatcher(ProjectPaths.JSP_CREATEBRAND_PATH).forward(request, response);
+                return;
+            }
+            
+            Brand brand = new Brand(
                 0,
-                request.getParameter("name"),
-                request.getParameter("country"),
-                request.getParameter("description"),
-                request.getParameter("imageUrl"),
-                request.getParameter("status") != null && !request.getParameter("status").isEmpty()
-                ? Status.valueOf(request.getParameter("status")) : null
-        );
-        brandService.createBrand(brand);
-        response.sendRedirect(request.getContextPath() + "/main?action=" + MainControllerServlet.BRAND_MANAGEMENT_REDIRECT);
+                name.trim(),
+                country.trim(),
+                description.trim(),
+                imageUrl.trim(),
+                status
+            );
+            
+            brandService.createBrand(brand);
+            request.setAttribute("successMessage", "Brand created successfully!");
+            response.sendRedirect(request.getContextPath() + "/main?action=" + MainControllerServlet.BRAND_MANAGEMENT_REDIRECT);
+            
+        } catch (IllegalArgumentException e) {
+            request.setAttribute("error", e.getMessage());
+            request.getRequestDispatcher(ProjectPaths.JSP_CREATEBRAND_PATH).forward(request, response);
+        } catch (Exception e) {
+            request.setAttribute("error", "Error creating brand: " + e.getMessage());
+            request.getRequestDispatcher(ProjectPaths.JSP_CREATEBRAND_PATH).forward(request, response);
+        }
+    }
+    
+    // Helper method to validate URL format
+    private boolean isValidUrl(String url) {
+        try {
+            new java.net.URL(url);
+            return true;
+        } catch (Exception e) {
+            return false;
+        }
     }
 
     private void handleEditBrand(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        Brand brandUpdate = new Brand(
-                Integer.parseInt(request.getParameter("brandId")),
-                request.getParameter("name"),
-                request.getParameter("country"),
-                request.getParameter("description"),
-                request.getParameter("imageUrl"),
-                Status.valueOf(request.getParameter("status"))
-        );
-        brandService.updateBrand(brandUpdate);
-        response.sendRedirect(request.getContextPath() + "/main?action=" + MainControllerServlet.BRAND_MANAGEMENT_REDIRECT);
+        try {
+            // Validate brandId
+            String brandIdParam = request.getParameter("brandId");
+            if (brandIdParam == null || brandIdParam.trim().isEmpty()) {
+                request.setAttribute("error", "Brand ID is required");
+                request.getRequestDispatcher(ProjectPaths.JSP_BRANDMANAGEMENT_PATH).forward(request, response);
+                return;
+            }
+            
+            int brandId;
+            try {
+                brandId = Integer.parseInt(brandIdParam);
+            } catch (NumberFormatException e) {
+                request.setAttribute("error", "Invalid brand ID format");
+                request.getRequestDispatcher(ProjectPaths.JSP_BRANDMANAGEMENT_PATH).forward(request, response);
+                return;
+            }
+            
+            // Validate input parameters
+            String name = request.getParameter("name");
+            String country = request.getParameter("country");
+            String description = request.getParameter("description");
+            String imageUrl = request.getParameter("imageUrl");
+            String statusParam = request.getParameter("status");
+            
+            // Validation - ALL FIELDS ARE REQUIRED
+            if (name == null || name.trim().isEmpty()) {
+                request.setAttribute("error", "Brand name is required");
+                // Get brand data to repopulate form
+                Brand brand = brandService.getBrandById(brandId);
+                if (brand != null) {
+                    request.setAttribute("brand", brand);
+                }
+                request.getRequestDispatcher(ProjectPaths.JSP_UPDATEBRAND_PATH).forward(request, response);
+                return;
+            }
+            
+            if (name.trim().length() > 100) {
+                request.setAttribute("error", "Brand name cannot exceed 100 characters");
+                Brand brand = brandService.getBrandById(brandId);
+                if (brand != null) {
+                    request.setAttribute("brand", brand);
+                }
+                request.getRequestDispatcher(ProjectPaths.JSP_UPDATEBRAND_PATH).forward(request, response);
+                return;
+            }
+            
+            // Country is required
+            if (country == null || country.trim().isEmpty()) {
+                request.setAttribute("error", "Country is required");
+                Brand brand = brandService.getBrandById(brandId);
+                if (brand != null) {
+                    request.setAttribute("brand", brand);
+                }
+                request.getRequestDispatcher(ProjectPaths.JSP_UPDATEBRAND_PATH).forward(request, response);
+                return;
+            }
+            
+            if (country.trim().length() > 50) {
+                request.setAttribute("error", "Country name cannot exceed 50 characters");
+                Brand brand = brandService.getBrandById(brandId);
+                if (brand != null) {
+                    request.setAttribute("brand", brand);
+                }
+                request.getRequestDispatcher(ProjectPaths.JSP_UPDATEBRAND_PATH).forward(request, response);
+                return;
+            }
+            
+            // Description is required
+            if (description == null || description.trim().isEmpty()) {
+                request.setAttribute("error", "Description is required");
+                Brand brand = brandService.getBrandById(brandId);
+                if (brand != null) {
+                    request.setAttribute("brand", brand);
+                }
+                request.getRequestDispatcher(ProjectPaths.JSP_UPDATEBRAND_PATH).forward(request, response);
+                return;
+            }
+            
+            if (description.trim().length() > 500) {
+                request.setAttribute("error", "Description cannot exceed 500 characters");
+                Brand brand = brandService.getBrandById(brandId);
+                if (brand != null) {
+                    request.setAttribute("brand", brand);
+                }
+                request.getRequestDispatcher(ProjectPaths.JSP_UPDATEBRAND_PATH).forward(request, response);
+                return;
+            }
+            
+            // Image URL is required
+            if (imageUrl == null || imageUrl.trim().isEmpty()) {
+                request.setAttribute("error", "Image URL is required");
+                Brand brand = brandService.getBrandById(brandId);
+                if (brand != null) {
+                    request.setAttribute("brand", brand);
+                }
+                request.getRequestDispatcher(ProjectPaths.JSP_UPDATEBRAND_PATH).forward(request, response);
+                return;
+            }
+            
+            if (!isValidUrl(imageUrl.trim())) {
+                request.setAttribute("error", "Please enter a valid image URL");
+                Brand brand = brandService.getBrandById(brandId);
+                if (brand != null) {
+                    request.setAttribute("brand", brand);
+                }
+                request.getRequestDispatcher(ProjectPaths.JSP_UPDATEBRAND_PATH).forward(request, response);
+                return;
+            }
+            
+            // Validate status is required
+            if (statusParam == null || statusParam.isEmpty()) {
+                request.setAttribute("error", "Status is required");
+                Brand brand = brandService.getBrandById(brandId);
+                if (brand != null) {
+                    request.setAttribute("brand", brand);
+                }
+                request.getRequestDispatcher(ProjectPaths.JSP_UPDATEBRAND_PATH).forward(request, response);
+                return;
+            }
+            
+            // Validate status value
+            Status status;
+            try {
+                status = Status.valueOf(statusParam);
+            } catch (IllegalArgumentException e) {
+                request.setAttribute("error", "Invalid status value");
+                Brand brand = brandService.getBrandById(brandId);
+                if (brand != null) {
+                    request.setAttribute("brand", brand);
+                }
+                request.getRequestDispatcher(ProjectPaths.JSP_UPDATEBRAND_PATH).forward(request, response);
+                return;
+            }
+            
+            Brand brandUpdate = new Brand(
+                brandId,
+                name.trim(),
+                country.trim(),
+                description.trim(),
+                imageUrl.trim(),
+                status
+            );
+            
+            brandService.updateBrand(brandUpdate);
+            request.setAttribute("successMessage", "Brand updated successfully!");
+            response.sendRedirect(request.getContextPath() + "/main?action=" + MainControllerServlet.BRAND_MANAGEMENT_REDIRECT);
+            
+        } catch (IllegalArgumentException e) {
+            request.setAttribute("error", e.getMessage());
+            request.getRequestDispatcher(ProjectPaths.JSP_BRANDMANAGEMENT_PATH).forward(request, response);
+        } catch (Exception e) {
+            request.setAttribute("error", "Error updating brand: " + e.getMessage());
+            request.getRequestDispatcher(ProjectPaths.JSP_BRANDMANAGEMENT_PATH).forward(request, response);
+        }
     }
 
     private void handleDeleteBrand(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        int brandId = Integer.parseInt(request.getParameter("brandId"));
-        brandService.deleteBrand(brandId);
-        response.sendRedirect(request.getContextPath() + "/main?action=" + MainControllerServlet.BRAND_MANAGEMENT_REDIRECT);
+        try {
+            String brandIdParam = request.getParameter("brandId");
+            if (brandIdParam == null || brandIdParam.trim().isEmpty()) {
+                request.setAttribute("error", "Brand ID is required");
+                request.getRequestDispatcher(ProjectPaths.JSP_BRANDMANAGEMENT_PATH).forward(request, response);
+                return;
+            }
+            
+            int brandId;
+            try {
+                brandId = Integer.parseInt(brandIdParam);
+            } catch (NumberFormatException e) {
+                request.setAttribute("error", "Invalid brand ID format");
+                request.getRequestDispatcher(ProjectPaths.JSP_BRANDMANAGEMENT_PATH).forward(request, response);
+                return;
+            }
+            
+            // Check if brand exists
+            Brand existingBrand = brandService.getBrandById(brandId);
+            if (existingBrand == null) {
+                request.setAttribute("error", "Brand not found");
+                request.getRequestDispatcher(ProjectPaths.JSP_BRANDMANAGEMENT_PATH).forward(request, response);
+                return;
+            }
+            
+            // Check if brand has associated products
+            List<Product> products = brandService.getProductsByBrandId(brandId);
+            if (!products.isEmpty()) {
+                request.setAttribute("error", "Cannot delete brand. It has " + products.size() + " associated product(s)");
+                request.getRequestDispatcher(ProjectPaths.JSP_BRANDMANAGEMENT_PATH).forward(request, response);
+                return;
+            }
+            
+            brandService.deleteBrand(brandId);
+            request.setAttribute("successMessage", "Brand deleted successfully!");
+            response.sendRedirect(request.getContextPath() + "/main?action=" + MainControllerServlet.BRAND_MANAGEMENT_REDIRECT);
+            
+        } catch (IllegalArgumentException e) {
+            request.setAttribute("error", e.getMessage());
+            request.getRequestDispatcher(ProjectPaths.JSP_BRANDMANAGEMENT_PATH).forward(request, response);
+        } catch (Exception e) {
+            request.setAttribute("error", "Error deleting brand: " + e.getMessage());
+            request.getRequestDispatcher(ProjectPaths.JSP_BRANDMANAGEMENT_PATH).forward(request, response);
+        }
     }
 
     private void handleNavigateToCreateBrand(HttpServletRequest request, HttpServletResponse response)
@@ -161,15 +484,45 @@ public class BrandManagementServlet extends HttpServlet {
 
     private void handleNavigateToUpdateBrand(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-//        ErrDialog.showError("Navigating to create brand with action: " + request.getParameter("action"));
-        int brandId = Integer.parseInt(request.getParameter("brandId"));
-        Brand brand = brandService.getBrandById(brandId);
-        if (brand == null) {
-            request.setAttribute("error", "Brand not found");
-            request.getRequestDispatcher(ProjectPaths.JSP_BRANDMANAGEMENT_PATH).forward(request, response);
-        } else {
+        try {
+            String brandIdParam = request.getParameter("brandId");
+            if (brandIdParam == null || brandIdParam.trim().isEmpty()) {
+                request.setAttribute("error", "Brand ID is required");
+                request.getRequestDispatcher(ProjectPaths.JSP_BRANDMANAGEMENT_PATH).forward(request, response);
+                return;
+            }
+            
+            int brandId;
+            try {
+                brandId = Integer.parseInt(brandIdParam);
+            } catch (NumberFormatException e) {
+                request.setAttribute("error", "Invalid brand ID format");
+                request.getRequestDispatcher(ProjectPaths.JSP_BRANDMANAGEMENT_PATH).forward(request, response);
+                return;
+            }
+            
+            if (brandId <= 0) {
+                request.setAttribute("error", "Invalid brand ID");
+                request.getRequestDispatcher(ProjectPaths.JSP_BRANDMANAGEMENT_PATH).forward(request, response);
+                return;
+            }
+            
+            Brand brand = brandService.getBrandById(brandId);
+            if (brand == null) {
+                request.setAttribute("error", "Brand not found with ID: " + brandId);
+                request.getRequestDispatcher(ProjectPaths.JSP_BRANDMANAGEMENT_PATH).forward(request, response);
+                return;
+            }
+            
             request.setAttribute("brand", brand);
             request.getRequestDispatcher(ProjectPaths.JSP_UPDATEBRAND_PATH).forward(request, response);
+            
+        } catch (IllegalArgumentException e) {
+            request.setAttribute("error", e.getMessage());
+            request.getRequestDispatcher(ProjectPaths.JSP_BRANDMANAGEMENT_PATH).forward(request, response);
+        } catch (Exception e) {
+            request.setAttribute("error", "Error retrieving brand: " + e.getMessage());
+            request.getRequestDispatcher(ProjectPaths.JSP_BRANDMANAGEMENT_PATH).forward(request, response);
         }
     }
 

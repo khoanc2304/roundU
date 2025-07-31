@@ -361,4 +361,4 @@ public class MainControllerServlet extends HttpServlet {
                 response.sendRedirect("errorAtMainController.jsp");
         }
     }
-}
+}   

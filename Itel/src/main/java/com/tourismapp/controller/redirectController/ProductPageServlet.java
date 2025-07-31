@@ -218,6 +218,45 @@ public class ProductPageServlet extends HttpServlet {
         int totalComments = reviewService.getTotalCommentsByProductId(id);
         Collections.reverse(reviewProductId);
 
+        //Lọc review theo rating
+        String ratingParam = request.getParameter("rating");
+//        ErrDialog.showError("ratingParam received: " + ratingParam); // Debug
+        int ratingFilter = (ratingParam != null && !ratingParam.isEmpty()) ? Integer.parseInt(ratingParam) : 0; // 0 nghĩa là lấy tất cả
+        List<Review> reviewProduct = (ratingFilter > 0) 
+            ? reviewService.getReviewsByProductIdAndRating(id, ratingFilter)
+            : reviewService.getReviewsByProductId(id);
+//        ErrDialog.showError("Filtered reviews count: " + reviewProduct.size()); // Debug
+        Collections.reverse(reviewProduct); // Sắp xếp mới nhất lên trên
+        
+        // Kiểm tra người đã mua hàng cho từng review
+        HttpSession session = request.getSession();
+        Users loggedUser = (Users) session.getAttribute("loggedUser");
+        boolean canComment = false;
+        if (loggedUser != null) {
+            canComment = reviewService.hasUserPurchasedProduct(loggedUser.getUserId(), id);
+        }
+        request.setAttribute("canComment", canComment); // Truyền trạng thái có thể bình luận
+        
+        // Tạo map để lưu trạng thái đã mua hàng cho từng user
+        Map<Integer, Boolean> userPurchaseStatus = new java.util.HashMap<>();
+
+        if (loggedUser != null) {
+            // Kiểm tra xem user hiện tại đã mua sản phẩm này chưa
+            boolean currentUserPurchased = reviewService.hasUserPurchasedProduct(loggedUser.getUserId(), id);
+            userPurchaseStatus.put(loggedUser.getUserId(), currentUserPurchased);
+        }
+
+        // Kiểm tra cho tất cả user trong review list
+        for (Review review : reviewProductId) {
+            if (!userPurchaseStatus.containsKey(review.getUser().getUserId())) {
+                boolean hasPurchased = reviewService.hasUserPurchasedProduct(review.getUser().getUserId(), id);
+                userPurchaseStatus.put(review.getUser().getUserId(), hasPurchased);
+            }
+        }
+
+        // Gửi thông tin trạng thái mua hàng đến JSP
+        request.setAttribute("userPurchaseStatus", userPurchaseStatus);
+
         //HUY
         List<Product> sameCategoryProducts = productService.getProductsByCategory(product.get().getCategory().getCategoryId());
 

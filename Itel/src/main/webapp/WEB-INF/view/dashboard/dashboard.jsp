@@ -816,23 +816,6 @@
                     <p class="welcome-subtitle">Theo dõi và quản lý hoạt động kinh doanh của bạn một cách hiệu quả</p>
                 </div>
 
-                <!-- Search Section -->
-<!--                <div class="search-section">
-                    <h3 style="margin-bottom: 1rem; color: #1a202c; font-size: 1.25rem;">
-                        <i class="fas fa-search" style="color: #3b82f6; margin-right: 0.5rem;"></i>
-                        Tìm kiếm nhanh
-                    </h3>
-                    <form class="search-form" action="main" method="get">
-                        <input type="hidden" name="action" value="searchDashboard" />
-                        <input type="text" name="searchQuery" class="search-input" 
-                               placeholder="Tìm kiếm đơn hàng, sản phẩm, khách hàng..." 
-                               value="${param.searchQuery}">
-                        <button type="submit" class="search-btn">
-                            <i class="fas fa-search" style="margin-right: 0.5rem;"></i>
-                            Tìm kiếm
-                        </button>
-                    </form>
-                </div>-->
 
                 <!-- Error Display -->
                 <c:if test="${not empty error}">
@@ -1037,107 +1020,20 @@
                         </div>
                     </div>
                 </div>
-
-                <!-- Recent Orders Table -->
-                <!--            <div class="table-card">
-                                <div class="table-header">
-                                    <div class="table-icon">
-                                        <i class="fas fa-list"></i>
-                                    </div>
-                                    <div class="chart-info">
-                                        <div class="chart-title">Đơn hàng gần đây</div>
-                                        <div class="chart-subtitle">Danh sách các đơn hàng mới nhất trong hệ thống</div>
-                                    </div>
-                                </div>
-                <c:choose>
-                    <c:when test="${not empty allOrders}">
-                        <table class="orders-table">
-                            <thead>
-                                <tr>
-                                    <th>Mã đơn hàng</th>
-                                    <th>Ngày đặt</th>
-                                    <th>Trạng thái</th>
-                                    <th>Tổng tiền</th>
-                                    <th>Địa chỉ</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                        <c:forEach var="order" items="${allOrders}" begin="0" end="9">
-                            <tr>
-                                <td><strong>${order.orderId}</strong></td>
-                                <td>${order.orderDate}</td>
-                                <td>
-                            <c:choose>
-                                <c:when test="${order.status == 'completed' || order.status == 'Completed'}">
-                                    <span class="status-badge status-completed">Hoàn thành</span>
-                                </c:when>
-                                <c:when test="${order.status == 'processing' || order.status == 'Processing'}">
-                                    <span class="status-badge status-processing">Đang xử lý</span>
-                                </c:when>
-                                <c:when test="${order.status == 'shipped' || order.status == 'Shipped'}">
-                                    <span class="status-badge status-shipped">Đã giao hàng</span>
-                                </c:when>
-                                <c:when test="${order.status == 'canceled' || order.status == 'Canceled'}">
-                                    <span class="status-badge status-canceled">Đã hủy</span>
-                                </c:when>
-                                <c:otherwise>
-                                    <span class="status-badge status-pending">Chờ xử lý</span>
-                                </c:otherwise>
-                            </c:choose>
-                        </td>
-                        <td><strong>₫${order.totalAmount}</strong></td>
-                        <td>${order.shippingAddress}</td>
-                    </tr>
-                        </c:forEach>
-                    </tbody>
-                </table>
-                    </c:when>
-                    <c:otherwise>
-                        <div class="empty-state">
-                            <i class="fas fa-box"></i>
-                            <small>Các đơn hàng sẽ hiển thị tại đây khi có khách hàng đặt</small>
-                        </div>
-                    </c:otherwise>
-                </c:choose>
-            </div>-->
-
-                <!-- Debug Section -->
-                <!--            <div class="debug-section">
-                                <h4 class="debug-title">
-                                    <i class="fas fa-bug"></i>
-                                    Thông tin debug hệ thống
-                                </h4>
-                                <div class="debug-content">
-                                    <h5>📊 Dữ liệu thống kê theo tháng:</h5>
-                <c:choose>
-                    <c:when test="${not empty orderStatsByMonth}">
-                        <ul>
-                        <c:forEach var="stat" items="${orderStatsByMonth}">
-                            <li>📅 Năm ${stat.year}, Tháng ${stat.month}: <strong>${stat.orderCount} đơn hàng</strong></li>
-                        </c:forEach>
-                    </ul>
-                    </c:when>
-                    <c:otherwise>
-                        <p>⚠️ Không có dữ liệu thống kê theo tháng (orderStatsByMonth).</p>
-                    </c:otherwise>
-                </c:choose>
-
-                <h5>🎯 Dữ liệu thống kê theo sản phẩm:</h5>
-                <c:choose>
-                    <c:when test="${not empty orderStatsByProduct}">
-                        <ul>
-                        <c:forEach var="stat" items="${orderStatsByProduct}">
-                            <li>🏷️ Sản phẩm ID ${stat.productId}: <strong>${stat.orderCount} đơn hàng</strong></li>
-                        </c:forEach>
-                    </ul>
-                    </c:when>
-                    <c:otherwise>
-                        <p>⚠️ Không có dữ liệu thống kê theo sản phẩm (orderStatsByProduct).</p>
-                    </c:otherwise>
-                </c:choose>
             </div>
-        </div>-->
-            </div>
+            <button onclick="window.location.href = '#chat'" style="padding: 10px 20px; background: #ff4444; color: #fff; border: none; cursor: pointer;">Thông báo Message (<span id="message-count">0</span>)</button>
+
+            <script>
+                let messageCount = 0;
+                setInterval(() => {
+                    messageCount = Math.floor(Math.random() * 5);
+                    document.getElementById('message-count').textContent = messageCount;
+                }, 5000);
+
+                document.querySelector('button').addEventListener('click', () => {
+                    document.getElementById('chat').style.display = 'block';
+                });
+            </script>
         </div>
 
         <script>

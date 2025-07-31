@@ -28,6 +28,12 @@ public interface IReviewService {
     
     boolean updateReview(Review review);
     
-    boolean deleteReview(int id);
+    boolean deleteReview(int reviewId);
     
+    List<StatisticReview> getStatisticReview();
+    
+    // Method to check if user has purchased the product
+    boolean hasUserPurchasedProduct(int userId, int productId);
+    
+    List<Review> getReviewsByProductIdAndRating(int productId, int rating);
 }

@@ -18,7 +18,7 @@
     </head>
     <body style="background-color: #F3F4F6; margin: 0; font-family: 'Roboto', sans-serif;">
 
-        <% request.getRequestDispatcher("/WEB-INF/view/components/navbar.jsp").include(request, response); %>
+        <% request.getRequestDispatcher("/WEB-INF/view/components/navbar.jsp").include(request, response);%>
         <jsp:include page="../../components/toast.jsp" />
 
         <div class="container product-container mt-5">
@@ -326,16 +326,16 @@
                         <div class="comments-header">
                             <h2 class="comments-count">${totalComments} Bình luận</h2>
                             <div class="filter-buttons">
-                                <button class="filter-btn active">Tất cả</button>
-                                <button class="filter-btn">5 ★</button>
-                                <button class="filter-btn">4 ★</button>
-                                <button class="filter-btn">3 ★</button>
-                                <button class="filter-btn">2 ★</button>
-                                <button class="filter-btn">1 ★</button>
+                                <a href="${pageContext.request.contextPath}/main?action=${param.action}&id=${param.id}" class="filter-btn ${empty param.rating ? 'active' : ''}">Tất cả</a>
+                                <a href="${pageContext.request.contextPath}/main?action=${param.action}&id=${param.id}&rating=5" class="filter-btn ${param.rating == '5' ? 'active' : ''}">5 ★</a>
+                                <a href="${pageContext.request.contextPath}/main?action=${param.action}&id=${param.id}&rating=4" class="filter-btn ${param.rating == '4' ? 'active' : ''}">4 ★</a>
+                                <a href="${pageContext.request.contextPath}/main?action=${param.action}&id=${param.id}&rating=3" class="filter-btn ${param.rating == '3' ? 'active' : ''}">3 ★</a>
+                                <a href="${pageContext.request.contextPath}/main?action=${param.action}&id=${param.id}&rating=2" class="filter-btn ${param.rating == '2' ? 'active' : ''}">2 ★</a>
+                                <a href="${pageContext.request.contextPath}/main?action=${param.action}&id=${param.id}&rating=1" class="filter-btn ${param.rating == '1' ? 'active' : ''}">1 ★</a>
                             </div>
                         </div>
 
-                        <c:if test="${not empty sessionScope.loggedUser}">
+                        <c:if test="${canComment}">
                             <form method="POST" action="main">
                                 <input type="hidden" name="userId" value="${sessionScope.loggedUser.userId}" />
                                 <input type="hidden" name="productId" value="${product.productId}" />
@@ -365,8 +365,13 @@
                                 </div>
                             </form>
                         </c:if>
-
-
+                        <%--
+                        <c:if test="${not canComment and not empty sessionScope.loggedUser}">
+                            <div class="comment-form">
+                                <p>Bạn cần mua sản phẩm này để có thể bình luận. <a href="${pageContext.request.contextPath}/main?action=productPage&id=${product.productId}">Mua ngay</a></p>
+                            </div>
+                        </c:if>
+                        --%>
                         <c:if test="${empty sessionScope.loggedUser}">
                             <div class="comment-form">
                                 <p>Bạn cần <a href="/Itel/loginPage?redirect=${pageContext.request.requestURL}">đăng nhập</a> để bình luận.</p>
@@ -391,6 +396,9 @@
                                             <span class="username">${review.user.fullName}</span>
                                             <c:if test="${review.user.role == 'ADMIN'}">
                                                 <span class="admin-badge">Quản trị viên</span>
+                                            </c:if>
+                                            <c:if test="${userPurchaseStatus[review.user.userId]}">
+                                                <span class="purchased-badge">Đã mua hàng</span>
                                             </c:if>
                                             <span class="comment-time">${review.createdAt}</span>
                                         </div>
@@ -540,11 +548,11 @@
                                                                     const comment = button.closest('.comment');
                                                                     const reviewId = comment.dataset.reviewId;
                                                                     const editMode = comment.querySelector('.edit-mode');
-                                                                    
+
                                                                     const newRating = parseInt(editMode.querySelector('.edit-rating').dataset.rating);
                                                                     const newComment = editMode.querySelector('.edit-textarea').value.trim();
                                                                     const productId = comment.dataset.productId;
-                                                                    
+
                                                                     if (!newComment) {
                                                                         alert('Vui lòng nhập nội dung bình luận');
                                                                         return;
@@ -717,6 +725,8 @@
                 }
             }
         </script>
+
+
     </body>
     <style>
         .product-container {
@@ -1588,6 +1598,7 @@
             font-size: 14px;
             cursor: pointer;
             transition: all 0.3s;
+            text-decoration: none;
         }
 
         .filter-btn.active {
@@ -1713,6 +1724,19 @@
             border-radius: 4px;
             font-size: 10px;
             font-weight: 600;
+        }
+
+        .purchased-badge {
+            background: linear-gradient(135deg, #4CAF50, #45a049);
+            color: white;
+            padding: 3px 8px;
+            border-radius: 12px;
+            font-size: 10px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            box-shadow: 0 2px 4px rgba(76, 175, 80, 0.3);
+            margin-left: 8px;
         }
 
         .comment-time {

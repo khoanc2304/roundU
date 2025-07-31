@@ -43,10 +43,32 @@ public class ReviewDAO implements IReviewDAO {
     private static final String COUNT_COMMENTS
             = "SELECT COUNT(*) AS total_comments FROM Review WHERE product_id = ? AND status = 'ACTIVE'";
     
-    private static final String GET_REVIEW_WITH_USER = 
-    "SELECT r.*, u.username, u.fullName, u.role " +
-    "FROM Review r JOIN Users u ON r.user_id = u.user_id " +
-    "WHERE r.product_id = ? AND r.status = 'ACTIVE'";
+    private static final String GET_REVIEW_WITH_USER = "SELECT r.*, u.username, u.fullName, u.email FROM Review r " +
+            "JOIN Users u ON r.user_id = u.user_id " +
+            "WHERE r.product_id = ? AND r.status = 'ACTIVE' " +
+            "ORDER BY r.created_at DESC";
+    
+    // Method to check if user has purchased the product
+    private static final String CHECK_USER_PURCHASED_PRODUCT = 
+            "SELECT COUNT(*) FROM Order_Detail od " +
+            "JOIN Orders o ON od.order_id = o.order_id " +
+            "WHERE o.user_id = ? AND od.product_id = ? AND o.status = 'completed'";
+    
+    public boolean hasUserPurchasedProduct(int userId, int productId) {
+        try (Connection conn = DBConnection.getConnection(); 
+             PreparedStatement ps = conn.prepareStatement(CHECK_USER_PURCHASED_PRODUCT)) {
+            ps.setInt(1, userId);
+            ps.setInt(2, productId);
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    return rs.getInt(1) > 0;
+                }
+            }
+        } catch (Exception e) {
+            ErrDialog.showError("hasUserPurchasedProduct(): " + e.getMessage());
+        }
+        return false;
+    }
     
     @Override
     public int getTotalCommentsByProductId(int productId) {
@@ -211,5 +233,31 @@ public class ReviewDAO implements IReviewDAO {
         }
     }
 
-    
+    @Override
+    public List<StatisticReview> getStatisticReview() {
+        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+    }
+
+    @Override
+    public List<Review> getReviewsByProductIdAndRating(int productId, int rating) {
+        List<Review> list = new ArrayList<>();
+        String sql = "SELECT r.*, u.username, u.fullName, u.email FROM Review r " +
+                "JOIN Users u ON r.user_id = u.user_id " +
+                "WHERE r.product_id = ? AND r.rating = ? AND r.status = 'active' " +
+                "ORDER BY r.created_at DESC";
+        
+        try (Connection conn = DBConnection.getConnection(); 
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setInt(1, productId);
+            ps.setInt(2, rating);
+            try (ResultSet rs = ps.executeQuery()) {
+                while (rs.next()) {
+                    list.add(extractReview(rs));
+                }
+            }
+        } catch (Exception e) {
+            ErrDialog.showError("getReviewsByProductIdAndRating(): " + e.getMessage());
+        }
+        return list;
+    }
 }

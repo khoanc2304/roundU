@@ -19,30 +19,36 @@
         <div class="form-container">
             <%--  <% String actionValue = MainControllerServlet.ACTION_CREATE_BRAND; %>
              <% com.tourismapp.utils.ErrDialog.showError("Rendering createBrand.jsp - Action value: " + actionValue);%> --%>
-            <form action="main" method="POST" onsubmit="return checkForm()"> 
+            <form action="main" method="POST" onsubmit="return validateForm()"> 
                 <input type="hidden" name="action" value="createBrand">
                 <div class="form-group">
                     <label for="name">Brand Name:</label>
                     <input type="text" id="name" name="name" placeholder="Enter brand name" required>
+                    <span id="nameError" class="error-message"></span>
                 </div>
                 <div class="form-group">
                     <label for="country">Country:</label>
-                    <input type="text" id="country" name="country" placeholder="Enter country">
+                    <input type="text" id="country" name="country" placeholder="Enter country" required>
+                    <span id="countryError" class="error-message"></span>
                 </div>
                 <div class="form-group">
                     <label for="description">Description:</label>
-                    <textarea id="description" name="description" placeholder="Enter description"></textarea>
+                    <textarea id="description" name="description" placeholder="Enter description" required></textarea>
+                    <span id="descriptionError" class="error-message"></span>
                 </div>
                 <div class="form-group">
                     <label for="imageUrl">Image URL:</label>
-                    <input type="text" id="imageUrl" name="imageUrl" placeholder="Enter image URL">
+                    <input type="text" id="imageUrl" name="imageUrl" placeholder="Enter image URL" required>
+                    <span id="imageUrlError" class="error-message"></span>
                 </div>
                 <div class="form-group">
                     <label for="status">Status:</label>
-                    <select id="status" name="status">
+                    <select id="status" name="status" required>
+                        <option value="">Select Status</option>
                         <option value="ACTIVE">Active</option>
                         <option value="INACTIVE">Inactive</option>
                     </select>
+                    <span id="statusError" class="error-message"></span>
                 </div>
                 <div class="form-group">
                     <button type="submit" class="btn btn-primary">Create Brand</button>
@@ -50,6 +56,89 @@
                 </div>
             </form>
         </div>
+        
+        <script>
+            function validateForm() {
+                let isValid = true;
+                
+                // Clear previous errors
+                clearErrors();
+                
+                // Validate brand name
+                const name = document.getElementById('name').value.trim();
+                if (!name) {
+                    showError('nameError', 'Brand name is required');
+                    isValid = false;
+                } else if (name.length > 100) {
+                    showError('nameError', 'Brand name cannot exceed 100 characters');
+                    isValid = false;
+                }
+                
+                // Validate country is required
+                const country = document.getElementById('country').value.trim();
+                if (!country) {
+                    showError('countryError', 'Country is required');
+                    isValid = false;
+                } else if (country.length > 50) {
+                    showError('countryError', 'Country name cannot exceed 50 characters');
+                    isValid = false;
+                }
+                
+                // Validate description is required
+                const description = document.getElementById('description').value.trim();
+                if (!description) {
+                    showError('descriptionError', 'Description is required');
+                    isValid = false;
+                } else if (description.length > 500) {
+                    showError('descriptionError', 'Description cannot exceed 500 characters');
+                    isValid = false;
+                }
+                
+                // Validate image URL is required
+                const imageUrl = document.getElementById('imageUrl').value.trim();
+                if (!imageUrl) {
+                    showError('imageUrlError', 'Image URL is required');
+                    isValid = false;
+                } else if (!isValidUrl(imageUrl)) {
+                    showError('imageUrlError', 'Please enter a valid URL');
+                    isValid = false;
+                }
+                
+                // Validate status is required
+                const status = document.getElementById('status').value;
+                if (!status || status.trim() === '') {
+                    showError('statusError', 'Status is required');
+                    isValid = false;
+                }
+                
+                return isValid;
+            }
+            
+            function showError(elementId, message) {
+                const errorElement = document.getElementById(elementId);
+                if (errorElement) {
+                    errorElement.textContent = message;
+                    errorElement.style.display = 'block';
+                }
+            }
+            
+            function clearErrors() {
+                const errorElements = document.querySelectorAll('.error-message');
+                errorElements.forEach(element => {
+                    element.textContent = '';
+                    element.style.display = 'none';
+                });
+            }
+            
+            function isValidUrl(string) {
+                try {
+                    new URL(string);
+                    return true;
+                } catch (_) {
+                    return false;
+                }
+            }
+        </script>
     </body>
 
     <style>
@@ -136,6 +225,25 @@
         .btn-secondary:hover {
             background-color: #5a6268;
             border-color: #5a6268;
+        }
+        
+        .error-message {
+            color: #dc3545;
+            font-size: 0.875rem;
+            margin-top: 0.25rem;
+            display: none;
+        }
+        
+        .form-group input:invalid,
+        .form-group textarea:invalid {
+            border-color: #dc3545;
+        }
+        
+        .form-group input:focus,
+        .form-group textarea:focus,
+        .form-group select:focus {
+            border-color: #007bff;
+            box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
         }
     </style>
 </html>
