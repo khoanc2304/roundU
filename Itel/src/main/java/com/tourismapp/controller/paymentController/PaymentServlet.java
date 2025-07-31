@@ -35,6 +35,7 @@ import java.util.logging.Logger;
 
 /**
  * Payment Servlet handles payment processing
+ *
  * @author Admin
  */
 @WebServlet(name = "PaymentServlet", urlPatterns = {"/payment"})
@@ -45,26 +46,35 @@ public class PaymentServlet extends HttpServlet {
     private final ProductService productService = new ProductService();
     private final ICouponService couponService = new CouponService();
     private final IUserService userService = new UserService();
-    
+
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        
+
         HttpSession session = request.getSession();
         Users user = (Users) session.getAttribute("loggedUser");
-        Cart cart = (Cart) session.getAttribute("cart");
-        
+        Cart cart;
+        String checkoutType = request.getParameter("checkoutType");
+
+        if ("selected".equals(checkoutType)) {
+            cart = (Cart) session.getAttribute("selectedCart");
+            System.out.println("Using selectedCart from session");
+        } else {
+            cart = (Cart) session.getAttribute("cart");
+            System.out.println("Using full cart from session");
+        }
+
         // Validate user and cart
         if (user == null) {
             response.sendRedirect("/Itel/main?action=loginPage");
             return;
         }
-        
+
         if (cart == null || cart.isEmpty()) {
             response.sendRedirect("/Itel/main?action=cartPage");
             return;
         }
-        
+
         try {
             // Get form data
             String firstName = request.getParameter("firstName");
@@ -76,36 +86,35 @@ public class PaymentServlet extends HttpServlet {
             String district = request.getParameter("district");
             String paymentMethodStr = request.getParameter("paymentMethod");
             String orderNotes = request.getParameter("orderNotes");
-            String checkoutType = request.getParameter("checkoutType"); // "all" or "selected"
-            
+//            String checkoutType = request.getParameter("checkoutType"); // "all" or "selected"
+
             // Get discount information ====== VINH ==============================
             String couponCode = request.getParameter("appliedCouponCode");
             String membershipDiscountPercentStr = request.getParameter("membershipDiscountPercent");
             String couponDiscountPercentStr = request.getParameter("couponDiscountPercent");
             String finalAmountStr = request.getParameter("finalAmount");
-            
+
             System.out.println("Payment processing - checkoutType: " + checkoutType);
             System.out.println("Coupon code: " + couponCode);
             System.out.println("Membership discount: " + membershipDiscountPercentStr + "%");
             System.out.println("Coupon discount: " + couponDiscountPercentStr + "%");
             System.out.println("Final amount: " + finalAmountStr);
             //================================================================//
-            
-            
+
             // Validate required fields
-            if (firstName == null || lastName == null || email == null || 
-                phone == null || address == null || city == null || 
-                district == null || paymentMethodStr == null) {
-                
+            if (firstName == null || lastName == null || email == null
+                    || phone == null || address == null || city == null
+                    || district == null || paymentMethodStr == null) {
+
                 request.setAttribute("error", "Please fill in all required fields");
                 request.getRequestDispatcher("/WEB-INF/view/pages/checkoutPage/checkoutPage.jsp")
                         .forward(request, response);
                 return;
             }
-            
+
             // Build full shipping address
             String fullShippingAddress = address + ", " + district + ", " + city;
-            
+
             // Parse payment method
             PaymentMethod paymentMethod;
             try {
@@ -113,7 +122,7 @@ public class PaymentServlet extends HttpServlet {
             } catch (IllegalArgumentException e) {
                 paymentMethod = PaymentMethod.CASH_ON_DELIVERY;
             }
-            
+
             // Validate stock availability before processing order
             for (CartItem item : cart.getItems()) {
                 Product product = productService.findProductById(item.getProduct().getProductId())
@@ -125,11 +134,11 @@ public class PaymentServlet extends HttpServlet {
                     return;
                 }
             }
-            
+
             // Calculate final amount with discounts          VINH ===============================
             BigDecimal originalAmount = cart.getTotalAmount();
             BigDecimal finalAmount = originalAmount;
-            
+
             // Apply membership discount if available
             if (membershipDiscountPercentStr != null && !membershipDiscountPercentStr.isEmpty()) {
                 try {
@@ -144,22 +153,22 @@ public class PaymentServlet extends HttpServlet {
                     System.err.println("Invalid membership discount: " + e.getMessage());
                 }
             }
-            
+
             // Apply coupon discount if available
             if (couponCode != null && !couponCode.isEmpty() && couponDiscountPercentStr != null && !couponDiscountPercentStr.isEmpty()) {
                 try {
                     String couponDiscountType = request.getParameter("couponDiscountType");
                     double couponDiscountValue = Double.parseDouble(couponDiscountPercentStr);
-                    
+
                     if (couponDiscountValue > 0) {
                         // Validate coupon (basic validation)
-                        if (couponCode.equals("BACKTOSCHOOL10") || couponCode.equals("BACKTOSCHOOL15") || 
-                            couponCode.equals("AUGUST10") || couponCode.equals("AUGUST15") ||
-                            couponCode.equals("FRESHMAN") || couponCode.equals("BLACKFRIDAY") ||
-                            couponCode.equals("FIRSTORDER") || couponCode.equals("SCHOOL1M")) {
-                            
+                        if (couponCode.equals("BACKTOSCHOOL10") || couponCode.equals("BACKTOSCHOOL15")
+                                || couponCode.equals("AUGUST10") || couponCode.equals("AUGUST15")
+                                || couponCode.equals("FRESHMAN") || couponCode.equals("BLACKFRIDAY")
+                                || couponCode.equals("FIRSTORDER") || couponCode.equals("SCHOOL1M")) {
+
                             BigDecimal couponDiscount;
-                            
+
                             // Calculate discount based on type
                             if ("fixed".equals(couponDiscountType)) {
                                 // Fixed amount discount
@@ -171,7 +180,7 @@ public class PaymentServlet extends HttpServlet {
                                 couponDiscount = originalAmount.multiply(discountFactor).setScale(0, RoundingMode.HALF_UP);
                                 System.out.println("Applied percentage coupon discount: " + couponDiscount);
                             }
-                            
+
                             finalAmount = finalAmount.subtract(couponDiscount);
                         }
                     }
@@ -179,7 +188,7 @@ public class PaymentServlet extends HttpServlet {
                     System.err.println("Invalid coupon discount: " + e.getMessage());
                 }
             }
-            
+
             // Use the provided final amount if available
             if (finalAmountStr != null && !finalAmountStr.isEmpty()) {
                 try {
@@ -188,44 +197,43 @@ public class PaymentServlet extends HttpServlet {
                     System.err.println("Invalid final amount: " + e.getMessage());
                 }
             }
-            
+
             // Ensure final amount is not negative
             if (finalAmount.compareTo(BigDecimal.ZERO) < 0) {
                 finalAmount = BigDecimal.ZERO;
             }
             //======================================================================================
-            
-            
+
             // Create order with final amount
             Orders order = new Orders(
-                user,
-                LocalDateTime.now(),
-                "pending",
-                finalAmount,
-                fullShippingAddress
+                    user,
+                    LocalDateTime.now(),
+                    "pending",
+                    finalAmount,
+                    fullShippingAddress
             );
-            
+
             System.out.println("Creating order for user: " + user.getUserId() + ", original amount: " + originalAmount + ", final amount: " + finalAmount);
-            
+
             // Process fake payment
             PaymentResult paymentResult = processFakePayment(paymentMethod, finalAmount);
             System.out.println("Payment result: " + paymentResult.isSuccess() + ", message: " + paymentResult.getMessage());
-            
+
             if (paymentResult.isSuccess()) {
                 // Create order in database
                 Orders createdOrder = orderService.createOrder(order, cart, orderNotes);
                 System.out.println("Order creation result: " + (createdOrder != null ? "Success, ID: " + createdOrder.getOrderId() : "Failed"));
-                
+
                 if (createdOrder != null) {
                     // Create payment record
                     Payment payment = new Payment(
-                        createdOrder,
-                        LocalDateTime.now(),
-                        paymentMethod,
-                        finalAmount,
-                        Status.ACTIVE
+                            createdOrder,
+                            LocalDateTime.now(),
+                            paymentMethod,
+                            finalAmount,
+                            Status.ACTIVE
                     );
-                    
+
                     // Kiểm tra và nâng cấp hạng mức thành viên dựa trên giá trị đơn hàng   VINH ======================
                     boolean membershipUpgraded = userService.checkAndUpgradeMembership(user.getUserId(), originalAmount);
                     if (membershipUpgraded) {
@@ -233,16 +241,16 @@ public class PaymentServlet extends HttpServlet {
                         Users updatedUser = userService.getUserById(user.getUserId());
                         if (updatedUser != null) {
                             System.out.println("Cập nhật session với thông tin người dùng mới sau khi nâng cấp hạng mức");
-                            System.out.println("Hạng mức mới: " + updatedUser.getMembershipLevel().getValue() + 
-                                              " (ID: " + updatedUser.getMembershipLevel().getId() + ")");
-                            
+                            System.out.println("Hạng mức mới: " + updatedUser.getMembershipLevel().getValue()
+                                    + " (ID: " + updatedUser.getMembershipLevel().getId() + ")");
+
                             // Cập nhật cả hai biến session "user" và "loggedUser" để đảm bảo nhất quán
                             session.setAttribute("user", updatedUser);
                             session.setAttribute("loggedUser", updatedUser);
-                            
+
                             // Thêm thông báo nâng cấp hạng mức thành viên
-                            String upgradeMessage = "Chúc mừng! Bạn đã được nâng cấp lên thành viên " + 
-                                                   updatedUser.getMembershipLevel().getValue() + " với nhiều ưu đãi hơn!";
+                            String upgradeMessage = "Chúc mừng! Bạn đã được nâng cấp lên thành viên "
+                                    + updatedUser.getMembershipLevel().getValue() + " với nhiều ưu đãi hơn!";
                             request.setAttribute("membershipUpgraded", true);
                             request.setAttribute("upgradeMessage", upgradeMessage);
                         } else {
@@ -250,19 +258,18 @@ public class PaymentServlet extends HttpServlet {
                         }
                     }
                     ////////////////////////////////////////////////////////////////////////////////////////////////////
-                    
-                    
+
                     // Gửi email hướng dẫn chuyển khoản nếu chọn BANKING
                     if (paymentMethod == PaymentMethod.BANKING) {
                         String subject = "Hướng dẫn chuyển khoản đơn hàng #" + createdOrder.getOrderId();
                         String content = "<h3>Cảm ơn bạn đã đặt hàng tại Itel Shop!</h3>"
-                            + "<p>Vui lòng chuyển khoản theo thông tin sau để hoàn tất đơn hàng:</p>"
-                            + "<b>Ngân hàng:</b> Vietcombank (VCB)<br>"
-                            + "<b>Số tài khoản:</b> 0123456789<br>"
-                            + "<b>Chủ tài khoản:</b> NGUYEN VAN A<br>"
-                            + "<b>Số tiền:</b> " + cart.getTotalAmount() + " VNĐ<br>"
-                            + "<b>Nội dung chuyển khoản:</b> DH" + createdOrder.getOrderId() + " hoặc số điện thoại của bạn<br>"
-                            + "<p><i>Vui lòng chuyển khoản đúng nội dung để được xác nhận đơn hàng nhanh nhất.</i></p>";
+                                + "<p>Vui lòng chuyển khoản theo thông tin sau để hoàn tất đơn hàng:</p>"
+                                + "<b>Ngân hàng:</b> Vietcombank (VCB)<br>"
+                                + "<b>Số tài khoản:</b> 0123456789<br>"
+                                + "<b>Chủ tài khoản:</b> NGUYEN VAN A<br>"
+                                + "<b>Số tiền:</b> " + cart.getTotalAmount() + " VNĐ<br>"
+                                + "<b>Nội dung chuyển khoản:</b> DH" + createdOrder.getOrderId() + " hoặc số điện thoại của bạn<br>"
+                                + "<p><i>Vui lòng chuyển khoản đúng nội dung để được xác nhận đơn hàng nhanh nhất.</i></p>";
                         try {
                             MailUtil.sendMail(email, subject, content);
                         } catch (MessagingException e) {
@@ -271,26 +278,26 @@ public class PaymentServlet extends HttpServlet {
                             Logger.getLogger(PaymentServlet.class.getName()).log(Level.SEVERE, null, ex);
                         }
                     }
-                    
+
                     // Get original cart from session to modify
                     Cart originalCart = (Cart) session.getAttribute("cart");
-                    
+
                     // Handle cart cleanup based on checkout type
                     if ("selected".equals(checkoutType)) {
                         // Only remove selected items from original cart
                         System.out.println("Removing selected items from original cart");
-                        
+
                         // Get selected items from form
                         String[] productIds = new String[100];
                         int count = 0;
-                        
+
                         for (int i = 0; i < 100; i++) {
                             String productId = request.getParameter("selectedItems[" + i + "].productId");
                             if (productId != null) {
                                 productIds[count++] = productId;
                             }
                         }
-                        
+
                         // Remove selected items from original cart
                         for (int i = 0; i < count; i++) {
                             try {
@@ -301,38 +308,39 @@ public class PaymentServlet extends HttpServlet {
                                 System.err.println("Invalid product ID: " + productIds[i]);
                             }
                         }
-                        
+
                         // Update session with modified cart
                         session.setAttribute("cart", originalCart);
                         System.out.println("Original cart updated, remaining items: " + originalCart.getTotalItems());
-                        
+
                     } else {
                         // Clear entire cart for "all" checkout
                         originalCart.clear();
                         session.setAttribute("cart", originalCart);
-                        
+
                         // Clear user's persistent cart if logged in
                         cartService.clearUserCart(user.getUserId());
                         System.out.println("Entire cart cleared");
                     }
-                    
+
                     // Set success attributes for thank you page
+                    session.removeAttribute("selectedCart");
                     request.setAttribute("order", createdOrder);
                     request.setAttribute("payment", payment);
                     request.setAttribute("paymentResult", paymentResult);
-                    
+
 //========================VINH=====================
                     request.setAttribute("originalAmount", originalAmount);
                     request.setAttribute("finalAmount", finalAmount);
                     request.setAttribute("discountAmount", originalAmount.subtract(finalAmount));
                     if (paymentMethod == PaymentMethod.BANKING) {
                         request.getRequestDispatcher("/WEB-INF/view/pages/thankYouPage/waitingBankTransfer.jsp")
-                            .forward(request, response);
+                                .forward(request, response);
                         return;
                     }
                     // Forward to success page
                     request.getRequestDispatcher("/WEB-INF/view/pages/thankYouPage/thankYou.jsp")
-                        .forward(request, response);
+                            .forward(request, response);
                 } else {
                     request.setAttribute("error", "Failed to create order. Please try again.");
                     request.getRequestDispatcher("/WEB-INF/view/pages/checkoutPage/checkoutPage.jsp")
@@ -343,7 +351,7 @@ public class PaymentServlet extends HttpServlet {
                 request.getRequestDispatcher("/WEB-INF/view/pages/checkoutPage/checkoutPage.jsp")
                         .forward(request, response);
             }
-            
+
         } catch (Exception e) {
             ErrDialog.showError("Payment processing error: " + e.getMessage());
             request.setAttribute("error", "An error occurred while processing your payment. Please try again.");
@@ -351,64 +359,65 @@ public class PaymentServlet extends HttpServlet {
                     .forward(request, response);
         }
     }
-    
+
     /**
      * Process fake payment - simulates different payment methods
      */
     private PaymentResult processFakePayment(PaymentMethod paymentMethod, BigDecimal amount) {
         Random random = new Random();
-        
+
         switch (paymentMethod) {
             case CASH_ON_DELIVERY:
                 // COD always succeeds
-                return new PaymentResult(true, "COD-" + System.currentTimeMillis(), 
-                    "Order placed successfully. You will pay when receiving the product.");
-                
+                return new PaymentResult(true, "COD-" + System.currentTimeMillis(),
+                        "Order placed successfully. You will pay when receiving the product.");
+
             case BANKING:
                 // Bank transfer - 95% success rate
                 if (random.nextInt(100) < 95) {
-                    return new PaymentResult(true, "BANK-" + System.currentTimeMillis(), 
-                        "Bank transfer initiated successfully.");
+                    return new PaymentResult(true, "BANK-" + System.currentTimeMillis(),
+                            "Bank transfer initiated successfully.");
                 } else {
                     return new PaymentResult(false, null, "Bank transfer failed. Please try again.");
                 }
-                
+
             case CASH:
                 // Credit card - 90% success rate (demo)
                 if (random.nextInt(100) < 90) {
-                    return new PaymentResult(true, "CARD-" + System.currentTimeMillis(), 
-                        "Card payment processed successfully.");
+                    return new PaymentResult(true, "CARD-" + System.currentTimeMillis(),
+                            "Card payment processed successfully.");
                 } else {
                     return new PaymentResult(false, null, "Card payment declined. Please check your card details.");
                 }
-                
+
             default:
                 return new PaymentResult(false, null, "Invalid payment method.");
         }
     }
-    
+
     /**
      * Helper class to represent payment result
      */
     public static class PaymentResult {
+
         private final boolean success;
         private final String transactionId;
         private final String message;
-        
+
         public PaymentResult(boolean success, String transactionId, String message) {
             this.success = success;
             this.transactionId = transactionId;
             this.message = message;
         }
-        
+
         public boolean isSuccess() {
             return success;
         }
-        
+
         public String getTransactionId() {
             return transactionId;
         }
-        
+
         public String getMessage() {
             return message;
         }

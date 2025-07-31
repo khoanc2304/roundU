@@ -3,6 +3,8 @@ package com.tourismapp.controller.mainController;
 import com.tourismapp.model.Users;
 import com.tourismapp.utils.ErrDialog;
 import com.tourismapp.config.ProjectPaths;
+import com.tourismapp.model.Cart;
+import com.tourismapp.model.CartItem;
 import com.tourismapp.service.user.IUserService;
 import com.tourismapp.service.user.UserService;
 import java.io.IOException;
@@ -13,6 +15,8 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.ServletContext;
 import jakarta.servlet.http.HttpSession;
+import java.util.ArrayList;
+import java.util.List;
 
 @WebServlet(name = "MainControllerServlet", urlPatterns = {"/main"})
 public class MainControllerServlet extends HttpServlet {
@@ -95,27 +99,26 @@ public class MainControllerServlet extends HttpServlet {
     public static final String ACTION_CREATE_REVIEW = "createReview";
     public static final String ACTION_EDIT_REVIEW = "editReview";
     public static final String ACTION_DELETE_REVIEW = "deleteReview";
-    
 
     // HIEU cart 
     public static final String ACTION_REMOVE_FROM_CART = "removeFromCart";
     public static final String ACTION_GET_CART_COUNT = "getCartCount";
     public static final String ACTION_GET_CART_ITEMS = "getCartItems";
-    
+
     public static final String ACTION_ADD_ITEMS = "add-items"; // cart
     public static final String ACTION_INCREASE_QUANTITY = "increase-quantity"; // cart
     public static final String ACTION_DECREASE_QUANTITY = "decrease-quantity"; // cart   
     public static final String ACTION_CHECKOUT = "confirm-checkout"; // checkOut
-     // PAYMENT PAGES
+    // PAYMENT PAGES
     public static final String PAYMENT_SUCCESS_REDIRECT = "paymentSuccess";
     public static final String PAYMENT_FAILED_REDIRECT = "paymentFailed";
     public static final String PAYMENT_PROCESSING_REDIRECT = "paymentProcessing";
-    
+
     public static final String ACTION_INITIATE_PAYMENT = "initiatePayment";
     public static final String ACTION_PAYMENT_SUCCESS = "paymentSuccess";
     public static final String ACTION_PAYMENT_FAILED = "paymentFailed";
     public static final String ACTION_PAYMENT_PROCESSING = "paymentProcessing";
-    
+
     // doGet (Action)
     // Khoa browser
     public static final String ACTION_FILTER_BY_CATEGORY = "filterByCategory";
@@ -135,7 +138,7 @@ public class MainControllerServlet extends HttpServlet {
     // NAM dashboard
     public static final String ACTION_MANAGE_BRAND = "manageBrand";
     public static final String ACTION_FIND_BRAND = "findBrand";
-        //NAM dashboard order
+    //NAM dashboard order
     public static final String ACTION_FIND_ORDERS = "manageOrder";
     public static final String ACTION_EDIT_ORDER_STATUS = "manageOrder";
 
@@ -156,30 +159,29 @@ public class MainControllerServlet extends HttpServlet {
 
     // HIEU    
     public static final String ACTION_VIEW_COMMENT = "viewComment";
-    
-    
+
     //NAM
     public static final String ACTION_VIEW_STATISTIC = "viewStatistic";
-    
+
     // VINH dashboard
     public static final String ACTION_UPDATE_CATEGORY_FORM = "updateCategoryForm";
     public static final String ACTION_CREATE_CATEGORY_FORM = "createCategoryForm";
     public static final String ACTION_SEARCH_CATEGORY = "searchCategory";
-    
+
     private void refreshUserInfo(HttpServletRequest request) {
         HttpSession session = request.getSession();
         Users user = (Users) session.getAttribute("user");
         Users loggedUser = (Users) session.getAttribute("loggedUser");
-        
+
         if (user != null || loggedUser != null) {
             IUserService userService = new UserService();
             int userId = user != null ? user.getUserId() : loggedUser.getUserId();
-            
+
             Users updatedUser = userService.getUserById(userId);
             if (updatedUser != null) {
                 System.out.println("MainController: Tải lại thông tin người dùng từ DB");
                 System.out.println("Hạng mức hiện tại: " + updatedUser.getMembershipLevel().getValue());
-                
+
                 if (user != null) {
                     session.setAttribute("user", updatedUser);
                 }
@@ -189,17 +191,18 @@ public class MainControllerServlet extends HttpServlet {
             }
         }
     }
-    
+
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         String action = request.getParameter("action") != null ? request.getParameter("action").trim() : "";
+        ErrDialog.showError("MainPOST: " + action);
         switch (action) {
             case ACTION_LOGIN ->
                 request.getRequestDispatcher(LOGINPAGE_REDIRECT).forward(request, response);
             case ACTION_CREATE_PRODUCT, ACTION_EDIT_PRODUCT, ACTION_DELETE_PRODUCT ->
                 request.getRequestDispatcher(PRODUCT_MANAGEMENT_REDIRECT).forward(request, response);
             case ACTION_CREATE_REVIEW, ACTION_EDIT_REVIEW, ACTION_DELETE_REVIEW ->
-                request.getRequestDispatcher(PRODUCTPAGE_REDIRECT).forward(request, response);    
+                request.getRequestDispatcher(PRODUCTPAGE_REDIRECT).forward(request, response);
             //USER HUY
             case ACTION_CREATE_USER, ACTION_EDIT_USER, ACTION_DELETE_USER ->
                 request.getRequestDispatcher(USER_MANAGEMENT_SERVLET).forward(request, response);
@@ -213,8 +216,42 @@ public class MainControllerServlet extends HttpServlet {
             case ACTION_ADD_ITEMS, ACTION_INCREASE_QUANTITY, ACTION_DECREASE_QUANTITY, ACTION_CHECKOUT ->
                 request.getRequestDispatcher(CARTPAGE_SERVLET).forward(request, response);
             //CHECKOUT
-            case CHECKOUTPAGE_REDIRECT ->
-                request.getRequestDispatcher(CHECKOUTPAGE_REDIRECT).forward(request, response);
+//            case CHECKOUTPAGE_REDIRECT -> {
+//                String[] productIds = request.getParameterValues("selectedItems[].productId");
+//                String[] quantities = request.getParameterValues("selectedItems[].quantity");
+//
+//                if (productIds != null && quantities != null && productIds.length == quantities.length) {
+//                    List<CartItem> selectedItems = new ArrayList<>();
+//                    Cart cart = (Cart) request.getSession().getAttribute("cart");
+//
+//                    for (int i = 0; i < productIds.length; i++) {
+//                        try {
+//                            int pid = Integer.parseInt(productIds[i]);
+//                            int qty = Integer.parseInt(quantities[i]);
+//
+//                            CartItem originalItem = cart.getItem(pid);
+//                            if (originalItem != null) {
+//                                CartItem selectedItem = new CartItem(originalItem.getProduct(), qty);
+//                                selectedItems.add(selectedItem);
+//                            }
+//                        } catch (NumberFormatException e) {
+//                            // Bỏ qua nếu lỗi parse
+//                        }
+//                    }
+//
+//                    if (!selectedItems.isEmpty()) {
+//                        request.setAttribute("selectedItems", selectedItems);
+//                        request.getRequestDispatcher(ProjectPaths.JSP_CHECKOUTPAGE_PATH).forward(request, response);
+//                    } else {
+//                        request.getSession().setAttribute("toastMessage", "Không có sản phẩm hợp lệ được chọn.");
+//                        response.sendRedirect(ProjectPaths.HREF_TO_CARTPAGE);
+//                    }
+//                } else {
+//                    request.getSession().setAttribute("toastMessage", "Vui lòng chọn sản phẩm để thanh toán.");
+//                    response.sendRedirect(ProjectPaths.HREF_TO_CARTPAGE);
+//                }
+//            }
+
             // HUY
             case ACTION_UPDATE_PROFILE ->
                 request.getRequestDispatcher(PROFILEPAGE_SERVLET).forward(request, response);
@@ -266,40 +303,27 @@ public class MainControllerServlet extends HttpServlet {
                 } else {
                     request.getRequestDispatcher(ORDER_MANAGEMENT_REDIRECT).forward(request, response);
                 }
-            }    
+            }
             default ->
                 response.sendRedirect("errorAtMainController.jsp");
         }
     }
 
     @Override
-    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {        
+    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         String action = request.getParameter("action") != null ? request.getParameter("action") : "";
-        
+        ErrDialog.showError("MainGET: " + action);
+
         // Tải lại thông tin người dùng cho các trang quan trọng
-        if ("homePage".equals(action) || "cartPage".equals(action) || "checkoutPage".equals(action) || 
-            "profilePage".equals(action) || "orderHistory".equals(action)) {
+        if ("homePage".equals(action) || "cartPage".equals(action) || "checkoutPage".equals(action)
+                || "profilePage".equals(action) || "orderHistory".equals(action)) {
             refreshUserInfo(request);
         }
-        
+
         switch (action) {
             case //DIRECT TO BROWSER
-                    LOGINPAGE_REDIRECT, 
-                    LOGOUTPAGE_REDIRECT, 
-                    PROFILEPAGE_REDIRECT, 
-                    PRODUCTPAGE_REDIRECT, 
-                    HOMEPAGE_REDIRECT, 
-                    CARTPAGE_REDIRECT, 
-                    CHECKOUTPAGE_REDIRECT,
-                    ORDERHISTORY_REDIRECT,
-                //DIRECT TO DASHBOARD
-                    DASHBOARDPAGE_REDIRECT, 
-                    USER_MANAGEMENT_REDIRECT, 
-                    BRAND_MANAGEMENT_REDIRECT, 
-                    CATEGORY_MANAGEMENT_REDIRECT, 
-                    PRODUCT_MANAGEMENT_REDIRECT, 
-                    ORDER_MANAGEMENT_REDIRECT, 
-                    COMPARE_REDIRECT ->
+            LOGINPAGE_REDIRECT, LOGOUTPAGE_REDIRECT, PROFILEPAGE_REDIRECT, PRODUCTPAGE_REDIRECT, HOMEPAGE_REDIRECT, CARTPAGE_REDIRECT, CHECKOUTPAGE_REDIRECT, ORDERHISTORY_REDIRECT, //DIRECT TO DASHBOARD
+            DASHBOARDPAGE_REDIRECT, USER_MANAGEMENT_REDIRECT, BRAND_MANAGEMENT_REDIRECT, CATEGORY_MANAGEMENT_REDIRECT, PRODUCT_MANAGEMENT_REDIRECT, ORDER_MANAGEMENT_REDIRECT, COMPARE_REDIRECT ->
                 request.getRequestDispatcher(action).forward(request, response);
             // VIEW PRODUCT FOR USER 
             case ACTION_BROWSE_PRODUCT, ACTION_FILTER_BY_CRITERIA ->
@@ -315,11 +339,11 @@ public class MainControllerServlet extends HttpServlet {
             case ACTION_MANAGE_BRAND, ACTION_FIND_BRAND, ACTION_NAVIGATE_TO_CREATE_BRAND, ACTION_NAVIGATE_TO_UPDATE_BRAND ->
                 request.getRequestDispatcher(BRAND_MANAGEMENT_REDIRECT).forward(request, response);
             //ORDER STAT
-            case ACTION_VIEW_STATISTIC -> 
-                request.getRequestDispatcher(DASHBOARDPAGE_SERVLET).forward(request, response);    
+            case ACTION_VIEW_STATISTIC ->
+                request.getRequestDispatcher(DASHBOARDPAGE_SERVLET).forward(request, response);
             // CATEGORY MANAGEMENT VINH
             case ACTION_CREATE_CATEGORY_FORM, ACTION_SEARCH_CATEGORY, ACTION_UPDATE_CATEGORY_FORM -> //(fix) -> bỏ action vào đây để nó direct tới trang servlet
-                 request.getRequestDispatcher(CATEGORY_MANAGEMENT_REDIRECT).forward(request, response);
+                request.getRequestDispatcher(CATEGORY_MANAGEMENT_REDIRECT).forward(request, response);
             // ORDER-CART HIEU
             case ACTION_PAYMENT_SUCCESS -> {
                 String message = (String) request.getSession().getAttribute("paymentMessage");
@@ -335,7 +359,7 @@ public class MainControllerServlet extends HttpServlet {
             }
             case ACTION_PAYMENT_PROCESSING -> {
                 request.getRequestDispatcher("paymentProcessing.jsp").forward(request, response);
-            } 
+            }
             // CHANGE PASSWORD
             case CHANGEPASSWORDPAGE_REDIRECT ->
                 request.getRequestDispatcher(ProjectPaths.JSP_CHANGE_PASSWORD_PATH).forward(request, response);
@@ -355,7 +379,7 @@ public class MainControllerServlet extends HttpServlet {
                 request.getRequestDispatcher("/WEB-INF/view/pages/recentlyViewed.jsp").forward(request, response);
             }
             case "viewOrderDetail" ->
-                request.getRequestDispatcher(ORDER_MANAGEMENT_SERVLET).forward(request, response);    
+                request.getRequestDispatcher(ORDER_MANAGEMENT_SERVLET).forward(request, response);
             default ->
                 response.sendRedirect("errorAtMainController.jsp");
         }
