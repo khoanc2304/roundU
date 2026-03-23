@@ -42,3 +42,4 @@ debug*.jsp
 test*.jsp
 *Test*.jsp
 Itel/src/main/webapp/
+Itel/target/

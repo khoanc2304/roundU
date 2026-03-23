@@ -9,10 +9,10 @@ import java.util.logging.Logger;
 
 public class DBConnection {
 
-    public static String driverName = "com.microsoft.sqlserver.jdbc.SQLServerDriver";
-    public static String dbURL = "jdbc:sqlserver://localhost:1433;databaseName=Itel_Shop20;encrypt=true;trustServerCertificate=true;";
-    public static String userDB = "sa";
-    public static String passDB = "123";
+    public static String driverName = "com.mysql.cj.jdbc.Driver";
+    public static String dbURL = "jdbc:mysql://localhost:3306/Itel_Shop?useSSL=false&serverTimezone=UTC";
+    public static String userDB = "root"; // đổi nếu cần
+    public static String passDB = "khoa7619";  // đổi theo MySQL của bạn
 
     public static Connection getConnection() {
         Connection con = null;
@@ -29,8 +29,9 @@ public class DBConnection {
     public static void main(String[] args) {
         try (Connection con = getConnection()) {
             if (con != null) {
-//                System.out.println("Connect to Itel_Shop Success");
-                ErrDialog.showError("Connect to Itel_Shop Success");
+                ErrDialog.showError("Connect to MySQL Success");
+            } else {
+                ErrDialog.showError("Connect failed");
             }
         } catch (SQLException ex) {
             Logger.getLogger(DBConnection.class.getName()).log(Level.SEVERE, null, ex);
