@@ -1,83 +1,64 @@
-package com.tourismapp.controller.redirectController;
+package com.tourismapp.controller.userController;
 
 import com.tourismapp.config.ProjectPaths;
 import com.tourismapp.controller.mainController.MainControllerServlet;
 import com.tourismapp.model.Users;
 import com.tourismapp.service.user.UserService;
-import com.tourismapp.utils.ErrDialog;
-import jakarta.servlet.ServletException;
-import jakarta.servlet.annotation.WebServlet;
-import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+
 import java.io.IOException;
 import java.util.regex.Pattern;
 
-@WebServlet(name = "ProfilePageServlet", urlPatterns = {MainControllerServlet.PROFILEPAGE_SERVLET})
-public class ProfilePageServlet extends HttpServlet {
+@Controller
+public class ProfileController {
 
-    private UserService userService;
+    private final UserService userService = new UserService();
 
-    @Override
-    public void init() throws ServletException {
-        userService = new UserService();
-    }
-
-    @Override
-    protected void doGet(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
-        HttpSession session = request.getSession();
+    @GetMapping(MainControllerServlet.PROFILEPAGE_SERVLET)
+    public String handleGetProfile(@RequestParam(value = "action", required = false, defaultValue = MainControllerServlet.ACTION_VIEW_PROFILE) String action,
+                                   HttpServletRequest request, HttpSession session) {
         Users loggedUser = (Users) session.getAttribute("loggedUser");
 
         if (loggedUser == null) {
-            response.sendRedirect(ProjectPaths.HREF_TO_LOGINPAGE);
-            return;
+            return "redirect:" + ProjectPaths.HREF_TO_LOGINPAGE;
         }
-
-        String action = request.getParameter("action") != null ? request.getParameter("action") : MainControllerServlet.ACTION_VIEW_PROFILE;
-//        ErrDialog.showError("ProServlet: " + action);
 
         switch (action) {
             case MainControllerServlet.ACTION_VIEW_PROFILE:
                 request.setAttribute("user", loggedUser);
-                request.getRequestDispatcher(ProjectPaths.JSP_PROFILEPAGE_PATH).forward(request, response);
-                break;
+                return ProjectPaths.JSP_PROFILEPAGE_PATH;
             case MainControllerServlet.ACTION_EDIT_PROFILE:
                 request.setAttribute("user", loggedUser);
-                request.getRequestDispatcher(ProjectPaths.JSP_EDIT_PROFILEPAGE_PATH).forward(request, response);
-                break;
+                return ProjectPaths.JSP_EDIT_PROFILEPAGE_PATH;
             case MainControllerServlet.ACTION_CHANGE_PASSWORD:
                 request.setAttribute("user", loggedUser);
-                request.getRequestDispatcher(ProjectPaths.JSP_CHANGE_PASSWORD_PATH).forward(request, response);
-                break;
-
+                return ProjectPaths.JSP_CHANGE_PASSWORD_PATH;
             default:
-                response.sendRedirect("errorAtMainController.jsp");
+                return "redirect:errorAtMainController.jsp";
         }
     }
 
-    @Override
-    protected void doPost(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
-        HttpSession session = request.getSession();
+    @PostMapping(MainControllerServlet.PROFILEPAGE_SERVLET)
+    public String handlePostProfile(@RequestParam(value = "action", required = false, defaultValue = "") String action,
+                                    @RequestParam(value = "fullName", required = false) String fullName,
+                                    @RequestParam(value = "email", required = false) String email,
+                                    @RequestParam(value = "phone", required = false) String phone,
+                                    @RequestParam(value = "address", required = false) String address,
+                                    HttpServletRequest request, HttpSession session) {
+
         Users loggedUser = (Users) session.getAttribute("loggedUser");
 
         if (loggedUser == null) {
-            response.sendRedirect(ProjectPaths.HREF_TO_LOGINPAGE);
-            return;
+            return "redirect:" + ProjectPaths.HREF_TO_LOGINPAGE;
         }
 
-        String action = request.getParameter("action") != null ? request.getParameter("action") : "";
-
-        if (action.equals(MainControllerServlet.ACTION_UPDATE_PROFILE)) {
-            // Lấy dữ liệu từ form
-            String fullName = request.getParameter("fullName");
-            String email = request.getParameter("email");
-            String phone = request.getParameter("phone");
-            String address = request.getParameter("address");
-
-            // Kiểm tra dữ liệu đầu vào
+        if (MainControllerServlet.ACTION_UPDATE_PROFILE.equals(action)) {
             StringBuilder errorMessage = new StringBuilder();
             if (fullName == null || !Pattern.matches("^[a-zA-ZÀ-ỹ\\s]{2,50}$", fullName.trim())) {
                 errorMessage.append("Tên phải từ 2-50 ký tự, chỉ chứa chữ cái và khoảng trắng. ");
@@ -95,30 +76,26 @@ public class ProfilePageServlet extends HttpServlet {
             if (errorMessage.length() > 0) {
                 request.setAttribute("errorMessage", errorMessage.toString());
                 request.setAttribute("user", loggedUser);
-                request.getRequestDispatcher(ProjectPaths.JSP_EDIT_PROFILEPAGE_PATH).forward(request, response);
-                return;
+                return ProjectPaths.JSP_EDIT_PROFILEPAGE_PATH;
             }
 
-            // Cập nhật thông tin user
             loggedUser.setFullName(fullName.trim());
             loggedUser.setEmail(email.trim());
             loggedUser.setPhone(phone.trim());
             loggedUser.setAddress(address.trim());
 
-            // Lưu vào DB
             boolean updated = userService.updateUser(loggedUser);
             if (updated) {
                 session.setAttribute("loggedUser", loggedUser);
                 request.setAttribute("successMessage", "Cập nhật thông tin thành công!");
                 request.setAttribute("user", loggedUser);
-                request.getRequestDispatcher(ProjectPaths.JSP_EDIT_PROFILEPAGE_PATH).forward(request, response);
             } else {
                 request.setAttribute("errorMessage", "Cập nhật thông tin thất bại!");
                 request.setAttribute("user", loggedUser);
-                request.getRequestDispatcher(ProjectPaths.JSP_EDIT_PROFILEPAGE_PATH).forward(request, response);
             }
+            return ProjectPaths.JSP_EDIT_PROFILEPAGE_PATH;
         } else {
-            response.sendRedirect("errorAtMainController.jsp");
+            return "redirect:errorAtMainController.jsp";
         }
     }
 }
