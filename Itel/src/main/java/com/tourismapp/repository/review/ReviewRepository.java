@@ -1,11 +1,8 @@
 package com.tourismapp.repository.review;
 
-import com.sun.tools.xjc.reader.xmlschema.bindinfo.BIConversion.User;
 import com.tourismapp.common.Status;
 import com.tourismapp.repository.DBConnection;
 import com.tourismapp.repository.product.ProductRepository;
-import com.tourismapp.repository.product.ProductRepository;
-import com.tourismapp.repository.user.UserRepository;
 import com.tourismapp.repository.user.UserRepository;
 import com.tourismapp.model.Product;
 import com.tourismapp.model.Users;
@@ -20,10 +17,10 @@ import java.util.List;
 import java.util.Optional;
 
 public class ReviewRepository {
-    
+
     private final ProductRepository ProductRepository = new ProductRepository();
-    private final UserRepository UserRepository = new UserRepository(); 
-    
+    private final UserRepository UserRepository = new UserRepository();
+
     private static final String GET_ALL_ACTIVE_REVIEWS = "SELECT * FROM Review WHERE status = 'ACTIVE'";
     private static final String GET_REVIEW_BY_ID = "SELECT * FROM Review WHERE review_id = ?";
     private static final String GET_REVIEW_BY_PRODUCT_ID = "SELECT * FROM Review WHERE product_id = ? AND status = 'ACTIVE'";
@@ -40,23 +37,21 @@ public class ReviewRepository {
             + "SUM(CASE WHEN rating = 5 THEN 1 ELSE 0 END) AS count_5_star "
             + "FROM Review WHERE product_id = ? AND status = 'ACTIVE'";
 
-    private static final String COUNT_COMMENTS
-            = "SELECT COUNT(*) AS total_comments FROM Review WHERE product_id = ? AND status = 'ACTIVE'";
-    
+    private static final String COUNT_COMMENTS = "SELECT COUNT(*) AS total_comments FROM Review WHERE product_id = ? AND status = 'ACTIVE'";
+
     private static final String GET_REVIEW_WITH_USER = "SELECT r.*, u.username, u.fullName, u.email FROM Review r " +
             "JOIN Users u ON r.user_id = u.user_id " +
             "WHERE r.product_id = ? AND r.status = 'ACTIVE' " +
             "ORDER BY r.created_at DESC";
-    
+
     // Method to check if user has purchased the product
-    private static final String CHECK_USER_PURCHASED_PRODUCT = 
-            "SELECT COUNT(*) FROM Order_Detail od " +
+    private static final String CHECK_USER_PURCHASED_PRODUCT = "SELECT COUNT(*) FROM Order_Detail od " +
             "JOIN Orders o ON od.order_id = o.order_id " +
             "WHERE o.user_id = ? AND od.product_id = ? AND o.status = 'completed'";
-    
+
     public boolean hasUserPurchasedProduct(int userId, int productId) {
-        try (Connection conn = DBConnection.getConnection(); 
-             PreparedStatement ps = conn.prepareStatement(CHECK_USER_PURCHASED_PRODUCT)) {
+        try (Connection conn = DBConnection.getConnection();
+                PreparedStatement ps = conn.prepareStatement(CHECK_USER_PURCHASED_PRODUCT)) {
             ps.setInt(1, userId);
             ps.setInt(2, productId);
             try (ResultSet rs = ps.executeQuery()) {
@@ -69,9 +64,10 @@ public class ReviewRepository {
         }
         return false;
     }
-    
+
     public int getTotalCommentsByProductId(int productId) {
-        try (Connection conn = DBConnection.getConnection(); PreparedStatement ps = conn.prepareStatement(COUNT_COMMENTS)) {
+        try (Connection conn = DBConnection.getConnection();
+                PreparedStatement ps = conn.prepareStatement(COUNT_COMMENTS)) {
             ps.setInt(1, productId);
             try (ResultSet rs = ps.executeQuery()) {
                 if (rs.next()) {
@@ -96,8 +92,7 @@ public class ReviewRepository {
                             rs.getInt("count_2_star"),
                             rs.getInt("count_3_star"),
                             rs.getInt("count_4_star"),
-                            rs.getInt("count_5_star")
-                    );
+                            rs.getInt("count_5_star"));
                 }
             }
         } catch (Exception e) {
@@ -108,7 +103,9 @@ public class ReviewRepository {
 
     public List<Review> getAllActiveReviews() {
         List<Review> list = new ArrayList<>();
-        try (Connection conn = DBConnection.getConnection(); PreparedStatement ps = conn.prepareStatement(GET_ALL_ACTIVE_REVIEWS); ResultSet rs = ps.executeQuery()) {
+        try (Connection conn = DBConnection.getConnection();
+                PreparedStatement ps = conn.prepareStatement(GET_ALL_ACTIVE_REVIEWS);
+                ResultSet rs = ps.executeQuery()) {
             while (rs.next()) {
                 list.add(extractReview(rs));
             }
@@ -119,7 +116,8 @@ public class ReviewRepository {
     }
 
     public Review getReviewById(int reviewId) {
-        try (Connection conn = DBConnection.getConnection(); PreparedStatement ps = conn.prepareStatement(GET_REVIEW_BY_ID)) {
+        try (Connection conn = DBConnection.getConnection();
+                PreparedStatement ps = conn.prepareStatement(GET_REVIEW_BY_ID)) {
             ps.setInt(1, reviewId);
             try (ResultSet rs = ps.executeQuery()) {
                 if (rs.next()) {
@@ -134,7 +132,8 @@ public class ReviewRepository {
 
     public List<Review> getReviewsByProductId(int productId) {
         List<Review> list = new ArrayList<>();
-        try (Connection conn = DBConnection.getConnection(); PreparedStatement ps = conn.prepareStatement(GET_REVIEW_WITH_USER)) {
+        try (Connection conn = DBConnection.getConnection();
+                PreparedStatement ps = conn.prepareStatement(GET_REVIEW_WITH_USER)) {
             ps.setInt(1, productId);
             try (ResultSet rs = ps.executeQuery()) {
                 while (rs.next()) {
@@ -166,7 +165,8 @@ public class ReviewRepository {
     }
 
     public boolean updateReview(Review review) {
-        try (Connection conn = DBConnection.getConnection(); PreparedStatement ps = conn.prepareStatement(UPDATE_REVIEW)) {
+        try (Connection conn = DBConnection.getConnection();
+                PreparedStatement ps = conn.prepareStatement(UPDATE_REVIEW)) {
             ps.setInt(1, review.getRating());
             ps.setString(2, review.getComment());
             ps.setInt(3, review.getReviewId());
@@ -178,7 +178,8 @@ public class ReviewRepository {
     }
 
     public boolean deleteReview(int reviewId) {
-        try (Connection conn = DBConnection.getConnection(); PreparedStatement ps = conn.prepareStatement(DELETE_REVIEW)) {
+        try (Connection conn = DBConnection.getConnection();
+                PreparedStatement ps = conn.prepareStatement(DELETE_REVIEW)) {
             ps.setInt(1, reviewId);
             return ps.executeUpdate() > 0;
         } catch (Exception e) {
@@ -200,12 +201,13 @@ public class ReviewRepository {
         LocalDateTime updatedAt = rs.getTimestamp("updated_at").toLocalDateTime();
 
         Optional<Product> product = ProductRepository.findProductById(productId);
-        
+
         Users user = UserRepository.getUserById(userId);
 
-        return new Review(reviewId, product.get(), user, rating, comment, parent_review_id, status, createdAt, updatedAt);
+        return new Review(reviewId, product.get(), user, rating, comment, parent_review_id, status, createdAt,
+                updatedAt);
     }
-    
+
     public static void main(String[] args) {
         int productId = 1; // ID sản phẩm muốn test
 
@@ -226,7 +228,8 @@ public class ReviewRepository {
     }
 
     public List<StatisticReview> getStatisticReview() {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+        throw new UnsupportedOperationException("Not supported yet."); // Generated from
+                                                                       // nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
     }
 
     public List<Review> getReviewsByProductIdAndRating(int productId, int rating) {
@@ -235,9 +238,9 @@ public class ReviewRepository {
                 "JOIN Users u ON r.user_id = u.user_id " +
                 "WHERE r.product_id = ? AND r.rating = ? AND r.status = 'active' " +
                 "ORDER BY r.created_at DESC";
-        
-        try (Connection conn = DBConnection.getConnection(); 
-             PreparedStatement ps = conn.prepareStatement(sql)) {
+
+        try (Connection conn = DBConnection.getConnection();
+                PreparedStatement ps = conn.prepareStatement(sql)) {
             ps.setInt(1, productId);
             ps.setInt(2, rating);
             try (ResultSet rs = ps.executeQuery()) {

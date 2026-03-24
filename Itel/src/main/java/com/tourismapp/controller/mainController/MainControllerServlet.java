@@ -3,8 +3,6 @@ package com.tourismapp.controller.mainController;
 import com.tourismapp.model.Users;
 import com.tourismapp.utils.ErrDialog;
 import com.tourismapp.config.ProjectPaths;
-import com.tourismapp.model.Cart;
-import com.tourismapp.model.CartItem;
 import com.tourismapp.service.user.IUserService;
 import com.tourismapp.service.user.UserService;
 import java.io.IOException;
@@ -15,8 +13,6 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.ServletContext;
 import jakarta.servlet.http.HttpSession;
-import java.util.ArrayList;
-import java.util.List;
 
 @WebServlet(name = "MainControllerServlet", urlPatterns = { "/main" })
 public class MainControllerServlet extends HttpServlet {

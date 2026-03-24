@@ -2,9 +2,7 @@ package com.tourismapp.service.user;
 
 import com.tourismapp.common.MembershipLevel;
 import com.tourismapp.common.Status;
-import com.tourismapp.common.UserRole;
 import com.tourismapp.repository.DBConnection;
-import com.tourismapp.repository.user.UserRepository;
 import com.tourismapp.repository.user.UserRepository;
 import com.tourismapp.model.Users;
 
@@ -52,7 +50,7 @@ public class UserService implements IUserService {
         return UserRepository.createUser(user);
     }
 
-// ✅ Hàm validate logic như ở Servlet trước đây
+    // ✅ Hàm validate logic như ở Servlet trước đây
     public Map<String, String> validateUserData(Users user, boolean isUpdate) {
         Map<String, String> errors = new HashMap<>();
 

@@ -4,7 +4,6 @@ import com.tourismapp.config.ProjectPaths;
 import com.tourismapp.controller.mainController.MainControllerServlet;
 import com.tourismapp.model.Product;
 import com.tourismapp.service.product.IProductService;
-import com.tourismapp.service.product.ProductService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
@@ -32,12 +31,16 @@ public class CompareController {
 
     @GetMapping(MainControllerServlet.COMPARE_SERVLET)
     public String showComparePage(@RequestParam(value = "productIds", required = false) String productIds,
-                                  HttpServletRequest request, HttpSession session) {
+            HttpServletRequest request, HttpSession session) {
         if (productIds != null && !productIds.isEmpty()) {
             String[] ids = productIds.split("-");
             List<Product> compareProducts = Arrays.stream(ids)
                     .map(id -> {
-                        try { return Integer.parseInt(id); } catch (Exception e) { return null; }
+                        try {
+                            return Integer.parseInt(id);
+                        } catch (Exception e) {
+                            return null;
+                        }
                     })
                     .filter(id -> id != null)
                     .map(productService::findProductById)
@@ -59,8 +62,8 @@ public class CompareController {
     @ResponseBody
     @SuppressWarnings("unchecked")
     public void handleCompareAction(@RequestParam("action") String action,
-                                    @RequestParam(value = "productId", required = false) String productId,
-                                    HttpSession session, HttpServletResponse response) throws IOException {
+            @RequestParam(value = "productId", required = false) String productId,
+            HttpSession session, HttpServletResponse response) throws IOException {
         List<String> compareList = (List<String>) session.getAttribute("compareList");
         if (compareList == null) {
             compareList = new ArrayList<>();
@@ -79,6 +82,7 @@ public class CompareController {
         session.setAttribute("compareList", compareList);
 
         response.setContentType("application/json");
-        response.getWriter().write("{\"compareList\": [" + String.join(",", compareList.stream().map(id -> "\"" + id + "\"").toArray(String[]::new)) + "]}");
+        response.getWriter().write("{\"compareList\": ["
+                + String.join(",", compareList.stream().map(id -> "\"" + id + "\"").toArray(String[]::new)) + "]}");
     }
 }

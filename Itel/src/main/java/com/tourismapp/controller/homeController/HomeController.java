@@ -6,12 +6,9 @@ import com.tourismapp.model.Brand;
 import org.springframework.beans.factory.annotation.Autowired;
 import com.tourismapp.model.Category;
 import com.tourismapp.model.Product;
-import com.tourismapp.service.brand.BrandService;
 import com.tourismapp.service.brand.IBrandService;
-import com.tourismapp.service.category.CategoryService;
 import com.tourismapp.service.category.ICategoryService;
 import com.tourismapp.service.product.IProductService;
-import com.tourismapp.service.product.ProductService;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
@@ -30,8 +27,10 @@ public class HomeController {
 
     @Autowired
     private IProductService productService;
-    @Autowired private ICategoryService categoryService;
-    @Autowired private IBrandService brandService;
+    @Autowired
+    private ICategoryService categoryService;
+    @Autowired
+    private IBrandService brandService;
 
     @GetMapping
     public String doGet(@RequestParam(value = "action", defaultValue = "") String action,

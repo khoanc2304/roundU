@@ -3,10 +3,6 @@ package com.tourismapp.controller.paymentController;
 import com.tourismapp.common.PaymentMethod;
 import com.tourismapp.common.Status;
 import com.tourismapp.model.*;
-import com.tourismapp.service.cart.CartService;
-import com.tourismapp.service.order.OrderService;
-import com.tourismapp.service.product.ProductService;
-import com.tourismapp.service.user.UserService;
 import com.tourismapp.service.user.IUserService;
 import com.tourismapp.utils.MailUtil;
 import jakarta.servlet.http.HttpServletRequest;
@@ -31,13 +27,13 @@ public class PaymentController {
 
     @Autowired
     private IOrderService orderService;
-    
+
     @Autowired
     private ICartService cartService;
-    
+
     @Autowired
     private IProductService productService;
-    
+
     @Autowired
     private IUserService userService;
 
@@ -45,23 +41,24 @@ public class PaymentController {
 
     @PostMapping("/payment")
     public String processPayment(@RequestParam(value = "checkoutType", required = false) String checkoutType,
-                                 @RequestParam(value = "firstName", required = false) String firstName,
-                                 @RequestParam(value = "lastName", required = false) String lastName,
-                                 @RequestParam(value = "email", required = false) String email,
-                                 @RequestParam(value = "phone", required = false) String phone,
-                                 @RequestParam(value = "address", required = false) String address,
-                                 @RequestParam(value = "city", required = false) String city,
-                                 @RequestParam(value = "district", required = false) String district,
-                                 @RequestParam(value = "paymentMethod", required = false) String paymentMethodStr,
-                                 @RequestParam(value = "orderNotes", required = false) String orderNotes,
-                                 HttpServletRequest request, HttpSession session) {
+            @RequestParam(value = "firstName", required = false) String firstName,
+            @RequestParam(value = "lastName", required = false) String lastName,
+            @RequestParam(value = "email", required = false) String email,
+            @RequestParam(value = "phone", required = false) String phone,
+            @RequestParam(value = "address", required = false) String address,
+            @RequestParam(value = "city", required = false) String city,
+            @RequestParam(value = "district", required = false) String district,
+            @RequestParam(value = "paymentMethod", required = false) String paymentMethodStr,
+            @RequestParam(value = "orderNotes", required = false) String orderNotes,
+            HttpServletRequest request, HttpSession session) {
 
         Users user = (Users) session.getAttribute("loggedUser");
         if (user == null) {
             return "redirect:/main?action=loginPage";
         }
 
-        Cart cart = "selected".equals(checkoutType) ? (Cart) session.getAttribute("selectedCart") : (Cart) session.getAttribute("cart");
+        Cart cart = "selected".equals(checkoutType) ? (Cart) session.getAttribute("selectedCart")
+                : (Cart) session.getAttribute("cart");
 
         if (cart == null || cart.isEmpty()) {
             return "redirect:/main?action=cartPage";
@@ -103,7 +100,8 @@ public class PaymentController {
                     orderService.updateOrderTotalAmount(createdOrder.getOrderId(), finalAmount);
                     createdOrder.setTotalAmount(finalAmount);
 
-                    Payment payment = new Payment(createdOrder, LocalDateTime.now(), paymentMethod, finalAmount, Status.ACTIVE);
+                    Payment payment = new Payment(createdOrder, LocalDateTime.now(), paymentMethod, finalAmount,
+                            Status.ACTIVE);
 
                     if (userService.checkAndUpgradeMembership(user.getUserId(), originalAmount)) {
                         Users updatedUser = userService.getUserById(user.getUserId());
@@ -111,7 +109,8 @@ public class PaymentController {
                             session.setAttribute("user", updatedUser);
                             session.setAttribute("loggedUser", updatedUser);
                             request.setAttribute("membershipUpgraded", true);
-                            request.setAttribute("upgradeMessage", "Chúc mừng! Bạn đã được nâng cấp lên thành viên " + updatedUser.getMembershipLevel().getValue());
+                            request.setAttribute("upgradeMessage", "Chúc mừng! Bạn đã được nâng cấp lên thành viên "
+                                    + updatedUser.getMembershipLevel().getValue());
                         }
                     }
 
@@ -120,14 +119,16 @@ public class PaymentController {
                             String subject = "Hướng dẫn chuyển khoản đơn hàng #" + createdOrder.getOrderId();
                             String content = "<h3>Cảm ơn bạn đã đặt hàng tại Itel Shop!</h3><p>Vui lòng chuyển khoản...</p>";
                             MailUtil.sendMail(email, subject, content);
-                        } catch (Exception ignored) {}
+                        } catch (Exception ignored) {
+                        }
                     }
 
                     Cart originalCart = (Cart) session.getAttribute("cart");
                     if ("selected".equals(checkoutType)) {
                         for (int i = 0; i < 100; i++) {
                             String productId = request.getParameter("selectedItems[" + i + "].productId");
-                            if (productId != null) originalCart.removeItem(Integer.parseInt(productId));
+                            if (productId != null)
+                                originalCart.removeItem(Integer.parseInt(productId));
                         }
                         session.setAttribute("cart", originalCart);
                     } else {
@@ -169,17 +170,26 @@ public class PaymentController {
             String subject = "[Itel Shop] User đã chuyển khoản cho đơn hàng #" + orderId;
             String content = "Khách hàng vừa báo đã chuyển khoản... #" + orderId;
             MailUtil.sendMail(ADMIN_EMAIL, subject, content);
-        } catch (Exception ignored) {}
+        } catch (Exception ignored) {
+        }
         return "redirect:/main?action=orderHistory";
     }
 
     private PaymentResult processFakePayment(PaymentMethod paymentMethod, BigDecimal amount) {
         Random random = new Random();
         switch (paymentMethod) {
-            case CASH_ON_DELIVERY: return new PaymentResult(true, "COD-" + System.currentTimeMillis(), "Thành công.");
-            case BANKING: return random.nextInt(100) < 95 ? new PaymentResult(true, "BANK-" + System.currentTimeMillis(), "Thành công.") : new PaymentResult(false, null, "Lỗi.");
-            case CASH: return random.nextInt(100) < 90 ? new PaymentResult(true, "CARD-" + System.currentTimeMillis(), "Thành công.") : new PaymentResult(false, null, "Lỗi.");
-            default: return new PaymentResult(false, null, "Không hợp lệ.");
+            case CASH_ON_DELIVERY:
+                return new PaymentResult(true, "COD-" + System.currentTimeMillis(), "Thành công.");
+            case BANKING:
+                return random.nextInt(100) < 95
+                        ? new PaymentResult(true, "BANK-" + System.currentTimeMillis(), "Thành công.")
+                        : new PaymentResult(false, null, "Lỗi.");
+            case CASH:
+                return random.nextInt(100) < 90
+                        ? new PaymentResult(true, "CARD-" + System.currentTimeMillis(), "Thành công.")
+                        : new PaymentResult(false, null, "Lỗi.");
+            default:
+                return new PaymentResult(false, null, "Không hợp lệ.");
         }
     }
 
@@ -194,8 +204,16 @@ public class PaymentController {
             this.message = message;
         }
 
-        public boolean isSuccess() { return success; }
-        public String getTransactionId() { return transactionId; }
-        public String getMessage() { return message; }
+        public boolean isSuccess() {
+            return success;
+        }
+
+        public String getTransactionId() {
+            return transactionId;
+        }
+
+        public String getMessage() {
+            return message;
+        }
     }
 }

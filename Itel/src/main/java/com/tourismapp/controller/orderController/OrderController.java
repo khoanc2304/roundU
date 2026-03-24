@@ -16,7 +16,6 @@ import jakarta.servlet.http.HttpSession;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
@@ -34,7 +33,7 @@ public class OrderController {
 
     @Autowired
     private IOrderService orderService;
-    
+
     @Autowired
     private IProductService productService;
 
@@ -116,7 +115,8 @@ public class OrderController {
                     Product product = productOpt.get();
                     selectedCart.addItem(product, quantity);
                 }
-            } catch (NumberFormatException ignored) {}
+            } catch (NumberFormatException ignored) {
+            }
         }
 
         if (selectedCart.isEmpty()) {
@@ -140,8 +140,9 @@ public class OrderController {
 
     // ORDER HISTORY
     @GetMapping(MainControllerServlet.ORDERHISTORY_SERVLET)
-    public String showOrderHistory(@RequestParam(value = "status", required = false, defaultValue = "all") String status,
-                                   HttpServletRequest request, HttpSession session) {
+    public String showOrderHistory(
+            @RequestParam(value = "status", required = false, defaultValue = "all") String status,
+            HttpServletRequest request, HttpSession session) {
         Users user = (Users) session.getAttribute("loggedUser");
         if (user == null) {
             return "redirect:" + ProjectPaths.HREF_TO_LOGINPAGE.substring(ProjectPaths.PREFIX_WEB_PATH.length());
@@ -164,7 +165,7 @@ public class OrderController {
 
         return ProjectPaths.JSP_ORDERHISTORY_PATH;
     }
-    
+
     // SIMPLE ORDER HISTORY DEBUG
     @GetMapping("/simpleOrderHistory")
     @ResponseBody
@@ -178,7 +179,8 @@ public class OrderController {
             HttpSession session = request.getSession();
             Users user = (Users) session.getAttribute("loggedUser");
 
-            out.println("<p><strong>User from session:</strong> " + (user != null ? user.getFullName() + " (ID: " + user.getUserId() + ")" : "NULL") + "</p>");
+            out.println("<p><strong>User from session:</strong> "
+                    + (user != null ? user.getFullName() + " (ID: " + user.getUserId() + ")" : "NULL") + "</p>");
 
             if (user == null) {
                 out.println("<p style='color:red'>No user in session!</p>");
@@ -189,14 +191,16 @@ public class OrderController {
                 out.println("<p><strong>Orders found:</strong> " + (orders != null ? orders.size() : "NULL") + "</p>");
 
                 if (orders != null && !orders.isEmpty()) {
-                    out.println("<table border='1'><tr><th>Order ID</th><th>Status</th><th>Amount</th><th>Date</th><th>Details</th></tr>");
+                    out.println(
+                            "<table border='1'><tr><th>Order ID</th><th>Status</th><th>Amount</th><th>Date</th><th>Details</th></tr>");
                     for (Orders order : orders) {
                         out.println("<tr>");
                         out.println("<td>" + order.getOrderId() + "</td>");
                         out.println("<td>" + order.getStatus() + "</td>");
                         out.println("<td>" + order.getTotalAmount() + "</td>");
                         out.println("<td>" + order.getOrderDate() + "</td>");
-                        out.println("<td>" + (order.getOrderDetails() != null ? order.getOrderDetails().size() : "NULL") + "</td>");
+                        out.println("<td>" + (order.getOrderDetails() != null ? order.getOrderDetails().size() : "NULL")
+                                + "</td>");
                         out.println("</tr>");
                     }
                     out.println("</table>");
@@ -204,7 +208,10 @@ public class OrderController {
                     out.println("<p style='color:orange'>No orders found for user " + user.getUserId() + "</p>");
                 }
             }
-            out.println("<hr><a href='" + ProjectPaths.PREFIX_WEB_PATH + "/main?action=orderHistory'>Try Original OrderHistory</a><br><a href='" + ProjectPaths.PREFIX_WEB_PATH + "/orderHistory'>Try Direct OrderHistory</a><br><a href='" + ProjectPaths.PREFIX_WEB_PATH + "/main?action=homePage'>Home</a></body></html>");
+            out.println("<hr><a href='" + ProjectPaths.PREFIX_WEB_PATH
+                    + "/main?action=orderHistory'>Try Original OrderHistory</a><br><a href='"
+                    + ProjectPaths.PREFIX_WEB_PATH + "/orderHistory'>Try Direct OrderHistory</a><br><a href='"
+                    + ProjectPaths.PREFIX_WEB_PATH + "/main?action=homePage'>Home</a></body></html>");
         } catch (Exception e) {
             out.println("<p style='color:red'>ERROR: " + e.getMessage() + "</p>");
             e.printStackTrace(out);

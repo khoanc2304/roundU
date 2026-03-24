@@ -1,12 +1,10 @@
 package com.tourismapp.service.order;
 
 import com.tourismapp.repository.order.OrderRepository;
-import com.tourismapp.repository.order.OrderRepository;
 import com.tourismapp.model.Orders;
 import com.tourismapp.model.OrderDetail;
 import com.tourismapp.model.Cart;
 import com.tourismapp.model.CartItem;
-import com.tourismapp.service.product.ProductService;
 import com.tourismapp.utils.ErrDialog;
 
 import java.util.List;
@@ -26,7 +24,7 @@ public class OrderService implements IOrderService {
 
     @Autowired
     private OrderRepository OrderRepository;
-    
+
     @Autowired
     private IProductService productService;
 
@@ -45,7 +43,8 @@ public class OrderService implements IOrderService {
 
             // Create order in database
             Orders createdOrder = OrderRepository.createOrder(order);
-            System.out.println("OrderRepository.createOrder result: " + (createdOrder != null ? "Success, ID: " + createdOrder.getOrderId() : "Failed"));
+            System.out.println("OrderRepository.createOrder result: "
+                    + (createdOrder != null ? "Success, ID: " + createdOrder.getOrderId() : "Failed"));
 
             if (createdOrder != null) {
                 // Create order details for each cart item
@@ -56,21 +55,20 @@ public class OrderService implements IOrderService {
                             createdOrder,
                             cartItem.getProduct(),
                             cartItem.getQuantity(),
-                            cartItem.getProduct().getPrice()
-                    );
+                            cartItem.getProduct().getPrice());
 
                     boolean detailCreated = OrderRepository.addOrderDetail(orderDetail);
                     if (!detailCreated) {
                         allDetailsCreated = false;
-                        ErrDialog.showError("Failed to create order detail for product: " + cartItem.getProduct().getName());
+                        ErrDialog.showError(
+                                "Failed to create order detail for product: " + cartItem.getProduct().getName());
                     }
 
                     // Update product stock
                     try {
                         productService.updateProductStock(
                                 cartItem.getProduct().getProductId(),
-                                cartItem.getProduct().getStockQuantity() - cartItem.getQuantity()
-                        );
+                                cartItem.getProduct().getStockQuantity() - cartItem.getQuantity());
                     } catch (Exception e) {
                         ErrDialog.showError("Failed to update stock for product: " + cartItem.getProduct().getName());
                     }
@@ -158,7 +156,8 @@ public class OrderService implements IOrderService {
     @Override
     public boolean updateOrderStatus(int orderId, String status) {
         try {
-//            ErrDialog.showError("OrderService.updateOrderStatus called for orderId: " + orderId + ", status: " + status);
+            // ErrDialog.showError("OrderService.updateOrderStatus called for orderId: " +
+            // orderId + ", status: " + status);
             // Get order details to restore stock if canceled
             if ("Canceled".equalsIgnoreCase(status)) {
                 List<OrderDetail> orderDetails = OrderRepository.getOrderDetailsByOrderId(orderId);
@@ -166,14 +165,17 @@ public class OrderService implements IOrderService {
                     for (OrderDetail detail : orderDetails) {
                         try {
                             // Lấy stock hiện tại từ cơ sở dữ liệu để đảm bảo chính xác
-                            int currentStock = productService.getProductById(detail.getProduct().getProductId()).getStockQuantity();
-//                            productService.updateProductStock(
-//                                    detail.getProduct().getProductId(),
-//                                    currentStock + detail.getQuantity()
-//                            );
-//                            ErrDialog.showError("Restored stock for productId: " + detail.getProduct().getProductId() + ", quantity: " + detail.getQuantity());
+                            int currentStock = productService.getProductById(detail.getProduct().getProductId())
+                                    .getStockQuantity();
+                            // productService.updateProductStock(
+                            // detail.getProduct().getProductId(),
+                            // currentStock + detail.getQuantity()
+                            // );
+                            // ErrDialog.showError("Restored stock for productId: " +
+                            // detail.getProduct().getProductId() + ", quantity: " + detail.getQuantity());
                         } catch (Exception e) {
-                            ErrDialog.showError("Failed to restore stock for product: " + detail.getProduct().getName());
+                            ErrDialog
+                                    .showError("Failed to restore stock for product: " + detail.getProduct().getName());
                             ErrDialog.showError("Stock restoration failed: " + e.getMessage());
                         }
                     }
@@ -184,7 +186,8 @@ public class OrderService implements IOrderService {
             boolean updated = OrderRepository.updateOrderStatus(orderId, status);
             if (updated) {
                 System.out.println("Successfully updated orderId: " + orderId + " to status: " + status);
-//                ErrDialog.showError("Successfully updated orderId: " + orderId + " to status: " + status);
+                // ErrDialog.showError("Successfully updated orderId: " + orderId + " to status:
+                // " + status);
             } else {
                 ErrDialog.showError("Failed to update orderId: " + orderId + " to status: " + status);
             }
@@ -199,7 +202,8 @@ public class OrderService implements IOrderService {
     @Override
     public boolean cancelOrder(int orderId) {
         try {
-//            ErrDialog.showError("OrderService.cancelOrder called for orderId: " + orderId);
+            // ErrDialog.showError("OrderService.cancelOrder called for orderId: " +
+            // orderId);
             return updateOrderStatus(orderId, "canceled"); // Sử dụng updateOrderStatus để tái sử dụng logic
         } catch (Exception e) {
             ErrDialog.showError("Error in OrderService.cancelOrder: " + e.getMessage());
@@ -256,24 +260,28 @@ public class OrderService implements IOrderService {
             return false;
         }
     }
+
     public List<Orders> findOrdersByStatus(String status) {
         return OrderRepository.findOrdersByStatus(status);
     }
-    
+
     /**
      * Calculate discounted total amount for an order
-     * @param originalAmount Original order amount
+     * 
+     * @param originalAmount    Original order amount
      * @param membershipLevelId User's membership level ID
-     * @param couponCode Applied coupon code (can be null)
+     * @param couponCode        Applied coupon code (can be null)
      * @return Discounted total amount
      */
-    public java.math.BigDecimal calculateDiscountedTotal(java.math.BigDecimal originalAmount, int membershipLevelId, String couponCode) {
+    public java.math.BigDecimal calculateDiscountedTotal(java.math.BigDecimal originalAmount, int membershipLevelId,
+            String couponCode) {
         return OrderRepository.calculateDiscountedTotal(originalAmount, membershipLevelId, couponCode);
     }
-    
+
     /**
      * Update order total amount after applying discounts
-     * @param orderId Order ID
+     * 
+     * @param orderId         Order ID
      * @param discountedTotal New total amount after discount
      * @return true if successful
      */

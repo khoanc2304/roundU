@@ -1,17 +1,14 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package com.tourismapp.repository.user;
 
 import com.tourismapp.common.MembershipLevel;
 import com.tourismapp.common.Status;
 import com.tourismapp.common.UserRole;
-import com.tourismapp.repository.DBConnection;
 import com.tourismapp.model.Users;
-import com.tourismapp.utils.ErrDialog;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.RowMapper;
+import org.springframework.stereotype.Repository;
+
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Timestamp;
@@ -20,143 +17,97 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-import org.springframework.stereotype.Repository;
-
-/**
- *
- * @author Admin
- */
 @Repository
 public class UserRepository {
+
+    @Autowired
+    private JdbcTemplate jdbcTemplate;
 
     private static final String GET_ALL_USERS = "SELECT * FROM Users;";
     private static final String FIND_USER_BY_CREDENTIALS = "SELECT * FROM Users WHERE (username = ? OR email = ?) AND password = ?;";
 
+    private final RowMapper<Users> userRowMapper = (rs, rowNum) -> mapResultSetToUser(rs);
+
     public Users mapUser(ResultSet rs) throws SQLException {
-        return new Users(
-                rs.getInt("user_id"),
-                rs.getString("username"),
-                rs.getString("password"),
-                rs.getString("fullName"),
-                rs.getString("email"),
-                rs.getString("phone"),
-                rs.getString("address"),
-                UserRole.valueOf(rs.getString("role").toUpperCase()),
-                rs.getInt("membership_level_id") != 0 ? MembershipLevel.fromId(rs.getInt("membership_level_id")) : null,
-                rs.getString("image_url"),
-                Status.valueOf(rs.getString("status").toUpperCase()),
-                rs.getTimestamp("created_at").toLocalDateTime(),
-                rs.getTimestamp("updated_at").toLocalDateTime()
-        );
+        return mapResultSetToUser(rs);
+    }
+
+    private Users mapResultSetToUser(ResultSet rs) throws SQLException {
+        Users user = new Users();
+        user.setUserId(rs.getInt("user_id"));
+        user.setUsername(rs.getString("username"));
+        user.setPassword(rs.getString("password"));
+        user.setFullName(rs.getString("fullName"));
+        user.setEmail(rs.getString("email"));
+        user.setPhone(rs.getString("phone"));
+        user.setAddress(rs.getString("address"));
+        try {
+            user.setRole(UserRole.valueOf(rs.getString("role").toUpperCase()));
+        } catch (IllegalArgumentException e) {
+            throw new RuntimeException("Vai trò không hợp lệ: " + rs.getString("role"));
+        }
+        try {
+            int membershipLevelId = rs.getInt("membership_level_id");
+            user.setMembershipLevel(membershipLevelId != 0 ? MembershipLevel.fromId(membershipLevelId) : null);
+        } catch (IllegalArgumentException e) {
+            throw new RuntimeException("Cấp độ thành viên không hợp lệ: " + rs.getInt("membership_level_id"));
+        }
+        try {
+            user.setStatus(Status.valueOf(rs.getString("status").toUpperCase()));
+        } catch (IllegalArgumentException e) {
+            throw new RuntimeException("Trạng thái không hợp lệ: " + rs.getString("status"));
+        }
+        
+        Timestamp created = rs.getTimestamp("created_at");
+        if (created != null) user.setCreatedAt(created.toLocalDateTime());
+        
+        Timestamp updated = rs.getTimestamp("updated_at");
+        if (updated != null) user.setUpdatedAt(updated.toLocalDateTime());
+        
+        return user;
     }
 
     public Optional<Users> findUserByCredentials(String identifier, String password) {
-        Users user = null;
-
-        try (Connection connection = DBConnection.getConnection();) {
-            try (PreparedStatement stmt = connection.prepareStatement(FIND_USER_BY_CREDENTIALS)) {
-                stmt.setString(1, identifier);
-                stmt.setString(2, identifier);
-                stmt.setString(3, password);
-
-                ResultSet rs = stmt.executeQuery();
-
-                if (rs.next()) {
-                    user = mapUser(rs);
-                }
-            }
-        } catch (SQLException e) {
-            ErrDialog.showError("ex: " + e);
-        }
-
-        return Optional.ofNullable(user);
+        List<Users> users = jdbcTemplate.query(FIND_USER_BY_CREDENTIALS, userRowMapper, identifier, identifier, password);
+        return users.isEmpty() ? Optional.empty() : Optional.of(users.get(0));
     }
 
     public List<Users> selectAllUsers() {
-        List<Users> users = new ArrayList<>();
-        try (Connection conn = DBConnection.getConnection(); PreparedStatement ps = conn.prepareStatement(GET_ALL_USERS); ResultSet rs = ps.executeQuery()) {
-            while (rs.next()) {
-                Users user = mapUser(rs);
-                users.add(user);
-            }
-        } catch (SQLException e) {
-            ErrDialog.showError("Lỗi khi truy vấn sản phẩm: " + e.getMessage());
-        }
-        return users;
+        return jdbcTemplate.query(GET_ALL_USERS, userRowMapper);
     }
 
-/////////////////////////////////////////////////// HUY /////////////////////////////////////////////////////
     public List<Users> getAllUsers() {
-        List<Users> users = new ArrayList<>();
-        String sql = "SELECT * FROM Users";
-        try (Connection conn = DBConnection.getConnection(); PreparedStatement ps = conn.prepareStatement(sql); ResultSet rs = ps.executeQuery()) {
-            System.out.println("SQL: " + sql);
-            while (rs.next()) {
-                users.add(mapResultSetToUser(rs));
-            }
-            System.out.println("Users retrieved: " + users.size());
-        } catch (SQLException e) {
-            e.printStackTrace();
-            throw new RuntimeException("Lỗi khi lấy danh sách người dùng: " + e.getMessage());
-        }
-        return users;
+        return selectAllUsers();
     }
 
     public Users getUserById(int userId) {
         String sql = "SELECT * FROM Users WHERE user_id = ?";
-        try (Connection conn = DBConnection.getConnection(); PreparedStatement ps = conn.prepareStatement(sql)) {
-            ps.setInt(1, userId);
-            System.out.println("SQL: " + sql);
-            System.out.println("Parameters: [user_id=" + userId + "]");
-            try (ResultSet rs = ps.executeQuery()) {
-                if (rs.next()) {
-                    return mapResultSetToUser(rs);
-                }
-            }
-            System.out.println("No user found with ID: " + userId);
-        } catch (SQLException e) {
-            e.printStackTrace();
-            throw new RuntimeException("Lỗi khi lấy người dùng: " + e.getMessage());
-        }
-        return null;
+        List<Users> users = jdbcTemplate.query(sql, userRowMapper, userId);
+        return users.isEmpty() ? null : users.get(0);
     }
 
     public boolean createUser(Users user) {
-        // Kiểm tra username hoặc email đã tồn tại
         String checkSql = "SELECT COUNT(*) FROM Users WHERE username = ? OR email = ?";
-        try (Connection conn = DBConnection.getConnection(); PreparedStatement ps = conn.prepareStatement(checkSql)) {
-            ps.setString(1, user.getUsername());
-            ps.setString(2, user.getEmail());
-            System.out.println("SQL: " + checkSql);
-            System.out.println("Parameters: [username=" + user.getUsername() + ", email=" + user.getEmail() + "]");
-            try (ResultSet rs = ps.executeQuery()) {
-                if (rs.next() && rs.getInt(1) > 0) {
-                    System.out.println("Username or email already exists: " + user.getUsername() + ", " + user.getEmail());
-                    return false;
-                }
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-            throw new RuntimeException("Lỗi khi kiểm tra username/email: " + e.getMessage());
+        Integer count = jdbcTemplate.queryForObject(checkSql, Integer.class, user.getUsername(), user.getEmail());
+        if (count != null && count > 0) {
+            return false;
         }
 
         String sql = "INSERT INTO Users (username, password, fullName, email, phone, address, role, membership_level_id, status, created_at, updated_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
-        try (Connection conn = DBConnection.getConnection(); PreparedStatement ps = conn.prepareStatement(sql)) {
-            setUserParams(ps, user);
-            System.out.println("SQL: " + sql);
-            System.out.println("Parameters: [username=" + user.getUsername() + ", password=" + user.getPassword()
-                    + ", fullName=" + user.getFullName() + ", email=" + user.getEmail()
-                    + ", phone=" + user.getPhone() + ", address=" + user.getAddress()
-                    + ", role=" + user.getRole().getValue() + ", membership_level_id=" + user.getMembershipLevel().getId()
-                    + ", status=" + user.getStatus().getValue() + ", created_at=" + user.getCreatedAt()
-                    + ", updated_at=" + user.getUpdatedAt() + "]");
-            int rowsAffected = ps.executeUpdate();
-            System.out.println("Rows affected: " + rowsAffected);
-            return rowsAffected > 0;
-        } catch (SQLException e) {
-            e.printStackTrace();
-            throw new RuntimeException("Lỗi khi tạo người dùng: " + e.getMessage());
-        }
+        int rows = jdbcTemplate.update(sql, 
+                user.getUsername(),
+                user.getPassword(),
+                user.getFullName(),
+                user.getEmail(),
+                user.getPhone(),
+                user.getAddress(),
+                user.getRole().getValue(),
+                user.getMembershipLevel() != null ? user.getMembershipLevel().getId() : null,
+                user.getStatus().getValue(),
+                user.getCreatedAt() != null ? Timestamp.valueOf(user.getCreatedAt()) : Timestamp.valueOf(LocalDateTime.now()),
+                user.getUpdatedAt() != null ? Timestamp.valueOf(user.getUpdatedAt()) : Timestamp.valueOf(LocalDateTime.now())
+        );
+        return rows > 0;
     }
 
     public boolean updateUser(Users user) {
@@ -195,17 +146,15 @@ public class UserRepository {
         if (user.getMembershipLevel() != null) {
             updates.add("membership_level_id=?");
             params.add(user.getMembershipLevel().getId());
-            System.out.println("UserRepository: Cập nhật hạng mức thành viên thành " + user.getMembershipLevel().getValue()
-                    + " (ID: " + user.getMembershipLevel().getId() + ")");
         }
         if (user.getStatus() != null) {
             updates.add("status=?");
             params.add(user.getStatus().getValue());
         }
-        updates.add("updated_at=GETDATE()");
+        // Use CURRENT_TIMESTAMP compatible with SQL Server/MySQL depending on what they use
+        updates.add("updated_at=CURRENT_TIMESTAMP");
 
         if (updates.isEmpty()) {
-            System.out.println("UserRepository: Không có trường nào cần cập nhật cho user ID: " + user.getUserId());
             return false;
         }
 
@@ -213,119 +162,50 @@ public class UserRepository {
         sql.append(" WHERE user_id=?");
         params.add(user.getUserId());
 
-        try (Connection conn = DBConnection.getConnection(); PreparedStatement ps = conn.prepareStatement(sql.toString())) {
-            System.out.println("UserRepository: SQL cập nhật: " + sql);
-            System.out.println("UserRepository: Parameters: " + params);
-            for (int i = 0; i < params.size(); i++) {
-                ps.setObject(i + 1, params.get(i));
-            }
-            int rowsAffected = ps.executeUpdate();
-            System.out.println("UserRepository: Số dòng bị ảnh hưởng: " + rowsAffected);
-            return rowsAffected > 0;
-        } catch (SQLException e) {
-            System.out.println("UserRepository: Lỗi SQL khi cập nhật người dùng: " + e.getMessage());
-            e.printStackTrace();
-            throw new RuntimeException("Lỗi khi cập nhật người dùng: " + e.getMessage());
-        }
+        int rows = jdbcTemplate.update(sql.toString(), params.toArray());
+        return rows > 0;
     }
 
     public Optional<Users> findUserByUsername(String username) {
         String sql = "SELECT * FROM Users WHERE username = ?";
-        try (Connection conn = DBConnection.getConnection(); PreparedStatement ps = conn.prepareStatement(sql)) {
-            ps.setString(1, username);
-            try (ResultSet rs = ps.executeQuery()) {
-                if (rs.next()) {
-                    return Optional.of(mapResultSetToUser(rs));
-                }
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        return Optional.empty();
+        List<Users> users = jdbcTemplate.query(sql, userRowMapper, username);
+        return users.isEmpty() ? Optional.empty() : Optional.of(users.get(0));
     }
 
     public Optional<Users> findUserByEmail(String email) {
         String sql = "SELECT * FROM Users WHERE email = ?";
-        try (Connection conn = DBConnection.getConnection(); PreparedStatement ps = conn.prepareStatement(sql)) {
-            ps.setString(1, email);
-            try (ResultSet rs = ps.executeQuery()) {
-                if (rs.next()) {
-                    return Optional.of(mapResultSetToUser(rs));
-                }
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        return Optional.empty();
+        List<Users> users = jdbcTemplate.query(sql, userRowMapper, email);
+        return users.isEmpty() ? Optional.empty() : Optional.of(users.get(0));
     }
 
     public Optional<Users> findUserByPhone(String phone) {
         String sql = "SELECT * FROM Users WHERE phone = ?";
-        try (Connection conn = DBConnection.getConnection(); PreparedStatement ps = conn.prepareStatement(sql)) {
-            ps.setString(1, phone);
-            try (ResultSet rs = ps.executeQuery()) {
-                if (rs.next()) {
-                    return Optional.of(mapResultSetToUser(rs));
-                }
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        return Optional.empty();
+        List<Users> users = jdbcTemplate.query(sql, userRowMapper, phone);
+        return users.isEmpty() ? Optional.empty() : Optional.of(users.get(0));
     }
 
     public boolean usernameExists(String username) {
         String sql = "SELECT COUNT(*) FROM Users WHERE username = ?";
-        try (Connection conn = DBConnection.getConnection(); PreparedStatement ps = conn.prepareStatement(sql)) {
-            ps.setString(1, username);
-            try (ResultSet rs = ps.executeQuery()) {
-                return rs.next() && rs.getInt(1) > 0;
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        return false;
+        Integer count = jdbcTemplate.queryForObject(sql, Integer.class, username);
+        return count != null && count > 0;
     }
 
     public boolean emailExists(String email) {
         String sql = "SELECT COUNT(*) FROM Users WHERE email = ?";
-        try (Connection conn = DBConnection.getConnection(); PreparedStatement ps = conn.prepareStatement(sql)) {
-            ps.setString(1, email);
-            try (ResultSet rs = ps.executeQuery()) {
-                return rs.next() && rs.getInt(1) > 0;
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        return false;
+        Integer count = jdbcTemplate.queryForObject(sql, Integer.class, email);
+        return count != null && count > 0;
     }
 
     public boolean phoneExists(String phone) {
         String sql = "SELECT COUNT(*) FROM Users WHERE phone = ?";
-        try (Connection conn = DBConnection.getConnection(); PreparedStatement ps = conn.prepareStatement(sql)) {
-            ps.setString(1, phone);
-            try (ResultSet rs = ps.executeQuery()) {
-                return rs.next() && rs.getInt(1) > 0;
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        return false;
+        Integer count = jdbcTemplate.queryForObject(sql, Integer.class, phone);
+        return count != null && count > 0;
     }
 
     public boolean deleteUser(int userId) {
-        String sql = "UPDATE Users SET status = 'inactive', updated_at = GETDATE() WHERE user_id = ?";
-        try (Connection conn = DBConnection.getConnection(); PreparedStatement ps = conn.prepareStatement(sql)) {
-            ps.setInt(1, userId);
-            System.out.println("SQL: " + sql);
-            System.out.println("Parameters: [user_id=" + userId + "]");
-            int rowsAffected = ps.executeUpdate();
-            System.out.println("Rows affected: " + rowsAffected);
-            return rowsAffected > 0;
-        } catch (SQLException e) {
-            e.printStackTrace();
-            throw new RuntimeException("Lỗi khi xóa người dùng: " + e.getMessage());
-        }
+        String sql = "UPDATE Users SET status = 'inactive', updated_at = CURRENT_TIMESTAMP WHERE user_id = ?";
+        int rows = jdbcTemplate.update(sql, userId);
+        return rows > 0;
     }
 
     public List<Users> searchUsers(String username, String status) {
@@ -341,93 +221,6 @@ public class UserRepository {
             params.add(status.toLowerCase());
         }
 
-        try (Connection conn = DBConnection.getConnection(); PreparedStatement ps = conn.prepareStatement(sql.toString())) {
-            System.out.println("SQL: " + sql);
-            System.out.println("Parameters: " + params);
-            for (int i = 0; i < params.size(); i++) {
-                ps.setObject(i + 1, params.get(i));
-            }
-            List<Users> users = new ArrayList<>();
-            try (ResultSet rs = ps.executeQuery()) {
-                while (rs.next()) {
-                    users.add(mapResultSetToUser(rs));
-                }
-            }
-            System.out.println("Users found: " + users.size());
-            return users;
-        } catch (SQLException e) {
-            e.printStackTrace();
-            throw new RuntimeException("Lỗi khi tìm kiếm người dùng: " + e.getMessage());
-        }
+        return jdbcTemplate.query(sql.toString(), userRowMapper, params.toArray());
     }
-
-    private Users mapResultSetToUser(ResultSet rs) throws SQLException {
-        Users user = new Users();
-        user.setUserId(rs.getInt("user_id"));
-        user.setUsername(rs.getString("username"));
-        user.setPassword(rs.getString("password"));
-        user.setFullName(rs.getString("fullName"));
-        user.setEmail(rs.getString("email"));
-        user.setPhone(rs.getString("phone"));
-        user.setAddress(rs.getString("address"));
-        try {
-            user.setRole(UserRole.valueOf(rs.getString("role").toUpperCase()));
-        } catch (IllegalArgumentException e) {
-            System.out.println("Invalid role: " + rs.getString("role"));
-            throw new RuntimeException("Vai trò không hợp lệ: " + rs.getString("role"));
-        }
-        try {
-            user.setMembershipLevel(MembershipLevel.fromId(rs.getInt("membership_level_id")));
-        } catch (IllegalArgumentException e) {
-            System.out.println("Invalid membership level: " + rs.getInt("membership_level_id"));
-            throw new RuntimeException("Cấp độ thành viên không hợp lệ: " + rs.getInt("membership_level_id"));
-        }
-        try {
-            user.setStatus(Status.valueOf(rs.getString("status").toUpperCase()));
-        } catch (IllegalArgumentException e) {
-            System.out.println("Invalid status: " + rs.getString("status"));
-            throw new RuntimeException("Trạng thái không hợp lệ: " + rs.getString("status"));
-        }
-        user.setCreatedAt(rs.getTimestamp("created_at").toLocalDateTime());
-        user.setUpdatedAt(rs.getTimestamp("updated_at").toLocalDateTime());
-        return user;
-    }
-
-    private void setUserParams(PreparedStatement ps, Users user) throws SQLException {
-        ps.setString(1, user.getUsername());
-        ps.setString(2, user.getPassword());
-        ps.setString(3, user.getFullName());
-        ps.setString(4, user.getEmail());
-        ps.setString(5, user.getPhone());
-        ps.setString(6, user.getAddress());
-        ps.setString(7, user.getRole().getValue());
-        ps.setInt(8, user.getMembershipLevel().getId());
-        ps.setString(9, user.getStatus().getValue());
-        ps.setTimestamp(10, Timestamp.valueOf(user.getCreatedAt() != null ? user.getCreatedAt() : LocalDateTime.now()));
-        ps.setTimestamp(11, Timestamp.valueOf(user.getUpdatedAt() != null ? user.getUpdatedAt() : LocalDateTime.now()));
-    }
-
-    public static void main(String[] args) {
-        // Khởi tạo UserService hoặc lớp chứa findUserByCredentials
-        UserRepository ud = new UserRepository(); // Thay bằng cách khởi tạo thực tế
-
-        // Dữ liệu kiểm tra
-        String identifier = "user1@example.com";
-        String password = "user1";
-
-        // Gọi phương thức
-        Optional<Users> loggedUser = ud.findUserByCredentials(identifier, password);
-
-        // Kiểm tra kết quả
-        if (loggedUser.isPresent()) {
-            Users user = loggedUser.get();
-            System.out.println("User found: " + user.getClass().getName());
-            System.out.println("Username: " + (user.getUsername() != null ? user.getUsername() : "N/A"));
-            System.out.println("Email: " + (user.getEmail() != null ? user.getEmail() : "N/A"));
-            System.out.println("Role: " + (user.getRole() != null ? user.getRole().getValue() : "N/A"));
-        } else {
-            System.out.println("No user found with the given credentials.");
-        }
-    }
-
 }

@@ -5,7 +5,6 @@ import com.tourismapp.config.ProjectPaths;
 import com.tourismapp.controller.mainController.MainControllerServlet;
 import com.tourismapp.model.Brand;
 import com.tourismapp.model.Product;
-import com.tourismapp.service.brand.BrandService;
 import com.tourismapp.service.brand.IBrandService;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.stereotype.Controller;
@@ -27,10 +26,10 @@ public class BrandManagementController {
 
     @GetMapping
     public String handleGet(@RequestParam(value = "action", required = false, defaultValue = "") String action,
-                            @RequestParam(value = "country", required = false) String country,
-                            @RequestParam(value = "searchName", required = false) String searchName,
-                            @RequestParam(value = "brandId", required = false) Integer brandId,
-                            HttpServletRequest request) {
+            @RequestParam(value = "country", required = false) String country,
+            @RequestParam(value = "searchName", required = false) String searchName,
+            @RequestParam(value = "brandId", required = false) Integer brandId,
+            HttpServletRequest request) {
 
         switch (action) {
             case MainControllerServlet.ACTION_MANAGE_BRAND:
@@ -44,7 +43,8 @@ public class BrandManagementController {
                 return ProjectPaths.JSP_BRANDMANAGEMENT_PATH;
 
             case MainControllerServlet.ACTION_FIND_BRAND:
-                if (searchName == null || searchName.trim().isEmpty() || searchName.trim().length() < 2 || searchName.trim().length() > 50) {
+                if (searchName == null || searchName.trim().isEmpty() || searchName.trim().length() < 2
+                        || searchName.trim().length() > 50) {
                     request.setAttribute("error", "Tên tìm kiếm không hợp lệ (2-50 ký tự)");
                     request.setAttribute("brands", brandService.getAllBrands());
                     return ProjectPaths.JSP_BRANDMANAGEMENT_PATH;
@@ -85,13 +85,13 @@ public class BrandManagementController {
 
     @PostMapping
     public String handlePost(@RequestParam(value = "action", required = false, defaultValue = "") String action,
-                             @RequestParam(value = "brandId", required = false) Integer brandId,
-                             @RequestParam(value = "name", required = false) String name,
-                             @RequestParam(value = "country", required = false) String country,
-                             @RequestParam(value = "description", required = false) String description,
-                             @RequestParam(value = "imageUrl", required = false) String imageUrl,
-                             @RequestParam(value = "status", required = false) String statusParam,
-                             HttpServletRequest request) {
+            @RequestParam(value = "brandId", required = false) Integer brandId,
+            @RequestParam(value = "name", required = false) String name,
+            @RequestParam(value = "country", required = false) String country,
+            @RequestParam(value = "description", required = false) String description,
+            @RequestParam(value = "imageUrl", required = false) String imageUrl,
+            @RequestParam(value = "status", required = false) String statusParam,
+            HttpServletRequest request) {
 
         try {
             switch (action) {
@@ -102,7 +102,8 @@ public class BrandManagementController {
                 case MainControllerServlet.ACTION_DELETE_BRAND:
                     return handleDelete(brandId, request);
                 default:
-                    return "redirect:" + ProjectPaths.HREF_TO_BRANDMANAGEMENT.substring(ProjectPaths.PREFIX_WEB_PATH.length());
+                    return "redirect:"
+                            + ProjectPaths.HREF_TO_BRANDMANAGEMENT.substring(ProjectPaths.PREFIX_WEB_PATH.length());
             }
         } catch (Exception e) {
             request.setAttribute("error", "Lỗi: " + e.getMessage());
@@ -110,9 +111,11 @@ public class BrandManagementController {
         }
     }
 
-    private String handleCreate(String name, String country, String description, String imageUrl, String statusParam, HttpServletRequest request) {
+    private String handleCreate(String name, String country, String description, String imageUrl, String statusParam,
+            HttpServletRequest request) {
         if (name == null || name.trim().isEmpty() || country == null || country.trim().isEmpty() ||
-            description == null || description.trim().isEmpty() || imageUrl == null || imageUrl.trim().isEmpty() || statusParam == null || statusParam.trim().isEmpty()) {
+                description == null || description.trim().isEmpty() || imageUrl == null || imageUrl.trim().isEmpty()
+                || statusParam == null || statusParam.trim().isEmpty()) {
             request.setAttribute("error", "Tất cả các trường đều bắt buộc");
             return ProjectPaths.JSP_CREATEBRAND_PATH;
         }
@@ -128,11 +131,14 @@ public class BrandManagementController {
         }
     }
 
-    private String handleUpdate(Integer brandId, String name, String country, String description, String imageUrl, String statusParam, HttpServletRequest request) {
+    private String handleUpdate(Integer brandId, String name, String country, String description, String imageUrl,
+            String statusParam, HttpServletRequest request) {
         if (brandId == null || name == null || name.trim().isEmpty() || country == null || country.trim().isEmpty() ||
-            description == null || description.trim().isEmpty() || imageUrl == null || imageUrl.trim().isEmpty() || statusParam == null || statusParam.trim().isEmpty()) {
+                description == null || description.trim().isEmpty() || imageUrl == null || imageUrl.trim().isEmpty()
+                || statusParam == null || statusParam.trim().isEmpty()) {
             request.setAttribute("error", "Tất cả các trường đều bắt buộc");
-            if (brandId != null) request.setAttribute("brand", brandService.getBrandById(brandId));
+            if (brandId != null)
+                request.setAttribute("brand", brandService.getBrandById(brandId));
             return ProjectPaths.JSP_UPDATEBRAND_PATH;
         }
         try {

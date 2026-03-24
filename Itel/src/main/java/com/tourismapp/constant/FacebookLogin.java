@@ -7,7 +7,6 @@ package com.tourismapp.constant;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import com.tourismapp.model.FacebookAccount;
-import com.tourismapp.utils.ErrDialog;
 import java.io.IOException;
 import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.fluent.Form;
@@ -27,8 +26,7 @@ public class FacebookLogin {
                                 .add("client_secret", IConstant.FACEBOOK_CLIENT_SECRET)
                                 .add("redirect_uri", IConstant.FACEBOOK_REDIRECT_URI)
                                 .add("code", code)
-                                .build()
-                )
+                                .build())
                 .execute()
                 .returnContent()
                 .asString();

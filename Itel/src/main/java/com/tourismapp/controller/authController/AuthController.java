@@ -9,7 +9,6 @@ import com.tourismapp.repository.DBConnection;
 import com.tourismapp.model.Users;
 import com.tourismapp.service.user.IUserService;
 import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -17,7 +16,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import java.io.IOException;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -43,10 +41,10 @@ public class AuthController {
 
     @PostMapping(MainControllerServlet.LOGINPAGE_SERVLET)
     public String handleLogin(@RequestParam("action") String action,
-                              @RequestParam("identifier") String identifier,
-                              @RequestParam("password") String password,
-                              HttpServletRequest request,
-                              HttpSession session) {
+            @RequestParam("identifier") String identifier,
+            @RequestParam("password") String password,
+            HttpServletRequest request,
+            HttpSession session) {
 
         if (MainControllerServlet.ACTION_LOGIN.equals(action.trim())) {
             Optional<Users> loggedUser = userService.findUserByCredentials(identifier, password);
@@ -86,16 +84,17 @@ public class AuthController {
 
     @PostMapping("/register")
     public String handleRegister(@RequestParam("username") String username,
-                                 @RequestParam("password") String password,
-                                 @RequestParam("fullName") String fullName,
-                                 @RequestParam("email") String email,
-                                 @RequestParam("phone") String phone,
-                                 @RequestParam("address") String address,
-                                 HttpServletRequest req) {
+            @RequestParam("password") String password,
+            @RequestParam("fullName") String fullName,
+            @RequestParam("email") String email,
+            @RequestParam("phone") String phone,
+            @RequestParam("address") String address,
+            HttpServletRequest req) {
 
         try {
             req.setCharacterEncoding("UTF-8");
-        } catch (Exception ignored) {}
+        } catch (Exception ignored) {
+        }
 
         if (username.isEmpty() || password.isEmpty() || fullName.isEmpty() ||
                 email.isEmpty() || phone.isEmpty() || address.isEmpty()) {
@@ -153,8 +152,7 @@ public class AuthController {
             Users newUser = new Users(
                     username, password, fullName, email, phone, address,
                     UserRole.CUSTOMER, MembershipLevel.STANDARD, null, Status.ACTIVE,
-                    LocalDateTime.now(), LocalDateTime.now()
-            );
+                    LocalDateTime.now(), LocalDateTime.now());
 
             String sql = "INSERT INTO Users (username, password, fullName, email, phone, address, role, membership_level_id, image_url, status, created_at, updated_at) "
                     + "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
@@ -189,7 +187,8 @@ public class AuthController {
         return email.matches(emailRegex);
     }
 
-    private void preserveFormData(HttpServletRequest req, String username, String fullName, String email, String phone, String address) {
+    private void preserveFormData(HttpServletRequest req, String username, String fullName, String email, String phone,
+            String address) {
         req.setAttribute("username", username);
         req.setAttribute("fullName", fullName);
         req.setAttribute("email", email);
@@ -265,7 +264,9 @@ public class AuthController {
                 FacebookAccount acc = FacebookLogin.getUserInfo(accessToken);
                 ErrDialog.showError("acc: " + acc);
             }
-        } catch (Exception ignored) {}
-        return "redirect:" + ProjectPaths.HREF_TO_LOGINPAGE; // Fallback since facebook login logic was just incomplete stub in Servlet
+        } catch (Exception ignored) {
+        }
+        return "redirect:" + ProjectPaths.HREF_TO_LOGINPAGE; // Fallback since facebook login logic was just incomplete
+                                                             // stub in Servlet
     }
 }
