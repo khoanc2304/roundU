@@ -4,8 +4,8 @@
  */
 package com.tourismapp.service.relation;
 
-import com.tourismapp.dao.relation.BrandCategoryDAO;
-import com.tourismapp.dao.relation.IBrandCategoryDAO;
+import com.tourismapp.repository.relation.BrandCategoryRepository;
+import com.tourismapp.repository.relation.BrandCategoryRepository;
 import com.tourismapp.dto.BrandCategoryDTO;
 import java.util.List;
 
@@ -15,16 +15,16 @@ import java.util.List;
  */
 public class BrandCategoryService implements IBrandCategoryService{
     
-    private final IBrandCategoryDAO brandCategoryDAO = new BrandCategoryDAO();
+    private final BrandCategoryRepository BrandCategoryRepository = new BrandCategoryRepository();
     
     @Override
     public List<BrandCategoryDTO> getAllBrandCategoryRelations() {
-        return brandCategoryDAO.getAllBrandCategoryRelations();
+        return BrandCategoryRepository.getAllBrandCategoryRelations();
     }
 
     @Override
     public List<BrandCategoryDTO> getBrandsByCategoryId(int categoryId) {
-        return brandCategoryDAO.getBrandsByCategoryId(categoryId);
+        return BrandCategoryRepository.getBrandsByCategoryId(categoryId);
     }
     
 }

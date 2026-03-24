@@ -1,4 +1,4 @@
-package com.tourismapp.dao.product;
+package com.tourismapp.repository.product;
 
 import com.tourismapp.common.Status;
 import com.tourismapp.model.Brand;
@@ -21,7 +21,7 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 @Repository
-public class ProductDAO implements IProductDAO {
+public class ProductRepository {
 
     @Autowired
     private JdbcTemplate jdbcTemplate;
@@ -53,7 +53,6 @@ public class ProductDAO implements IProductDAO {
 
     private final RowMapper<Product> productRowMapper = (rs, rowNum) -> mapProduct(rs);
 
-    @Override
     public Product mapProduct(ResultSet rs) throws SQLException {
         return new Product(
                 rs.getInt("product_id"),
@@ -70,13 +69,11 @@ public class ProductDAO implements IProductDAO {
         );
     }
 
-    @Override
     public List<Product> getSimilarProductsByCategory(int categoryId, int excludeProductId, int limit) {
         String sql = String.format(GET_SIMILAR_PRODUCTS_BY_CATEGORY, limit);
         return jdbcTemplate.query(sql, productRowMapper, categoryId, excludeProductId);
     }
 
-    @Override
     public List<Product> getSimilarProductsByPrice(BigDecimal productPrice, int excludeProductId, int limit) {
         BigDecimal minPrice = productPrice.multiply(BigDecimal.valueOf(0.9));
         BigDecimal maxPrice = productPrice.multiply(BigDecimal.valueOf(1.1));
@@ -84,29 +81,24 @@ public class ProductDAO implements IProductDAO {
         return jdbcTemplate.query(sql, productRowMapper, minPrice, maxPrice, excludeProductId, productPrice);
     }
 
-    @Override
     public List<Product> getSimilarProductsByBrand(int brandId, BigDecimal productPrice, int excludeProductId, int limit) {
         String sql = String.format(GET_SIMILAR_PRODUCTS_BY_BRAND, limit);
         return jdbcTemplate.query(sql, productRowMapper, brandId, excludeProductId, productPrice);
     }
 
-    @Override
     public List<Product> getActiveProducts() {
         return jdbcTemplate.query(GET_ACTIVE_PRODUCTS, productRowMapper);
     }
 
-    @Override
     public List<Product> getAllProducts() {
         return jdbcTemplate.query(GET_ALL_PRODUCTS, productRowMapper);
     }
 
-    @Override
     public Optional<Product> findProductById(int productId) {
         List<Product> products = jdbcTemplate.query(FIND_PRODUCT_BY_ID, productRowMapper, productId);
         return products.isEmpty() ? Optional.empty() : Optional.of(products.get(0));
     }
 
-    @Override
     public boolean createProduct(Product product) {
         KeyHolder keyHolder = new GeneratedKeyHolder();
         int affectedRows = jdbcTemplate.update(connection -> {
@@ -128,7 +120,6 @@ public class ProductDAO implements IProductDAO {
         return false;
     }
 
-    @Override
     public boolean editProduct(Product product) {
         int rowsUpdated = jdbcTemplate.update(EDIT_PRODUCT,
                 product.getName(),
@@ -143,29 +134,24 @@ public class ProductDAO implements IProductDAO {
         return rowsUpdated > 0;
     }
 
-    @Override
     public boolean deleteProduct(int id) {
         int rowsUpdated = jdbcTemplate.update(DELETE_PRODUCT, id);
         return rowsUpdated > 0;
     }
 
-    @Override
     public int getNextProductId() {
         Integer maxId = jdbcTemplate.queryForObject(GET_PRODUCT_NEXT_ID, Integer.class);
         return maxId != null ? maxId + 1 : 1;
     }
 
-    @Override
     public List<Product> searchProductsByName(String q) {
         return jdbcTemplate.query(SEARCH_PRODUCTS_BY_NAME, productRowMapper, "%" + q + "%");
     }
 
-    @Override
     public List<Product> searchActiveProductsByName(String q) {
         return jdbcTemplate.query(SEARCH_ACTIVE_PRODUCTS_BY_NAME, productRowMapper, "%" + q + "%");
     }
 
-    @Override
     public Optional<List<ProductImage>> getProductImagesById(int productId) {
         List<ProductImage> productImages = jdbcTemplate.query(GET_PRODUCT_IMAGES_BY_ID, (rs, rowNum) -> new ProductImage(
                 rs.getInt("image_id"),
@@ -175,7 +161,6 @@ public class ProductDAO implements IProductDAO {
         return Optional.of(productImages);
     }
 
-    @Override
     public Map<String, String> getInforProductById(int productId) {
         Map<String, String> infoMap = new LinkedHashMap<>();
         jdbcTemplate.query(GET_INFO_PRODUCT_BY_ID, rs -> {
@@ -190,24 +175,20 @@ public class ProductDAO implements IProductDAO {
         return infoMap;
     }
 
-    @Override
     public List<Product> getProductsByCategory(int categoryId) {
         return jdbcTemplate.query(GET_PRODUCTS_BY_CATEGORY, productRowMapper, categoryId);
     }
 
-    @Override
     public Integer mapCategoryId(String name) {
         List<Integer> ids = jdbcTemplate.queryForList(MAP_CATEGORY_ID, Integer.class, name);
         return ids.isEmpty() ? null : ids.get(0);
     }
 
-    @Override
     public Integer mapBrandId(String name) {
         List<Integer> ids = jdbcTemplate.queryForList(MAP_BRAND_ID, Integer.class, name);
         return ids.isEmpty() ? null : ids.get(0);
     }
 
-    @Override
     public List<String> getProductDetailByIdTop5(int productId) {
         return jdbcTemplate.query(GET_PRODUCT_DETAIL_BY_ID_TOP_5, (rs, rowNum) -> {
             String value = rs.getString("attribute_value");
@@ -216,7 +197,6 @@ public class ProductDAO implements IProductDAO {
         }, productId);
     }
 
-    @Override
     public List<Product> filterProductsByCriteria(int categoryId, String brands, String cpus, int minPrice, int maxPrice) {
         List<String> brandList = (brands != null && !brands.isEmpty()) ? Arrays.asList(brands.split(",")) : new ArrayList<>();
         List<String> cpuList = (cpus != null && !cpus.isEmpty())
@@ -243,12 +223,10 @@ public class ProductDAO implements IProductDAO {
         return jdbcTemplate.query(sql, productRowMapper, params.toArray());
     }
 
-    @Override
     public List<Product> getProductsByCategoryPaginated(int categoryId, int offset, int size) {
         return jdbcTemplate.query(GET_PRODUCTS_BY_CATEGORY_PAGINATED, productRowMapper, categoryId, offset, size);
     }
 
-    @Override
     public boolean updateProductStock(int productId, int newStock) {
         int rowsUpdated = jdbcTemplate.update(UPDATE_PRODUCT_STOCK, newStock, productId);
         return rowsUpdated > 0;

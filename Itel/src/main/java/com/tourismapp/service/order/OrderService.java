@@ -1,7 +1,7 @@
 package com.tourismapp.service.order;
 
-import com.tourismapp.dao.order.IOrderDAO;
-import com.tourismapp.dao.order.OrderDAO;
+import com.tourismapp.repository.order.OrderRepository;
+import com.tourismapp.repository.order.OrderRepository;
 import com.tourismapp.model.Orders;
 import com.tourismapp.model.OrderDetail;
 import com.tourismapp.model.Cart;
@@ -25,7 +25,7 @@ import com.tourismapp.service.product.IProductService;
 public class OrderService implements IOrderService {
 
     @Autowired
-    private IOrderDAO orderDAO;
+    private OrderRepository OrderRepository;
     
     @Autowired
     private IProductService productService;
@@ -44,8 +44,8 @@ public class OrderService implements IOrderService {
             }
 
             // Create order in database
-            Orders createdOrder = orderDAO.createOrder(order);
-            System.out.println("OrderDAO.createOrder result: " + (createdOrder != null ? "Success, ID: " + createdOrder.getOrderId() : "Failed"));
+            Orders createdOrder = OrderRepository.createOrder(order);
+            System.out.println("OrderRepository.createOrder result: " + (createdOrder != null ? "Success, ID: " + createdOrder.getOrderId() : "Failed"));
 
             if (createdOrder != null) {
                 // Create order details for each cart item
@@ -59,7 +59,7 @@ public class OrderService implements IOrderService {
                             cartItem.getProduct().getPrice()
                     );
 
-                    boolean detailCreated = orderDAO.addOrderDetail(orderDetail);
+                    boolean detailCreated = OrderRepository.addOrderDetail(orderDetail);
                     if (!detailCreated) {
                         allDetailsCreated = false;
                         ErrDialog.showError("Failed to create order detail for product: " + cartItem.getProduct().getName());
@@ -95,7 +95,7 @@ public class OrderService implements IOrderService {
     @Override
     public Optional<Orders> findOrderById(int orderId) {
         try {
-            return orderDAO.findOrderById(orderId);
+            return OrderRepository.findOrderById(orderId);
         } catch (Exception e) {
             ErrDialog.showError("Error in OrderService.findOrderById: " + e.getMessage());
             return Optional.empty();
@@ -105,9 +105,9 @@ public class OrderService implements IOrderService {
     @Override
     public List<Orders> findOrdersByUserId(int userId) {
         try {
-            List<Orders> orders = orderDAO.findOrdersByUserId(userId);
+            List<Orders> orders = OrderRepository.findOrdersByUserId(userId);
             for (Orders order : orders) {
-                order.setOrderDetails(orderDAO.getOrderDetailsByOrderId(order.getOrderId()));
+                order.setOrderDetails(OrderRepository.getOrderDetailsByOrderId(order.getOrderId()));
             }
             return orders;
         } catch (Exception e) {
@@ -120,13 +120,13 @@ public class OrderService implements IOrderService {
     public List<Orders> getOrdersByUserId(int userId) {
         try {
             System.out.println("OrderService.getOrdersByUserId called for userId: " + userId);
-            List<Orders> orders = orderDAO.findOrdersByUserId(userId);
-            System.out.println("OrderDAO returned " + orders.size() + " orders");
+            List<Orders> orders = OrderRepository.findOrdersByUserId(userId);
+            System.out.println("OrderRepository returned " + orders.size() + " orders");
 
             // Load order details for each order
             for (Orders order : orders) {
                 System.out.println("Loading details for order: " + order.getOrderId());
-                List<OrderDetail> orderDetails = orderDAO.getOrderDetailsByOrderId(order.getOrderId());
+                List<OrderDetail> orderDetails = OrderRepository.getOrderDetailsByOrderId(order.getOrderId());
                 System.out.println("Found " + orderDetails.size() + " order details");
                 order.setOrderDetails(orderDetails);
             }
@@ -144,9 +144,9 @@ public class OrderService implements IOrderService {
     @Override
     public List<Orders> findAllOrders() {
         try {
-            List<Orders> orders = orderDAO.findAllOrders();
+            List<Orders> orders = OrderRepository.findAllOrders();
             for (Orders order : orders) {
-                order.setOrderDetails(orderDAO.getOrderDetailsByOrderId(order.getOrderId()));
+                order.setOrderDetails(OrderRepository.getOrderDetailsByOrderId(order.getOrderId()));
             }
             return orders;
         } catch (Exception e) {
@@ -161,7 +161,7 @@ public class OrderService implements IOrderService {
 //            ErrDialog.showError("OrderService.updateOrderStatus called for orderId: " + orderId + ", status: " + status);
             // Get order details to restore stock if canceled
             if ("Canceled".equalsIgnoreCase(status)) {
-                List<OrderDetail> orderDetails = orderDAO.getOrderDetailsByOrderId(orderId);
+                List<OrderDetail> orderDetails = OrderRepository.getOrderDetailsByOrderId(orderId);
                 if (orderDetails != null && !orderDetails.isEmpty()) {
                     for (OrderDetail detail : orderDetails) {
                         try {
@@ -181,7 +181,7 @@ public class OrderService implements IOrderService {
             }
 
             // Update order status
-            boolean updated = orderDAO.updateOrderStatus(orderId, status);
+            boolean updated = OrderRepository.updateOrderStatus(orderId, status);
             if (updated) {
                 System.out.println("Successfully updated orderId: " + orderId + " to status: " + status);
 //                ErrDialog.showError("Successfully updated orderId: " + orderId + " to status: " + status);
@@ -210,7 +210,7 @@ public class OrderService implements IOrderService {
     @Override
     public List<OrderDetail> getOrderDetailsByOrderId(int orderId) {
         try {
-            return orderDAO.getOrderDetailsByOrderId(orderId);
+            return OrderRepository.getOrderDetailsByOrderId(orderId);
         } catch (Exception e) {
             ErrDialog.showError("Error in OrderService.getOrderDetailsByOrderId: " + e.getMessage());
             return List.of();
@@ -220,11 +220,11 @@ public class OrderService implements IOrderService {
     @Override
     public Optional<Orders> getOrderWithDetails(int orderId) {
         try {
-            Optional<Orders> orderOpt = orderDAO.findOrderById(orderId);
+            Optional<Orders> orderOpt = OrderRepository.findOrderById(orderId);
 
             if (orderOpt.isPresent()) {
                 Orders order = orderOpt.get();
-                List<OrderDetail> orderDetails = orderDAO.getOrderDetailsByOrderId(orderId);
+                List<OrderDetail> orderDetails = OrderRepository.getOrderDetailsByOrderId(orderId);
                 // Note: You might want to add a field to Orders model to store order details
                 // For now, we'll just return the order
                 return Optional.of(order);
@@ -240,7 +240,7 @@ public class OrderService implements IOrderService {
     @Override
     public boolean completeOrder(int orderId) {
         try {
-            return orderDAO.updateOrderStatus(orderId, "completed");
+            return OrderRepository.updateOrderStatus(orderId, "completed");
         } catch (Exception e) {
             ErrDialog.showError("Error in OrderService.completeOrder: " + e.getMessage());
             return false;
@@ -250,14 +250,14 @@ public class OrderService implements IOrderService {
     @Override
     public boolean shipOrder(int orderId) {
         try {
-            return orderDAO.updateOrderStatus(orderId, "shipped");
+            return OrderRepository.updateOrderStatus(orderId, "shipped");
         } catch (Exception e) {
             ErrDialog.showError("Error in OrderService.shipOrder: " + e.getMessage());
             return false;
         }
     }
     public List<Orders> findOrdersByStatus(String status) {
-        return orderDAO.findOrdersByStatus(status);
+        return OrderRepository.findOrdersByStatus(status);
     }
     
     /**
@@ -268,7 +268,7 @@ public class OrderService implements IOrderService {
      * @return Discounted total amount
      */
     public java.math.BigDecimal calculateDiscountedTotal(java.math.BigDecimal originalAmount, int membershipLevelId, String couponCode) {
-        return orderDAO.calculateDiscountedTotal(originalAmount, membershipLevelId, couponCode);
+        return OrderRepository.calculateDiscountedTotal(originalAmount, membershipLevelId, couponCode);
     }
     
     /**
@@ -278,6 +278,6 @@ public class OrderService implements IOrderService {
      * @return true if successful
      */
     public boolean updateOrderTotalAmount(int orderId, java.math.BigDecimal discountedTotal) {
-        return orderDAO.updateOrderTotalAmount(orderId, discountedTotal);
+        return OrderRepository.updateOrderTotalAmount(orderId, discountedTotal);
     }
 }

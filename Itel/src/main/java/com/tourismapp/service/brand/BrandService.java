@@ -1,7 +1,7 @@
 package com.tourismapp.service.brand;
 
 import com.tourismapp.common.Status;
-import com.tourismapp.dao.brand.IBrandDAO;
+import com.tourismapp.repository.brand.BrandRepository;
 import com.tourismapp.model.Brand;
 import com.tourismapp.model.Product;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,21 +14,21 @@ import java.util.Optional;
 public class BrandService implements IBrandService {
 
     @Autowired
-    private IBrandDAO brandDAO;
+    private BrandRepository BrandRepository;
 
     @Override
     public List<Brand> getAllBrands() {
-        return brandDAO.getAllBrands();
+        return BrandRepository.getAllBrands();
     }
 
     @Override
     public Optional<Brand> findBrandById(int id) {
-        return brandDAO.findBrandById(id);
+        return BrandRepository.findBrandById(id);
     }
     
     @Override
     public List<Brand> getActiveBrands() {
-        return brandDAO.getActiveBrands();
+        return BrandRepository.getActiveBrands();
     }
     
     @Override
@@ -37,7 +37,7 @@ public class BrandService implements IBrandService {
         if (brand.getStatus() == null) {
             brand.setStatus(Status.ACTIVE);
         }
-        brandDAO.createBrand(brand);
+        BrandRepository.createBrand(brand);
     }
 
     @Override
@@ -45,7 +45,7 @@ public class BrandService implements IBrandService {
         if (brandId <= 0) {
             throw new IllegalArgumentException("Invalid brand ID");
         }
-        return brandDAO.getBrandById(brandId);
+        return BrandRepository.getBrandById(brandId);
     }
 
     @Override
@@ -53,7 +53,7 @@ public class BrandService implements IBrandService {
         if (name == null || name.trim().isEmpty()) {
             throw new IllegalArgumentException("Search name cannot be empty");
         }
-        return brandDAO.findBrandsByName(name);
+        return BrandRepository.findBrandsByName(name);
     }
 
     @Override
@@ -62,7 +62,7 @@ public class BrandService implements IBrandService {
         if (brand.getBrandId() <= 0) {
             throw new IllegalArgumentException("Invalid brand ID");
         }
-        brandDAO.updateBrand(brand);
+        BrandRepository.updateBrand(brand);
     }
 
     @Override
@@ -70,7 +70,7 @@ public class BrandService implements IBrandService {
         if (brandId <= 0) {
             throw new IllegalArgumentException("Invalid brand ID");
         }
-        brandDAO.deleteBrand(brandId);
+        BrandRepository.deleteBrand(brandId);
     }
 
     private void validateBrandForCreate(Brand brand) {
@@ -96,11 +96,11 @@ public class BrandService implements IBrandService {
 
     @Override
     public List<Brand> findBrandsByCountry(String country) {
-        return brandDAO.findBrandsByCountry(country);
+        return BrandRepository.findBrandsByCountry(country);
     }
 
     @Override
     public List<Product> getProductsByBrandId(int brandId) {
-        return brandDAO.getProductsByBrandId(brandId);
+        return BrandRepository.getProductsByBrandId(brandId);
     }
 }

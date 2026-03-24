@@ -37,7 +37,7 @@ public class DashboardController {
     @Autowired private IBrandService brandService;
     @Autowired private ICategoryService categoryService;
     @Autowired
-    private com.tourismapp.dao.order.IOrderDAO orderDAO;
+    private com.tourismapp.repository.order.OrderRepository OrderRepository;
     @Autowired
     private IUserService userService;
     private static final Logger LOGGER = Logger.getLogger(DashboardController.class.getName());
@@ -80,7 +80,7 @@ public class DashboardController {
             return ProjectPaths.JSP_DASHBOARDPAGE_PATH;
         }
 
-        BigDecimal totalRevenue = orderDAO.calculateTotalRevenue();
+        BigDecimal totalRevenue = OrderRepository.calculateTotalRevenue();
         if (allOrders != null) {
             for (Orders o : allOrders) {
                 if (o.getTotalAmount() != null && "Completed".equals(o.getStatus())) {
@@ -90,7 +90,7 @@ public class DashboardController {
         }
         request.setAttribute("totalRevenue", totalRevenue);
 
-        List<OrderStat> revenueStatsByMonth = orderDAO.getRevenueStatsByMonth();
+        List<OrderStat> revenueStatsByMonth = OrderRepository.getRevenueStatsByMonth();
         request.setAttribute("revenueStatsByMonth", revenueStatsByMonth);
 
         List<OrderStat> orderStatsByMonth = (List<OrderStat>) request.getAttribute("orderStatsByMonth");
@@ -214,9 +214,9 @@ public class DashboardController {
     }
 
     private void processStatisticData(HttpServletRequest request) throws Exception {
-        request.setAttribute("orderStatsByMonth", orderDAO.getOrderStatsByMonth());
-        request.setAttribute("allOrders", orderDAO.getAllOrders());
-        request.setAttribute("orderStatsByStatus", orderDAO.getOrderStatsByStatus());
-        request.setAttribute("orderStatsByProduct", orderDAO.getOrderStatsByProduct());
+        request.setAttribute("orderStatsByMonth", OrderRepository.getOrderStatsByMonth());
+        request.setAttribute("allOrders", OrderRepository.getAllOrders());
+        request.setAttribute("orderStatsByStatus", OrderRepository.getOrderStatsByStatus());
+        request.setAttribute("orderStatsByProduct", OrderRepository.getOrderStatsByProduct());
     }
 }

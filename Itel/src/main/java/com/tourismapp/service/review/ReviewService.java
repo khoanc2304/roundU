@@ -4,8 +4,8 @@
  */
 package com.tourismapp.service.review;
 
-import com.tourismapp.dao.review.IReviewDAO;
-import com.tourismapp.dao.review.ReviewDAO;
+import com.tourismapp.repository.review.ReviewRepository;
+import com.tourismapp.repository.review.ReviewRepository;
 import com.tourismapp.model.Review;
 import com.tourismapp.model.StatisticReview;
 import java.util.List;
@@ -16,60 +16,60 @@ import java.util.List;
  */
 public class ReviewService implements IReviewService {
     
-    private final IReviewDAO reviewDAO = new ReviewDAO();
+    private final ReviewRepository ReviewRepository = new ReviewRepository();
 
     @Override
     public int getTotalCommentsByProductId(int productId) {
-        return reviewDAO.getTotalCommentsByProductId(productId);
+        return ReviewRepository.getTotalCommentsByProductId(productId);
     }
     
     @Override
     public StatisticReview getRatingCountByProductId(int productId){
-        return reviewDAO.getRatingCountByProductId(productId);
+        return ReviewRepository.getRatingCountByProductId(productId);
     }
     
     @Override
     public List<Review> getAllActiveReviews() {
-        return reviewDAO.getAllActiveReviews();
+        return ReviewRepository.getAllActiveReviews();
     }
 
     @Override
     public Review getReviewById(int viewId) {
-        return reviewDAO.getReviewById(viewId);
+        return ReviewRepository.getReviewById(viewId);
     }
 
     @Override
     public List<Review> getReviewsByProductId(int productId) {
-        return reviewDAO.getReviewsByProductId(productId);
+        return ReviewRepository.getReviewsByProductId(productId);
     }
 
     @Override
     public boolean addReview(Review review) {
-        return reviewDAO.addReview(review);
+        return ReviewRepository.addReview(review);
     }
 
     @Override
     public boolean updateReview(Review review) {
-        return reviewDAO.updateReview(review);
+        return ReviewRepository.updateReview(review);
     }
 
     @Override
     public boolean deleteReview(int id) {
-        return reviewDAO.deleteReview(id);
+        return ReviewRepository.deleteReview(id);
     }
 
     @Override
     public List<StatisticReview> getStatisticReview() {
-        return reviewDAO.getStatisticReview();
+        return ReviewRepository.getStatisticReview();
     }
     
     @Override
     public boolean hasUserPurchasedProduct(int userId, int productId) {
-        return reviewDAO.hasUserPurchasedProduct(userId, productId);
+        return ReviewRepository.hasUserPurchasedProduct(userId, productId);
     }
 
     @Override
     public List<Review> getReviewsByProductIdAndRating(int productId, int rating) {
-        return reviewDAO.getReviewsByProductIdAndRating(productId, rating);
+        return ReviewRepository.getReviewsByProductIdAndRating(productId, rating);
     }
 }

@@ -1,7 +1,7 @@
 package com.tourismapp.service.cart;
 
-import com.tourismapp.dao.cart.CartDAO;
-import com.tourismapp.dao.cart.ICartDAO;
+import com.tourismapp.repository.cart.CartRepository;
+import com.tourismapp.repository.cart.CartRepository;
 import com.tourismapp.model.Cart;
 import com.tourismapp.model.CartItem;
 import com.tourismapp.model.Product;
@@ -21,7 +21,7 @@ import com.tourismapp.service.product.IProductService;
 public class CartService implements ICartService {
     
     @Autowired
-    private ICartDAO cartDAO;
+    private CartRepository CartRepository;
 
     @Autowired
     private IProductService productService;
@@ -29,7 +29,7 @@ public class CartService implements ICartService {
     @Override
     public boolean saveUserCart(int userId, Cart cart) {
         try {
-            return cartDAO.saveCart(userId, cart);
+            return CartRepository.saveCart(userId, cart);
         } catch (Exception e) {
             ErrDialog.showError("Error in CartService.saveUserCart: " + e.getMessage());
             return false;
@@ -39,7 +39,7 @@ public class CartService implements ICartService {
     @Override
     public Cart loadUserCart(int userId) {
         try {
-            return cartDAO.loadCart(userId);
+            return CartRepository.loadCart(userId);
         } catch (Exception e) {
             ErrDialog.showError("Error in CartService.loadUserCart: " + e.getMessage());
             return new Cart();
@@ -49,7 +49,7 @@ public class CartService implements ICartService {
     @Override
     public boolean clearUserCart(int userId) {
         try {
-            return cartDAO.clearCart(userId);
+            return CartRepository.clearCart(userId);
         } catch (Exception e) {
             ErrDialog.showError("Error in CartService.clearUserCart: " + e.getMessage());
             return false;
@@ -70,7 +70,7 @@ public class CartService implements ICartService {
                 return false;
             }
             
-            return cartDAO.addItemToCart(userId, product.getProductId(), quantity);
+            return CartRepository.addItemToCart(userId, product.getProductId(), quantity);
         } catch (Exception e) {
             ErrDialog.showError("Error in CartService.addItemToUserCart: " + e.getMessage());
             return false;
@@ -91,7 +91,7 @@ public boolean updateUserCartItem(int userId, int productId, int quantity) {
             return false;
         }
 
-        return cartDAO.updateCartItem(userId, productId, quantity);
+        return CartRepository.updateCartItem(userId, productId, quantity);
     } catch (Exception e) {
         ErrDialog.showError("Error in CartService.updateUserCartItem: " + e.getMessage());
         return false;
@@ -101,7 +101,7 @@ public boolean updateUserCartItem(int userId, int productId, int quantity) {
     @Override
     public boolean removeItemFromUserCart(int userId, int productId) {
         try {
-            return cartDAO.removeCartItem(userId, productId);
+            return CartRepository.removeCartItem(userId, productId);
         } catch (Exception e) {
             ErrDialog.showError("Error in CartService.removeItemFromUserCart: " + e.getMessage());
             return false;

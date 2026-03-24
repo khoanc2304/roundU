@@ -2,12 +2,12 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
-package com.tourismapp.dao.user;
+package com.tourismapp.repository.user;
 
 import com.tourismapp.common.MembershipLevel;
 import com.tourismapp.common.Status;
 import com.tourismapp.common.UserRole;
-import com.tourismapp.dao.DBConnection;
+import com.tourismapp.repository.DBConnection;
 import com.tourismapp.model.Users;
 import com.tourismapp.utils.ErrDialog;
 import java.sql.Connection;
@@ -27,12 +27,11 @@ import org.springframework.stereotype.Repository;
  * @author Admin
  */
 @Repository
-public class UserDAO implements IUserDAO {
+public class UserRepository {
 
     private static final String GET_ALL_USERS = "SELECT * FROM Users;";
     private static final String FIND_USER_BY_CREDENTIALS = "SELECT * FROM Users WHERE (username = ? OR email = ?) AND password = ?;";
 
-    @Override
     public Users mapUser(ResultSet rs) throws SQLException {
         return new Users(
                 rs.getInt("user_id"),
@@ -51,7 +50,6 @@ public class UserDAO implements IUserDAO {
         );
     }
 
-    @Override
     public Optional<Users> findUserByCredentials(String identifier, String password) {
         Users user = null;
 
@@ -88,7 +86,6 @@ public class UserDAO implements IUserDAO {
     }
 
 /////////////////////////////////////////////////// HUY /////////////////////////////////////////////////////
-    @Override
     public List<Users> getAllUsers() {
         List<Users> users = new ArrayList<>();
         String sql = "SELECT * FROM Users";
@@ -105,7 +102,6 @@ public class UserDAO implements IUserDAO {
         return users;
     }
 
-    @Override
     public Users getUserById(int userId) {
         String sql = "SELECT * FROM Users WHERE user_id = ?";
         try (Connection conn = DBConnection.getConnection(); PreparedStatement ps = conn.prepareStatement(sql)) {
@@ -125,7 +121,6 @@ public class UserDAO implements IUserDAO {
         return null;
     }
 
-    @Override
     public boolean createUser(Users user) {
         // Kiểm tra username hoặc email đã tồn tại
         String checkSql = "SELECT COUNT(*) FROM Users WHERE username = ? OR email = ?";
@@ -164,7 +159,6 @@ public class UserDAO implements IUserDAO {
         }
     }
 
-    @Override
     public boolean updateUser(Users user) {
         StringBuilder sql = new StringBuilder("UPDATE Users SET ");
         List<String> updates = new ArrayList<>();
@@ -201,7 +195,7 @@ public class UserDAO implements IUserDAO {
         if (user.getMembershipLevel() != null) {
             updates.add("membership_level_id=?");
             params.add(user.getMembershipLevel().getId());
-            System.out.println("UserDAO: Cập nhật hạng mức thành viên thành " + user.getMembershipLevel().getValue()
+            System.out.println("UserRepository: Cập nhật hạng mức thành viên thành " + user.getMembershipLevel().getValue()
                     + " (ID: " + user.getMembershipLevel().getId() + ")");
         }
         if (user.getStatus() != null) {
@@ -211,7 +205,7 @@ public class UserDAO implements IUserDAO {
         updates.add("updated_at=GETDATE()");
 
         if (updates.isEmpty()) {
-            System.out.println("UserDAO: Không có trường nào cần cập nhật cho user ID: " + user.getUserId());
+            System.out.println("UserRepository: Không có trường nào cần cập nhật cho user ID: " + user.getUserId());
             return false;
         }
 
@@ -220,22 +214,21 @@ public class UserDAO implements IUserDAO {
         params.add(user.getUserId());
 
         try (Connection conn = DBConnection.getConnection(); PreparedStatement ps = conn.prepareStatement(sql.toString())) {
-            System.out.println("UserDAO: SQL cập nhật: " + sql);
-            System.out.println("UserDAO: Parameters: " + params);
+            System.out.println("UserRepository: SQL cập nhật: " + sql);
+            System.out.println("UserRepository: Parameters: " + params);
             for (int i = 0; i < params.size(); i++) {
                 ps.setObject(i + 1, params.get(i));
             }
             int rowsAffected = ps.executeUpdate();
-            System.out.println("UserDAO: Số dòng bị ảnh hưởng: " + rowsAffected);
+            System.out.println("UserRepository: Số dòng bị ảnh hưởng: " + rowsAffected);
             return rowsAffected > 0;
         } catch (SQLException e) {
-            System.out.println("UserDAO: Lỗi SQL khi cập nhật người dùng: " + e.getMessage());
+            System.out.println("UserRepository: Lỗi SQL khi cập nhật người dùng: " + e.getMessage());
             e.printStackTrace();
             throw new RuntimeException("Lỗi khi cập nhật người dùng: " + e.getMessage());
         }
     }
 
-    @Override
     public Optional<Users> findUserByUsername(String username) {
         String sql = "SELECT * FROM Users WHERE username = ?";
         try (Connection conn = DBConnection.getConnection(); PreparedStatement ps = conn.prepareStatement(sql)) {
@@ -251,7 +244,6 @@ public class UserDAO implements IUserDAO {
         return Optional.empty();
     }
 
-    @Override
     public Optional<Users> findUserByEmail(String email) {
         String sql = "SELECT * FROM Users WHERE email = ?";
         try (Connection conn = DBConnection.getConnection(); PreparedStatement ps = conn.prepareStatement(sql)) {
@@ -267,7 +259,6 @@ public class UserDAO implements IUserDAO {
         return Optional.empty();
     }
 
-    @Override
     public Optional<Users> findUserByPhone(String phone) {
         String sql = "SELECT * FROM Users WHERE phone = ?";
         try (Connection conn = DBConnection.getConnection(); PreparedStatement ps = conn.prepareStatement(sql)) {
@@ -283,7 +274,6 @@ public class UserDAO implements IUserDAO {
         return Optional.empty();
     }
 
-    @Override
     public boolean usernameExists(String username) {
         String sql = "SELECT COUNT(*) FROM Users WHERE username = ?";
         try (Connection conn = DBConnection.getConnection(); PreparedStatement ps = conn.prepareStatement(sql)) {
@@ -297,7 +287,6 @@ public class UserDAO implements IUserDAO {
         return false;
     }
 
-    @Override
     public boolean emailExists(String email) {
         String sql = "SELECT COUNT(*) FROM Users WHERE email = ?";
         try (Connection conn = DBConnection.getConnection(); PreparedStatement ps = conn.prepareStatement(sql)) {
@@ -311,7 +300,6 @@ public class UserDAO implements IUserDAO {
         return false;
     }
 
-    @Override
     public boolean phoneExists(String phone) {
         String sql = "SELECT COUNT(*) FROM Users WHERE phone = ?";
         try (Connection conn = DBConnection.getConnection(); PreparedStatement ps = conn.prepareStatement(sql)) {
@@ -325,7 +313,6 @@ public class UserDAO implements IUserDAO {
         return false;
     }
 
-    @Override
     public boolean deleteUser(int userId) {
         String sql = "UPDATE Users SET status = 'inactive', updated_at = GETDATE() WHERE user_id = ?";
         try (Connection conn = DBConnection.getConnection(); PreparedStatement ps = conn.prepareStatement(sql)) {
@@ -341,7 +328,6 @@ public class UserDAO implements IUserDAO {
         }
     }
 
-    @Override
     public List<Users> searchUsers(String username, String status) {
         StringBuilder sql = new StringBuilder("SELECT * FROM Users WHERE 1=1");
         List<Object> params = new ArrayList<>();
@@ -423,7 +409,7 @@ public class UserDAO implements IUserDAO {
 
     public static void main(String[] args) {
         // Khởi tạo UserService hoặc lớp chứa findUserByCredentials
-        UserDAO ud = new UserDAO(); // Thay bằng cách khởi tạo thực tế
+        UserRepository ud = new UserRepository(); // Thay bằng cách khởi tạo thực tế
 
         // Dữ liệu kiểm tra
         String identifier = "user1@example.com";

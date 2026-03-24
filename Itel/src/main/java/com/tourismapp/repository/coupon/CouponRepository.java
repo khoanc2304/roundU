@@ -1,6 +1,6 @@
-package com.tourismapp.dao.coupon;
+package com.tourismapp.repository.coupon;
 
-import com.tourismapp.dao.DBConnection;
+import com.tourismapp.repository.DBConnection;
 import com.tourismapp.model.Coupon;
 import com.tourismapp.utils.ErrDialog;
 
@@ -18,7 +18,7 @@ import java.util.Optional;
 /**
  * Implementation for Coupon DAO
  */
-public class CouponDAO implements ICouponDAO {
+public class CouponRepository {
 
     private static final String GET_ALL_COUPONS = "SELECT * FROM Coupon ORDER BY created_at DESC;";
     private static final String GET_ACTIVE_COUPONS = "SELECT * FROM Coupon WHERE is_active = 1 AND start_date <= GETDATE() AND end_date >= GETDATE() ORDER BY created_at DESC;";
@@ -27,7 +27,6 @@ public class CouponDAO implements ICouponDAO {
     private static final String UPDATE_COUPON = "UPDATE Coupon SET code = ?, description = ?, discount_percent = ?, min_purchase_amount = ?, start_date = ?, end_date = ?, is_active = ? WHERE coupon_id = ?;";
     private static final String DELETE_COUPON = "DELETE FROM Coupon WHERE coupon_id = ?;";
 
-    @Override
     public List<Coupon> getAllCoupons() {
         List<Coupon> coupons = new ArrayList<>();
         
@@ -45,7 +44,6 @@ public class CouponDAO implements ICouponDAO {
         return coupons;
     }
 
-    @Override
     public List<Coupon> getActiveCoupons() {
         List<Coupon> coupons = new ArrayList<>();
         
@@ -63,7 +61,6 @@ public class CouponDAO implements ICouponDAO {
         return coupons;
     }
 
-    @Override
     public Optional<Coupon> findCouponByCode(String code) {
         Coupon coupon = null;
         
@@ -84,7 +81,6 @@ public class CouponDAO implements ICouponDAO {
         return Optional.ofNullable(coupon);
     }
 
-    @Override
     public boolean createCoupon(Coupon coupon) {
         try (Connection conn = DBConnection.getConnection();
              PreparedStatement stmt = conn.prepareStatement(CREATE_COUPON)) {
@@ -105,7 +101,6 @@ public class CouponDAO implements ICouponDAO {
         }
     }
 
-    @Override
     public boolean updateCoupon(Coupon coupon) {
         try (Connection conn = DBConnection.getConnection();
              PreparedStatement stmt = conn.prepareStatement(UPDATE_COUPON)) {
@@ -127,7 +122,6 @@ public class CouponDAO implements ICouponDAO {
         }
     }
 
-    @Override
     public boolean deleteCoupon(int couponId) {
         try (Connection conn = DBConnection.getConnection();
              PreparedStatement stmt = conn.prepareStatement(DELETE_COUPON)) {

@@ -3,9 +3,9 @@ package com.tourismapp.service.user;
 import com.tourismapp.common.MembershipLevel;
 import com.tourismapp.common.Status;
 import com.tourismapp.common.UserRole;
-import com.tourismapp.dao.DBConnection;
-import com.tourismapp.dao.user.IUserDAO;
-import com.tourismapp.dao.user.UserDAO;
+import com.tourismapp.repository.DBConnection;
+import com.tourismapp.repository.user.UserRepository;
+import com.tourismapp.repository.user.UserRepository;
 import com.tourismapp.model.Users;
 
 import java.math.BigDecimal;
@@ -26,21 +26,21 @@ import org.springframework.beans.factory.annotation.Autowired;
 public class UserService implements IUserService {
 
     @Autowired
-    private IUserDAO userDAO;
+    private UserRepository UserRepository;
 
     @Override
     public List<Users> getAllUsers() {
-        return userDAO.getAllUsers();
+        return UserRepository.getAllUsers();
     }
 
     @Override
     public Optional<Users> findUserByCredentials(String identifier, String password) {
-        return userDAO.findUserByCredentials(identifier, password);
+        return UserRepository.findUserByCredentials(identifier, password);
     }
 
     @Override
     public Users getUserById(int userId) {
-        return userDAO.getUserById(userId);
+        return UserRepository.getUserById(userId);
     }
 
     @Override
@@ -49,7 +49,7 @@ public class UserService implements IUserService {
         if (!isValidMembershipLevel(user.getMembershipLevel().getId())) {
             throw new IllegalArgumentException("Cấp độ thành viên không tồn tại.");
         }
-        return userDAO.createUser(user);
+        return UserRepository.createUser(user);
     }
 
 // ✅ Hàm validate logic như ở Servlet trước đây
@@ -95,17 +95,17 @@ public class UserService implements IUserService {
 
     @Override
     public Optional<Users> findUserByUsername(String username) {
-        return userDAO.findUserByUsername(username);
+        return UserRepository.findUserByUsername(username);
     }
 
     @Override
     public Optional<Users> findUserByEmail(String email) {
-        return userDAO.findUserByEmail(email);
+        return UserRepository.findUserByEmail(email);
     }
 
     @Override
     public Optional<Users> findUserByPhone(String phone) {
-        return userDAO.findUserByPhone(phone);
+        return UserRepository.findUserByPhone(phone);
     }
 
     @Override
@@ -113,17 +113,17 @@ public class UserService implements IUserService {
         if (!isValidMembershipLevel(user.getMembershipLevel().getId())) {
             throw new IllegalArgumentException("Cấp độ thành viên không tồn tại: " + user.getMembershipLevel().getId());
         }
-        return userDAO.updateUser(user);
+        return UserRepository.updateUser(user);
     }
 
     @Override
     public boolean deleteUser(int userId) {
-        return userDAO.deleteUser(userId);
+        return UserRepository.deleteUser(userId);
     }
 
     @Override
     public List<Users> searchUsers(String username, String status) {
-        return userDAO.searchUsers(username, status);
+        return UserRepository.searchUsers(username, status);
     }
 
     @Override

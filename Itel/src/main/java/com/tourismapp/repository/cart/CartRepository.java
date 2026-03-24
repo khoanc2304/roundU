@@ -1,6 +1,6 @@
-package com.tourismapp.dao.cart;
+package com.tourismapp.repository.cart;
 
-import com.tourismapp.dao.DBConnection;
+import com.tourismapp.repository.DBConnection;
 import com.tourismapp.model.Cart;
 import com.tourismapp.model.CartItem;
 import com.tourismapp.model.Product;
@@ -19,14 +19,13 @@ import com.tourismapp.service.product.IProductService;
  * @author Admin
  */
 @Repository
-public class CartDAO implements ICartDAO {
+public class CartRepository {
     
     private final DBConnection dbConnection = new DBConnection();
     
     @Autowired
     private IProductService productService;
     
-    @Override
     public boolean saveCart(int userId, Cart cart) {
         try (Connection connection = dbConnection.getConnection()) {
             // First clear existing cart items for this user
@@ -50,7 +49,6 @@ public class CartDAO implements ICartDAO {
         }
     }
     
-    @Override
     public Cart loadCart(int userId) {
         Cart cart = new Cart();
         String sql = "SELECT product_id, quantity FROM Cart WHERE user_id = ?";
@@ -79,7 +77,6 @@ public class CartDAO implements ICartDAO {
         }
     }
     
-    @Override
     public boolean clearCart(int userId) {
         String sql = "DELETE FROM Cart WHERE user_id = ?";
         
@@ -95,7 +92,7 @@ public class CartDAO implements ICartDAO {
         }
     }
     
-    @Override //lưu vào database nếu đã đăng nhập, chưa thì bắt buộc đăng nhập
+    //lưu vào database nếu đã đăng nhập, chưa thì bắt buộc đăng nhập
     //kiểm tra sp có trong giỏ hàng hay chưa, nếu chưa thì thêm mới, có rồi thì cộng dồn 
     public boolean addItemToCart(int userId, int productId, int quantity) {
         String checkSql = "SELECT quantity FROM Cart WHERE user_id = ? AND product_id = ?";
@@ -134,7 +131,6 @@ public class CartDAO implements ICartDAO {
         }
     }
     
-    @Override 
     // cập nhật số lượng sản phẩm trong giỏ hàng của người dùng
     public boolean updateCartItem(int userId, int productId, int quantity) {
         if (quantity <= 0) {
@@ -158,7 +154,6 @@ public class CartDAO implements ICartDAO {
         }
     }
     
-    @Override
     public boolean removeCartItem(int userId, int productId) {
         String sql = "DELETE FROM Cart WHERE user_id = ? AND product_id = ?";
         

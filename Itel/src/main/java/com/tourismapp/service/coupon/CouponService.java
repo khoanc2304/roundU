@@ -1,7 +1,7 @@
 package com.tourismapp.service.coupon;
 
-import com.tourismapp.dao.coupon.CouponDAO;
-import com.tourismapp.dao.coupon.ICouponDAO;
+import com.tourismapp.repository.coupon.CouponRepository;
+import com.tourismapp.repository.coupon.CouponRepository;
 import com.tourismapp.model.Coupon;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
@@ -13,36 +13,36 @@ import java.util.Optional;
  */
 public class CouponService implements ICouponService {
 
-    private final ICouponDAO couponDAO = new CouponDAO();
+    private final CouponRepository CouponRepository = new CouponRepository();
     
     @Override
     public List<Coupon> getAllCoupons() {
-        return couponDAO.getAllCoupons();
+        return CouponRepository.getAllCoupons();
     }
 
     @Override
     public List<Coupon> getActiveCoupons() {
-        return couponDAO.getActiveCoupons();
+        return CouponRepository.getActiveCoupons();
     }
 
     @Override
     public Optional<Coupon> findCouponByCode(String code) {
-        return couponDAO.findCouponByCode(code);
+        return CouponRepository.findCouponByCode(code);
     }
 
     @Override
     public boolean createCoupon(Coupon coupon) {
-        return couponDAO.createCoupon(coupon);
+        return CouponRepository.createCoupon(coupon);
     }
 
     @Override
     public boolean updateCoupon(Coupon coupon) {
-        return couponDAO.updateCoupon(coupon);
+        return CouponRepository.updateCoupon(coupon);
     }
 
     @Override
     public boolean deleteCoupon(int couponId) {
-        return couponDAO.deleteCoupon(couponId);
+        return CouponRepository.deleteCoupon(couponId);
     }
     
     @Override

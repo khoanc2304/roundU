@@ -1,4 +1,4 @@
-package com.tourismapp.dao.order;
+package com.tourismapp.repository.order;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -12,9 +12,9 @@ import java.util.Optional;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 
-import com.tourismapp.dao.DBConnection;
-import com.tourismapp.dao.coupon.CouponDAO;
-import com.tourismapp.dao.coupon.ICouponDAO;
+import com.tourismapp.repository.DBConnection;
+import com.tourismapp.repository.coupon.CouponRepository;
+import com.tourismapp.repository.coupon.CouponRepository;
 import com.tourismapp.model.OrderDetail;
 import com.tourismapp.model.OrderStat;
 import com.tourismapp.model.Orders;
@@ -32,12 +32,12 @@ import org.springframework.stereotype.Repository;
  * @author Admin
  */
 @Repository
-public class OrderDAO implements IOrderDAO {
+public class OrderRepository {
 
     private final DBConnection dbConnection = new DBConnection();
 
     // NAM
-    private static final Logger LOGGER = Logger.getLogger(OrderDAO.class.getName());
+    private static final Logger LOGGER = Logger.getLogger(OrderRepository.class.getName());
     private static final String GET_ORDERS_BY_MONTH = "SELECT YEAR(order_date) AS year, MONTH(order_date) AS month, COUNT(order_id) AS order_count "
             + "FROM Orders "
             + "WHERE order_date IS NOT NULL "
@@ -179,7 +179,6 @@ public class OrderDAO implements IOrderDAO {
 
     
     //////////////////////////////////////////// HIEU ///////////////////////////////
-    @Override
     public Orders createOrder(Orders order) {
         String sql = "INSERT INTO Orders (user_id, order_date, status, total_amount, shipping_address) VALUES (?, ?, ?, ?, ?)";
 
@@ -209,7 +208,6 @@ public class OrderDAO implements IOrderDAO {
         }
     }
 
-    @Override
     public Optional<Orders> findOrderById(int orderId) {
         String sql = "SELECT o.order_id, o.user_id, o.order_date, o.status, o.total_amount, o.shipping_address, "
                 + "u.username, u.fullName, u.email "
@@ -246,14 +244,13 @@ public class OrderDAO implements IOrderDAO {
         }
     }
 
-    @Override
     public List<Orders> findOrdersByUserId(int userId) {
         List<Orders> orders = new ArrayList<>();
         String sql = "SELECT o.order_id, o.user_id, o.order_date, o.status, o.total_amount, o.shipping_address, "
                 + "u.username, u.fullName, u.email "
                 + "FROM Orders o JOIN Users u ON o.user_id = u.user_id WHERE o.user_id = ? ORDER BY o.order_date DESC";
 
-        System.out.println("OrderDAO.findOrdersByUserId called with userId: " + userId);
+        System.out.println("OrderRepository.findOrdersByUserId called with userId: " + userId);
         System.out.println("SQL Query: " + sql);
 
         try (Connection connection = dbConnection.getConnection(); PreparedStatement statement = connection.prepareStatement(sql)) {
@@ -281,7 +278,7 @@ public class OrderDAO implements IOrderDAO {
                 System.out.println("Found order: ID=" + order.getOrderId() + ", Status=" + order.getStatus() + ", Amount=" + order.getTotalAmount());
             }
 
-            System.out.println("OrderDAO.findOrdersByUserId returning " + orders.size() + " orders");
+            System.out.println("OrderRepository.findOrdersByUserId returning " + orders.size() + " orders");
 
         } catch (SQLException e) {
             System.err.println("SQL Error in findOrdersByUserId: " + e.getMessage());
@@ -292,7 +289,6 @@ public class OrderDAO implements IOrderDAO {
         return orders;
     }
 
-    @Override
     public List<Orders> findAllOrders() {
         List<Orders> orders = new ArrayList<>();
         String sql = "SELECT o.order_id, o.user_id, o.order_date, o.status, o.total_amount, o.shipping_address, "
@@ -329,7 +325,6 @@ public class OrderDAO implements IOrderDAO {
         return orders;
     }
 
-    @Override
     public boolean updateOrderStatus(int orderId, String status) {
         String sqlUpdateOrder = "UPDATE Orders SET status = ? WHERE order_id = ?";
         String sqlGetOrderDetails = "SELECT product_id, quantity FROM Order_Detail WHERE order_id = ?";
@@ -402,7 +397,6 @@ public class OrderDAO implements IOrderDAO {
         }
     }
 
-    @Override
     public boolean deleteOrder(int orderId) {
         String sql = "DELETE FROM Orders WHERE order_id = ?";
 
@@ -419,7 +413,6 @@ public class OrderDAO implements IOrderDAO {
         }
     }
 
-    @Override
     public boolean addOrderDetail(OrderDetail orderDetail) {
         String sql = "INSERT INTO Order_Detail (order_id, product_id, quantity, unit_price) VALUES (?, ?, ?, ?)";
 
@@ -439,7 +432,6 @@ public class OrderDAO implements IOrderDAO {
         }
     }
 
-    @Override
     public List<OrderDetail> getOrderDetailsByOrderId(int orderId) {
         List<OrderDetail> orderDetails = new ArrayList<>();
         String sql = "SELECT od.order_detail_id, od.order_id, od.product_id, od.quantity, od.unit_price, "
@@ -478,7 +470,6 @@ public class OrderDAO implements IOrderDAO {
         return orderDetails;
     }
 
-    @Override
     public boolean updateOrderDetail(OrderDetail orderDetail) {
         String sql = "UPDATE Order_Detail SET quantity = ?, unit_price = ? WHERE order_detail_id = ?";
 
@@ -497,7 +488,6 @@ public class OrderDAO implements IOrderDAO {
         }
     }
 
-    @Override
     public boolean deleteOrderDetail(int orderDetailId) {
         String sql = "DELETE FROM Order_Detail WHERE order_detail_id = ?";
 
@@ -514,7 +504,6 @@ public class OrderDAO implements IOrderDAO {
         }
     }
     
-    @Override
     public boolean updateOrderHistory(Orders orders,String status) {
         String sql = "UPDATE Orders SET status = ?";
 
@@ -530,7 +519,6 @@ public class OrderDAO implements IOrderDAO {
         }
     }
     
-    @Override
     public List<Orders> findOrdersByStatus(String status) {
         List<Orders> orders = new ArrayList<>();
         String sql = "SELECT o.order_id, o.user_id, o.order_date, o.status, o.total_amount, o.shipping_address, "
@@ -562,7 +550,7 @@ public class OrderDAO implements IOrderDAO {
     }
     
     public static void main(String[] args) {
-        OrderDAO od = new OrderDAO();
+        OrderRepository od = new OrderRepository();
         
         // Test getAllOrders
         System.out.println("=== Testing getAllOrders ===");
@@ -589,7 +577,6 @@ public class OrderDAO implements IOrderDAO {
         }
     }
     
-    @Override
     public boolean updateOrderTotalAmount(int orderId, BigDecimal discountedTotal) {
         String sql = "UPDATE Orders SET total_amount = ? WHERE order_id = ?";
         
@@ -609,7 +596,6 @@ public class OrderDAO implements IOrderDAO {
         }
     }
     
-    @Override
     public BigDecimal calculateDiscountedTotal(BigDecimal originalAmount, int membershipLevelId, String couponCode) {
         BigDecimal finalAmount = originalAmount;
         
@@ -646,8 +632,8 @@ public class OrderDAO implements IOrderDAO {
         // Apply coupon discount if provided
         if (couponCode != null && !couponCode.trim().isEmpty()) {
             try {
-                ICouponDAO couponDAO = new CouponDAO();
-                Optional<Coupon> couponOpt = couponDAO.findCouponByCode(couponCode);
+                CouponRepository CouponRepository = new CouponRepository();
+                Optional<Coupon> couponOpt = CouponRepository.findCouponByCode(couponCode);
                 
                 if (couponOpt.isPresent()) {
                     Coupon coupon = couponOpt.get();
@@ -675,7 +661,6 @@ public class OrderDAO implements IOrderDAO {
     }
     
 
-    @Override
     public boolean isOrderAlreadyProcessed(int orderId) {
         String sql = "SELECT COUNT(*) FROM Order_Detail od JOIN Orders o ON od.order_id = o.order_id WHERE o.order_id = ? AND o.status NOT IN ('Pending', 'Canceled')";
         try (Connection conn = dbConnection.getConnection();

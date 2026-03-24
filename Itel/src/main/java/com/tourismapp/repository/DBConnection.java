@@ -1,4 +1,4 @@
-package com.tourismapp.dao;
+package com.tourismapp.repository;
 
 import com.tourismapp.utils.ErrDialog;
 import java.sql.Connection;

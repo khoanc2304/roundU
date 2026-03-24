@@ -1,4 +1,4 @@
-package com.tourismapp.dao.brand;
+package com.tourismapp.repository.brand;
 
 import com.tourismapp.common.Status;
 import com.tourismapp.model.Brand;
@@ -16,12 +16,12 @@ import java.util.Optional;
 import java.util.logging.Logger;
 
 @Repository
-public class BrandDAO implements IBrandDAO {
+public class BrandRepository {
 
     @Autowired
     private JdbcTemplate jdbcTemplate;
 
-    private static final Logger LOGGER = Logger.getLogger(BrandDAO.class.getName());
+    private static final Logger LOGGER = Logger.getLogger(BrandRepository.class.getName());
 
     private static final String GET_ALL_BRANDS = "SELECT * FROM Brand;";
     private static final String FIND_BRAND_BY_ID = "SELECT * FROM Brand WHERE brand_id = ?";
@@ -36,7 +36,6 @@ public class BrandDAO implements IBrandDAO {
 
     private final RowMapper<Brand> brandRowMapper = (rs, rowNum) -> mapBrand(rs);
 
-    @Override
     public Brand mapBrand(ResultSet rs) throws SQLException {
         return new Brand(
                 rs.getInt("brand_id"),
@@ -58,23 +57,19 @@ public class BrandDAO implements IBrandDAO {
         throw new IllegalArgumentException("Invalid status value in database: " + status);
     }
 
-    @Override
     public List<Brand> getAllBrands() {
         return jdbcTemplate.query(GET_ALL_BRANDS, brandRowMapper);
     }
 
-    @Override
     public Optional<Brand> findBrandById(int brandId) {
         List<Brand> brands = jdbcTemplate.query(FIND_BRAND_BY_ID, brandRowMapper, brandId);
         return brands.isEmpty() ? Optional.empty() : Optional.of(brands.get(0));
     }
 
-    @Override
     public List<Brand> getActiveBrands() {
         return jdbcTemplate.query(GET_ACTIVE_BRANDS, brandRowMapper);
     }
 
-    @Override
     public void createBrand(Brand brand) {
         validateBrand(brand);
         jdbcTemplate.update(INSERT_BRAND, 
@@ -86,12 +81,10 @@ public class BrandDAO implements IBrandDAO {
         LOGGER.info("Created brand: " + brand.getName());
     }
 
-    @Override
     public Brand getBrandById(int brandId) {
         return findBrandById(brandId).orElse(null);
     }
 
-    @Override
     public List<Brand> findBrandsByName(String name) {
         if (name == null || name.trim().isEmpty() || name.trim().length() < 2 || name.trim().length() > 50) {
             throw new IllegalArgumentException("Invalid search name");
@@ -99,7 +92,6 @@ public class BrandDAO implements IBrandDAO {
         return jdbcTemplate.query(SELECT_BRANDS_BY_NAME, brandRowMapper, "%" + name.trim() + "%");
     }
 
-    @Override
     public void updateBrand(Brand brand) {
         validateBrand(brand);
         
@@ -124,7 +116,6 @@ public class BrandDAO implements IBrandDAO {
         LOGGER.info("Updated brand: " + brand.getName());
     }
 
-    @Override
     public void deleteBrand(int brandId) {
         if (brandId <= 0) throw new IllegalArgumentException("Invalid brand ID");
         List<Product> products = getProductsByBrandId(brandId);
@@ -138,7 +129,6 @@ public class BrandDAO implements IBrandDAO {
         LOGGER.info("Deleted brand with ID: " + brandId);
     }
 
-    @Override
     public List<Brand> findBrandsByCountry(String country) {
         if (country == null || country.trim().isEmpty() || country.trim().length() > 50) {
             throw new IllegalArgumentException("Invalid country search");
@@ -146,7 +136,6 @@ public class BrandDAO implements IBrandDAO {
         return jdbcTemplate.query(SELECT_BRANDS_BY_COUNTRY, brandRowMapper, "%" + country.trim() + "%");
     }
 
-    @Override
     public List<Product> getProductsByBrandId(int brandId) {
         if (brandId <= 0) throw new IllegalArgumentException("Invalid brand ID");
         return jdbcTemplate.query(SELECT_PRODUCTS_BY_BRAND_ID, (rs, rowNum) -> new Product(

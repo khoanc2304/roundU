@@ -5,7 +5,7 @@ import com.tourismapp.common.Status;
 import com.tourismapp.common.UserRole;
 import com.tourismapp.config.ProjectPaths;
 import com.tourismapp.controller.mainController.MainControllerServlet;
-import com.tourismapp.dao.DBConnection;
+import com.tourismapp.repository.DBConnection;
 import com.tourismapp.model.Users;
 import com.tourismapp.service.user.IUserService;
 import jakarta.servlet.http.HttpServletRequest;

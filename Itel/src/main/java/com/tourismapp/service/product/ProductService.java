@@ -1,6 +1,6 @@
 package com.tourismapp.service.product;
 
-import com.tourismapp.dao.product.IProductDAO;
+import com.tourismapp.repository.product.ProductRepository;
 import com.tourismapp.model.Product;
 import com.tourismapp.model.ProductImage;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,118 +16,118 @@ import java.util.Optional;
 public class ProductService implements IProductService {
 
     @Autowired
-    private IProductDAO productDAO;
+    private ProductRepository ProductRepository;
 
     //user view
     @Override
     public List<Product> getActiveProducts() {
-        return productDAO.getActiveProducts();
+        return ProductRepository.getActiveProducts();
     }
 
     //dashboard
     @Override
     public List<Product> getAllProducts() {
-        return productDAO.getAllProducts();
+        return ProductRepository.getAllProducts();
     }
 
     @Override
     public Optional<Product> findProductById(int id) {
-        return productDAO.findProductById(id);
+        return ProductRepository.findProductById(id);
     }
 
     @Override
     public List<Product> searchProductsByName(String q) {
-        return productDAO.searchProductsByName(q);
+        return ProductRepository.searchProductsByName(q);
     }
 
     @Override
     public List<Product> searchActiveProductsByName(String q) {
-        return productDAO.searchActiveProductsByName(q);
+        return ProductRepository.searchActiveProductsByName(q);
     }
 
     @Override
     public int getNextProductId() {
-        return productDAO.getNextProductId();
+        return ProductRepository.getNextProductId();
     }
 
     @Override
     @Transactional
     public boolean createProduct(Product product) {
-        return productDAO.createProduct(product);
+        return ProductRepository.createProduct(product);
     }
 
     @Override
     @Transactional
     public boolean editProduct(Product product) {
-        return productDAO.editProduct(product);
+        return ProductRepository.editProduct(product);
     }
 
     @Override
     @Transactional
     public boolean deleteProduct(int id) {
-        return productDAO.deleteProduct(id);
+        return ProductRepository.deleteProduct(id);
     }
 
     @Override
     public Optional<List<ProductImage>> getProductImagesById(int productId) {
-        return productDAO.getProductImagesById(productId);
+        return ProductRepository.getProductImagesById(productId);
     }
 
     @Override
     public Map<String, String> getInforProductById(int productId) {
-        return productDAO.getInforProductById(productId);
+        return ProductRepository.getInforProductById(productId);
     }
 
     @Override
     public List<Product> getProductsByCategory(int categoryId) {
-        return productDAO.getProductsByCategory(categoryId);
+        return ProductRepository.getProductsByCategory(categoryId);
     }
 
     @Override
     public Integer mapCategoryId(String name) {
-        return productDAO.mapCategoryId(name);
+        return ProductRepository.mapCategoryId(name);
     }
 
     @Override
     public Integer mapBrandId(String name) {
-        return productDAO.mapBrandId(name);
+        return ProductRepository.mapBrandId(name);
     }
 
     @Override
     public List<String> getProductDetailByIdTop5(int productId) {
-        return productDAO.getProductDetailByIdTop5(productId);
+        return ProductRepository.getProductDetailByIdTop5(productId);
     }
 
     @Override
     public List<Product> filterProductsByCriteria(int categoryId, String brands, String cpus, int minPrice, int maxPrice) {
-        return productDAO.filterProductsByCriteria(categoryId, brands, cpus, minPrice, maxPrice);
+        return ProductRepository.filterProductsByCriteria(categoryId, brands, cpus, minPrice, maxPrice);
     }
 
     @Override
     public List<Product> getProductsByCategoryPaginated(int categoryId, int offset, int size) {
-        return productDAO.getProductsByCategoryPaginated(categoryId, offset, size);
+        return ProductRepository.getProductsByCategoryPaginated(categoryId, offset, size);
     }
     
      @Override
      @Transactional
     public boolean updateProductStock(int productId, int newStock) {
-        return productDAO.updateProductStock(productId, newStock);
+        return ProductRepository.updateProductStock(productId, newStock);
     }
 
     //HUY
     @Override
     public List<Product> getSimilarProductsByCategory(int categoryId, int excludeProductId, int limit) {
-        return productDAO.getSimilarProductsByCategory(categoryId, excludeProductId, limit);
+        return ProductRepository.getSimilarProductsByCategory(categoryId, excludeProductId, limit);
     }
 
     @Override
     public List<Product> getSimilarProductsByPrice(BigDecimal productPrice, int excludeProductId, int limit) {
-        return productDAO.getSimilarProductsByPrice(productPrice, excludeProductId, limit);
+        return ProductRepository.getSimilarProductsByPrice(productPrice, excludeProductId, limit);
     }
 
     @Override
     public List<Product> getSimilarProductsByBrand(int brandId, BigDecimal productPrice, int excludeProductId, int limit) {
-        return productDAO.getSimilarProductsByBrand(brandId, productPrice, excludeProductId, limit);
+        return ProductRepository.getSimilarProductsByBrand(brandId, productPrice, excludeProductId, limit);
     }
     
     @Override

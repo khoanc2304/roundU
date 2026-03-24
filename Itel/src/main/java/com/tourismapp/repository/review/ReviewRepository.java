@@ -1,12 +1,12 @@
-package com.tourismapp.dao.review;
+package com.tourismapp.repository.review;
 
 import com.sun.tools.xjc.reader.xmlschema.bindinfo.BIConversion.User;
 import com.tourismapp.common.Status;
-import com.tourismapp.dao.DBConnection;
-import com.tourismapp.dao.product.IProductDAO;
-import com.tourismapp.dao.product.ProductDAO;
-import com.tourismapp.dao.user.IUserDAO;
-import com.tourismapp.dao.user.UserDAO;
+import com.tourismapp.repository.DBConnection;
+import com.tourismapp.repository.product.ProductRepository;
+import com.tourismapp.repository.product.ProductRepository;
+import com.tourismapp.repository.user.UserRepository;
+import com.tourismapp.repository.user.UserRepository;
 import com.tourismapp.model.Product;
 import com.tourismapp.model.Users;
 import com.tourismapp.model.Review;
@@ -19,10 +19,10 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-public class ReviewDAO implements IReviewDAO {
+public class ReviewRepository {
     
-    private final IProductDAO productDAO = new ProductDAO();
-    private final IUserDAO userDAO = new UserDAO(); 
+    private final ProductRepository ProductRepository = new ProductRepository();
+    private final UserRepository UserRepository = new UserRepository(); 
     
     private static final String GET_ALL_ACTIVE_REVIEWS = "SELECT * FROM Review WHERE status = 'ACTIVE'";
     private static final String GET_REVIEW_BY_ID = "SELECT * FROM Review WHERE review_id = ?";
@@ -70,7 +70,6 @@ public class ReviewDAO implements IReviewDAO {
         return false;
     }
     
-    @Override
     public int getTotalCommentsByProductId(int productId) {
         try (Connection conn = DBConnection.getConnection(); PreparedStatement ps = conn.prepareStatement(COUNT_COMMENTS)) {
             ps.setInt(1, productId);
@@ -85,7 +84,6 @@ public class ReviewDAO implements IReviewDAO {
         return 0;
     }
 
-    @Override
     public StatisticReview getRatingCountByProductId(int productId) {
         try (Connection con = DBConnection.getConnection(); PreparedStatement ps = con.prepareStatement(STAT_REVIEW)) {
             ps.setInt(1, productId);
@@ -108,7 +106,6 @@ public class ReviewDAO implements IReviewDAO {
         return null;
     }
 
-    @Override
     public List<Review> getAllActiveReviews() {
         List<Review> list = new ArrayList<>();
         try (Connection conn = DBConnection.getConnection(); PreparedStatement ps = conn.prepareStatement(GET_ALL_ACTIVE_REVIEWS); ResultSet rs = ps.executeQuery()) {
@@ -121,7 +118,6 @@ public class ReviewDAO implements IReviewDAO {
         return list;
     }
 
-    @Override
     public Review getReviewById(int reviewId) {
         try (Connection conn = DBConnection.getConnection(); PreparedStatement ps = conn.prepareStatement(GET_REVIEW_BY_ID)) {
             ps.setInt(1, reviewId);
@@ -136,7 +132,6 @@ public class ReviewDAO implements IReviewDAO {
         return null;
     }
 
-    @Override
     public List<Review> getReviewsByProductId(int productId) {
         List<Review> list = new ArrayList<>();
         try (Connection conn = DBConnection.getConnection(); PreparedStatement ps = conn.prepareStatement(GET_REVIEW_WITH_USER)) {
@@ -152,7 +147,6 @@ public class ReviewDAO implements IReviewDAO {
         return list;
     }
 
-    @Override
     public boolean addReview(Review review) {
         try (Connection conn = DBConnection.getConnection(); PreparedStatement ps = conn.prepareStatement(ADD_REVIEW)) {
             ps.setInt(1, review.getProduct().getProductId());
@@ -171,7 +165,6 @@ public class ReviewDAO implements IReviewDAO {
         return false;
     }
 
-    @Override
     public boolean updateReview(Review review) {
         try (Connection conn = DBConnection.getConnection(); PreparedStatement ps = conn.prepareStatement(UPDATE_REVIEW)) {
             ps.setInt(1, review.getRating());
@@ -184,7 +177,6 @@ public class ReviewDAO implements IReviewDAO {
         return false;
     }
 
-    @Override
     public boolean deleteReview(int reviewId) {
         try (Connection conn = DBConnection.getConnection(); PreparedStatement ps = conn.prepareStatement(DELETE_REVIEW)) {
             ps.setInt(1, reviewId);
@@ -207,9 +199,9 @@ public class ReviewDAO implements IReviewDAO {
         LocalDateTime createdAt = rs.getTimestamp("created_at").toLocalDateTime();
         LocalDateTime updatedAt = rs.getTimestamp("updated_at").toLocalDateTime();
 
-        Optional<Product> product = productDAO.findProductById(productId);
+        Optional<Product> product = ProductRepository.findProductById(productId);
         
-        Users user = userDAO.getUserById(userId);
+        Users user = UserRepository.getUserById(userId);
 
         return new Review(reviewId, product.get(), user, rating, comment, parent_review_id, status, createdAt, updatedAt);
     }
@@ -217,8 +209,8 @@ public class ReviewDAO implements IReviewDAO {
     public static void main(String[] args) {
         int productId = 1; // ID sản phẩm muốn test
 
-        ReviewDAO reviewDAO = new ReviewDAO();
-        List<Review> reviews = reviewDAO.getReviewsByProductId(productId);
+        ReviewRepository ReviewRepository = new ReviewRepository();
+        List<Review> reviews = ReviewRepository.getReviewsByProductId(productId);
 
         if (reviews.isEmpty()) {
             System.out.println("Không có đánh giá nào cho sản phẩm có ID = " + productId);
@@ -233,12 +225,10 @@ public class ReviewDAO implements IReviewDAO {
         }
     }
 
-    @Override
     public List<StatisticReview> getStatisticReview() {
         throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
     }
 
-    @Override
     public List<Review> getReviewsByProductIdAndRating(int productId, int rating) {
         List<Review> list = new ArrayList<>();
         String sql = "SELECT r.*, u.username, u.fullName, u.email FROM Review r " +

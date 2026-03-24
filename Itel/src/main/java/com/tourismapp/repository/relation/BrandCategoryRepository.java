@@ -2,9 +2,9 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
-package com.tourismapp.dao.relation;
+package com.tourismapp.repository.relation;
 
-import com.tourismapp.dao.DBConnection;
+import com.tourismapp.repository.DBConnection;
 import com.tourismapp.dto.BrandCategoryDTO;
 import com.tourismapp.utils.ErrDialog;
 import java.sql.Connection;
@@ -18,7 +18,7 @@ import java.util.List;
  *
  * @author Admin
  */
-public class BrandCategoryDAO implements IBrandCategoryDAO {
+public class BrandCategoryRepository {
 
     private static final String GET_ALL_BRAND_CATEGORY_RELATIONS = """
             SELECT 
@@ -40,7 +40,6 @@ public class BrandCategoryDAO implements IBrandCategoryDAO {
             WHERE b.status = 'active' AND c.status = 'active' AND c.category_id = ?
         """;
 
-    @Override
     public BrandCategoryDTO mapBrandCategoryDTO(ResultSet rs) throws SQLException {
         return new BrandCategoryDTO(
                 rs.getInt("brand_id"),
@@ -53,7 +52,6 @@ public class BrandCategoryDAO implements IBrandCategoryDAO {
         );
     }
 
-    @Override
     public List<BrandCategoryDTO> getAllBrandCategoryRelations() {
         List<BrandCategoryDTO> brandCategoryDTOs = new ArrayList<>();
         try (Connection conn = DBConnection.getConnection(); PreparedStatement ps = conn.prepareStatement(GET_ALL_BRAND_CATEGORY_RELATIONS); ResultSet rs = ps.executeQuery()) {
@@ -68,7 +66,6 @@ public class BrandCategoryDAO implements IBrandCategoryDAO {
         return brandCategoryDTOs;
     }
 
-    @Override
     public List<BrandCategoryDTO> getBrandsByCategoryId(int categoryId) {
         List<BrandCategoryDTO> brandCategoryDTOs = new ArrayList<>();
 

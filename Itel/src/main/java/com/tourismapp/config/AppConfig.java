@@ -14,7 +14,7 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 import org.springframework.web.servlet.view.InternalResourceViewResolver;
 
 import javax.sql.DataSource;
-import com.tourismapp.dao.DBConnection;
+import com.tourismapp.repository.DBConnection;
 
 @Configuration
 @EnableWebMvc

@@ -1,4 +1,4 @@
-package com.tourismapp.dao.category;
+package com.tourismapp.repository.category;
 
 import com.tourismapp.common.Status;
 import com.tourismapp.model.Category;
@@ -13,7 +13,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Repository
-public class CategoryDAO implements ICategoryDAO {
+public class CategoryRepository {
 
     @Autowired
     private JdbcTemplate jdbcTemplate;
@@ -29,7 +29,6 @@ public class CategoryDAO implements ICategoryDAO {
 
     private final RowMapper<Category> categoryRowMapper = (rs, rowNum) -> mapCategory(rs);
 
-    @Override
     public Category mapCategory(ResultSet rs) throws SQLException {
         return new Category(
                 rs.getInt("category_id"),
@@ -40,18 +39,15 @@ public class CategoryDAO implements ICategoryDAO {
         );
     }
 
-    @Override
     public List<Category> getAllCategories() {
         return jdbcTemplate.query(GET_ALL_CATEGORIES, categoryRowMapper);
     }
 
-    @Override
     public Optional<Category> findCategoryById(int categoryId) {
         List<Category> categories = jdbcTemplate.query(FIND_CATEGORY_BY_ID, categoryRowMapper, categoryId);
         return categories.isEmpty() ? Optional.empty() : Optional.of(categories.get(0));
     }
 
-    @Override
     public boolean createCategory(Category category) {
         int rows = jdbcTemplate.update(CREATE_CATEGORY, 
                 category.getName(), 
@@ -60,7 +56,6 @@ public class CategoryDAO implements ICategoryDAO {
         return rows > 0;
     }
 
-    @Override
     public boolean editCategory(Category category) {
         int rowsCategory = jdbcTemplate.update(UPDATE_CATEGORY, 
                 category.getName(), 
@@ -76,14 +71,12 @@ public class CategoryDAO implements ICategoryDAO {
         return rowsCategory > 0;
     }
 
-    @Override
     public boolean deleteCategory(int categoryId) {
         int rowsCategory = jdbcTemplate.update(UPDATE_STATUS_CATEGORY_INACTIVE, categoryId);
         jdbcTemplate.update(UPDATE_STATUS_PRODUCT_INACTIVE, categoryId);
         return rowsCategory > 0;
     }
 
-    @Override
     public List<Category> searchCategoriesByName(String name) {
         return jdbcTemplate.query(SEARCH_CATEGORIES_BY_NAME, categoryRowMapper, "%" + name + "%");
     }
