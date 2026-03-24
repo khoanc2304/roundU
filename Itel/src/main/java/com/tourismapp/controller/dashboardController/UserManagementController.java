@@ -6,13 +6,14 @@ import com.tourismapp.common.UserRole;
 import com.tourismapp.config.ProjectPaths;
 import com.tourismapp.controller.mainController.MainControllerServlet;
 import com.tourismapp.model.Users;
-import com.tourismapp.service.user.UserService;
+import com.tourismapp.service.user.IUserService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import java.time.LocalDateTime;
@@ -24,7 +25,8 @@ import java.util.Optional;
 @RequestMapping(MainControllerServlet.USER_MANAGEMENT_SERVLET)
 public class UserManagementController {
 
-    private final UserService userService = new UserService();
+    @Autowired
+    private IUserService userService;
 
     @GetMapping
     public String handleGet(@RequestParam(value = "action", required = false, defaultValue = "listUser") String action,

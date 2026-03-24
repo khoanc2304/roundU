@@ -20,10 +20,13 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+import org.springframework.stereotype.Repository;
+
 /**
  *
  * @author Admin
  */
+@Repository
 public class UserDAO implements IUserDAO {
 
     private static final String GET_ALL_USERS = "SELECT * FROM Users;";

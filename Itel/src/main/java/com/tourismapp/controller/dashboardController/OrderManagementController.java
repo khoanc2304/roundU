@@ -4,12 +4,12 @@ import com.tourismapp.config.ProjectPaths;
 import com.tourismapp.controller.mainController.MainControllerServlet;
 import com.tourismapp.model.Orders;
 import com.tourismapp.service.order.IOrderService;
-import com.tourismapp.service.order.OrderService;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.List;
@@ -18,7 +18,8 @@ import java.util.List;
 @RequestMapping(MainControllerServlet.ORDER_MANAGEMENT_SERVLET)
 public class OrderManagementController {
 
-    private final IOrderService orderService = new OrderService();
+    @Autowired
+    private IOrderService orderService;
 
     @GetMapping
     public String showOrderManagement(@RequestParam(value = "action", required = false) String action,

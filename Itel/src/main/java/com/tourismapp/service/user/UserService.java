@@ -15,10 +15,18 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.time.LocalDateTime;
 import java.util.*;
+import org.springframework.stereotype.Service;
+import org.springframework.beans.factory.annotation.Autowired;
 
+/**
+ *
+ * @author Admin
+ */
+@Service
 public class UserService implements IUserService {
 
-    private final IUserDAO userDAO = new UserDAO();
+    @Autowired
+    private IUserDAO userDAO;
 
     @Override
     public List<Users> getAllUsers() {

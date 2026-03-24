@@ -1,27 +1,22 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package com.tourismapp.service.product;
 
 import com.tourismapp.dao.product.IProductDAO;
-import com.tourismapp.dao.product.ProductDAO;
 import com.tourismapp.model.Product;
 import com.tourismapp.model.ProductImage;
-import com.tourismapp.utils.ErrDialog;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
 import java.math.BigDecimal;
-import java.sql.SQLException;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
-/**
- *
- * @author Admin
- */
+@Service
 public class ProductService implements IProductService {
 
-    private final IProductDAO productDAO = new ProductDAO();
+    @Autowired
+    private IProductDAO productDAO;
 
     //user view
     @Override
@@ -56,16 +51,19 @@ public class ProductService implements IProductService {
     }
 
     @Override
+    @Transactional
     public boolean createProduct(Product product) {
         return productDAO.createProduct(product);
     }
 
     @Override
+    @Transactional
     public boolean editProduct(Product product) {
         return productDAO.editProduct(product);
     }
 
     @Override
+    @Transactional
     public boolean deleteProduct(int id) {
         return productDAO.deleteProduct(id);
     }
@@ -111,6 +109,7 @@ public class ProductService implements IProductService {
     }
     
      @Override
+     @Transactional
     public boolean updateProductStock(int productId, int newStock) {
         return productDAO.updateProductStock(productId, newStock);
     }

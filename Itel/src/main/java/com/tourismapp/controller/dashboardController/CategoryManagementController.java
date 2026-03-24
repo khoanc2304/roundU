@@ -16,11 +16,14 @@ import org.springframework.web.bind.annotation.RequestParam;
 import java.util.List;
 import java.util.Optional;
 
+import org.springframework.beans.factory.annotation.Autowired;
+
 @Controller
 @RequestMapping(MainControllerServlet.CATEGORY_MANAGEMENT_SERVLET)
 public class CategoryManagementController {
 
-    private final ICategoryService categoryService = new CategoryService();
+    @Autowired
+    private ICategoryService categoryService;
 
     @GetMapping
     public String handleGet(@RequestParam(value = "action", required = false, defaultValue = "") String action,

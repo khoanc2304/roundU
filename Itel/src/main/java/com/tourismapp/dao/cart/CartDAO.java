@@ -10,14 +10,21 @@ import com.tourismapp.utils.ErrDialog;
 import java.sql.*;
 import java.util.Optional;
 
+import org.springframework.stereotype.Repository;
+import org.springframework.beans.factory.annotation.Autowired;
+import com.tourismapp.service.product.IProductService;
+
 /**
  * Cart DAO Implementation
  * @author Admin
  */
+@Repository
 public class CartDAO implements ICartDAO {
     
     private final DBConnection dbConnection = new DBConnection();
-    private final ProductService productService = new ProductService();
+    
+    @Autowired
+    private IProductService productService;
     
     @Override
     public boolean saveCart(int userId, Cart cart) {

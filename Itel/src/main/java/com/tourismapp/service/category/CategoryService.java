@@ -1,24 +1,20 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package com.tourismapp.service.category;
 
-import com.tourismapp.dao.category.CategoryDAO;
 import com.tourismapp.dao.category.ICategoryDAO;
 import com.tourismapp.model.Category;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
 import java.util.List;
 import java.util.Optional;
 
-/**
- *
- * @author Admin
- */
+@Service
 public class CategoryService implements ICategoryService {
 
-    private final ICategoryDAO categoryDAO = new CategoryDAO();
+    @Autowired
+    private ICategoryDAO categoryDAO;
     
-    // KHOA
     @Override
     public List<Category> getAllCategories() {
         return categoryDAO.getAllCategories();
@@ -29,24 +25,25 @@ public class CategoryService implements ICategoryService {
         return categoryDAO.findCategoryById(id);
     }
     
-    
-    // VINH
     @Override
     public List<Category> searchCategoriesByName(String q) {
         return categoryDAO.searchCategoriesByName(q);
     }
 
     @Override
+    @Transactional
     public void createCategory(Category category) {
         categoryDAO.createCategory(category);
     }
 
     @Override
+    @Transactional
     public boolean editCategory(Category category) {
         return categoryDAO.editCategory(category);
     }
 
     @Override
+    @Transactional
     public boolean deleteCategory(int categoryId) {
         return categoryDAO.deleteCategory(categoryId);
     }

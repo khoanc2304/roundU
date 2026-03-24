@@ -8,13 +8,13 @@ import com.tourismapp.controller.mainController.MainControllerServlet;
 import com.tourismapp.dao.DBConnection;
 import com.tourismapp.model.Users;
 import com.tourismapp.service.user.IUserService;
-import com.tourismapp.service.user.UserService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import java.io.IOException;
@@ -33,7 +33,8 @@ import com.tourismapp.utils.ErrDialog;
 @Controller
 public class AuthController {
 
-    private final IUserService userService = new UserService();
+    @Autowired
+    private IUserService userService;
 
     @GetMapping(MainControllerServlet.LOGINPAGE_SERVLET)
     public String showLoginPage() {

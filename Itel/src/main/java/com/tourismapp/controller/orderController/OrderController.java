@@ -6,16 +6,17 @@ import com.tourismapp.model.Cart;
 import com.tourismapp.model.Orders;
 import com.tourismapp.model.Product;
 import com.tourismapp.model.Users;
-import com.tourismapp.service.order.OrderService;
-import com.tourismapp.service.product.ProductService;
+import org.springframework.beans.factory.annotation.Autowired;
+import com.tourismapp.service.order.IOrderService;
+import com.tourismapp.service.product.IProductService;
 import com.tourismapp.service.user.IUserService;
-import com.tourismapp.service.user.UserService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
@@ -28,9 +29,14 @@ import java.util.stream.Collectors;
 @Controller
 public class OrderController {
 
-    private final UserService userService = new UserService();
-    private final ProductService productService = new ProductService();
-    private final OrderService orderService = new OrderService();
+    @Autowired
+    private IUserService userService;
+
+    @Autowired
+    private IOrderService orderService;
+    
+    @Autowired
+    private IProductService productService;
 
     // CHECKOUT PAGE GET
     @GetMapping(MainControllerServlet.CHECKOUTPAGE_SERVLET)
@@ -40,8 +46,7 @@ public class OrderController {
             return "redirect:" + ProjectPaths.HREF_TO_LOGINPAGE.substring(ProjectPaths.PREFIX_WEB_PATH.length());
         }
 
-        IUserService localUserService = new UserService();
-        Users updatedUser = localUserService.getUserById(user.getUserId());
+        Users updatedUser = userService.getUserById(user.getUserId());
         if (updatedUser != null) {
             session.setAttribute("loggedUser", updatedUser);
             user = updatedUser;

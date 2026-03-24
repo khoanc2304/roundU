@@ -24,11 +24,14 @@ import com.tourismapp.model.Coupon;
 import com.tourismapp.utils.ErrDialog;
 import java.util.logging.Logger;
 
+import org.springframework.stereotype.Repository;
+
 /**
  * Order DAO Implementation
  *
  * @author Admin
  */
+@Repository
 public class OrderDAO implements IOrderDAO {
 
     private final DBConnection dbConnection = new DBConnection();

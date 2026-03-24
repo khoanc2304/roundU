@@ -9,13 +9,22 @@ import com.tourismapp.service.product.ProductService;
 import com.tourismapp.utils.ErrDialog;
 import java.util.Optional;
 
+import org.springframework.stereotype.Service;
+import org.springframework.beans.factory.annotation.Autowired;
+import com.tourismapp.service.product.IProductService;
+
 /**
  * Cart Service Implementation
  * @author Admin
  */
+@Service
 public class CartService implements ICartService {
     
-    private final ICartDAO cartDAO = new CartDAO();
+    @Autowired
+    private ICartDAO cartDAO;
+
+    @Autowired
+    private IProductService productService;
     
     @Override
     public boolean saveUserCart(int userId, Cart cart) {
@@ -72,7 +81,7 @@ public class CartService implements ICartService {
 public boolean updateUserCartItem(int userId, int productId, int quantity) {
     try {
         // Lấy sản phẩm để kiểm tra stock
-        Optional<Product> productOpt = new ProductService().findProductById(productId); // Giả sử bạn inject ProductService
+        Optional<Product> productOpt = productService.findProductById(productId);
         if (productOpt.isPresent()) {
             Product product = productOpt.get();
             if (quantity > product.getStockQuantity()) {

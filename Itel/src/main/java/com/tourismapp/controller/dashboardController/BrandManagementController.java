@@ -16,11 +16,14 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.List;
 
+import org.springframework.beans.factory.annotation.Autowired;
+
 @Controller
 @RequestMapping(MainControllerServlet.BRAND_MANAGEMENT_SERVLET)
 public class BrandManagementController {
 
-    private final IBrandService brandService = new BrandService();
+    @Autowired
+    private IBrandService brandService;
 
     @GetMapping
     public String handleGet(@RequestParam(value = "action", required = false, defaultValue = "") String action,

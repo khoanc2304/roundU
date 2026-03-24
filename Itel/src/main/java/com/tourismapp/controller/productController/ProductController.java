@@ -10,13 +10,10 @@ import com.tourismapp.model.Review;
 import com.tourismapp.model.StatisticReview;
 import com.tourismapp.model.Users;
 import com.tourismapp.service.product.IProductService;
-import com.tourismapp.service.product.ProductService;
 import com.tourismapp.service.relation.BrandCategoryService;
 import com.tourismapp.service.relation.IBrandCategoryService;
 import com.tourismapp.service.review.IReviewService;
-import com.tourismapp.service.review.ReviewService;
 import com.tourismapp.service.user.IUserService;
-import com.tourismapp.service.user.UserService;
 import com.tourismapp.utils.ErrDialog;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
@@ -24,6 +21,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import java.io.IOException;
 import java.util.*;
@@ -32,10 +30,13 @@ import java.util.*;
 @RequestMapping(MainControllerServlet.PRODUCTPAGE_SERVLET)
 public class ProductController {
 
-    private final IProductService productService = new ProductService();
+    @Autowired
+    private IProductService productService;
     private final IBrandCategoryService brandCategoryService = new BrandCategoryService();
-    private final IReviewService reviewService = new ReviewService();
-    private final IUserService userService = new UserService();
+    @Autowired
+    private IReviewService reviewService;
+    @Autowired
+    private IUserService userService;
 
     @GetMapping
     public String doGet(@RequestParam(value = "action", defaultValue = "") String action,

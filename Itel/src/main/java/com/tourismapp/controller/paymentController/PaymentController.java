@@ -20,14 +20,26 @@ import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.Random;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import com.tourismapp.service.cart.ICartService;
+import com.tourismapp.service.order.IOrderService;
+import com.tourismapp.service.product.IProductService;
+
 @Controller
 @RequestMapping("/")
 public class PaymentController {
 
-    private final OrderService orderService = new OrderService();
-    private final CartService cartService = new CartService();
-    private final ProductService productService = new ProductService();
-    private final IUserService userService = new UserService();
+    @Autowired
+    private IOrderService orderService;
+    
+    @Autowired
+    private ICartService cartService;
+    
+    @Autowired
+    private IProductService productService;
+    
+    @Autowired
+    private IUserService userService;
 
     private static final String ADMIN_EMAIL = "admin@gmail.com";
 

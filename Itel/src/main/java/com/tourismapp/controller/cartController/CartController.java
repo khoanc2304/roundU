@@ -6,15 +6,15 @@ import com.tourismapp.model.Cart;
 import com.tourismapp.model.CartItem;
 import com.tourismapp.model.Product;
 import com.tourismapp.model.Users;
-import com.tourismapp.service.cart.CartService;
-import com.tourismapp.service.product.ProductService;
 import com.tourismapp.service.user.IUserService;
-import com.tourismapp.service.user.UserService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
+import com.tourismapp.service.product.IProductService;
+import com.tourismapp.service.cart.ICartService;
 
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -24,9 +24,13 @@ import java.util.Optional;
 @Controller
 public class CartController {
 
-    private final ProductService productService = new ProductService();
-    private final CartService cartService = new CartService();
-    private final IUserService userService = new UserService();
+    @Autowired
+    private ICartService cartService;
+
+    @Autowired
+    private IProductService productService;
+    @Autowired
+    private IUserService userService;
 
     @RequestMapping(value = MainControllerServlet.CARTPAGE_SERVLET, method = {RequestMethod.GET, RequestMethod.POST})
     public String showCartPage(HttpServletRequest request, HttpSession session) {

@@ -12,15 +12,23 @@ import com.tourismapp.utils.ErrDialog;
 import java.util.List;
 import java.util.Optional;
 
+import org.springframework.stereotype.Service;
+import org.springframework.beans.factory.annotation.Autowired;
+import com.tourismapp.service.product.IProductService;
+
 /**
  * Order Service Implementation
  *
  * @author Admin
  */
+@Service
 public class OrderService implements IOrderService {
 
-    private final IOrderDAO orderDAO = new OrderDAO();
-    private final ProductService productService = new ProductService();
+    @Autowired
+    private IOrderDAO orderDAO;
+    
+    @Autowired
+    private IProductService productService;
 
     @Override
     public Orders createOrder(Orders order, Cart cart, String orderNotes) {

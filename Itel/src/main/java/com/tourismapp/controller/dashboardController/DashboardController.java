@@ -3,11 +3,11 @@ package com.tourismapp.controller.dashboardController;
 import com.tourismapp.common.UserRole;
 import com.tourismapp.config.ProjectPaths;
 import com.tourismapp.controller.mainController.MainControllerServlet;
-import com.tourismapp.dao.order.OrderDAO;
 import com.tourismapp.model.Brand;
 import com.tourismapp.model.Category;
 import com.tourismapp.model.OrderStat;
 import com.tourismapp.model.Orders;
+import org.springframework.beans.factory.annotation.Autowired;
 import com.tourismapp.model.Product;
 import com.tourismapp.model.Users;
 import com.tourismapp.service.brand.BrandService;
@@ -15,9 +15,7 @@ import com.tourismapp.service.brand.IBrandService;
 import com.tourismapp.service.category.CategoryService;
 import com.tourismapp.service.category.ICategoryService;
 import com.tourismapp.service.product.IProductService;
-import com.tourismapp.service.product.ProductService;
 import com.tourismapp.service.user.IUserService;
-import com.tourismapp.service.user.UserService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.stereotype.Controller;
@@ -34,11 +32,14 @@ import java.util.logging.Logger;
 @RequestMapping(MainControllerServlet.DASHBOARDPAGE_SERVLET)
 public class DashboardController {
 
-    private final IProductService productService = new ProductService();
-    private final IBrandService brandService = new BrandService();
-    private final ICategoryService categoryService = new CategoryService();
-    private final OrderDAO orderDAO = new OrderDAO();
-    private final IUserService userService = new UserService();
+    @Autowired
+    private IProductService productService;
+    @Autowired private IBrandService brandService;
+    @Autowired private ICategoryService categoryService;
+    @Autowired
+    private com.tourismapp.dao.order.IOrderDAO orderDAO;
+    @Autowired
+    private IUserService userService;
     private static final Logger LOGGER = Logger.getLogger(DashboardController.class.getName());
 
     @GetMapping

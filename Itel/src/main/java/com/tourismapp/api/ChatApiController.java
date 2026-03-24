@@ -6,6 +6,7 @@ import org.apache.http.client.fluent.Request;
 import org.apache.http.entity.ContentType;
 import org.json.JSONArray;
 import org.json.JSONObject;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
@@ -18,7 +19,9 @@ public class ChatApiController {
 
     private static final String GEMINI_API_KEY = "AIzaSyAQOhALT1ZFY8t80YSXmEIZ54AKZK_3WSA";
     private static final String GEMINI_API_URL = "https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash-latest:generateContent?key=" + GEMINI_API_KEY;
-    private final ChatDatabaseService chatDatabaseService = new ChatDatabaseService();
+    
+    @Autowired
+    private ChatDatabaseService chatDatabaseService;
 
     @GetMapping
     public Map<String, Object> handleGet() {

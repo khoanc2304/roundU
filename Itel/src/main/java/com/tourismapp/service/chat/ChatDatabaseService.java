@@ -20,16 +20,24 @@ import java.util.regex.Matcher;
 import java.math.BigDecimal;
 import java.util.stream.Collectors;
 
+import org.springframework.stereotype.Service;
+import org.springframework.beans.factory.annotation.Autowired;
+
 /**
  * Service để xử lý logic phân tích câu hỏi và truy vấn database cho chatbox
  */
+@Service
 public class ChatDatabaseService {
     
     private final ProductService productService = new ProductService();
     private final OrderService orderService = new OrderService();
     private final UserService userService = new UserService();
-    private final IBrandService brandService = new BrandService();
-    private final ICategoryService categoryService = new CategoryService();
+    
+    @Autowired
+    private IBrandService brandService;
+    
+    @Autowired
+    private ICategoryService categoryService;
     
     /**
      * Phân tích câu hỏi và trả về dữ liệu từ database nếu có liên quan

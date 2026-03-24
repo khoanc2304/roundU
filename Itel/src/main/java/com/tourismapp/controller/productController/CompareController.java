@@ -10,6 +10,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -26,7 +27,8 @@ import java.util.stream.Stream;
 @Controller
 public class CompareController {
 
-    private final IProductService productService = new ProductService();
+    @Autowired
+    private IProductService productService;
 
     @GetMapping(MainControllerServlet.COMPARE_SERVLET)
     public String showComparePage(@RequestParam(value = "productIds", required = false) String productIds,

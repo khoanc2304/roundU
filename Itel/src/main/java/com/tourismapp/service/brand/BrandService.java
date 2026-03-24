@@ -1,24 +1,20 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package com.tourismapp.service.brand;
 
 import com.tourismapp.common.Status;
-import com.tourismapp.dao.brand.BrandDAO;
 import com.tourismapp.dao.brand.IBrandDAO;
 import com.tourismapp.model.Brand;
 import com.tourismapp.model.Product;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
 import java.util.List;
 import java.util.Optional;
 
-/**
- *
- * @author Admin
- */
+@Service
 public class BrandService implements IBrandService {
 
-    private final IBrandDAO brandDAO = new BrandDAO();
+    @Autowired
+    private IBrandDAO brandDAO;
 
     @Override
     public List<Brand> getAllBrands() {
@@ -30,18 +26,14 @@ public class BrandService implements IBrandService {
         return brandDAO.findBrandById(id);
     }
     
-    
-    // NAM
     @Override
     public List<Brand> getActiveBrands() {
         return brandDAO.getActiveBrands();
     }
     
-    // NAM
     @Override
     public void createBrand(Brand brand) {
         validateBrandForCreate(brand);
-        // Set default status to ACTIVE if not provided
         if (brand.getStatus() == null) {
             brand.setStatus(Status.ACTIVE);
         }
@@ -85,7 +77,6 @@ public class BrandService implements IBrandService {
         if (brand.getName() == null || brand.getName().trim().isEmpty()) {
             throw new IllegalArgumentException("Brand name cannot be empty");
         }
-        // Allow null status for creation (will default to ACTIVE)
         if (brand.getStatus() != null && brand.getStatus() != Status.ACTIVE && brand.getStatus() != Status.INACTIVE) {
             throw new IllegalArgumentException("Invalid status for brand: " + brand.getStatus() + ". Only ACTIVE or INACTIVE are allowed.");
         }

@@ -3,6 +3,7 @@ package com.tourismapp.controller.homeController;
 import com.tourismapp.config.ProjectPaths;
 import com.tourismapp.controller.mainController.MainControllerServlet;
 import com.tourismapp.model.Brand;
+import org.springframework.beans.factory.annotation.Autowired;
 import com.tourismapp.model.Category;
 import com.tourismapp.model.Product;
 import com.tourismapp.service.brand.BrandService;
@@ -27,9 +28,10 @@ import java.util.List;
 @RequestMapping(MainControllerServlet.HOMEPAGE_SERVLET)
 public class HomeController {
 
-    private final IProductService productService = new ProductService();
-    private final ICategoryService categoryService = new CategoryService();
-    private final IBrandService brandService = new BrandService();
+    @Autowired
+    private IProductService productService;
+    @Autowired private ICategoryService categoryService;
+    @Autowired private IBrandService brandService;
 
     @GetMapping
     public String doGet(@RequestParam(value = "action", defaultValue = "") String action,
