@@ -1,4 +1,4 @@
-package com.tourismapp.controller;
+package com.tourismapp.controller.productController;
 
 import com.google.gson.Gson;
 import com.tourismapp.config.ProjectPaths;
@@ -39,9 +39,9 @@ public class ProductController {
 
     @GetMapping
     public String doGet(@RequestParam(value = "action", defaultValue = "") String action,
-                        @RequestParam(value = "c", required = false) String category,
-                        HttpServletRequest request, HttpServletResponse response) throws IOException {
-        
+            @RequestParam(value = "c", required = false) String category,
+            HttpServletRequest request, HttpServletResponse response) throws IOException {
+
         if (MainControllerServlet.ACTION_FILTER_BY_CRITERIA.equals(action)) {
             filterProducts(request, response);
             return null;
@@ -56,8 +56,8 @@ public class ProductController {
 
     @PostMapping
     public String doPost(@RequestParam(value = "action", defaultValue = "") String action,
-                         HttpServletRequest request, HttpServletResponse response) {
-                         
+            HttpServletRequest request, HttpServletResponse response) {
+
         switch (action) {
             case MainControllerServlet.ACTION_CREATE_REVIEW:
                 return createReview(request, response);
@@ -73,7 +73,8 @@ public class ProductController {
     private String createReview(HttpServletRequest request, HttpServletResponse response) {
         try {
             request.setCharacterEncoding("UTF-8");
-        } catch (Exception ignored) {}
+        } catch (Exception ignored) {
+        }
 
         String userIdStr = request.getParameter("userId");
         String productIdStr = request.getParameter("productId");
@@ -85,9 +86,10 @@ public class ProductController {
             int userId = Integer.parseInt(userIdStr);
             int productId = Integer.parseInt(productIdStr);
             int rating = Integer.parseInt(ratingStr);
-            Integer parent_review_id = (parentReviewIdStr != null && !parentReviewIdStr.isEmpty() && !"null".equals(parentReviewIdStr))
-                    ? Integer.parseInt(parentReviewIdStr)
-                    : null;
+            Integer parent_review_id = (parentReviewIdStr != null && !parentReviewIdStr.isEmpty()
+                    && !"null".equals(parentReviewIdStr))
+                            ? Integer.parseInt(parentReviewIdStr)
+                            : null;
 
             Review review = new Review(new Product(productId), new Users(userId), rating, comment, parent_review_id);
             boolean success = reviewService.addReview(review);
@@ -106,7 +108,10 @@ public class ProductController {
     }
 
     private String editReview(HttpServletRequest request, HttpServletResponse response) {
-        try { request.setCharacterEncoding("UTF-8"); } catch (Exception ignored) {}
+        try {
+            request.setCharacterEncoding("UTF-8");
+        } catch (Exception ignored) {
+        }
         HttpSession session = request.getSession(true);
         int rating = Integer.parseInt(request.getParameter("rating"));
         int reviewId = Integer.parseInt(request.getParameter("reviewId"));
@@ -123,7 +128,10 @@ public class ProductController {
     }
 
     private String deleteReview(HttpServletRequest request, HttpServletResponse response) {
-        try { request.setCharacterEncoding("UTF-8"); } catch (Exception ignored) {}
+        try {
+            request.setCharacterEncoding("UTF-8");
+        } catch (Exception ignored) {
+        }
         HttpSession session = request.getSession(true);
         int reviewId = Integer.parseInt(request.getParameter("reviewId"));
         int productId = Integer.parseInt(request.getParameter("productId"));
@@ -136,7 +144,8 @@ public class ProductController {
         return "redirect:" + ProjectPaths.HREF_TO_PRODUCTPAGE + "&id=" + productId;
     }
 
-    private String showActiveProductDetail(HttpServletRequest request, HttpServletResponse response) throws IOException {
+    private String showActiveProductDetail(HttpServletRequest request, HttpServletResponse response)
+            throws IOException {
         String idParam = request.getParameter("id");
         if (idParam == null || idParam.isEmpty()) {
             response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Thiếu tham số ID product");
@@ -180,9 +189,9 @@ public class ProductController {
         response.addCookie(cookie);
 
         Optional<Product> product = productService.findProductById(id);
-        if(product.isEmpty()) {
-             response.sendError(HttpServletResponse.SC_NOT_FOUND, "Product Not Found");
-             return null;
+        if (product.isEmpty()) {
+            response.sendError(HttpServletResponse.SC_NOT_FOUND, "Product Not Found");
+            return null;
         }
 
         Optional<List<ProductImage>> productImages = productService.getProductImagesById(id);
@@ -195,9 +204,9 @@ public class ProductController {
 
         String ratingParam = request.getParameter("rating");
         int ratingFilter = (ratingParam != null && !ratingParam.isEmpty()) ? Integer.parseInt(ratingParam) : 0;
-        List<Review> reviewProduct = (ratingFilter > 0) 
-            ? reviewService.getReviewsByProductIdAndRating(id, ratingFilter)
-            : reviewService.getReviewsByProductId(id);
+        List<Review> reviewProduct = (ratingFilter > 0)
+                ? reviewService.getReviewsByProductIdAndRating(id, ratingFilter)
+                : reviewService.getReviewsByProductId(id);
         Collections.reverse(reviewProduct);
 
         HttpSession session = request.getSession();
@@ -221,9 +230,10 @@ public class ProductController {
         }
         request.setAttribute("userPurchaseStatus", userPurchaseStatus);
 
-        List<Product> sameCategoryProducts = productService.getProductsByCategory(product.get().getCategory().getCategoryId());
+        List<Product> sameCategoryProducts = productService
+                .getProductsByCategory(product.get().getCategory().getCategoryId());
         sameCategoryProducts.removeIf(p -> p.getProductId() == product.get().getProductId());
-        
+
         Map<Product, List<String>> productSuggestionMap = new LinkedHashMap<>();
         for (Product p : sameCategoryProducts) {
             List<String> topAttributes = productService.getProductDetailByIdTop5(p.getProductId());
@@ -232,7 +242,8 @@ public class ProductController {
 
         Map<String, String> currentAttributes = productService.getInforProductById(product.get().getProductId());
         List<String> attributeNames = new ArrayList<>(currentAttributes.keySet());
-        if(attributeNames.size() > 5) attributeNames = attributeNames.subList(0, 5);
+        if (attributeNames.size() > 5)
+            attributeNames = attributeNames.subList(0, 5);
 
         request.setAttribute("suggestionMap", productSuggestionMap);
         request.setAttribute("attributeNames", attributeNames);
@@ -260,7 +271,7 @@ public class ProductController {
         request.getSession().setAttribute("mapProduct_Detail", mapProduct_Detail);
         request.getSession().setAttribute("categoryId", id);
         request.getSession().setAttribute("brandCategoryDTOs", brandCategoryDTOs);
-        
+
         return ProjectPaths.JSP_PRODUCTPAGE_PATH;
     }
 
@@ -272,10 +283,12 @@ public class ProductController {
         String maxPriceStr = request.getParameter("maxPrice");
 
         int minPrice = minPriceStr != null && !minPriceStr.isEmpty() ? Integer.parseInt(minPriceStr) : 0;
-        int maxPrice = maxPriceStr != null && !maxPriceStr.isEmpty() ? Integer.parseInt(maxPriceStr) : Integer.MAX_VALUE;
+        int maxPrice = maxPriceStr != null && !maxPriceStr.isEmpty() ? Integer.parseInt(maxPriceStr)
+                : Integer.MAX_VALUE;
 
         int categoryId = productService.mapCategoryId(category);
-        List<Product> filteredProducts = productService.filterProductsByCriteria(categoryId, brands, cpus, minPrice, maxPrice);
+        List<Product> filteredProducts = productService.filterProductsByCriteria(categoryId, brands, cpus, minPrice,
+                maxPrice);
 
         Map<Product, List<String>> mapProduct_Detail = new LinkedHashMap<>();
         for (Product product : filteredProducts) {
@@ -288,7 +301,7 @@ public class ProductController {
 
         Map<String, Object> jsonResponse = new LinkedHashMap<>();
         mapProduct_Detail.forEach((product, details) -> {
-            jsonResponse.put(String.valueOf(product.getProductId()), new Object[]{product, details});
+            jsonResponse.put(String.valueOf(product.getProductId()), new Object[] { product, details });
         });
         String json = new Gson().toJson(jsonResponse);
         response.getWriter().write(json);

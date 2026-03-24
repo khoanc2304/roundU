@@ -1,4 +1,4 @@
-package com.tourismapp.controller;
+package com.tourismapp.controller.homeController;
 
 import com.tourismapp.config.ProjectPaths;
 import com.tourismapp.controller.mainController.MainControllerServlet;
@@ -33,7 +33,7 @@ public class HomeController {
 
     @GetMapping
     public String doGet(@RequestParam(value = "action", defaultValue = "") String action,
-                        HttpServletRequest request, HttpSession session) {
+            HttpServletRequest request, HttpSession session) {
         if (MainControllerServlet.ACTION_SEARCH_ACTIVE_PRODUCT.equals(action)) {
             return searchActiveProduct(request, session);
         } else {
