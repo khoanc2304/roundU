@@ -2,7 +2,7 @@ package com.tourismapp.controller.dashboardController;
 
 import com.tourismapp.config.ProjectPaths;
 import com.tourismapp.controller.mainController.MainControllerServlet;
-import com.tourismapp.model.Orders;
+import com.tourismapp.entity.Orders;
 import com.tourismapp.service.order.IOrderService;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.stereotype.Controller;

@@ -2,10 +2,10 @@ package com.tourismapp.controller.homeController;
 
 import com.tourismapp.config.ProjectPaths;
 import com.tourismapp.controller.mainController.MainControllerServlet;
-import com.tourismapp.model.Brand;
+import com.tourismapp.entity.Brand;
 import org.springframework.beans.factory.annotation.Autowired;
-import com.tourismapp.model.Category;
-import com.tourismapp.model.Product;
+import com.tourismapp.entity.Category;
+import com.tourismapp.entity.Product;
 import com.tourismapp.service.brand.IBrandService;
 import com.tourismapp.service.category.ICategoryService;
 import com.tourismapp.service.product.IProductService;

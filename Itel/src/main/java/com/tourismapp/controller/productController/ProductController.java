@@ -4,13 +4,12 @@ import com.google.gson.Gson;
 import com.tourismapp.config.ProjectPaths;
 import com.tourismapp.controller.mainController.MainControllerServlet;
 import com.tourismapp.dto.BrandCategoryDTO;
-import com.tourismapp.model.Product;
-import com.tourismapp.model.ProductImage;
-import com.tourismapp.model.Review;
-import com.tourismapp.model.StatisticReview;
-import com.tourismapp.model.Users;
+import com.tourismapp.entity.Product;
+import com.tourismapp.entity.ProductImage;
+import com.tourismapp.entity.Review;
+import com.tourismapp.dto.StatisticReview;
+import com.tourismapp.entity.Users;
 import com.tourismapp.service.product.IProductService;
-import com.tourismapp.service.relation.BrandCategoryService;
 import com.tourismapp.service.relation.IBrandCategoryService;
 import com.tourismapp.service.review.IReviewService;
 import com.tourismapp.service.user.IUserService;
@@ -32,7 +31,8 @@ public class ProductController {
 
     @Autowired
     private IProductService productService;
-    private final IBrandCategoryService brandCategoryService = new BrandCategoryService();
+    @Autowired
+    private IBrandCategoryService brandCategoryService;
     @Autowired
     private IReviewService reviewService;
     @Autowired

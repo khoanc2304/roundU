@@ -3,7 +3,7 @@ package com.tourismapp.repository.user;
 import com.tourismapp.common.MembershipLevel;
 import com.tourismapp.common.Status;
 import com.tourismapp.common.UserRole;
-import com.tourismapp.model.Users;
+import com.tourismapp.entity.Users;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;

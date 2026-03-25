@@ -1,12 +1,13 @@
 package com.tourismapp.api;
 
-import com.tourismapp.model.Orders;
-import com.tourismapp.model.Users;
-import com.tourismapp.service.order.OrderService;
+import com.tourismapp.entity.Orders;
+import com.tourismapp.entity.Users;
+import com.tourismapp.service.order.IOrderService;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.HashMap;
 import java.util.List;
@@ -16,7 +17,8 @@ import java.util.Map;
 @RequestMapping("/api/orders")
 public class OrderHistoryApiController {
 
-    private final OrderService orderService = new OrderService();
+    @Autowired
+    private IOrderService orderService;
 
     @GetMapping
     public Map<String, Object> getOrders(HttpSession session) {

@@ -4,7 +4,7 @@
  */
 package com.tourismapp.service.category;
 
-import com.tourismapp.model.Category;
+import com.tourismapp.entity.Category;
 import java.util.List;
 import java.util.Optional;
 

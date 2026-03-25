@@ -1,10 +1,10 @@
 package com.tourismapp.service.order;
 
 import com.tourismapp.repository.order.OrderRepository;
-import com.tourismapp.model.Orders;
-import com.tourismapp.model.OrderDetail;
-import com.tourismapp.model.Cart;
-import com.tourismapp.model.CartItem;
+import com.tourismapp.entity.Orders;
+import com.tourismapp.entity.OrderDetail;
+import com.tourismapp.entity.Cart;
+import com.tourismapp.entity.CartItem;
 import com.tourismapp.utils.ErrDialog;
 
 import java.util.List;

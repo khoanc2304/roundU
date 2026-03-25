@@ -18,6 +18,9 @@ import java.util.List;
  *
  * @author Admin
  */
+import org.springframework.stereotype.Repository;
+
+@Repository
 public class BrandCategoryRepository {
 
     private static final String GET_ALL_BRAND_CATEGORY_RELATIONS = """

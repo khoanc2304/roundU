@@ -1,8 +1,8 @@
 package com.tourismapp.service.order;
 
-import com.tourismapp.model.Orders;
-import com.tourismapp.model.OrderDetail;
-import com.tourismapp.model.Cart;
+import com.tourismapp.entity.Orders;
+import com.tourismapp.entity.OrderDetail;
+import com.tourismapp.entity.Cart;
 import java.util.List;
 import java.util.Optional;
 

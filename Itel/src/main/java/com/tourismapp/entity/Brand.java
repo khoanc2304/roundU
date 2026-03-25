@@ -2,23 +2,32 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
-package com.tourismapp.model;
+package com.tourismapp.entity;
 
 import com.tourismapp.common.Status;
 import java.util.List;
+
+import jakarta.persistence.*;
 
 /**
  *
  * @author Admin
  */
+@Entity
+@Table(name = "Brand")
 public class Brand {
 
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "brand_id")
     private int brandId;
     private String name;
     private String country;
     private String description;
     private String imageUrl;
     private Status status;
+    
+    @OneToMany(mappedBy = "brand")
     private List<Product> productList;
 
     public Brand() {

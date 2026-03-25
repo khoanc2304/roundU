@@ -1,6 +1,6 @@
 package com.tourismapp.service.coupon;
 
-import com.tourismapp.model.Coupon;
+import com.tourismapp.entity.Coupon;
 import java.util.List;
 import java.util.Optional;
 

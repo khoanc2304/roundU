@@ -2,8 +2,8 @@ package com.tourismapp.service.brand;
 
 import com.tourismapp.common.Status;
 import com.tourismapp.repository.brand.BrandRepository;
-import com.tourismapp.model.Brand;
-import com.tourismapp.model.Product;
+import com.tourismapp.entity.Brand;
+import com.tourismapp.entity.Product;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

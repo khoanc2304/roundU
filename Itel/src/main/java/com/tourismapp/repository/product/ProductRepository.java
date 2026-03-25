@@ -1,10 +1,10 @@
 package com.tourismapp.repository.product;
 
 import com.tourismapp.common.Status;
-import com.tourismapp.model.Brand;
-import com.tourismapp.model.Category;
-import com.tourismapp.model.Product;
-import com.tourismapp.model.ProductImage;
+import com.tourismapp.entity.Brand;
+import com.tourismapp.entity.Category;
+import com.tourismapp.entity.Product;
+import com.tourismapp.entity.ProductImage;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;

@@ -1,11 +1,11 @@
 package com.tourismapp.repository.order;
 
-import com.tourismapp.model.Coupon;
-import com.tourismapp.model.OrderDetail;
-import com.tourismapp.model.OrderStat;
-import com.tourismapp.model.Orders;
-import com.tourismapp.model.Product;
-import com.tourismapp.model.Users;
+import com.tourismapp.entity.Coupon;
+import com.tourismapp.entity.OrderDetail;
+import com.tourismapp.dto.OrderStat;
+import com.tourismapp.entity.Orders;
+import com.tourismapp.entity.Product;
+import com.tourismapp.entity.Users;
 import com.tourismapp.repository.coupon.CouponRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;

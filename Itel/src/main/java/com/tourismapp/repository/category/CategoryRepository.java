@@ -1,7 +1,7 @@
 package com.tourismapp.repository.category;
 
 import com.tourismapp.common.Status;
-import com.tourismapp.model.Category;
+import com.tourismapp.entity.Category;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;

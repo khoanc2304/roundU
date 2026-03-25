@@ -2,10 +2,10 @@ package com.tourismapp.controller.orderController;
 
 import com.tourismapp.config.ProjectPaths;
 import com.tourismapp.controller.mainController.MainControllerServlet;
-import com.tourismapp.model.Cart;
-import com.tourismapp.model.Orders;
-import com.tourismapp.model.Product;
-import com.tourismapp.model.Users;
+import com.tourismapp.entity.Cart;
+import com.tourismapp.entity.Orders;
+import com.tourismapp.entity.Product;
+import com.tourismapp.entity.Users;
 import org.springframework.beans.factory.annotation.Autowired;
 import com.tourismapp.service.order.IOrderService;
 import com.tourismapp.service.product.IProductService;

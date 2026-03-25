@@ -1,6 +1,6 @@
 package com.tourismapp.controller.mainController;
 
-import com.tourismapp.model.Users;
+import com.tourismapp.entity.Users;
 import com.tourismapp.utils.ErrDialog;
 import com.tourismapp.config.ProjectPaths;
 import com.tourismapp.service.user.IUserService;
@@ -13,9 +13,16 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.ServletContext;
 import jakarta.servlet.http.HttpSession;
+import org.springframework.web.context.WebApplicationContext;
+import org.springframework.web.context.support.WebApplicationContextUtils;
 
 @WebServlet(name = "MainControllerServlet", urlPatterns = { "/main" })
 public class MainControllerServlet extends HttpServlet {
+
+    private <T> T getBean(Class<T> clazz) {
+        WebApplicationContext context = WebApplicationContextUtils.getRequiredWebApplicationContext(getServletContext());
+        return context.getBean(clazz);
+    }
 
     // display servlet list
     // dashboard
@@ -157,7 +164,7 @@ public class MainControllerServlet extends HttpServlet {
         Users loggedUser = (Users) session.getAttribute("loggedUser");
 
         if (user != null || loggedUser != null) {
-            IUserService userService = new UserService();
+            IUserService userService = getBean(IUserService.class);
             int userId = user != null ? user.getUserId() : loggedUser.getUserId();
 
             Users updatedUser = userService.getUserById(userId);
@@ -211,14 +218,14 @@ public class MainControllerServlet extends HttpServlet {
                 try {
                     int orderId = Integer.parseInt(request.getParameter("orderId"));
                     String status = request.getParameter("status");
-                    com.tourismapp.service.order.IOrderService orderService = new com.tourismapp.service.order.OrderService();
+                    com.tourismapp.service.order.IOrderService orderService = getBean(com.tourismapp.service.order.IOrderService.class);
                     boolean updated = orderService.updateOrderStatus(orderId, status);
                     if (updated) {
                         request.setAttribute("successMessage", "Cập nhật trạng thái thành công!");
                         // --- Thông báo cho user (application scope) ---
-                        java.util.Optional<com.tourismapp.model.Orders> orderOpt = orderService.findOrderById(orderId);
+                        java.util.Optional<com.tourismapp.entity.Orders> orderOpt = orderService.findOrderById(orderId);
                         if (orderOpt.isPresent() && orderOpt.get().getUser() != null) {
-                            com.tourismapp.model.Orders order = orderOpt.get();
+                            com.tourismapp.entity.Orders order = orderOpt.get();
                             ServletContext app = getServletContext();
                             synchronized (app) {
                                 java.util.Map<Integer, String> notifyMap = (java.util.Map<Integer, String>) app

@@ -1,7 +1,7 @@
 package com.tourismapp.service.coupon;
 
 import com.tourismapp.repository.coupon.CouponRepository;
-import com.tourismapp.model.Coupon;
+import com.tourismapp.entity.Coupon;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -10,12 +10,14 @@ import java.util.Optional;
 /**
  * Implementation for Coupon Service
  */
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
 public class CouponService implements ICouponService {
 
-    private final CouponRepository CouponRepository = new CouponRepository();
+    @Autowired
+    private CouponRepository CouponRepository;
 
     @Override
     public List<Coupon> getAllCoupons() {

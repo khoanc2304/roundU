@@ -6,7 +6,7 @@ import com.tourismapp.common.UserRole;
 import com.tourismapp.config.ProjectPaths;
 import com.tourismapp.controller.mainController.MainControllerServlet;
 import com.tourismapp.repository.DBConnection;
-import com.tourismapp.model.Users;
+import com.tourismapp.entity.Users;
 import com.tourismapp.service.user.IUserService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
@@ -23,9 +23,9 @@ import java.time.LocalDateTime;
 import java.util.Optional;
 
 import com.tourismapp.constant.GoogleLogin;
-import com.tourismapp.model.GoogleAccount;
+import com.tourismapp.entity.GoogleAccount;
 import com.tourismapp.constant.FacebookLogin;
-import com.tourismapp.model.FacebookAccount;
+import com.tourismapp.entity.FacebookAccount;
 import com.tourismapp.utils.ErrDialog;
 
 @Controller

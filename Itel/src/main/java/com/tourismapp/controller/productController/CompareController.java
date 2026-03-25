@@ -2,7 +2,7 @@ package com.tourismapp.controller.productController;
 
 import com.tourismapp.config.ProjectPaths;
 import com.tourismapp.controller.mainController.MainControllerServlet;
-import com.tourismapp.model.Product;
+import com.tourismapp.entity.Product;
 import com.tourismapp.service.product.IProductService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;

@@ -4,8 +4,8 @@
  */
 package com.tourismapp.service.review;
 
-import com.tourismapp.model.Review;
-import com.tourismapp.model.StatisticReview;
+import com.tourismapp.entity.Review;
+import com.tourismapp.dto.StatisticReview;
 import java.util.List;
 
 /**

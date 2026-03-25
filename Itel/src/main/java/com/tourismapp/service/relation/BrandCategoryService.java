@@ -12,12 +12,14 @@ import java.util.List;
  *
  * @author Admin
  */
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
 public class BrandCategoryService implements IBrandCategoryService {
 
-    private final BrandCategoryRepository BrandCategoryRepository = new BrandCategoryRepository();
+    @Autowired
+    private BrandCategoryRepository BrandCategoryRepository;
 
     @Override
     public List<BrandCategoryDTO> getAllBrandCategoryRelations() {

@@ -4,8 +4,8 @@
  */
 package com.tourismapp.service.brand;
 
-import com.tourismapp.model.Brand;
-import com.tourismapp.model.Product;
+import com.tourismapp.entity.Brand;
+import com.tourismapp.entity.Product;
 import java.util.List;
 import java.util.Optional;
 

@@ -1,10 +1,20 @@
-package com.tourismapp.model;
+package com.tourismapp.entity;
 
 import com.tourismapp.common.Status;
 import java.time.LocalDateTime;
 
+import jakarta.persistence.*;
+
+@Entity
+@Table(name = "Order_Tracking")
 public class OrderTracking {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "tracking_id")
     private int trackingId;
+    
+    @ManyToOne
+    @JoinColumn(name = "order_id")
     private Orders order;
     private Status status;
     private LocalDateTime updateDate;

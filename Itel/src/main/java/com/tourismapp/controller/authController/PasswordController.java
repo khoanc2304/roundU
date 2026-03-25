@@ -3,7 +3,7 @@ package com.tourismapp.controller.authController;
 import com.tourismapp.config.ProjectPaths;
 import com.tourismapp.controller.mainController.MainControllerServlet;
 import com.tourismapp.repository.DBConnection;
-import com.tourismapp.model.Users;
+import com.tourismapp.entity.Users;
 import jakarta.mail.*;
 import jakarta.mail.internet.InternetAddress;
 import jakarta.mail.internet.MimeMessage;

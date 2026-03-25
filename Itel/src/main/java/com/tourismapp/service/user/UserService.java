@@ -4,7 +4,7 @@ import com.tourismapp.common.MembershipLevel;
 import com.tourismapp.common.Status;
 import com.tourismapp.repository.DBConnection;
 import com.tourismapp.repository.user.UserRepository;
-import com.tourismapp.model.Users;
+import com.tourismapp.entity.Users;
 
 import java.math.BigDecimal;
 import java.sql.Connection;

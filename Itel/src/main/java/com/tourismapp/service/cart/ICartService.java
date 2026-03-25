@@ -1,7 +1,7 @@
 package com.tourismapp.service.cart;
 
-import com.tourismapp.model.Cart;
-import com.tourismapp.model.Product;
+import com.tourismapp.entity.Cart;
+import com.tourismapp.entity.Product;
 
 /**
  * Cart Service Interface

@@ -2,19 +2,26 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
-package com.tourismapp.model;
+package com.tourismapp.entity;
 
 import com.tourismapp.common.MembershipLevel;
 import com.tourismapp.common.Status;
 import com.tourismapp.common.UserRole;
 import java.time.LocalDateTime;
 
+import jakarta.persistence.*;
+
 /**
  *
  * @author Admin
  */
+@Entity
+@Table(name = "Users")
 public class Users {
 
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "user_id")
     private int userId;
     private String username;
     private String password;

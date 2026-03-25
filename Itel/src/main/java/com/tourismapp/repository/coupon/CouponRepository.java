@@ -1,7 +1,7 @@
 package com.tourismapp.repository.coupon;
 
 import com.tourismapp.repository.DBConnection;
-import com.tourismapp.model.Coupon;
+import com.tourismapp.entity.Coupon;
 import com.tourismapp.utils.ErrDialog;
 
 import java.sql.Connection;
@@ -13,9 +13,12 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+import org.springframework.stereotype.Repository;
+
 /**
  * Implementation for Coupon DAO
  */
+@Repository
 public class CouponRepository {
 
     private static final String GET_ALL_COUPONS = "SELECT * FROM Coupon ORDER BY created_at DESC;";

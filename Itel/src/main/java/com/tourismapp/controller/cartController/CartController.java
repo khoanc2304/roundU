@@ -2,10 +2,10 @@ package com.tourismapp.controller.cartController;
 
 import com.tourismapp.config.ProjectPaths;
 import com.tourismapp.controller.mainController.MainControllerServlet;
-import com.tourismapp.model.Cart;
-import com.tourismapp.model.CartItem;
-import com.tourismapp.model.Product;
-import com.tourismapp.model.Users;
+import com.tourismapp.entity.Cart;
+import com.tourismapp.entity.CartItem;
+import com.tourismapp.entity.Product;
+import com.tourismapp.entity.Users;
 import com.tourismapp.service.user.IUserService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;

@@ -1,9 +1,9 @@
 package com.tourismapp.service.cart;
 
 import com.tourismapp.repository.cart.CartRepository;
-import com.tourismapp.model.Cart;
-import com.tourismapp.model.CartItem;
-import com.tourismapp.model.Product;
+import com.tourismapp.entity.Cart;
+import com.tourismapp.entity.CartItem;
+import com.tourismapp.entity.Product;
 import com.tourismapp.utils.ErrDialog;
 import java.util.Optional;
 

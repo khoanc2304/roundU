@@ -6,7 +6,7 @@ package com.tourismapp.constant;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
-import com.tourismapp.model.FacebookAccount;
+import com.tourismapp.entity.FacebookAccount;
 import java.io.IOException;
 import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.fluent.Form;

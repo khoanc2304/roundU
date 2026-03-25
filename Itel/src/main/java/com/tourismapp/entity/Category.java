@@ -2,16 +2,23 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
-package com.tourismapp.model;
+package com.tourismapp.entity;
 
 import com.tourismapp.common.Status;
+
+import jakarta.persistence.*;
 
 /**
  *
  * @author Admin
  */
+@Entity
+@Table(name = "Category")
 public class Category {
 
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "category_id")
     private int categoryId;
     private String name;
     private String description;

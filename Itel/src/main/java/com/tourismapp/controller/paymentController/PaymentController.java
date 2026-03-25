@@ -2,7 +2,7 @@ package com.tourismapp.controller.paymentController;
 
 import com.tourismapp.common.PaymentMethod;
 import com.tourismapp.common.Status;
-import com.tourismapp.model.*;
+import com.tourismapp.entity.*;
 import com.tourismapp.service.user.IUserService;
 import com.tourismapp.utils.MailUtil;
 import jakarta.servlet.http.HttpServletRequest;

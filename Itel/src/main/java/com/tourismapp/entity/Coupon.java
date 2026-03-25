@@ -1,12 +1,19 @@
-package com.tourismapp.model;
+package com.tourismapp.entity;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
+import jakarta.persistence.*;
+
 /**
  * Model class for Coupon
  */
+@Entity
+@Table(name = "Coupon")
 public class Coupon {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "coupon_id")
     private int couponId;
     private String code;
     private String description;

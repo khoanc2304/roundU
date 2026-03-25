@@ -1,4 +1,4 @@
-package com.tourismapp.model;
+package com.tourismapp.entity;
 
 import com.tourismapp.common.PaymentMethod;
 import com.tourismapp.common.Status;
@@ -6,9 +6,19 @@ import com.tourismapp.common.Status;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
+import jakarta.persistence.*;
+
+@Entity
+@Table(name = "Payment")
 public class Payment {
 
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "payment_id")
     private int paymentId;
+    
+    @ManyToOne
+    @JoinColumn(name = "order_id")
     private Orders order;
     private LocalDateTime paymentDate;
     private PaymentMethod paymentMethod;

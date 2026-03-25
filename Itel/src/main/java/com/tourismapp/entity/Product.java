@@ -1,18 +1,31 @@
-package com.tourismapp.model;
+package com.tourismapp.entity;
 
 import com.tourismapp.common.Status;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
+import jakarta.persistence.*;
+
+@Entity
+@Table(name = "Product")
 public class Product {
 
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "product_id")
     private int productId;
     private String name;
     private String description;
     private BigDecimal price;
     private int stockQuantity;
+    @ManyToOne
+    @JoinColumn(name = "category_id")
     private Category category;
+    
+    @ManyToOne
+    @JoinColumn(name = "brand_id")
     private Brand brand;
+    
     private String imageUrl;
     private Status status;
     private LocalDateTime createdAt;

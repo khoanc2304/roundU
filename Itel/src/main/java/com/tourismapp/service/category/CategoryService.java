@@ -1,7 +1,7 @@
 package com.tourismapp.service.category;
 
 import com.tourismapp.repository.category.CategoryRepository;
-import com.tourismapp.model.Category;
+import com.tourismapp.entity.Category;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;

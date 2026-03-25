@@ -1,13 +1,13 @@
 package com.tourismapp.service.chat;
 
-import com.tourismapp.model.Product;
-import com.tourismapp.model.Orders;
-import com.tourismapp.model.Users;
-import com.tourismapp.model.Brand;
-import com.tourismapp.model.Category;
-import com.tourismapp.service.product.ProductService;
-import com.tourismapp.service.order.OrderService;
-import com.tourismapp.service.user.UserService;
+import com.tourismapp.entity.Product;
+import com.tourismapp.entity.Orders;
+import com.tourismapp.entity.Users;
+import com.tourismapp.entity.Brand;
+import com.tourismapp.entity.Category;
+import com.tourismapp.service.product.IProductService;
+import com.tourismapp.service.order.IOrderService;
+import com.tourismapp.service.user.IUserService;
 import com.tourismapp.service.brand.IBrandService;
 import com.tourismapp.service.category.ICategoryService;
 
@@ -25,9 +25,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 @Service
 public class ChatDatabaseService {
 
-    private final ProductService productService = new ProductService();
-    private final OrderService orderService = new OrderService();
-    private final UserService userService = new UserService();
+    @Autowired
+    private IProductService productService;
+    @Autowired
+    private IOrderService orderService;
+    @Autowired
+    private IUserService userService;
 
     @Autowired
     private IBrandService brandService;

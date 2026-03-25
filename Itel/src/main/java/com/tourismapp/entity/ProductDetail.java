@@ -1,13 +1,26 @@
-package com.tourismapp.model;
+package com.tourismapp.entity;
+
+import jakarta.persistence.*;
 
 /**
  *
  * @author Admin
  */
+@Entity
+@Table(name = "Product_Detail")
 public class ProductDetail {
 
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "detail_id")
     private int detailId;
+    
+    @ManyToOne
+    @JoinColumn(name = "product_id")
     private Product product;
+    
+    @ManyToOne
+    @JoinColumn(name = "attribute_id")
     private Attribute attribute;
     private String attributeValue;
 

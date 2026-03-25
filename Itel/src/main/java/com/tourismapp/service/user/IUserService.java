@@ -1,6 +1,6 @@
 package com.tourismapp.service.user;
 
-import com.tourismapp.model.Users;
+import com.tourismapp.entity.Users;
 
 import java.math.BigDecimal;
 import java.util.List;

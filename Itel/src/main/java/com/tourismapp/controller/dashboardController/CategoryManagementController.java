@@ -3,7 +3,7 @@ package com.tourismapp.controller.dashboardController;
 import com.tourismapp.common.Status;
 import com.tourismapp.config.ProjectPaths;
 import com.tourismapp.controller.mainController.MainControllerServlet;
-import com.tourismapp.model.Category;
+import com.tourismapp.entity.Category;
 import com.tourismapp.service.category.ICategoryService;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.stereotype.Controller;

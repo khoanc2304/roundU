@@ -10,9 +10,9 @@ import java.util.logging.Logger;
 public class DBConnection {
 
     public static String driverName = "com.mysql.cj.jdbc.Driver";
-    public static String dbURL = "jdbc:mysql://localhost:3306/Itel_Shop?useSSL=false&serverTimezone=UTC";
-    public static String userDB = "root"; // đổi nếu cần
-    public static String passDB = "khoa7619";  // đổi theo MySQL của bạn
+    public static String dbURL = "jdbc:mysql://localhost:3306/Itel_Shop?useSSL=false&allowPublicKeyRetrieval=true&useUnicode=true&characterEncoding=UTF-8&serverTimezone=UTC";
+    public static String userDB = "root";
+    public static String passDB = "khoa7619";
 
     public static Connection getConnection() {
         Connection con = null;

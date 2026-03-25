@@ -1,8 +1,8 @@
 package com.tourismapp.service.product;
 
 import com.tourismapp.repository.product.ProductRepository;
-import com.tourismapp.model.Product;
-import com.tourismapp.model.ProductImage;
+import com.tourismapp.entity.Product;
+import com.tourismapp.entity.ProductImage;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;

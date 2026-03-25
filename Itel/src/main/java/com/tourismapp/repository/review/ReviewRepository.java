@@ -4,10 +4,10 @@ import com.tourismapp.common.Status;
 import com.tourismapp.repository.DBConnection;
 import com.tourismapp.repository.product.ProductRepository;
 import com.tourismapp.repository.user.UserRepository;
-import com.tourismapp.model.Product;
-import com.tourismapp.model.Users;
-import com.tourismapp.model.Review;
-import com.tourismapp.model.StatisticReview;
+import com.tourismapp.entity.Product;
+import com.tourismapp.entity.Users;
+import com.tourismapp.entity.Review;
+import com.tourismapp.dto.StatisticReview;
 import com.tourismapp.utils.ErrDialog;
 
 import java.sql.*;
@@ -16,10 +16,17 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+import org.springframework.stereotype.Repository;
+import org.springframework.beans.factory.annotation.Autowired;
+
+@Repository
 public class ReviewRepository {
 
-    private final ProductRepository ProductRepository = new ProductRepository();
-    private final UserRepository UserRepository = new UserRepository();
+    @Autowired
+    private ProductRepository ProductRepository;
+    
+    @Autowired
+    private UserRepository UserRepository;
 
     private static final String GET_ALL_ACTIVE_REVIEWS = "SELECT * FROM Review WHERE status = 'ACTIVE'";
     private static final String GET_REVIEW_BY_ID = "SELECT * FROM Review WHERE review_id = ?";

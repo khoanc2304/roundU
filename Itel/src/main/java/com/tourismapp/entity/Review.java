@@ -1,16 +1,29 @@
-package com.tourismapp.model;
+package com.tourismapp.entity;
 
 import com.tourismapp.common.Status;
 import java.time.LocalDateTime;
+
+import jakarta.persistence.*;
 
 /**
  *
  * @author Admin
  */
+@Entity
+@Table(name = "Review")
 public class Review {
 
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "review_id")
     private int reviewId;
+    
+    @ManyToOne
+    @JoinColumn(name = "product_id")
     private Product product;
+    
+    @ManyToOne
+    @JoinColumn(name = "user_id")
     private Users user;
     private int rating;
     private String comment;

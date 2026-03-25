@@ -1,4 +1,4 @@
-package com.tourismapp.model;
+package com.tourismapp.entity;
 
 import java.math.BigDecimal;
 

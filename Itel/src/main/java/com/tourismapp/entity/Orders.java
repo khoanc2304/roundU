@@ -1,23 +1,37 @@
-package com.tourismapp.model;
+package com.tourismapp.entity;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.ArrayList;
 
+import jakarta.persistence.*;
+
 /**
  *
  * @author Admin
  */
+@Entity
+@Table(name = "Orders")
 public class Orders {
 
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "order_id")
     private int orderId;
+    
+    @ManyToOne
+    @JoinColumn(name = "user_id")
     private Users user;
     private LocalDateTime orderDate;
     private String status;
     private BigDecimal totalAmount;
     private String shippingAddress;
+    @OneToMany(mappedBy = "order")
     private List<OrderDetail> orderDetails;
+    
+    @ManyToOne
+    @JoinColumn(name = "parent_order_id")
     private Orders order;
 
     public Orders(int orderId, Users user, LocalDateTime orderDate, String status,

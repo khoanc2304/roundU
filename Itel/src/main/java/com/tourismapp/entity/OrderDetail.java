@@ -1,12 +1,25 @@
-package com.tourismapp.model;
+package com.tourismapp.entity;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
+import jakarta.persistence.*;
+
+@Entity
+@Table(name = "Order_Detail")
 public class OrderDetail {
 
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "order_detail_id")
     private int orderDetailId;
+    
+    @ManyToOne
+    @JoinColumn(name = "order_id")
     private Orders order;
+    
+    @ManyToOne
+    @JoinColumn(name = "product_id")
     private Product product;
     private int quantity;
     private BigDecimal unitPrice;

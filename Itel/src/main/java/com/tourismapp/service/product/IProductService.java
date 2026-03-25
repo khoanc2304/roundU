@@ -4,8 +4,8 @@
  */
 package com.tourismapp.service.product;
 
-import com.tourismapp.model.Product;
-import com.tourismapp.model.ProductImage;
+import com.tourismapp.entity.Product;
+import com.tourismapp.entity.ProductImage;
 import java.math.BigDecimal;
 import java.util.List;
 import java.util.Map;

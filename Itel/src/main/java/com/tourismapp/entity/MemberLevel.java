@@ -2,17 +2,24 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
-package com.tourismapp.model;
+package com.tourismapp.entity;
 
 import com.tourismapp.common.MembershipLevel;
 import java.math.BigDecimal;
+
+import jakarta.persistence.*;
 
 /**
  *
  * @author Admin
  */
+@Entity
+@Table(name = "Member_Level")
 public class MemberLevel {
 
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "level_id")
     private int levelId;
     private MembershipLevel levelName;
     private BigDecimal discountPercent;

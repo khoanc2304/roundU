@@ -5,20 +5,22 @@
 package com.tourismapp.service.review;
 
 import com.tourismapp.repository.review.ReviewRepository;
-import com.tourismapp.model.Review;
-import com.tourismapp.model.StatisticReview;
+import com.tourismapp.entity.Review;
+import com.tourismapp.dto.StatisticReview;
 import java.util.List;
 
 /**
  *
  * @author Admin
  */
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
 public class ReviewService implements IReviewService {
 
-    private final ReviewRepository ReviewRepository = new ReviewRepository();
+    @Autowired
+    private ReviewRepository ReviewRepository;
 
     @Override
     public int getTotalCommentsByProductId(int productId) {
