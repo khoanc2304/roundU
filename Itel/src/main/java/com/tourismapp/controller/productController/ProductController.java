@@ -100,11 +100,11 @@ public class ProductController {
             } else {
                 request.getSession().setAttribute("errorMessage", "Review sản phẩm không thành công!");
             }
-            return "redirect:" + ProjectPaths.HREF_TO_PRODUCTPAGE + "&id=" + productId;
+            return "redirect:" + ProjectPaths.HREF_TO_PRODUCTPAGE.substring(ProjectPaths.PREFIX_WEB_PATH.length()) + "&id=" + productId;
         } catch (Exception e) {
             request.getSession().setAttribute("errorMessage", "Dữ liệu truyền vào không hợp lệ!");
             ErrDialog.showError("createReview(): " + e.getMessage());
-            return "redirect:" + ProjectPaths.HREF_TO_HOMEPAGE;
+            return "redirect:" + ProjectPaths.HREF_TO_HOMEPAGE.substring(ProjectPaths.PREFIX_WEB_PATH.length());
         }
     }
 
@@ -125,7 +125,7 @@ public class ProductController {
         } else {
             session.setAttribute("errorMessage", "Cập nhập review sản phẩm không thành công!");
         }
-        return "redirect:" + ProjectPaths.HREF_TO_PRODUCTPAGE + "&id=" + productId;
+        return "redirect:" + ProjectPaths.HREF_TO_PRODUCTPAGE.substring(ProjectPaths.PREFIX_WEB_PATH.length()) + "&id=" + productId;
     }
 
     private String deleteReview(HttpServletRequest request, HttpServletResponse response) {
@@ -142,7 +142,7 @@ public class ProductController {
         } else {
             session.setAttribute("errorMessage", "Xoá review sản phẩm không thành công!");
         }
-        return "redirect:" + ProjectPaths.HREF_TO_PRODUCTPAGE + "&id=" + productId;
+        return "redirect:" + ProjectPaths.HREF_TO_PRODUCTPAGE.substring(ProjectPaths.PREFIX_WEB_PATH.length()) + "&id=" + productId;
     }
 
     private String showActiveProductDetail(HttpServletRequest request, HttpServletResponse response)

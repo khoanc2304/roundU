@@ -7,6 +7,8 @@ import com.tourismapp.entity.Category;
 import com.tourismapp.service.category.ICategoryService;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.stereotype.Controller;
+import com.tourismapp.annotation.RequiresRole;
+import com.tourismapp.common.UserRole;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -17,6 +19,7 @@ import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 
+@RequiresRole({UserRole.ADMIN, UserRole.STAFF})
 @Controller
 @RequestMapping(MainControllerServlet.CATEGORY_MANAGEMENT_SERVLET)
 public class CategoryManagementController {
@@ -93,7 +96,7 @@ public class CategoryManagementController {
                         cat.setStatus(Status.valueOf(statusParam.toUpperCase()));
 
                     if (categoryService.editCategory(cat)) {
-                        return "redirect:" + ProjectPaths.HREF_TO_CATEGORYMANAGEMENT
+                        return "redirect:" + ProjectPaths.HREF_TO_CATEGORYMANAGEMENT.substring(ProjectPaths.PREFIX_WEB_PATH.length())
                                 .substring(ProjectPaths.PREFIX_WEB_PATH.length());
                     } else {
                         request.setAttribute("errorMessage", "Failed to update the category.");

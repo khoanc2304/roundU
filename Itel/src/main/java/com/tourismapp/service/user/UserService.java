@@ -33,7 +33,23 @@ public class UserService implements IUserService {
 
     @Override
     public Optional<Users> findUserByCredentials(String identifier, String password) {
-        return UserRepository.findUserByCredentials(identifier, password);
+        Optional<Users> userOpt = UserRepository.findUserByIdentifier(identifier);
+        if (userOpt.isPresent()) {
+            Users user = userOpt.get();
+            String dbPass = user.getPassword();
+            if (dbPass != null && dbPass.startsWith("$2a$")) {
+                if (org.mindrot.jbcrypt.BCrypt.checkpw(password, dbPass)) {
+                    return Optional.of(user);
+                }
+            } else if (dbPass != null && dbPass.equals(password)) {
+                // Auto-migrate plaintext to BCrypt
+                String hashed = org.mindrot.jbcrypt.BCrypt.hashpw(password, org.mindrot.jbcrypt.BCrypt.gensalt());
+                user.setPassword(hashed);
+                UserRepository.updateUser(user);
+                return Optional.of(user);
+            }
+        }
+        return Optional.empty();
     }
 
     @Override
@@ -46,6 +62,9 @@ public class UserService implements IUserService {
         // Nếu không validate trước thì vẫn cần check lại membership
         if (!isValidMembershipLevel(user.getMembershipLevel().getId())) {
             throw new IllegalArgumentException("Cấp độ thành viên không tồn tại.");
+        }
+        if (user.getPassword() != null && !user.getPassword().isEmpty() && !user.getPassword().startsWith("$2a$")) {
+            user.setPassword(org.mindrot.jbcrypt.BCrypt.hashpw(user.getPassword(), org.mindrot.jbcrypt.BCrypt.gensalt()));
         }
         return UserRepository.createUser(user);
     }
@@ -219,8 +238,13 @@ public class UserService implements IUserService {
                 + "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
         try (Connection conn = DBConnection.getConnection(); PreparedStatement ps = conn.prepareStatement(sql)) {
 
+            String passToSave = user.getPassword();
+            if (passToSave != null && !passToSave.isEmpty() && !passToSave.startsWith("$2a$")) {
+                passToSave = org.mindrot.jbcrypt.BCrypt.hashpw(passToSave, org.mindrot.jbcrypt.BCrypt.gensalt());
+            }
+
             ps.setString(1, user.getUsername());
-            ps.setString(2, user.getPassword());
+            ps.setString(2, passToSave);
             ps.setString(3, user.getFullName());
             ps.setString(4, user.getEmail());
             ps.setString(5, user.getPhone());

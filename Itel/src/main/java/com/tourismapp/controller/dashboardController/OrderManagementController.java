@@ -6,6 +6,8 @@ import com.tourismapp.entity.Orders;
 import com.tourismapp.service.order.IOrderService;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.stereotype.Controller;
+import com.tourismapp.annotation.RequiresRole;
+import com.tourismapp.common.UserRole;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -14,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.List;
 
+@RequiresRole({UserRole.ADMIN, UserRole.STAFF})
 @Controller
 @RequestMapping(MainControllerServlet.ORDER_MANAGEMENT_SERVLET)
 public class OrderManagementController {

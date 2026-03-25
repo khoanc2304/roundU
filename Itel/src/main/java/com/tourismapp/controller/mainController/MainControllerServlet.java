@@ -169,9 +169,6 @@ public class MainControllerServlet extends HttpServlet {
 
             Users updatedUser = userService.getUserById(userId);
             if (updatedUser != null) {
-                System.out.println("MainController: Tải lại thông tin người dùng từ DB");
-                System.out.println("Hạng mức hiện tại: " + updatedUser.getMembershipLevel().getValue());
-
                 if (user != null) {
                     session.setAttribute("user", updatedUser);
                 }

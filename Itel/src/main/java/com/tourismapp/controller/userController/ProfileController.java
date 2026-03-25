@@ -28,7 +28,7 @@ public class ProfileController {
         Users loggedUser = (Users) session.getAttribute("loggedUser");
 
         if (loggedUser == null) {
-            return "redirect:" + ProjectPaths.HREF_TO_LOGINPAGE;
+            return "redirect:" + ProjectPaths.HREF_TO_LOGINPAGE.substring(ProjectPaths.PREFIX_WEB_PATH.length());
         }
 
         switch (action) {
@@ -57,7 +57,7 @@ public class ProfileController {
         Users loggedUser = (Users) session.getAttribute("loggedUser");
 
         if (loggedUser == null) {
-            return "redirect:" + ProjectPaths.HREF_TO_LOGINPAGE;
+            return "redirect:" + ProjectPaths.HREF_TO_LOGINPAGE.substring(ProjectPaths.PREFIX_WEB_PATH.length());
         }
 
         if (MainControllerServlet.ACTION_UPDATE_PROFILE.equals(action)) {

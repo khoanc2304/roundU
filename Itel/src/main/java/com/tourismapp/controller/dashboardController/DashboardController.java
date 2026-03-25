@@ -19,6 +19,8 @@ import com.tourismapp.service.user.IUserService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.stereotype.Controller;
+import com.tourismapp.annotation.RequiresRole;
+import com.tourismapp.common.UserRole;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -28,6 +30,7 @@ import java.math.RoundingMode;
 import java.util.*;
 import java.util.logging.Logger;
 
+@RequiresRole({UserRole.ADMIN, UserRole.STAFF})
 @Controller
 @RequestMapping(MainControllerServlet.DASHBOARDPAGE_SERVLET)
 public class DashboardController {

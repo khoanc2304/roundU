@@ -24,7 +24,6 @@ public class UserRepository {
     private JdbcTemplate jdbcTemplate;
 
     private static final String GET_ALL_USERS = "SELECT * FROM Users;";
-    private static final String FIND_USER_BY_CREDENTIALS = "SELECT * FROM Users WHERE (username = ? OR email = ?) AND password = ?;";
 
     private final RowMapper<Users> userRowMapper = (rs, rowNum) -> mapResultSetToUser(rs);
 
@@ -67,8 +66,9 @@ public class UserRepository {
         return user;
     }
 
-    public Optional<Users> findUserByCredentials(String identifier, String password) {
-        List<Users> users = jdbcTemplate.query(FIND_USER_BY_CREDENTIALS, userRowMapper, identifier, identifier, password);
+    public Optional<Users> findUserByIdentifier(String identifier) {
+        String sql = "SELECT * FROM Users WHERE username = ? OR email = ? OR phone = ?";
+        List<Users> users = jdbcTemplate.query(sql, userRowMapper, identifier, identifier, identifier);
         return users.isEmpty() ? Optional.empty() : Optional.of(users.get(0));
     }
 

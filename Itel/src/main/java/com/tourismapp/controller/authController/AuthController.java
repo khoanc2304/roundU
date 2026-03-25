@@ -55,17 +55,17 @@ public class AuthController {
                 session.setAttribute("successMessage", "Đăng nhập thành công.");
 
                 return switch (role) {
-                    case "admin" -> "redirect:" + ProjectPaths.HREF_TO_DASHBOARDPAGE;
+                    case "admin" -> "redirect:" + ProjectPaths.HREF_TO_DASHBOARDPAGE.substring(ProjectPaths.PREFIX_WEB_PATH.length());
                     case "staff" -> ProjectPaths.JSP_DASHBOARDPAGE_PATH;
                     default -> ProjectPaths.JSP_HOMEPAGE_PATH;
                 };
             } else {
                 session.setAttribute("errorMessage", "Sai tài khoản hoặc mật khẩu. Vui lòng nhập lại!");
-                return "redirect:" + ProjectPaths.HREF_TO_LOGINPAGE;
+                return "redirect:" + ProjectPaths.HREF_TO_LOGINPAGE.substring(ProjectPaths.PREFIX_WEB_PATH.length());
             }
         } else {
             session.setAttribute("errorMessage", "Lỗi trong quá trình đăng nhập. Đăng nhập thất bại!");
-            return "redirect:" + ProjectPaths.HREF_TO_LOGINPAGE;
+            return "redirect:" + ProjectPaths.HREF_TO_LOGINPAGE.substring(ProjectPaths.PREFIX_WEB_PATH.length());
         }
     }
 
@@ -74,7 +74,7 @@ public class AuthController {
         if (session != null) {
             session.invalidate();
         }
-        return "redirect:" + ProjectPaths.HREF_TO_HOMEPAGE;
+        return "redirect:" + ProjectPaths.HREF_TO_HOMEPAGE.substring(ProjectPaths.PREFIX_WEB_PATH.length());
     }
 
     @GetMapping("/registerPage")
@@ -149,8 +149,10 @@ public class AuthController {
                 }
             }
 
+            String hashedPassword = org.mindrot.jbcrypt.BCrypt.hashpw(password, org.mindrot.jbcrypt.BCrypt.gensalt());
+
             Users newUser = new Users(
-                    username, password, fullName, email, phone, address,
+                    username, hashedPassword, fullName, email, phone, address,
                     UserRole.CUSTOMER, MembershipLevel.STANDARD, null, Status.ACTIVE,
                     LocalDateTime.now(), LocalDateTime.now());
 
@@ -200,17 +202,17 @@ public class AuthController {
     public String loginGoogle(@RequestParam(value = "code", required = false) String code, HttpSession session) {
         try {
             if (code == null || code.isEmpty()) {
-                return "redirect:" + ProjectPaths.HREF_TO_LOGINPAGE;
+                return "redirect:" + ProjectPaths.HREF_TO_LOGINPAGE.substring(ProjectPaths.PREFIX_WEB_PATH.length());
             }
 
             String accessToken = GoogleLogin.getToken(code);
             if (accessToken == null) {
-                return "redirect:" + ProjectPaths.HREF_TO_LOGINPAGE;
+                return "redirect:" + ProjectPaths.HREF_TO_LOGINPAGE.substring(ProjectPaths.PREFIX_WEB_PATH.length());
             }
 
             GoogleAccount googleAccount = GoogleLogin.getUserInfo(accessToken);
             if (googleAccount == null) {
-                return "redirect:" + ProjectPaths.HREF_TO_LOGINPAGE;
+                return "redirect:" + ProjectPaths.HREF_TO_LOGINPAGE.substring(ProjectPaths.PREFIX_WEB_PATH.length());
             }
 
             Optional<Users> existingUser = userService.findUserByEmail(googleAccount.getEmail());
@@ -240,7 +242,7 @@ public class AuthController {
 
                 boolean created = userService.insertUser(user);
                 if (!created) {
-                    return "redirect:" + ProjectPaths.HREF_TO_LOGINPAGE;
+                    return "redirect:" + ProjectPaths.HREF_TO_LOGINPAGE.substring(ProjectPaths.PREFIX_WEB_PATH.length());
                 }
             }
 
@@ -248,10 +250,10 @@ public class AuthController {
             session.setAttribute("isLoggedIn", true);
             session.setMaxInactiveInterval(30 * 60);
 
-            return "redirect:" + ProjectPaths.HREF_TO_HOMEPAGE;
+            return "redirect:" + ProjectPaths.HREF_TO_HOMEPAGE.substring(ProjectPaths.PREFIX_WEB_PATH.length());
 
         } catch (Exception e) {
-            return "redirect:" + ProjectPaths.HREF_TO_LOGINPAGE;
+            return "redirect:" + ProjectPaths.HREF_TO_LOGINPAGE.substring(ProjectPaths.PREFIX_WEB_PATH.length());
         }
     }
 
@@ -266,7 +268,7 @@ public class AuthController {
             }
         } catch (Exception ignored) {
         }
-        return "redirect:" + ProjectPaths.HREF_TO_LOGINPAGE; // Fallback since facebook login logic was just incomplete
+        return "redirect:" + ProjectPaths.HREF_TO_LOGINPAGE.substring(ProjectPaths.PREFIX_WEB_PATH.length()); // Fallback since facebook login logic was just incomplete
                                                              // stub in Servlet
     }
 }
