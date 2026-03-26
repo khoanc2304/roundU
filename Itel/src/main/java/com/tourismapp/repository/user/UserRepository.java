@@ -6,6 +6,8 @@ import com.tourismapp.common.UserRole;
 import com.tourismapp.entity.Users;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
+import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
 
@@ -22,6 +24,9 @@ public class UserRepository {
 
     @Autowired
     private JdbcTemplate jdbcTemplate;
+
+    @Autowired
+    private NamedParameterJdbcTemplate namedParameterJdbcTemplate;
 
     private static final String GET_ALL_USERS = "SELECT * FROM Users;";
 
@@ -87,71 +92,77 @@ public class UserRepository {
     }
 
     public boolean createUser(Users user) {
-        String checkSql = "SELECT COUNT(*) FROM Users WHERE username = ? OR email = ?";
-        Integer count = jdbcTemplate.queryForObject(checkSql, Integer.class, user.getUsername(), user.getEmail());
+        String checkSql = "SELECT COUNT(*) FROM Users WHERE username = :username OR email = :email";
+        MapSqlParameterSource checkParams = new MapSqlParameterSource()
+                .addValue("username", user.getUsername())
+                .addValue("email", user.getEmail());
+        Integer count = namedParameterJdbcTemplate.queryForObject(checkSql, checkParams, Integer.class);
         if (count != null && count > 0) {
             return false;
         }
 
-        String sql = "INSERT INTO Users (username, password, fullName, email, phone, address, role, membership_level_id, status, created_at, updated_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
-        int rows = jdbcTemplate.update(sql, 
-                user.getUsername(),
-                user.getPassword(),
-                user.getFullName(),
-                user.getEmail(),
-                user.getPhone(),
-                user.getAddress(),
-                user.getRole().getValue(),
-                user.getMembershipLevel() != null ? user.getMembershipLevel().getId() : null,
-                user.getStatus().getValue(),
-                user.getCreatedAt() != null ? Timestamp.valueOf(user.getCreatedAt()) : Timestamp.valueOf(LocalDateTime.now()),
-                user.getUpdatedAt() != null ? Timestamp.valueOf(user.getUpdatedAt()) : Timestamp.valueOf(LocalDateTime.now())
-        );
+        String sql = "INSERT INTO Users (username, password, fullName, email, phone, address, role, membership_level_id, image_url, status, created_at, updated_at) "
+                   + "VALUES (:username, :password, :fullName, :email, :phone, :address, :role, :membershipLevelId, :imageUrl, :status, :createdAt, :updatedAt)";
+
+        MapSqlParameterSource params = new MapSqlParameterSource()
+            .addValue("username", user.getUsername())
+            .addValue("password", user.getPassword())
+            .addValue("fullName", user.getFullName())
+            .addValue("email", user.getEmail())
+            .addValue("phone", user.getPhone())
+            .addValue("address", user.getAddress())
+            .addValue("role", user.getRole().getValue())
+            .addValue("membershipLevelId", user.getMembershipLevel() != null ? user.getMembershipLevel().getId() : null)
+            .addValue("imageUrl", user.getImageUrl())
+            .addValue("status", user.getStatus() != null ? user.getStatus().getValue() : Status.ACTIVE.getValue())
+            .addValue("createdAt", user.getCreatedAt() != null ? Timestamp.valueOf(user.getCreatedAt()) : Timestamp.valueOf(LocalDateTime.now()))
+            .addValue("updatedAt", user.getUpdatedAt() != null ? Timestamp.valueOf(user.getUpdatedAt()) : Timestamp.valueOf(LocalDateTime.now()));
+
+        int rows = namedParameterJdbcTemplate.update(sql, params);
         return rows > 0;
     }
 
     public boolean updateUser(Users user) {
         StringBuilder sql = new StringBuilder("UPDATE Users SET ");
         List<String> updates = new ArrayList<>();
-        List<Object> params = new ArrayList<>();
+        MapSqlParameterSource params = new MapSqlParameterSource();
 
         if (user.getUsername() != null && !user.getUsername().trim().isEmpty()) {
-            updates.add("username=?");
-            params.add(user.getUsername());
+            updates.add("username=:username");
+            params.addValue("username", user.getUsername());
         }
         if (user.getPassword() != null && !user.getPassword().trim().isEmpty()) {
-            updates.add("password=?");
-            params.add(user.getPassword());
+            updates.add("password=:password");
+            params.addValue("password", user.getPassword());
         }
         if (user.getFullName() != null && !user.getFullName().trim().isEmpty()) {
-            updates.add("fullName=?");
-            params.add(user.getFullName());
+            updates.add("fullName=:fullName");
+            params.addValue("fullName", user.getFullName());
         }
         if (user.getEmail() != null && !user.getEmail().trim().isEmpty()) {
-            updates.add("email=?");
-            params.add(user.getEmail());
+            updates.add("email=:email");
+            params.addValue("email", user.getEmail());
         }
         if (user.getPhone() != null && !user.getPhone().trim().isEmpty()) {
-            updates.add("phone=?");
-            params.add(user.getPhone());
+            updates.add("phone=:phone");
+            params.addValue("phone", user.getPhone());
         }
         if (user.getAddress() != null && !user.getAddress().trim().isEmpty()) {
-            updates.add("address=?");
-            params.add(user.getAddress());
+            updates.add("address=:address");
+            params.addValue("address", user.getAddress());
         }
         if (user.getRole() != null) {
-            updates.add("role=?");
-            params.add(user.getRole().getValue());
+            updates.add("role=:role");
+            params.addValue("role", user.getRole().getValue());
         }
         if (user.getMembershipLevel() != null) {
-            updates.add("membership_level_id=?");
-            params.add(user.getMembershipLevel().getId());
+            updates.add("membership_level_id=:membershipLevel");
+            params.addValue("membershipLevel", user.getMembershipLevel().getId());
         }
         if (user.getStatus() != null) {
-            updates.add("status=?");
-            params.add(user.getStatus().getValue());
+            updates.add("status=:status");
+            params.addValue("status", user.getStatus().getValue());
         }
-        // Use CURRENT_TIMESTAMP compatible with SQL Server/MySQL depending on what they use
         updates.add("updated_at=CURRENT_TIMESTAMP");
 
         if (updates.isEmpty()) {
@@ -159,10 +170,10 @@ public class UserRepository {
         }
 
         sql.append(String.join(", ", updates));
-        sql.append(" WHERE user_id=?");
-        params.add(user.getUserId());
+        sql.append(" WHERE user_id=:userId");
+        params.addValue("userId", user.getUserId());
 
-        int rows = jdbcTemplate.update(sql.toString(), params.toArray());
+        int rows = namedParameterJdbcTemplate.update(sql.toString(), params);
         return rows > 0;
     }
 

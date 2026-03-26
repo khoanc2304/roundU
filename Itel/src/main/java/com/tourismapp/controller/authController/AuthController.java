@@ -15,6 +15,11 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import jakarta.validation.Valid;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.FieldError;
+import com.tourismapp.dto.RegisterRequest;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -83,12 +88,8 @@ public class AuthController {
     }
 
     @PostMapping("/register")
-    public String handleRegister(@RequestParam("username") String username,
-            @RequestParam("password") String password,
-            @RequestParam("fullName") String fullName,
-            @RequestParam("email") String email,
-            @RequestParam("phone") String phone,
-            @RequestParam("address") String address,
+    public String handleRegister(@Valid @ModelAttribute("registerReq") RegisterRequest reqDto,
+            BindingResult bindingResult,
             HttpServletRequest req) {
 
         try {
@@ -96,24 +97,19 @@ public class AuthController {
         } catch (Exception ignored) {
         }
 
-        if (username.isEmpty() || password.isEmpty() || fullName.isEmpty() ||
-                email.isEmpty() || phone.isEmpty() || address.isEmpty()) {
-            req.setAttribute("errorMessage", "Tất cả các trường đều phải được điền đầy đủ.");
-            preserveFormData(req, username, fullName, email, phone, address);
+        if (bindingResult.hasErrors()) {
+            FieldError firstError = bindingResult.getFieldErrors().get(0);
+            req.setAttribute("errorMessage", firstError.getDefaultMessage());
+            preserveFormData(req, reqDto.getUsername(), reqDto.getFullName(), reqDto.getEmail(), reqDto.getPhone(), reqDto.getAddress());
             return ProjectPaths.JSP_REGISTER_PAGE_PATH;
         }
 
-        if (!isValidEmail(email)) {
-            req.setAttribute("errorMessage", "Địa chỉ email không hợp lệ.");
-            preserveFormData(req, username, fullName, email, phone, address);
-            return ProjectPaths.JSP_REGISTER_PAGE_PATH;
-        }
-
-        if (!phone.matches("^\\d{10,11}$")) {
-            req.setAttribute("errorMessage", "Số điện thoại phải gồm 10 hoặc 11 chữ số.");
-            preserveFormData(req, username, fullName, email, phone, address);
-            return ProjectPaths.JSP_REGISTER_PAGE_PATH;
-        }
+        String username = reqDto.getUsername();
+        String password = reqDto.getPassword();
+        String fullName = reqDto.getFullName();
+        String email = reqDto.getEmail();
+        String phone = reqDto.getPhone();
+        String address = reqDto.getAddress();
 
         try (Connection conn = DBConnection.getConnection()) {
             String checkUsernameSql = "SELECT COUNT(*) FROM Users WHERE username = ?";
@@ -182,11 +178,6 @@ public class AuthController {
             preserveFormData(req, username, fullName, email, phone, address);
             return ProjectPaths.JSP_REGISTER_PAGE_PATH;
         }
-    }
-
-    private boolean isValidEmail(String email) {
-        String emailRegex = "^[a-zA-Z0-9_+&*-]+(?:\\.[a-zA-Z0-9_+&*-]+)*@(?:[a-zA-Z0-9-]+\\.)+[a-zA-Z]{2,7}$";
-        return email.matches(emailRegex);
     }
 
     private void preserveFormData(HttpServletRequest req, String username, String fullName, String email, String phone,

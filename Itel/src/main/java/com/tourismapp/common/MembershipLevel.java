@@ -4,8 +4,6 @@
  */
 package com.tourismapp.common;
 
-import static com.tourismapp.common.MembershipLevel.values;
-
 /**
  *
  * @author Admin
@@ -32,8 +30,8 @@ public enum MembershipLevel {
     public String getValue() {
         return value;
     }
-    
-    public int getLevelId(){
+
+    public int getLevelId() {
         return id;
     }
 

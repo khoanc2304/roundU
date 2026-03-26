@@ -9,10 +9,27 @@ import java.util.logging.Logger;
 
 public class DBConnection {
 
-    public static String driverName = "com.mysql.cj.jdbc.Driver";
-    public static String dbURL = "jdbc:mysql://localhost:3306/Itel_Shop?useSSL=false&allowPublicKeyRetrieval=true&useUnicode=true&characterEncoding=UTF-8&serverTimezone=UTC";
-    public static String userDB = "root";
-    public static String passDB = "khoa7619";
+    public static String driverName;
+    public static String dbURL;
+    public static String userDB;
+    public static String passDB;
+
+    static {
+        try (java.io.InputStream input = DBConnection.class.getClassLoader().getResourceAsStream("application.properties")) {
+            java.util.Properties prop = new java.util.Properties();
+            if (input != null) {
+                prop.load(input);
+                driverName = prop.getProperty("db.driver");
+                dbURL = prop.getProperty("db.url");
+                userDB = prop.getProperty("db.username");
+                passDB = prop.getProperty("db.password");
+            } else {
+                Logger.getLogger(DBConnection.class.getName()).log(Level.SEVERE, "application.properties not found!");
+            }
+        } catch (java.io.IOException ex) {
+            Logger.getLogger(DBConnection.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
 
     public static Connection getConnection() {
         Connection con = null;

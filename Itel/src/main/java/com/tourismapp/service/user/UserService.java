@@ -1,7 +1,6 @@
 package com.tourismapp.service.user;
 
 import com.tourismapp.common.MembershipLevel;
-import com.tourismapp.common.Status;
 import com.tourismapp.repository.DBConnection;
 import com.tourismapp.repository.user.UserRepository;
 import com.tourismapp.entity.Users;
@@ -11,7 +10,6 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.time.LocalDateTime;
 import java.util.*;
 import org.springframework.stereotype.Service;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -64,7 +62,8 @@ public class UserService implements IUserService {
             throw new IllegalArgumentException("Cấp độ thành viên không tồn tại.");
         }
         if (user.getPassword() != null && !user.getPassword().isEmpty() && !user.getPassword().startsWith("$2a$")) {
-            user.setPassword(org.mindrot.jbcrypt.BCrypt.hashpw(user.getPassword(), org.mindrot.jbcrypt.BCrypt.gensalt()));
+            user.setPassword(
+                    org.mindrot.jbcrypt.BCrypt.hashpw(user.getPassword(), org.mindrot.jbcrypt.BCrypt.gensalt()));
         }
         return UserRepository.createUser(user);
     }
@@ -207,60 +206,23 @@ public class UserService implements IUserService {
     // ADDITIONAL METHODS
     // ----------------------
     public boolean isUsernameExists(String username) {
-        String sql = "SELECT COUNT(*) FROM Users WHERE username = ?";
-        return checkExistence(sql, username);
+        return UserRepository.usernameExists(username);
     }
 
     public boolean isEmailExists(String email) {
-        String sql = "SELECT COUNT(*) FROM Users WHERE email = ?";
-        return checkExistence(sql, email);
+        return UserRepository.emailExists(email);
     }
 
     public boolean isPhoneExists(String phone) {
-        String sql = "SELECT COUNT(*) FROM Users WHERE phone = ?";
-        return checkExistence(sql, phone);
-    }
-
-    private boolean checkExistence(String sql, String value) {
-        try (Connection conn = DBConnection.getConnection(); PreparedStatement ps = conn.prepareStatement(sql)) {
-            ps.setString(1, value);
-            try (ResultSet rs = ps.executeQuery()) {
-                return rs.next() && rs.getInt(1) > 0;
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        return false;
+        return UserRepository.phoneExists(phone);
     }
 
     public boolean insertUser(Users user) {
-        String sql = "INSERT INTO Users (username, password, fullName, email, phone, address, role, membership_level_id, image_url, status, created_at, updated_at) "
-                + "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
-        try (Connection conn = DBConnection.getConnection(); PreparedStatement ps = conn.prepareStatement(sql)) {
-
-            String passToSave = user.getPassword();
-            if (passToSave != null && !passToSave.isEmpty() && !passToSave.startsWith("$2a$")) {
-                passToSave = org.mindrot.jbcrypt.BCrypt.hashpw(passToSave, org.mindrot.jbcrypt.BCrypt.gensalt());
-            }
-
-            ps.setString(1, user.getUsername());
-            ps.setString(2, passToSave);
-            ps.setString(3, user.getFullName());
-            ps.setString(4, user.getEmail());
-            ps.setString(5, user.getPhone());
-            ps.setString(6, user.getAddress());
-            ps.setString(7, user.getRole().getValue());
-            ps.setInt(8, user.getMembershipLevel().getId());
-            ps.setString(9, user.getImageUrl());
-            ps.setString(10, Status.ACTIVE.toString());
-            ps.setObject(11, LocalDateTime.now());
-            ps.setObject(12, LocalDateTime.now());
-
-            return ps.executeUpdate() > 0;
-        } catch (SQLException e) {
-            e.printStackTrace();
+        if (user.getPassword() != null && !user.getPassword().isEmpty() && !user.getPassword().startsWith("$2a$")) {
+            user.setPassword(
+                    org.mindrot.jbcrypt.BCrypt.hashpw(user.getPassword(), org.mindrot.jbcrypt.BCrypt.gensalt()));
         }
-        return false;
+        return UserRepository.createUser(user);
     }
 
     private boolean isValidMembershipLevel(int levelId) {
