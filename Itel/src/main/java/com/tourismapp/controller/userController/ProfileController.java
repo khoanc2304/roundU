@@ -1,19 +1,15 @@
 package com.tourismapp.controller.userController;
 
 import com.tourismapp.config.ProjectPaths;
-import com.tourismapp.controller.mainController.MainControllerServlet;
 import com.tourismapp.entity.Users;
 import com.tourismapp.service.user.IUserService;
 import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestParam;
-
-import java.io.IOException;
 import java.util.regex.Pattern;
 
 @Controller
@@ -22,8 +18,8 @@ public class ProfileController {
     @Autowired
     private IUserService userService;
 
-    @GetMapping(MainControllerServlet.PROFILEPAGE_SERVLET)
-    public String handleGetProfile(@RequestParam(value = "action", required = false, defaultValue = MainControllerServlet.ACTION_VIEW_PROFILE) String action,
+    @GetMapping("/profilePage")
+    public String handleGetProfile(@RequestParam(value = "action", required = false, defaultValue = "viewProfile") String action,
                                    HttpServletRequest request, HttpSession session) {
         Users loggedUser = (Users) session.getAttribute("loggedUser");
 
@@ -32,13 +28,13 @@ public class ProfileController {
         }
 
         switch (action) {
-            case MainControllerServlet.ACTION_VIEW_PROFILE:
+            case "viewProfile":
                 request.setAttribute("user", loggedUser);
                 return ProjectPaths.JSP_PROFILEPAGE_PATH;
-            case MainControllerServlet.ACTION_EDIT_PROFILE:
+            case "editProfile":
                 request.setAttribute("user", loggedUser);
                 return ProjectPaths.JSP_EDIT_PROFILEPAGE_PATH;
-            case MainControllerServlet.ACTION_CHANGE_PASSWORD:
+            case "changePassword":
                 request.setAttribute("user", loggedUser);
                 return ProjectPaths.JSP_CHANGE_PASSWORD_PATH;
             default:
@@ -46,7 +42,7 @@ public class ProfileController {
         }
     }
 
-    @PostMapping(MainControllerServlet.PROFILEPAGE_SERVLET)
+    @PostMapping("/profilePage")
     public String handlePostProfile(@RequestParam(value = "action", required = false, defaultValue = "") String action,
                                     @RequestParam(value = "fullName", required = false) String fullName,
                                     @RequestParam(value = "email", required = false) String email,
@@ -60,7 +56,7 @@ public class ProfileController {
             return "redirect:" + ProjectPaths.HREF_TO_LOGINPAGE.substring(ProjectPaths.PREFIX_WEB_PATH.length());
         }
 
-        if (MainControllerServlet.ACTION_UPDATE_PROFILE.equals(action)) {
+        if ("updateProfile".equals(action)) {
             StringBuilder errorMessage = new StringBuilder();
             if (fullName == null || !Pattern.matches("^[a-zA-ZÀ-ỹ\\s]{2,50}$", fullName.trim())) {
                 errorMessage.append("Tên phải từ 2-50 ký tự, chỉ chứa chữ cái và khoảng trắng. ");
@@ -81,10 +77,10 @@ public class ProfileController {
                 return ProjectPaths.JSP_EDIT_PROFILEPAGE_PATH;
             }
 
-            loggedUser.setFullName(fullName.trim());
-            loggedUser.setEmail(email.trim());
-            loggedUser.setPhone(phone.trim());
-            loggedUser.setAddress(address.trim());
+            loggedUser.setFullName(fullName != null ? fullName.trim() : "");
+            loggedUser.setEmail(email != null ? email.trim() : "");
+            loggedUser.setPhone(phone != null ? phone.trim() : "");
+            loggedUser.setAddress(address != null ? address.trim() : "");
 
             boolean updated = userService.updateUser(loggedUser);
             if (updated) {

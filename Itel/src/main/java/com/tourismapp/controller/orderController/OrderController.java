@@ -1,7 +1,6 @@
 package com.tourismapp.controller.orderController;
 
 import com.tourismapp.config.ProjectPaths;
-import com.tourismapp.controller.mainController.MainControllerServlet;
 import com.tourismapp.entity.Cart;
 import com.tourismapp.entity.Orders;
 import com.tourismapp.entity.Product;
@@ -38,7 +37,7 @@ public class OrderController {
     private IProductService productService;
 
     // CHECKOUT PAGE GET
-    @GetMapping(MainControllerServlet.CHECKOUTPAGE_SERVLET)
+    @GetMapping("/checkoutPage")
     public String showCheckoutPage(HttpServletRequest request, HttpSession session) {
         Users user = (Users) session.getAttribute("loggedUser");
         if (user == null) {
@@ -70,7 +69,7 @@ public class OrderController {
     }
 
     // CHECKOUT PAGE POST (Selected Items)
-    @PostMapping(MainControllerServlet.CHECKOUTPAGE_SERVLET)
+    @PostMapping("/checkoutPage")
     public String handleCheckoutSelectedItems(HttpServletRequest request, HttpSession session) {
         Users user = (Users) session.getAttribute("loggedUser");
         if (user == null) {
@@ -138,8 +137,8 @@ public class OrderController {
         return ProjectPaths.JSP_CHECKOUTPAGE_PATH;
     }
 
-    // ORDER HISTORY
-    @GetMapping(MainControllerServlet.ORDERHISTORY_SERVLET)
+    // ORDER HISTORY GET
+    @GetMapping("/orderHistory")
     public String showOrderHistory(
             @RequestParam(value = "status", required = false, defaultValue = "all") String status,
             HttpServletRequest request, HttpSession session) {
@@ -164,6 +163,33 @@ public class OrderController {
         }
 
         return ProjectPaths.JSP_ORDERHISTORY_PATH;
+    }
+
+    // ORDER HISTORY POST (Update Order Status)
+    @PostMapping("/orderHistory")
+    public String handleOrderHistoryPost(@RequestParam("action") String action,
+                                         @RequestParam("orderId") Integer orderId,
+                                         @RequestParam("status") String status,
+                                         HttpServletRequest request, HttpSession session) {
+        Users user = (Users) session.getAttribute("loggedUser");
+        if (user == null) {
+            return "redirect:" + ProjectPaths.HREF_TO_LOGINPAGE.substring(ProjectPaths.PREFIX_WEB_PATH.length());
+        }
+
+        if ("updateOrderStatus".equals(action)) {
+            try {
+                boolean success = orderService.updateOrderStatus(orderId, status);
+                if (success) {
+                    session.setAttribute("successMessage", "Cập nhật trạng thái đơn hàng thành công.");
+                } else {
+                    session.setAttribute("errorMessage", "Cập nhật trạng thái đơn hàng thất bại.");
+                }
+            } catch (Exception e) {
+                session.setAttribute("errorMessage", "Lỗi: " + e.getMessage());
+            }
+        }
+
+        return "redirect:/orderHistory";
     }
 
     // SIMPLE ORDER HISTORY DEBUG

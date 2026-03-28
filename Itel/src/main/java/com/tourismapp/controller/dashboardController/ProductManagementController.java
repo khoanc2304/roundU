@@ -2,7 +2,6 @@ package com.tourismapp.controller.dashboardController;
 
 import com.tourismapp.common.Status;
 import com.tourismapp.config.ProjectPaths;
-import com.tourismapp.controller.mainController.MainControllerServlet;
 import com.tourismapp.entity.Brand;
 import org.springframework.beans.factory.annotation.Autowired;
 import com.tourismapp.entity.Category;
@@ -27,7 +26,7 @@ import java.util.Optional;
 
 @RequiresRole({UserRole.ADMIN, UserRole.STAFF})
 @Controller
-@RequestMapping(MainControllerServlet.PRODUCT_MANAGEMENT_SERVLET)
+@RequestMapping("/productManagement")
 public class ProductManagementController {
 
     @Autowired
@@ -46,10 +45,10 @@ public class ProductManagementController {
             HttpServletRequest request, HttpSession session) {
 
         switch (action) {
-            case MainControllerServlet.ACTION_CREATE_PRODUCT_FORM:
+            case "createProductForm":
                 return ProjectPaths.JSP_PATH_DASHBOARD + "/productManagement/createProduct.jsp";
 
-            case MainControllerServlet.ACTION_MANAGE_PRODUCT:
+            case "manageProduct":
                 if (id == null) {
                     session.setAttribute("errorMessage", "Thiếu tham số Id sản phẩm!");
                     return showAllProducts(session);
@@ -68,7 +67,7 @@ public class ProductManagementController {
                 request.setAttribute("product", product.get());
                 return ProjectPaths.JSP_PATH_DASHBOARD + "/productManagement/manageProduct.jsp";
 
-            case MainControllerServlet.ACTION_SEARCH_PRODUCT:
+            case "searchProduct":
                 List<Product> products = productService.searchProductsByName(qProduct);
                 request.setAttribute("products", products);
                 return ProjectPaths.JSP_PRODUCTMANAGEMENT_PATH;
@@ -92,7 +91,7 @@ public class ProductManagementController {
             HttpServletRequest request, HttpSession session) {
 
         switch (action) {
-            case MainControllerServlet.ACTION_CREATE_PRODUCT:
+            case "createProduct":
                 if (name != null && !name.isEmpty() && priceStr != null && !priceStr.isEmpty()) {
                     try {
                         Product product = new Product(name, description, new BigDecimal(priceStr),
@@ -114,7 +113,7 @@ public class ProductManagementController {
                 }
                 return ProjectPaths.JSP_PATH_DASHBOARD + "/productManagement/createProduct.jsp";
 
-            case MainControllerServlet.ACTION_EDIT_PRODUCT:
+            case "editProduct":
                 if (productId == null)
                     return showAllProducts(session);
 
@@ -133,8 +132,7 @@ public class ProductManagementController {
 
                     if (productService.editProduct(p)) {
                         session.setAttribute("successMessage", "Cập nhập sản phẩm thành công.");
-                        return "redirect:/main?action=" + MainControllerServlet.ACTION_MANAGE_PRODUCT + "&id="
-                                + productId;
+                        return "redirect:/productManagement?action=manageProduct&id=" + productId;
                     } else {
                         session.setAttribute("errorMessage", "Cập nhập sản phẩm thất bại!");
                         request.setAttribute("product", p);
@@ -143,7 +141,7 @@ public class ProductManagementController {
                 }
                 return showAllProducts(session);
 
-            case MainControllerServlet.ACTION_DELETE_PRODUCT:
+            case "deleteProduct":
                 if (productId != null) {
                     if (productService.deleteProduct(productId)) {
                         session.setAttribute("successMessage", "Xóa sản phẩm thành công.");

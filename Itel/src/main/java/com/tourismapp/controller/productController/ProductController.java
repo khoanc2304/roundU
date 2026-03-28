@@ -2,7 +2,6 @@ package com.tourismapp.controller.productController;
 
 import com.google.gson.Gson;
 import com.tourismapp.config.ProjectPaths;
-import com.tourismapp.controller.mainController.MainControllerServlet;
 import com.tourismapp.dto.BrandCategoryDTO;
 import com.tourismapp.entity.Product;
 import com.tourismapp.entity.ProductImage;
@@ -26,7 +25,7 @@ import java.io.IOException;
 import java.util.*;
 
 @Controller
-@RequestMapping(MainControllerServlet.PRODUCTPAGE_SERVLET)
+@RequestMapping("/productPage")
 public class ProductController {
 
     @Autowired
@@ -43,7 +42,7 @@ public class ProductController {
             @RequestParam(value = "c", required = false) String category,
             HttpServletRequest request, HttpServletResponse response) throws IOException {
 
-        if (MainControllerServlet.ACTION_FILTER_BY_CRITERIA.equals(action)) {
+        if ("filter".equals(action)) {
             filterProducts(request, response);
             return null;
         }
@@ -60,11 +59,11 @@ public class ProductController {
             HttpServletRequest request, HttpServletResponse response) {
 
         switch (action) {
-            case MainControllerServlet.ACTION_CREATE_REVIEW:
+            case "createReview":
                 return createReview(request, response);
-            case MainControllerServlet.ACTION_EDIT_REVIEW:
+            case "editReview":
                 return editReview(request, response);
-            case MainControllerServlet.ACTION_DELETE_REVIEW:
+            case "deleteReview":
                 return deleteReview(request, response);
             default:
                 return ProjectPaths.JSP_HOMEPAGE_PATH;
@@ -100,7 +99,7 @@ public class ProductController {
             } else {
                 request.getSession().setAttribute("errorMessage", "Review sản phẩm không thành công!");
             }
-            return "redirect:" + ProjectPaths.HREF_TO_PRODUCTPAGE.substring(ProjectPaths.PREFIX_WEB_PATH.length()) + "&id=" + productId;
+            return "redirect:" + ProjectPaths.HREF_TO_PRODUCTPAGE.substring(ProjectPaths.PREFIX_WEB_PATH.length()) + "?id=" + productId;
         } catch (Exception e) {
             request.getSession().setAttribute("errorMessage", "Dữ liệu truyền vào không hợp lệ!");
             ErrDialog.showError("createReview(): " + e.getMessage());
@@ -125,7 +124,7 @@ public class ProductController {
         } else {
             session.setAttribute("errorMessage", "Cập nhập review sản phẩm không thành công!");
         }
-        return "redirect:" + ProjectPaths.HREF_TO_PRODUCTPAGE.substring(ProjectPaths.PREFIX_WEB_PATH.length()) + "&id=" + productId;
+        return "redirect:" + ProjectPaths.HREF_TO_PRODUCTPAGE.substring(ProjectPaths.PREFIX_WEB_PATH.length()) + "?id=" + productId;
     }
 
     private String deleteReview(HttpServletRequest request, HttpServletResponse response) {
@@ -142,7 +141,7 @@ public class ProductController {
         } else {
             session.setAttribute("errorMessage", "Xoá review sản phẩm không thành công!");
         }
-        return "redirect:" + ProjectPaths.HREF_TO_PRODUCTPAGE.substring(ProjectPaths.PREFIX_WEB_PATH.length()) + "&id=" + productId;
+        return "redirect:" + ProjectPaths.HREF_TO_PRODUCTPAGE.substring(ProjectPaths.PREFIX_WEB_PATH.length()) + "?id=" + productId;
     }
 
     private String showActiveProductDetail(HttpServletRequest request, HttpServletResponse response)
@@ -259,7 +258,11 @@ public class ProductController {
     }
 
     private String showProductsByCategory(String category, HttpServletRequest request) {
-        int id = productService.mapCategoryId(category);
+        Integer id = productService.mapCategoryId(category);
+        if (id == null) {
+            request.getSession().setAttribute("errorMessage", "Không tìm thấy danh mục: " + category);
+            return "redirect:/homePage";
+        }
         List<Product> categoryProducts = productService.getProductsByCategory(id);
         List<BrandCategoryDTO> brandCategoryDTOs = brandCategoryService.getBrandsByCategoryId(id);
 
@@ -287,7 +290,11 @@ public class ProductController {
         int maxPrice = maxPriceStr != null && !maxPriceStr.isEmpty() ? Integer.parseInt(maxPriceStr)
                 : Integer.MAX_VALUE;
 
-        int categoryId = productService.mapCategoryId(category);
+        Integer categoryId = productService.mapCategoryId(category);
+        if (categoryId == null) {
+            response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+            return;
+        }
         List<Product> filteredProducts = productService.filterProductsByCriteria(categoryId, brands, cpus, minPrice,
                 maxPrice);
 

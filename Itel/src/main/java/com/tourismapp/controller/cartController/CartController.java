@@ -1,7 +1,6 @@
 package com.tourismapp.controller.cartController;
 
 import com.tourismapp.config.ProjectPaths;
-import com.tourismapp.controller.mainController.MainControllerServlet;
 import com.tourismapp.entity.Cart;
 import com.tourismapp.entity.CartItem;
 import com.tourismapp.entity.Product;
@@ -32,7 +31,7 @@ public class CartController {
     @Autowired
     private IUserService userService;
 
-    @RequestMapping(value = MainControllerServlet.CARTPAGE_SERVLET, method = {RequestMethod.GET, RequestMethod.POST})
+    @RequestMapping(value = "/cartPage", method = {RequestMethod.GET, RequestMethod.POST})
     public String showCartPage(HttpServletRequest request, HttpSession session) {
         Cart cart = getOrCreateCart(session);
 

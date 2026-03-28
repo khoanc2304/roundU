@@ -2,7 +2,6 @@ package com.tourismapp.controller.dashboardController;
 
 import com.tourismapp.common.Status;
 import com.tourismapp.config.ProjectPaths;
-import com.tourismapp.controller.mainController.MainControllerServlet;
 import com.tourismapp.entity.Brand;
 import com.tourismapp.entity.Product;
 import com.tourismapp.service.brand.IBrandService;
@@ -21,7 +20,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 @RequiresRole({UserRole.ADMIN, UserRole.STAFF})
 @Controller
-@RequestMapping(MainControllerServlet.BRAND_MANAGEMENT_SERVLET)
+@RequestMapping("/brandManagement")
 public class BrandManagementController {
 
     @Autowired
@@ -35,7 +34,7 @@ public class BrandManagementController {
             HttpServletRequest request) {
 
         switch (action) {
-            case MainControllerServlet.ACTION_MANAGE_BRAND:
+            case "manageBrand":
                 List<Brand> brandList;
                 if (country != null && !country.isEmpty()) {
                     brandList = brandService.findBrandsByCountry(country);
@@ -45,7 +44,7 @@ public class BrandManagementController {
                 request.setAttribute("brands", brandList);
                 return ProjectPaths.JSP_BRANDMANAGEMENT_PATH;
 
-            case MainControllerServlet.ACTION_FIND_BRAND:
+            case "findBrand":
                 if (searchName == null || searchName.trim().isEmpty() || searchName.trim().length() < 2
                         || searchName.trim().length() > 50) {
                     request.setAttribute("error", "Tên tìm kiếm không hợp lệ (2-50 ký tự)");
@@ -60,10 +59,10 @@ public class BrandManagementController {
                 }
                 return ProjectPaths.JSP_BRANDMANAGEMENT_PATH;
 
-            case MainControllerServlet.ACTION_NAVIGATE_TO_CREATE_BRAND:
+            case "navigateToCreateBrand":
                 return ProjectPaths.JSP_CREATEBRAND_PATH;
 
-            case MainControllerServlet.ACTION_NAVIGATE_TO_UPDATE_BRAND:
+            case "navigateToUpdateBrand":
                 if (brandId == null || brandId <= 0) {
                     request.setAttribute("error", "Brand ID không hợp lệ");
                     return ProjectPaths.JSP_BRANDMANAGEMENT_PATH;
@@ -98,11 +97,11 @@ public class BrandManagementController {
 
         try {
             switch (action) {
-                case MainControllerServlet.ACTION_CREATE_BRAND:
+                case "createBrand":
                     return handleCreate(name, country, description, imageUrl, statusParam, request);
-                case MainControllerServlet.ACTION_EDIT_BRAND:
+                case "editBrand":
                     return handleUpdate(brandId, name, country, description, imageUrl, statusParam, request);
-                case MainControllerServlet.ACTION_DELETE_BRAND:
+                case "deleteBrand":
                     return handleDelete(brandId, request);
                 default:
                     return "redirect:"
@@ -127,7 +126,7 @@ public class BrandManagementController {
             Brand brand = new Brand(0, name.trim(), country.trim(), description.trim(), imageUrl.trim(), status);
             brandService.createBrand(brand);
             request.setAttribute("successMessage", "Tạo thương hiệu thành công!");
-            return "redirect:/main?action=" + MainControllerServlet.BRAND_MANAGEMENT_REDIRECT;
+            return "redirect:/brandManagement";
         } catch (Exception e) {
             request.setAttribute("error", "Lỗi tạo thương hiệu: " + e.getMessage());
             return ProjectPaths.JSP_CREATEBRAND_PATH;
@@ -149,7 +148,7 @@ public class BrandManagementController {
             Brand brand = new Brand(brandId, name.trim(), country.trim(), description.trim(), imageUrl.trim(), status);
             brandService.updateBrand(brand);
             request.setAttribute("successMessage", "Cập nhật thương hiệu thành công!");
-            return "redirect:/main?action=" + MainControllerServlet.BRAND_MANAGEMENT_REDIRECT;
+            return "redirect:/brandManagement";
         } catch (Exception e) {
             request.setAttribute("error", "Lỗi cập nhật: " + e.getMessage());
             request.setAttribute("brand", brandService.getBrandById(brandId));
@@ -174,6 +173,6 @@ public class BrandManagementController {
         }
         brandService.deleteBrand(brandId);
         request.setAttribute("successMessage", "Xóa thương hiệu thành công!");
-        return "redirect:/main?action=" + MainControllerServlet.BRAND_MANAGEMENT_REDIRECT;
+        return "redirect:/brandManagement";
     }
 }

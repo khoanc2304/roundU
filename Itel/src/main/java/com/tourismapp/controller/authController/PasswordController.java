@@ -1,7 +1,6 @@
 package com.tourismapp.controller.authController;
 
 import com.tourismapp.config.ProjectPaths;
-import com.tourismapp.controller.mainController.MainControllerServlet;
 import com.tourismapp.repository.DBConnection;
 import com.tourismapp.entity.Users;
 import jakarta.mail.*;
@@ -28,17 +27,17 @@ public class PasswordController {
     private static final String PASSWORD = "cjxy fpgh ivyd emrk";
 
     // --- Forgot Password logic ---
-    @GetMapping(MainControllerServlet.FORGOTPASSWORD_SERVLET)
+    @GetMapping("/forgot-password")
     public String showForgotPasswordPage() {
         return "/WEB-INF/view/pages/forgotPasswordPage/forgotPasswordPage.jsp";
     }
 
-    @PostMapping(MainControllerServlet.FORGOTPASSWORD_SERVLET)
+    @PostMapping("/forgot-password")
     public String handleForgotPasswordPost(@RequestParam(value = "action", required = false, defaultValue = "") String action,
                                            HttpServletRequest request, HttpServletResponse response) {
         String act = action.trim();
         switch (act) {
-            case MainControllerServlet.ACTION_FORGOT_PASSWORD:
+            case "forgotPassword":
                 return handleForgotPassword(request);
             case "verifyOtp":
                 return handleVerifyOtp(request);
@@ -190,7 +189,7 @@ public class PasswordController {
     }
 
     // --- Change Password logic ---
-    @PostMapping(MainControllerServlet.CHANGEPASSWORD_SERVLET)
+    @PostMapping("/changePassword")
     public String handleChangePassword(@RequestParam("currentPassword") String currentPassword,
                                        @RequestParam("newPassword") String newPassword,
                                        @RequestParam("confirmPassword") String confirmPassword,

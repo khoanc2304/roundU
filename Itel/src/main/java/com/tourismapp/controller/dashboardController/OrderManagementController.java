@@ -1,7 +1,6 @@
 package com.tourismapp.controller.dashboardController;
 
 import com.tourismapp.config.ProjectPaths;
-import com.tourismapp.controller.mainController.MainControllerServlet;
 import com.tourismapp.entity.Orders;
 import com.tourismapp.service.order.IOrderService;
 import jakarta.servlet.http.HttpServletRequest;
@@ -18,7 +17,7 @@ import java.util.List;
 
 @RequiresRole({UserRole.ADMIN, UserRole.STAFF})
 @Controller
-@RequestMapping(MainControllerServlet.ORDER_MANAGEMENT_SERVLET)
+@RequestMapping("/orderManagement")
 public class OrderManagementController {
 
     @Autowired

@@ -2,7 +2,6 @@ package com.tourismapp.controller.dashboardController;
 
 import com.tourismapp.common.UserRole;
 import com.tourismapp.config.ProjectPaths;
-import com.tourismapp.controller.mainController.MainControllerServlet;
 import com.tourismapp.entity.Brand;
 import com.tourismapp.entity.Category;
 import com.tourismapp.dto.OrderStat;
@@ -10,9 +9,7 @@ import com.tourismapp.entity.Orders;
 import org.springframework.beans.factory.annotation.Autowired;
 import com.tourismapp.entity.Product;
 import com.tourismapp.entity.Users;
-import com.tourismapp.service.brand.BrandService;
 import com.tourismapp.service.brand.IBrandService;
-import com.tourismapp.service.category.CategoryService;
 import com.tourismapp.service.category.ICategoryService;
 import com.tourismapp.service.product.IProductService;
 import com.tourismapp.service.user.IUserService;
@@ -20,11 +17,9 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.stereotype.Controller;
 import com.tourismapp.annotation.RequiresRole;
-import com.tourismapp.common.UserRole;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.*;
@@ -32,7 +27,7 @@ import java.util.logging.Logger;
 
 @RequiresRole({UserRole.ADMIN, UserRole.STAFF})
 @Controller
-@RequestMapping(MainControllerServlet.DASHBOARDPAGE_SERVLET)
+@RequestMapping("/dashboardPage")
 public class DashboardController {
 
     @Autowired
@@ -199,11 +194,13 @@ public class DashboardController {
             int lastMonth = orderStatsByMonth.get(idx - 1).getMonth();
             int lastYear = orderStatsByMonth.get(idx - 1).getYear();
             Set<Integer> customerIdsOfLastMonth = new HashSet<>();
-            for (Orders o : allOrders) {
-                if (o.getOrderDate() != null &&
-                        o.getOrderDate().getMonthValue() == lastMonth &&
-                        o.getOrderDate().getYear() == lastYear && o.getUser() != null) {
-                    customerIdsOfLastMonth.add(o.getUser().getUserId());
+            if (allOrders != null) {
+                for (Orders o : allOrders) {
+                    if (o.getOrderDate() != null &&
+                            o.getOrderDate().getMonthValue() == lastMonth &&
+                            o.getOrderDate().getYear() == lastYear && o.getUser() != null) {
+                        customerIdsOfLastMonth.add(o.getUser().getUserId());
+                    }
                 }
             }
             int activeCustomerCountLastMonth = customerIdsOfLastMonth.size();

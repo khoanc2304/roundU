@@ -1,7 +1,6 @@
 package com.tourismapp.controller.productController;
 
 import com.tourismapp.config.ProjectPaths;
-import com.tourismapp.controller.mainController.MainControllerServlet;
 import com.tourismapp.entity.Product;
 import com.tourismapp.service.product.IProductService;
 import jakarta.servlet.http.HttpServletRequest;
@@ -29,7 +28,7 @@ public class CompareController {
     @Autowired
     private IProductService productService;
 
-    @GetMapping(MainControllerServlet.COMPARE_SERVLET)
+    @GetMapping("/compareProduct")
     public String showComparePage(@RequestParam(value = "productIds", required = false) String productIds,
             HttpServletRequest request, HttpSession session) {
         if (productIds != null && !productIds.isEmpty()) {
@@ -58,7 +57,7 @@ public class CompareController {
         return ProjectPaths.JSP_COMPARE_PATH;
     }
 
-    @PostMapping(MainControllerServlet.COMPARE_SERVLET)
+    @PostMapping("/compareProduct")
     @ResponseBody
     @SuppressWarnings("unchecked")
     public void handleCompareAction(@RequestParam("action") String action,

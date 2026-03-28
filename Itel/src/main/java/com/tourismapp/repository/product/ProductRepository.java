@@ -39,8 +39,8 @@ public class ProductRepository {
     private static final String GET_PRODUCT_IMAGES_BY_ID = "SELECT * FROM ProductImages WHERE product_id = ?";
     private static final String GET_INFO_PRODUCT_BY_ID = "SELECT a.name, pd.attribute_value, a.unit FROM ProductDetail pd JOIN Attribute a ON pd.attribute_id = a.attribute_id WHERE pd.product_id = ?;";
     private static final String GET_PRODUCTS_BY_CATEGORY = "SELECT * FROM Product WHERE category_id = ?";
-    private static final String MAP_CATEGORY_ID = "SELECT category_id FROM Category WHERE name = ?";
-    private static final String MAP_BRAND_ID = "SELECT brand_id FROM Brand WHERE name = ?";
+    private static final String MAP_CATEGORY_ID = "SELECT category_id FROM Category WHERE LOWER(name) = LOWER(?)";
+    private static final String MAP_BRAND_ID = "SELECT brand_id FROM Brand WHERE LOWER(name) = LOWER(?)";
     private static final String GET_PRODUCT_DETAIL_BY_ID_TOP_5 = "SELECT p.attribute_value, a.unit FROM ProductDetail p JOIN Attribute a ON p.attribute_id = a.attribute_id WHERE p.product_id = ?;";
 
     private static final String FILTER_PRODUCTS_BY_CRITERIA = "SELECT DISTINCT p.* FROM Product p LEFT JOIN ProductDetail pd ON p.product_id = pd.product_id WHERE p.category_id = ? AND p.price BETWEEN ? AND ? AND (p.brand_id IN (SELECT brand_id FROM Brand WHERE name IN (?)) OR p.brand_id IS NULL) AND (pd.attribute_id = 1 AND pd.attribute_value IN (?))";

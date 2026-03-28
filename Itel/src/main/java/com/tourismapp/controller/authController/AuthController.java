@@ -4,7 +4,6 @@ import com.tourismapp.common.MembershipLevel;
 import com.tourismapp.common.Status;
 import com.tourismapp.common.UserRole;
 import com.tourismapp.config.ProjectPaths;
-import com.tourismapp.controller.mainController.MainControllerServlet;
 import com.tourismapp.repository.DBConnection;
 import com.tourismapp.entity.Users;
 import com.tourismapp.service.user.IUserService;
@@ -39,19 +38,19 @@ public class AuthController {
     @Autowired
     private IUserService userService;
 
-    @GetMapping(MainControllerServlet.LOGINPAGE_SERVLET)
+    @GetMapping("/loginPage")
     public String showLoginPage() {
         return ProjectPaths.JSP_LOGINPAGE_PATH;
     }
 
-    @PostMapping(MainControllerServlet.LOGINPAGE_SERVLET)
+    @PostMapping("/loginPage")
     public String handleLogin(@RequestParam("action") String action,
             @RequestParam("identifier") String identifier,
             @RequestParam("password") String password,
             HttpServletRequest request,
             HttpSession session) {
 
-        if (MainControllerServlet.ACTION_LOGIN.equals(action.trim())) {
+        if ("login".equals(action.trim())) {
             Optional<Users> loggedUser = userService.findUserByCredentials(identifier, password);
             if (loggedUser.isPresent()) {
                 Users user = loggedUser.get();
@@ -74,7 +73,7 @@ public class AuthController {
         }
     }
 
-    @GetMapping(MainControllerServlet.LOGOUTPAGE_SERVLET)
+    @GetMapping("/logoutPage")
     public String handleLogout(HttpServletRequest request, HttpSession session) {
         if (session != null) {
             session.invalidate();

@@ -1,7 +1,6 @@
 package com.tourismapp.controller.homeController;
 
 import com.tourismapp.config.ProjectPaths;
-import com.tourismapp.controller.mainController.MainControllerServlet;
 import com.tourismapp.entity.Brand;
 import org.springframework.beans.factory.annotation.Autowired;
 import com.tourismapp.entity.Category;
@@ -22,7 +21,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Controller
-@RequestMapping(MainControllerServlet.HOMEPAGE_SERVLET)
+@RequestMapping("/homePage")
 public class HomeController {
 
     @Autowired
@@ -35,7 +34,7 @@ public class HomeController {
     @GetMapping
     public String doGet(@RequestParam(value = "action", defaultValue = "") String action,
             HttpServletRequest request, HttpSession session) {
-        if (MainControllerServlet.ACTION_SEARCH_ACTIVE_PRODUCT.equals(action)) {
+        if ("searchActiveProduct".equals(action)) {
             return searchActiveProduct(request, session);
         } else {
             return showActiveProducts(request, session);

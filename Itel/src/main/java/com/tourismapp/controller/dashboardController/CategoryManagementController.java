@@ -2,7 +2,6 @@ package com.tourismapp.controller.dashboardController;
 
 import com.tourismapp.common.Status;
 import com.tourismapp.config.ProjectPaths;
-import com.tourismapp.controller.mainController.MainControllerServlet;
 import com.tourismapp.entity.Category;
 import com.tourismapp.service.category.ICategoryService;
 import jakarta.servlet.http.HttpServletRequest;
@@ -21,7 +20,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 @RequiresRole({UserRole.ADMIN, UserRole.STAFF})
 @Controller
-@RequestMapping(MainControllerServlet.CATEGORY_MANAGEMENT_SERVLET)
+@RequestMapping("/categoryManagement")
 public class CategoryManagementController {
 
     @Autowired
@@ -34,10 +33,10 @@ public class CategoryManagementController {
             HttpServletRequest request) {
 
         switch (action) {
-            case MainControllerServlet.ACTION_CREATE_CATEGORY_FORM:
-                return ProjectPaths.JSP_PATH_DASHBOARD + "/categoryManagement/createCategory.jsp";
+            case "createCategoryForm":
+                return ProjectPaths.JSP_PATH_DASHBOARD + "categoryManagement/createCategory.jsp";
 
-            case MainControllerServlet.ACTION_UPDATE_CATEGORY_FORM:
+            case "updateCategoryForm":
                 if (id == null) {
                     request.setAttribute("errorMessage", "Thiếu tham số ID category");
                     return showAllCategories(request);
@@ -48,9 +47,9 @@ public class CategoryManagementController {
                     return showAllCategories(request);
                 }
                 request.setAttribute("category", category.get());
-                return ProjectPaths.JSP_PATH_DASHBOARD + "/categoryManagement/updateCategory.jsp";
+                return ProjectPaths.JSP_PATH_DASHBOARD + "categoryManagement/updateCategory.jsp";
 
-            case MainControllerServlet.ACTION_SEARCH_CATEGORY:
+            case "searchCategory":
                 List<Category> categories = categoryService.searchCategoriesByName(qCategory);
                 request.setAttribute("categories", categories);
                 return ProjectPaths.JSP_CATEGORYMANAGEMENT_PATH;
@@ -70,7 +69,7 @@ public class CategoryManagementController {
             HttpServletRequest request) {
 
         switch (action) {
-            case MainControllerServlet.ACTION_CREATE_CATEGORY:
+            case "createCategory":
                 if (name != null && !name.isEmpty()) {
                     Category newCategory = new Category(name, description, imageUrl,
                             statusParam != null ? Status.valueOf(statusParam) : null);
@@ -78,10 +77,10 @@ public class CategoryManagementController {
                     return showAllCategories(request);
                 } else {
                     request.setAttribute("errorMessage", "Các trường thông tin không thể bỏ trống");
-                    return ProjectPaths.JSP_PATH_DASHBOARD + "/categoryManagement/createCategory.jsp";
+                    return ProjectPaths.JSP_PATH_DASHBOARD + "categoryManagement/createCategory.jsp";
                 }
 
-            case MainControllerServlet.ACTION_EDIT_CATEGORY:
+            case "editCategory":
                 if (categoryId == null) {
                     request.setAttribute("errorMessage", "Thiếu tham số ID category");
                     return showAllCategories(request);
@@ -96,17 +95,16 @@ public class CategoryManagementController {
                         cat.setStatus(Status.valueOf(statusParam.toUpperCase()));
 
                     if (categoryService.editCategory(cat)) {
-                        return "redirect:" + ProjectPaths.HREF_TO_CATEGORYMANAGEMENT.substring(ProjectPaths.PREFIX_WEB_PATH.length())
-                                .substring(ProjectPaths.PREFIX_WEB_PATH.length());
+                        return "redirect:/categoryManagement";
                     } else {
                         request.setAttribute("errorMessage", "Failed to update the category.");
                         request.setAttribute("category", cat);
-                        return ProjectPaths.JSP_PATH_DASHBOARD + "/categoryManagement/updateCategory.jsp";
+                        return ProjectPaths.JSP_PATH_DASHBOARD + "categoryManagement/updateCategory.jsp";
                     }
                 }
                 return showAllCategories(request);
 
-            case MainControllerServlet.ACTION_DELETE_CATEGORY:
+            case "deleteCategory":
                 if (categoryId != null) {
                     boolean success = categoryService.deleteCategory(categoryId);
                     if (!success) {

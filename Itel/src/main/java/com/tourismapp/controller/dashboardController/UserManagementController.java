@@ -4,7 +4,6 @@ import com.tourismapp.common.MembershipLevel;
 import com.tourismapp.common.Status;
 import com.tourismapp.common.UserRole;
 import com.tourismapp.config.ProjectPaths;
-import com.tourismapp.controller.mainController.MainControllerServlet;
 import com.tourismapp.entity.Users;
 import com.tourismapp.service.user.IUserService;
 import jakarta.servlet.http.HttpServletRequest;
@@ -25,7 +24,7 @@ import java.util.Optional;
 
 @RequiresRole({UserRole.ADMIN, UserRole.STAFF})
 @Controller
-@RequestMapping(MainControllerServlet.USER_MANAGEMENT_SERVLET)
+@RequestMapping("/userManagement")
 public class UserManagementController {
 
     @Autowired
@@ -84,7 +83,7 @@ public class UserManagementController {
                              HttpServletRequest request, HttpSession session) {
         try {
             switch (action) {
-                case MainControllerServlet.ACTION_CREATE_USER:
+                case "createUser":
                     Users newUser = extractUserFromRequest(request);
                     Map<String, String> errors = userService.validateUserData(newUser, Boolean.FALSE);
 
@@ -104,7 +103,7 @@ public class UserManagementController {
                         return ProjectPaths.JSP_PATH_DASHBOARD + "userManagement/createUser.jsp";
                     }
 
-                case MainControllerServlet.ACTION_EDIT_USER:
+                case "editUser":
                     int userId = Integer.parseInt(request.getParameter("id"));
                     Users existingUser = userService.getUserById(userId);
 
@@ -144,7 +143,7 @@ public class UserManagementController {
                     }
                     return "redirect:" + ProjectPaths.HREF_TO_USERMANAGEMENT.substring(ProjectPaths.PREFIX_WEB_PATH.length());
 
-                case MainControllerServlet.ACTION_DELETE_USER:
+                case "deleteUser":
                     int deleteId = Integer.parseInt(request.getParameter("userId"));
                     if (userService.deleteUser(deleteId)) {
                         session.setAttribute("toastMessage", "Xóa người dùng thành công!");
