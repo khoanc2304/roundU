@@ -4,7 +4,6 @@ import com.tourismapp.common.MembershipLevel;
 import com.tourismapp.common.Status;
 import com.tourismapp.common.UserRole;
 import com.tourismapp.config.ProjectPaths;
-import com.tourismapp.repository.DBConnection;
 import com.tourismapp.entity.Users;
 import com.tourismapp.service.user.IUserService;
 import jakarta.servlet.http.HttpServletRequest;
@@ -20,9 +19,6 @@ import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
 import com.tourismapp.dto.RegisterRequest;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
 import java.time.LocalDateTime;
 import java.util.Optional;
 
@@ -59,7 +55,8 @@ public class AuthController {
                 session.setAttribute("successMessage", "Đăng nhập thành công.");
 
                 return switch (role) {
-                    case "admin" -> "redirect:" + ProjectPaths.HREF_TO_DASHBOARDPAGE.substring(ProjectPaths.PREFIX_WEB_PATH.length());
+                    case "admin" -> "redirect:"
+                            + ProjectPaths.HREF_TO_DASHBOARDPAGE.substring(ProjectPaths.PREFIX_WEB_PATH.length());
                     case "staff" -> ProjectPaths.JSP_DASHBOARDPAGE_PATH;
                     default -> ProjectPaths.JSP_HOMEPAGE_PATH;
                 };
@@ -99,7 +96,8 @@ public class AuthController {
         if (bindingResult.hasErrors()) {
             FieldError firstError = bindingResult.getFieldErrors().get(0);
             req.setAttribute("errorMessage", firstError.getDefaultMessage());
-            preserveFormData(req, reqDto.getUsername(), reqDto.getFullName(), reqDto.getEmail(), reqDto.getPhone(), reqDto.getAddress());
+            preserveFormData(req, reqDto.getUsername(), reqDto.getFullName(), reqDto.getEmail(), reqDto.getPhone(),
+                    reqDto.getAddress());
             return ProjectPaths.JSP_REGISTER_PAGE_PATH;
         }
 
@@ -110,66 +108,37 @@ public class AuthController {
         String phone = reqDto.getPhone();
         String address = reqDto.getAddress();
 
-        try (Connection conn = DBConnection.getConnection()) {
-            String checkUsernameSql = "SELECT COUNT(*) FROM Users WHERE username = ?";
-            try (PreparedStatement stmt = conn.prepareStatement(checkUsernameSql)) {
-                stmt.setString(1, username);
-                ResultSet rs = stmt.executeQuery();
-                if (rs.next() && rs.getInt(1) > 0) {
-                    req.setAttribute("errorMessage", "Tên đăng nhập đã được sử dụng, vui lòng chọn tên khác.");
-                    preserveFormData(req, username, fullName, email, phone, address);
-                    return ProjectPaths.JSP_REGISTER_PAGE_PATH;
-                }
+        try {
+            if (userService.isUsernameExists(username)) {
+                req.setAttribute("errorMessage", "Tên đăng nhập đã được sử dụng, vui lòng chọn tên khác.");
+                preserveFormData(req, username, fullName, email, phone, address);
+                return ProjectPaths.JSP_REGISTER_PAGE_PATH;
             }
 
-            String checkPhoneSql = "SELECT COUNT(*) FROM Users WHERE phone = ?";
-            try (PreparedStatement stmt = conn.prepareStatement(checkPhoneSql)) {
-                stmt.setString(1, phone);
-                ResultSet rs = stmt.executeQuery();
-                if (rs.next() && rs.getInt(1) > 0) {
-                    req.setAttribute("errorMessage", "Số điện thoại đã được sử dụng, vui lòng dùng số khác.");
-                    preserveFormData(req, username, fullName, email, phone, address);
-                    return ProjectPaths.JSP_REGISTER_PAGE_PATH;
-                }
+            if (userService.isPhoneExists(phone)) {
+                req.setAttribute("errorMessage", "Số điện thoại đã được sử dụng, vui lòng dùng số khác.");
+                preserveFormData(req, username, fullName, email, phone, address);
+                return ProjectPaths.JSP_REGISTER_PAGE_PATH;
             }
 
-            String checkEmailSql = "SELECT COUNT(*) FROM Users WHERE email = ?";
-            try (PreparedStatement stmt = conn.prepareStatement(checkEmailSql)) {
-                stmt.setString(1, email);
-                ResultSet rs = stmt.executeQuery();
-                if (rs.next() && rs.getInt(1) > 0) {
-                    req.setAttribute("errorMessage", "Email đã được sử dụng, vui lòng chọn email khác.");
-                    preserveFormData(req, username, fullName, email, phone, address);
-                    return ProjectPaths.JSP_REGISTER_PAGE_PATH;
-                }
+            if (userService.isEmailExists(email)) {
+                req.setAttribute("errorMessage", "Email đã được sử dụng, vui lòng chọn email khác.");
+                preserveFormData(req, username, fullName, email, phone, address);
+                return ProjectPaths.JSP_REGISTER_PAGE_PATH;
             }
-
-            String hashedPassword = org.mindrot.jbcrypt.BCrypt.hashpw(password, org.mindrot.jbcrypt.BCrypt.gensalt());
 
             Users newUser = new Users(
-                    username, hashedPassword, fullName, email, phone, address,
+                    username, password, fullName, email, phone, address,
                     UserRole.CUSTOMER, MembershipLevel.STANDARD, null, Status.ACTIVE,
                     LocalDateTime.now(), LocalDateTime.now());
 
-            String sql = "INSERT INTO Users (username, password, fullName, email, phone, address, role, membership_level_id, image_url, status, created_at, updated_at) "
-                    + "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
-
-            try (PreparedStatement ps = conn.prepareStatement(sql)) {
-                ps.setString(1, newUser.getUsername());
-                ps.setString(2, newUser.getPassword());
-                ps.setString(3, newUser.getFullName());
-                ps.setString(4, newUser.getEmail());
-                ps.setString(5, newUser.getPhone());
-                ps.setString(6, newUser.getAddress());
-                ps.setString(7, newUser.getRole().getValue());
-                ps.setInt(8, newUser.getMembershipLevel().getId());
-                ps.setString(9, newUser.getImageUrl());
-                ps.setString(10, newUser.getStatus().toString());
-                ps.setObject(11, newUser.getCreatedAt());
-                ps.setObject(12, newUser.getUpdatedAt());
-
-                ps.executeUpdate();
+            boolean created = userService.insertUser(newUser);
+            if (created) {
                 return ProjectPaths.JSP_REGISTER_THANKYOU_PATH;
+            } else {
+                req.setAttribute("errorMessage", "Lỗi tạo tài khoản. Vui lòng thử lại.");
+                preserveFormData(req, username, fullName, email, phone, address);
+                return ProjectPaths.JSP_REGISTER_PAGE_PATH;
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -232,7 +201,8 @@ public class AuthController {
 
                 boolean created = userService.insertUser(user);
                 if (!created) {
-                    return "redirect:" + ProjectPaths.HREF_TO_LOGINPAGE.substring(ProjectPaths.PREFIX_WEB_PATH.length());
+                    return "redirect:"
+                            + ProjectPaths.HREF_TO_LOGINPAGE.substring(ProjectPaths.PREFIX_WEB_PATH.length());
                 }
             }
 
@@ -258,7 +228,14 @@ public class AuthController {
             }
         } catch (Exception ignored) {
         }
-        return "redirect:" + ProjectPaths.HREF_TO_LOGINPAGE.substring(ProjectPaths.PREFIX_WEB_PATH.length()); // Fallback since facebook login logic was just incomplete
-                                                             // stub in Servlet
+        return "redirect:" + ProjectPaths.HREF_TO_LOGINPAGE.substring(ProjectPaths.PREFIX_WEB_PATH.length()); // Fallback
+                                                                                                              // since
+                                                                                                              // facebook
+                                                                                                              // login
+                                                                                                              // logic
+                                                                                                              // was
+                                                                                                              // just
+                                                                                                              // incomplete
+        // stub in Servlet
     }
 }

@@ -1,18 +1,14 @@
 package com.tourismapp.service.user;
 
 import com.tourismapp.common.MembershipLevel;
-import com.tourismapp.repository.DBConnection;
 import com.tourismapp.repository.user.UserRepository;
 import com.tourismapp.entity.Users;
 
 import java.math.BigDecimal;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.util.*;
 import org.springframework.stereotype.Service;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.jdbc.core.JdbcTemplate;
 
 /**
  *
@@ -23,6 +19,9 @@ public class UserService implements IUserService {
 
     @Autowired
     private UserRepository UserRepository;
+
+    @Autowired
+    private JdbcTemplate jdbcTemplate;
 
     @Override
     public List<Users> getAllUsers() {
@@ -145,20 +144,25 @@ public class UserService implements IUserService {
     @Override
     public BigDecimal getTotalPurchaseAmount(int userId) {
         String sql = "SELECT SUM(total_amount) FROM Orders "
-                + "WHERE user_id = ? AND order_date >= DATEADD(MONTH, -12, GETDATE()) "
+                + "WHERE user_id = ? AND order_date >= CURRENT_TIMESTAMP - INTERVAL 12 MONTH "
                 + "AND status IN ('completed', 'shipped', 'pending')";
-        try (Connection conn = DBConnection.getConnection(); PreparedStatement ps = conn.prepareStatement(sql)) {
-            ps.setInt(1, userId);
-            try (ResultSet rs = ps.executeQuery()) {
-                if (rs.next()) {
-                    BigDecimal total = rs.getBigDecimal(1);
-                    return total != null ? total : BigDecimal.ZERO;
-                }
+        try {
+            // Using a standard SQL Server compatible dialect to match the previous query
+            sql = "SELECT SUM(total_amount) FROM Orders WHERE user_id = ? AND order_date >= DATEADD(MONTH, -12, CURRENT_TIMESTAMP) AND status IN ('completed', 'shipped', 'pending')";
+            BigDecimal total = jdbcTemplate.queryForObject(sql, BigDecimal.class, userId);
+            return total != null ? total : BigDecimal.ZERO;
+        } catch (Exception e) {
+            // Fallback for MySQL if DATEADD fails, although Spring Data JPA is immune,
+            // native queries aren't.
+            try {
+                String sqlMysql = "SELECT SUM(total_amount) FROM Orders WHERE user_id = ? AND order_date >= DATE_SUB(NOW(), INTERVAL 12 MONTH) AND status IN ('completed', 'shipped', 'pending')";
+                BigDecimal total = jdbcTemplate.queryForObject(sqlMysql, BigDecimal.class, userId);
+                return total != null ? total : BigDecimal.ZERO;
+            } catch (Exception ex) {
+                ex.printStackTrace();
+                return BigDecimal.ZERO;
             }
-        } catch (SQLException e) {
-            e.printStackTrace();
         }
-        return BigDecimal.ZERO;
     }
 
     @Override

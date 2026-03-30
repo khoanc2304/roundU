@@ -10,7 +10,11 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestParam;
-import java.util.regex.Pattern;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import jakarta.validation.Valid;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.FieldError;
+import com.tourismapp.dto.ProfileUpdateRequest;
 
 @Controller
 public class ProfileController {
@@ -43,11 +47,8 @@ public class ProfileController {
     }
 
     @PostMapping("/profilePage")
-    public String handlePostProfile(@RequestParam(value = "action", required = false, defaultValue = "") String action,
-                                    @RequestParam(value = "fullName", required = false) String fullName,
-                                    @RequestParam(value = "email", required = false) String email,
-                                    @RequestParam(value = "phone", required = false) String phone,
-                                    @RequestParam(value = "address", required = false) String address,
+    public String handlePostProfile(@Valid @ModelAttribute ProfileUpdateRequest requestDto,
+                                    BindingResult bindingResult,
                                     HttpServletRequest request, HttpSession session) {
 
         Users loggedUser = (Users) session.getAttribute("loggedUser");
@@ -56,31 +57,22 @@ public class ProfileController {
             return "redirect:" + ProjectPaths.HREF_TO_LOGINPAGE.substring(ProjectPaths.PREFIX_WEB_PATH.length());
         }
 
-        if ("updateProfile".equals(action)) {
-            StringBuilder errorMessage = new StringBuilder();
-            if (fullName == null || !Pattern.matches("^[a-zA-ZÀ-ỹ\\s]{2,50}$", fullName.trim())) {
-                errorMessage.append("Tên phải từ 2-50 ký tự, chỉ chứa chữ cái và khoảng trắng. ");
-            }
-            if (email == null || !Pattern.matches("^[^\\s@]+@[^\\s@]+\\.[^\\s@]+$", email.trim())) {
-                errorMessage.append("Email không hợp lệ. ");
-            }
-            if (phone == null || !Pattern.matches("^[0-9]{10,11}$", phone.trim())) {
-                errorMessage.append("Số điện thoại phải có 10-11 chữ số. ");
-            }
-            if (address == null || !Pattern.matches("^.{5,200}$", address.trim())) {
-                errorMessage.append("Địa chỉ phải từ 5-200 ký tự. ");
-            }
-
-            if (errorMessage.length() > 0) {
-                request.setAttribute("errorMessage", errorMessage.toString());
+        if ("updateProfile".equals(requestDto.getAction())) {
+            
+            if (bindingResult.hasErrors()) {
+                StringBuilder errorMessage = new StringBuilder();
+                for (FieldError error : bindingResult.getFieldErrors()) {
+                    errorMessage.append(error.getDefaultMessage()).append(" ");
+                }
+                request.setAttribute("errorMessage", errorMessage.toString().trim());
                 request.setAttribute("user", loggedUser);
                 return ProjectPaths.JSP_EDIT_PROFILEPAGE_PATH;
             }
 
-            loggedUser.setFullName(fullName != null ? fullName.trim() : "");
-            loggedUser.setEmail(email != null ? email.trim() : "");
-            loggedUser.setPhone(phone != null ? phone.trim() : "");
-            loggedUser.setAddress(address != null ? address.trim() : "");
+            loggedUser.setFullName(requestDto.getFullName() != null ? requestDto.getFullName().trim() : "");
+            loggedUser.setEmail(requestDto.getEmail() != null ? requestDto.getEmail().trim() : "");
+            loggedUser.setPhone(requestDto.getPhone() != null ? requestDto.getPhone().trim() : "");
+            loggedUser.setAddress(requestDto.getAddress() != null ? requestDto.getAddress().trim() : "");
 
             boolean updated = userService.updateUser(loggedUser);
             if (updated) {
