@@ -52,7 +52,7 @@ public class PaymentController {
             @RequestParam(value = "orderNotes", required = false) String orderNotes,
             HttpServletRequest request, HttpSession session) {
 
-        Users user = (Users) session.getAttribute("loggedUser");
+        Users user = (Users) request.getAttribute("loggedUser");
         if (user == null) {
             return "redirect:/main?action=loginPage";
         }
@@ -107,7 +107,7 @@ public class PaymentController {
                         Users updatedUser = userService.getUserById(user.getUserId());
                         if (updatedUser != null) {
                             session.setAttribute("user", updatedUser);
-                            session.setAttribute("loggedUser", updatedUser);
+                            request.setAttribute("loggedUser", updatedUser);
                             request.setAttribute("membershipUpgraded", true);
                             request.setAttribute("upgradeMessage", "Chúc mừng! Bạn đã được nâng cấp lên thành viên "
                                     + updatedUser.getMembershipLevel().getValue());

@@ -10,11 +10,11 @@ public class ProjectPaths {
 
     // HREF constants — Dashboard (Admin/Staff)
     public static final String HREF_TO_DASHBOARDPAGE = PREFIX_WEB_PATH + "/dashboardPage";
-    public static final String HREF_TO_USERMANAGEMENT = PREFIX_WEB_PATH + "/userManagement";
-    public static final String HREF_TO_BRANDMANAGEMENT = PREFIX_WEB_PATH + "/brandManagement";
-    public static final String HREF_TO_CATEGORYMANAGEMENT = PREFIX_WEB_PATH + "/categoryManagement";
-    public static final String HREF_TO_PRODUCTMANAGEMENT = PREFIX_WEB_PATH + "/productManagement";
-    public static final String HREF_TO_ORDERMANAGEMENT = PREFIX_WEB_PATH + "/orderManagement";
+    public static final String HREF_TO_USERMANAGEMENT = PREFIX_WEB_PATH + "/admin/users";
+    public static final String HREF_TO_BRANDMANAGEMENT = PREFIX_WEB_PATH + "/admin/brands";
+    public static final String HREF_TO_CATEGORYMANAGEMENT = PREFIX_WEB_PATH + "/admin/categories";
+    public static final String HREF_TO_PRODUCTMANAGEMENT = PREFIX_WEB_PATH + "/admin/products";
+    public static final String HREF_TO_ORDERMANAGEMENT = PREFIX_WEB_PATH + "/admin/orders";
 
     // HREF constants — User-Facing Pages
     public static final String HREF_TO_HOMEPAGE = PREFIX_WEB_PATH + "/homePage";

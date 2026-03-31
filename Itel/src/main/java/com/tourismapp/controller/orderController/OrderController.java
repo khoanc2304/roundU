@@ -39,14 +39,14 @@ public class OrderController {
     // CHECKOUT PAGE GET
     @GetMapping("/checkoutPage")
     public String showCheckoutPage(HttpServletRequest request, HttpSession session) {
-        Users user = (Users) session.getAttribute("loggedUser");
+        Users user = (Users) request.getAttribute("loggedUser");
         if (user == null) {
             return "redirect:" + ProjectPaths.HREF_TO_LOGINPAGE.substring(ProjectPaths.PREFIX_WEB_PATH.length());
         }
 
         Users updatedUser = userService.getUserById(user.getUserId());
         if (updatedUser != null) {
-            session.setAttribute("loggedUser", updatedUser);
+            request.setAttribute("loggedUser", updatedUser);
             user = updatedUser;
         }
 
@@ -71,7 +71,7 @@ public class OrderController {
     // CHECKOUT PAGE POST (Selected Items)
     @PostMapping("/checkoutPage")
     public String handleCheckoutSelectedItems(HttpServletRequest request, HttpSession session) {
-        Users user = (Users) session.getAttribute("loggedUser");
+        Users user = (Users) request.getAttribute("loggedUser");
         if (user == null) {
             return "redirect:" + ProjectPaths.HREF_TO_LOGINPAGE.substring(ProjectPaths.PREFIX_WEB_PATH.length());
         }
@@ -142,7 +142,7 @@ public class OrderController {
     public String showOrderHistory(
             @RequestParam(value = "status", required = false, defaultValue = "all") String status,
             HttpServletRequest request, HttpSession session) {
-        Users user = (Users) session.getAttribute("loggedUser");
+        Users user = (Users) request.getAttribute("loggedUser");
         if (user == null) {
             return "redirect:" + ProjectPaths.HREF_TO_LOGINPAGE.substring(ProjectPaths.PREFIX_WEB_PATH.length());
         }
@@ -171,7 +171,7 @@ public class OrderController {
                                          @RequestParam("orderId") Integer orderId,
                                          @RequestParam("status") String status,
                                          HttpServletRequest request, HttpSession session) {
-        Users user = (Users) session.getAttribute("loggedUser");
+        Users user = (Users) request.getAttribute("loggedUser");
         if (user == null) {
             return "redirect:" + ProjectPaths.HREF_TO_LOGINPAGE.substring(ProjectPaths.PREFIX_WEB_PATH.length());
         }
@@ -203,7 +203,7 @@ public class OrderController {
             out.println("<h2>Simple Order History Debug</h2>");
 
             HttpSession session = request.getSession();
-            Users user = (Users) session.getAttribute("loggedUser");
+            Users user = (Users) request.getAttribute("loggedUser");
 
             out.println("<p><strong>User from session:</strong> "
                     + (user != null ? user.getFullName() + " (ID: " + user.getUserId() + ")" : "NULL") + "</p>");

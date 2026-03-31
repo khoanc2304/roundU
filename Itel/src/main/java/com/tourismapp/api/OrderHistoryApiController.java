@@ -4,6 +4,7 @@ import com.tourismapp.entity.Orders;
 import com.tourismapp.entity.Users;
 import com.tourismapp.service.order.IOrderService;
 import jakarta.servlet.http.HttpSession;
+import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -21,9 +22,9 @@ public class OrderHistoryApiController {
     private IOrderService orderService;
 
     @GetMapping
-    public Map<String, Object> getOrders(HttpSession session) {
+    public Map<String, Object> getOrders(HttpServletRequest request, HttpSession session) {
         Map<String, Object> result = new HashMap<>();
-        Users user = (Users) session.getAttribute("loggedUser");
+        Users user = (Users) request.getAttribute("loggedUser");
 
         if (user == null) {
             result.put("success", false);

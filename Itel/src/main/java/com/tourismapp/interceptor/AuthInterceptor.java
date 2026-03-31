@@ -22,12 +22,12 @@ public class AuthInterceptor implements HandlerInterceptor {
 
             if (requiresRoleInfo != null) {
                 HttpSession session = request.getSession(false);
-                if (session == null || session.getAttribute("loggedUser") == null) {
+                if (session == null || request.getAttribute("loggedUser") == null) {
                     response.sendRedirect(request.getContextPath() + ProjectPaths.HREF_TO_LOGINPAGE.substring(ProjectPaths.PREFIX_WEB_PATH.length()));
                     return false;
                 }
 
-                Users user = (Users) session.getAttribute("loggedUser");
+                Users user = (Users) request.getAttribute("loggedUser");
                 UserRole[] allowedRoles = requiresRoleInfo.value();
                 
                 boolean hasRole = false;

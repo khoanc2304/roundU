@@ -1,178 +1,150 @@
 package com.tourismapp.controller.dashboardController;
 
-import com.tourismapp.common.Status;
 import com.tourismapp.config.ProjectPaths;
 import com.tourismapp.entity.Brand;
-import com.tourismapp.entity.Product;
 import com.tourismapp.service.brand.IBrandService;
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpSession;
 import org.springframework.stereotype.Controller;
 import com.tourismapp.annotation.RequiresRole;
 import com.tourismapp.common.UserRole;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import java.util.List;
-
-import org.springframework.beans.factory.annotation.Autowired;
+import java.util.Optional;
 
 @RequiresRole({UserRole.ADMIN, UserRole.STAFF})
 @Controller
-@RequestMapping("/brandManagement")
+@RequestMapping("/admin/brands")
 public class BrandManagementController {
 
     @Autowired
     private IBrandService brandService;
 
     @GetMapping
-    public String handleGet(@RequestParam(value = "action", required = false, defaultValue = "") String action,
-            @RequestParam(value = "country", required = false) String country,
-            @RequestParam(value = "searchName", required = false) String searchName,
-            @RequestParam(value = "brandId", required = false) Integer brandId,
-            HttpServletRequest request) {
+    public String listBrands(@RequestParam(value = "qBrand", required = false) String qBrand,
+                             HttpServletRequest request, HttpSession session) {
+        if (qBrand != null && !qBrand.trim().isEmpty()) {
+            request.setAttribute("brands", brandService.findBrandsByName(qBrand));
+            return ProjectPaths.JSP_BRANDMANAGEMENT_PATH;
+        }
+        request.setAttribute("brands", brandService.getAllBrands());
+        return ProjectPaths.JSP_BRANDMANAGEMENT_PATH;
+    }
 
-        switch (action) {
-            case "manageBrand":
-                List<Brand> brandList;
-                if (country != null && !country.isEmpty()) {
-                    brandList = brandService.findBrandsByCountry(country);
-                } else {
-                    brandList = brandService.getAllBrands();
-                }
-                request.setAttribute("brands", brandList);
-                return ProjectPaths.JSP_BRANDMANAGEMENT_PATH;
+    @GetMapping("/create")
+    public String createBrandForm(HttpServletRequest request) {
+        return ProjectPaths.JSP_PATH_DASHBOARD + "brandManagement/createBrand.jsp";
+    }
 
-            case "findBrand":
-                if (searchName == null || searchName.trim().isEmpty() || searchName.trim().length() < 2
-                        || searchName.trim().length() > 50) {
-                    request.setAttribute("error", "Tên tìm kiếm không hợp lệ (2-50 ký tự)");
-                    request.setAttribute("brands", brandService.getAllBrands());
-                    return ProjectPaths.JSP_BRANDMANAGEMENT_PATH;
-                }
-                List<Brand> brands = brandService.findBrandsByName(searchName.trim());
-                request.setAttribute("brands", brands);
-                request.setAttribute("searchTerm", searchName.trim());
-                if (brands.isEmpty()) {
-                    request.setAttribute("info", "Không tìm thấy thương hiệu '" + searchName.trim() + "'");
-                }
-                return ProjectPaths.JSP_BRANDMANAGEMENT_PATH;
-
-            case "navigateToCreateBrand":
-                return ProjectPaths.JSP_CREATEBRAND_PATH;
-
-            case "navigateToUpdateBrand":
-                if (brandId == null || brandId <= 0) {
-                    request.setAttribute("error", "Brand ID không hợp lệ");
-                    return ProjectPaths.JSP_BRANDMANAGEMENT_PATH;
-                }
-                Brand brand = brandService.getBrandById(brandId);
-                if (brand == null) {
-                    request.setAttribute("error", "Không tìm thấy thương hiệu id " + brandId);
-                    return ProjectPaths.JSP_BRANDMANAGEMENT_PATH;
-                }
-                request.setAttribute("brand", brand);
-                return ProjectPaths.JSP_UPDATEBRAND_PATH;
-
-            default:
-                List<Brand> allBrands = brandService.getAllBrands();
-                for (Brand b : allBrands) {
-                    b.setProductList(brandService.getProductsByBrandId(b.getBrandId()));
-                }
-                request.setAttribute("brands", allBrands);
-                return ProjectPaths.JSP_MANAGEBRAND_PATH;
+    @GetMapping("/{id}/edit")
+    public String editBrandForm(@PathVariable("id") Integer id, HttpServletRequest request, HttpSession session) {
+        if (id == null) {
+            session.setAttribute("toastMessage", "ID thương hiệu không hợp lệ.");
+            return "redirect:/admin/brands";
+        }
+        Optional<Brand> brand = brandService.findBrandById(id);
+        if (brand.isPresent()) {
+            request.setAttribute("brand", brand.get());
+            request.setAttribute("updateBrand", "active");
+            return ProjectPaths.JSP_PATH_DASHBOARD + "brandManagement/updateBrand.jsp";
+        } else {
+            session.setAttribute("toastMessage", "Không tìm thấy thương hiệu.");
+            return "redirect:/admin/brands";
         }
     }
 
-    @PostMapping
-    public String handlePost(@RequestParam(value = "action", required = false, defaultValue = "") String action,
-            @RequestParam(value = "brandId", required = false) Integer brandId,
-            @RequestParam(value = "name", required = false) String name,
-            @RequestParam(value = "country", required = false) String country,
-            @RequestParam(value = "description", required = false) String description,
-            @RequestParam(value = "imageUrl", required = false) String imageUrl,
-            @RequestParam(value = "status", required = false) String statusParam,
-            HttpServletRequest request) {
-
+    @PostMapping("/create")
+    public String createBrand(@RequestParam("name") String name,
+                              @RequestParam("imageUrl") String imageUrl,
+                              HttpServletRequest request, HttpSession session) {
         try {
-            switch (action) {
-                case "createBrand":
-                    return handleCreate(name, country, description, imageUrl, statusParam, request);
-                case "editBrand":
-                    return handleUpdate(brandId, name, country, description, imageUrl, statusParam, request);
-                case "deleteBrand":
-                    return handleDelete(brandId, request);
-                default:
-                    return "redirect:"
-                            + ProjectPaths.HREF_TO_BRANDMANAGEMENT.substring(ProjectPaths.PREFIX_WEB_PATH.length());
+            if (name == null || name.trim().isEmpty() || imageUrl == null || imageUrl.trim().isEmpty()) {
+                session.setAttribute("toastMessage", "Tên và hình ảnh thương hiệu không được để trống.");
+                request.setAttribute("name", name);
+                request.setAttribute("imageUrl", imageUrl);
+                return ProjectPaths.JSP_PATH_DASHBOARD + "brandManagement/createBrand.jsp";
+            }
+            if (name.length() > 255 || imageUrl.length() > 255) {
+                session.setAttribute("toastMessage", "Dữ liệu nhập vào quá dài, vui lòng kiểm tra lại.");
+                request.setAttribute("name", name);
+                request.setAttribute("imageUrl", imageUrl);
+                return ProjectPaths.JSP_PATH_DASHBOARD + "brandManagement/createBrand.jsp";
+            }
+            Brand brand = new Brand();
+            brand.setName(name);
+            brand.setImageUrl(imageUrl);
+            try {
+                brandService.createBrand(brand);
+                session.setAttribute("toastMessage", "Thêm thương hiệu thành công.");
+                return "redirect:/admin/brands";
+            } catch (Exception ex) {
+                session.setAttribute("toastMessage", "Thêm thương hiệu thất bại.");
+                request.setAttribute("name", name);
+                request.setAttribute("imageUrl", imageUrl);
+                return ProjectPaths.JSP_PATH_DASHBOARD + "brandManagement/createBrand.jsp";
             }
         } catch (Exception e) {
-            request.setAttribute("error", "Lỗi: " + e.getMessage());
-            return ProjectPaths.JSP_BRANDMANAGEMENT_PATH;
+            e.printStackTrace();
+            session.setAttribute("toastMessage", "Có lỗi xảy ra: " + e.getMessage());
+            return "redirect:/admin/brands";
         }
     }
 
-    private String handleCreate(String name, String country, String description, String imageUrl, String statusParam,
-            HttpServletRequest request) {
-        if (name == null || name.trim().isEmpty() || country == null || country.trim().isEmpty() ||
-                description == null || description.trim().isEmpty() || imageUrl == null || imageUrl.trim().isEmpty()
-                || statusParam == null || statusParam.trim().isEmpty()) {
-            request.setAttribute("error", "Tất cả các trường đều bắt buộc");
-            return ProjectPaths.JSP_CREATEBRAND_PATH;
+    @PostMapping("/{id}/edit")
+    public String updateBrand(@PathVariable("id") Integer id,
+                              @RequestParam("name") String name,
+                              @RequestParam("imageUrl") String imageUrl,
+                              HttpServletRequest request, HttpSession session) {
+        try {
+            if (id == null || name == null || name.trim().isEmpty() || imageUrl == null || imageUrl.trim().isEmpty()) {
+                session.setAttribute("toastMessage", "Thông tin cập nhật không được để trống.");
+                return "redirect:/admin/brands/" + id + "/edit";
+            }
+            if (name.length() > 255 || imageUrl.length() > 255) {
+                session.setAttribute("toastMessage", "Dữ liệu cập nhật quá dài.");
+                return "redirect:/admin/brands/" + id + "/edit";
+            }
+            Optional<Brand> existing = brandService.findBrandById(id);
+            if (!existing.isPresent()) {
+                session.setAttribute("toastMessage", "Thương hiệu không tồn tại.");
+                return "redirect:/admin/brands";
+            }
+
+            try {
+                Brand brandToUpdate = existing.get();
+                brandToUpdate.setName(name);
+                brandToUpdate.setImageUrl(imageUrl);
+                brandService.updateBrand(brandToUpdate);
+                session.setAttribute("toastMessage", "Cập nhật thương hiệu thành công.");
+                return "redirect:/admin/brands";
+            } catch (Exception ex) {
+                session.setAttribute("toastMessage", "Cập nhật thương hiệu thất bại.");
+                return "redirect:/admin/brands/" + id + "/edit";
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            session.setAttribute("toastMessage", "Lỗi trong quá trình cập nhật: " + e.getMessage());
+            return "redirect:/admin/brands";
+        }
+    }
+
+    @PostMapping("/{id}/delete")
+    public String deleteBrand(@PathVariable("id") Integer id, HttpSession session) {
+        if (id == null) {
+            session.setAttribute("toastMessage", "Bắt buộc chọn thương hiệu để xóa.");
+            return "redirect:/admin/brands";
         }
         try {
-            Status status = Status.valueOf(statusParam.trim());
-            Brand brand = new Brand(0, name.trim(), country.trim(), description.trim(), imageUrl.trim(), status);
-            brandService.createBrand(brand);
-            request.setAttribute("successMessage", "Tạo thương hiệu thành công!");
-            return "redirect:/brandManagement";
-        } catch (Exception e) {
-            request.setAttribute("error", "Lỗi tạo thương hiệu: " + e.getMessage());
-            return ProjectPaths.JSP_CREATEBRAND_PATH;
+            brandService.deleteBrand(id);
+            session.setAttribute("toastMessage", "Xóa thương hiệu thành công.");
+        } catch (Exception ex) {
+            session.setAttribute("toastMessage", "Xóa thương hiệu thất bại.");
         }
-    }
-
-    private String handleUpdate(Integer brandId, String name, String country, String description, String imageUrl,
-            String statusParam, HttpServletRequest request) {
-        if (brandId == null || name == null || name.trim().isEmpty() || country == null || country.trim().isEmpty() ||
-                description == null || description.trim().isEmpty() || imageUrl == null || imageUrl.trim().isEmpty()
-                || statusParam == null || statusParam.trim().isEmpty()) {
-            request.setAttribute("error", "Tất cả các trường đều bắt buộc");
-            if (brandId != null)
-                request.setAttribute("brand", brandService.getBrandById(brandId));
-            return ProjectPaths.JSP_UPDATEBRAND_PATH;
-        }
-        try {
-            Status status = Status.valueOf(statusParam.trim());
-            Brand brand = new Brand(brandId, name.trim(), country.trim(), description.trim(), imageUrl.trim(), status);
-            brandService.updateBrand(brand);
-            request.setAttribute("successMessage", "Cập nhật thương hiệu thành công!");
-            return "redirect:/brandManagement";
-        } catch (Exception e) {
-            request.setAttribute("error", "Lỗi cập nhật: " + e.getMessage());
-            request.setAttribute("brand", brandService.getBrandById(brandId));
-            return ProjectPaths.JSP_UPDATEBRAND_PATH;
-        }
-    }
-
-    private String handleDelete(Integer brandId, HttpServletRequest request) {
-        if (brandId == null) {
-            request.setAttribute("error", "Brand ID bắt buộc");
-            return ProjectPaths.JSP_BRANDMANAGEMENT_PATH;
-        }
-        Brand existingBrand = brandService.getBrandById(brandId);
-        if (existingBrand == null) {
-            request.setAttribute("error", "Không tìm thấy thương hiệu");
-            return ProjectPaths.JSP_BRANDMANAGEMENT_PATH;
-        }
-        List<Product> products = brandService.getProductsByBrandId(brandId);
-        if (!products.isEmpty()) {
-            request.setAttribute("error", "Không thể xóa thương hiệu này vì đang có " + products.size() + " sản phẩm.");
-            return ProjectPaths.JSP_BRANDMANAGEMENT_PATH;
-        }
-        brandService.deleteBrand(brandId);
-        request.setAttribute("successMessage", "Xóa thương hiệu thành công!");
-        return "redirect:/brandManagement";
+        return "redirect:/admin/brands";
     }
 }

@@ -25,7 +25,7 @@ public class ProfileController {
     @GetMapping("/profilePage")
     public String handleGetProfile(@RequestParam(value = "action", required = false, defaultValue = "viewProfile") String action,
                                    HttpServletRequest request, HttpSession session) {
-        Users loggedUser = (Users) session.getAttribute("loggedUser");
+        Users loggedUser = (Users) request.getAttribute("loggedUser");
 
         if (loggedUser == null) {
             return "redirect:" + ProjectPaths.HREF_TO_LOGINPAGE.substring(ProjectPaths.PREFIX_WEB_PATH.length());
@@ -51,7 +51,7 @@ public class ProfileController {
                                     BindingResult bindingResult,
                                     HttpServletRequest request, HttpSession session) {
 
-        Users loggedUser = (Users) session.getAttribute("loggedUser");
+        Users loggedUser = (Users) request.getAttribute("loggedUser");
 
         if (loggedUser == null) {
             return "redirect:" + ProjectPaths.HREF_TO_LOGINPAGE.substring(ProjectPaths.PREFIX_WEB_PATH.length());
@@ -76,7 +76,7 @@ public class ProfileController {
 
             boolean updated = userService.updateUser(loggedUser);
             if (updated) {
-                session.setAttribute("loggedUser", loggedUser);
+                request.setAttribute("loggedUser", loggedUser);
                 request.setAttribute("successMessage", "Cập nhật thông tin thành công!");
                 request.setAttribute("user", loggedUser);
             } else {

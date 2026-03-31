@@ -8,17 +8,19 @@ import com.tourismapp.entity.Users;
 import com.tourismapp.service.user.IUserService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import jakarta.validation.Valid;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
 import com.tourismapp.dto.RegisterRequest;
-
+import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpServletResponse;
+import com.tourismapp.utils.JwtTokenProvider;
 import java.time.LocalDateTime;
 import java.util.Optional;
 
@@ -34,6 +36,9 @@ public class AuthController {
     @Autowired
     private IUserService userService;
 
+    @Autowired
+    private JwtTokenProvider jwtTokenProvider;
+
     @GetMapping("/loginPage")
     public String showLoginPage() {
         return ProjectPaths.JSP_LOGINPAGE_PATH;
@@ -44,20 +49,30 @@ public class AuthController {
             @RequestParam("identifier") String identifier,
             @RequestParam("password") String password,
             HttpServletRequest request,
+            HttpServletResponse response,
             HttpSession session) {
 
         if ("login".equals(action.trim())) {
             Optional<Users> loggedUser = userService.findUserByCredentials(identifier, password);
             if (loggedUser.isPresent()) {
                 Users user = loggedUser.get();
-                session.setAttribute("loggedUser", user);
+
+                // Issue JWT via HttpOnly Cookie instead of persisting user to session
+                String jwt = jwtTokenProvider.generateToken(user);
+                Cookie jwtCookie = new Cookie("JWT_TOKEN", jwt);
+                jwtCookie.setHttpOnly(true);
+                jwtCookie.setPath("/");
+                jwtCookie.setMaxAge(24 * 60 * 60); // 24 hours
+                response.addCookie(jwtCookie);
+
                 String role = user.getRole().getValue();
                 session.setAttribute("successMessage", "Đăng nhập thành công.");
 
                 return switch (role) {
                     case "admin" -> "redirect:"
                             + ProjectPaths.HREF_TO_DASHBOARDPAGE.substring(ProjectPaths.PREFIX_WEB_PATH.length());
-                    case "staff" -> ProjectPaths.JSP_DASHBOARDPAGE_PATH;
+                    case "staff" -> "redirect:"
+                            + ProjectPaths.HREF_TO_DASHBOARDPAGE.substring(ProjectPaths.PREFIX_WEB_PATH.length());
                     default -> ProjectPaths.JSP_HOMEPAGE_PATH;
                 };
             } else {
@@ -71,10 +86,17 @@ public class AuthController {
     }
 
     @GetMapping("/logoutPage")
-    public String handleLogout(HttpServletRequest request, HttpSession session) {
+    public String handleLogout(HttpServletRequest request, HttpServletResponse response, HttpSession session) {
         if (session != null) {
             session.invalidate();
         }
+        // Destroy JWT Cookie
+        Cookie jwtCookie = new Cookie("JWT_TOKEN", "");
+        jwtCookie.setHttpOnly(true);
+        jwtCookie.setPath("/");
+        jwtCookie.setMaxAge(0); // Tell browser to delete immediately
+        response.addCookie(jwtCookie);
+
         return "redirect:" + ProjectPaths.HREF_TO_HOMEPAGE.substring(ProjectPaths.PREFIX_WEB_PATH.length());
     }
 
@@ -158,10 +180,10 @@ public class AuthController {
     }
 
     @GetMapping("/loginGoogle")
-    public String loginGoogle(@RequestParam(value = "code", required = false) String code, HttpSession session) {
+    public String loginGoogle(@RequestParam(value = "code", required = false) String code, HttpServletResponse response,
+            HttpSession session) {
         try {
             if (code == null || code.isEmpty()) {
-                return "redirect:" + ProjectPaths.HREF_TO_LOGINPAGE.substring(ProjectPaths.PREFIX_WEB_PATH.length());
             }
 
             String accessToken = GoogleLogin.getToken(code);
@@ -206,7 +228,14 @@ public class AuthController {
                 }
             }
 
-            session.setAttribute("loggedUser", user);
+            // Issue JWT via Cookie
+            String jwt = jwtTokenProvider.generateToken(user);
+            Cookie jwtCookie = new Cookie("JWT_TOKEN", jwt);
+            jwtCookie.setHttpOnly(true);
+            jwtCookie.setPath("/");
+            jwtCookie.setMaxAge(24 * 60 * 60);
+            response.addCookie(jwtCookie);
+
             session.setAttribute("isLoggedIn", true);
             session.setMaxInactiveInterval(30 * 60);
 

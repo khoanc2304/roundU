@@ -181,7 +181,7 @@ public class PasswordController {
             request.setCharacterEncoding("UTF-8");
         } catch (Exception ignored) {}
 
-        Users currentUser = (Users) session.getAttribute("loggedUser");
+        Users currentUser = (Users) request.getAttribute("loggedUser");
         if (currentUser == null) {
             return "redirect:" + ProjectPaths.JSP_LOGINPAGE_PATH;
         }

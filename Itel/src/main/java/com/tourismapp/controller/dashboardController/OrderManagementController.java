@@ -11,48 +11,49 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.List;
 
 @RequiresRole({UserRole.ADMIN, UserRole.STAFF})
 @Controller
-@RequestMapping("/orderManagement")
+@RequestMapping("/admin/orders")
 public class OrderManagementController {
 
     @Autowired
     private IOrderService orderService;
 
     @GetMapping
-    public String showOrderManagement(@RequestParam(value = "action", required = false) String action,
-                                      @RequestParam(value = "status", required = false, defaultValue = "all") String status,
-                                      @RequestParam(value = "orderId", required = false) Integer orderId,
-                                      HttpServletRequest request) {
-
-        if ("viewOrderDetail".equals(action) && orderId != null) {
-            try {
-                Orders order = orderService.findAllOrders().stream()
-                        .filter(o -> o.getOrderId() == orderId)
-                        .findFirst().orElse(null);
-                if (order != null) {
-                    order.setOrderDetails(orderService.getOrderDetailsByOrderId(orderId));
-                    request.setAttribute("order", order);
-                    return "/WEB-INF/view/dashboard/orderManagement/orderDetail.jsp";
-                } else {
-                    request.setAttribute("errorMessage", "Không tìm thấy đơn hàng.");
-                }
-            } catch (Exception e) {
-                request.setAttribute("errorMessage", "Lỗi khi xem chi tiết đơn hàng: " + e.getMessage());
-            }
-        }
+    public String listOrders(@RequestParam(value = "status", required = false, defaultValue = "all") String status,
+                             HttpServletRequest request) {
 
         List<Orders> orders = ("all".equals(status) || status.isEmpty()) ? orderService.findAllOrders() : orderService.findOrdersByStatus(status);
         request.setAttribute("orders", orders);
         return ProjectPaths.JSP_ORDERMANAGEMENT_PATH;
     }
 
-    @PostMapping
-    public String updateOrderStatus(@RequestParam("orderId") Integer orderId,
+    @GetMapping("/{id}")
+    public String viewOrderDetail(@PathVariable("id") Integer orderId, HttpServletRequest request) {
+        try {
+            Orders order = orderService.findAllOrders().stream()
+                    .filter(o -> o.getOrderId() == orderId)
+                    .findFirst().orElse(null);
+            if (order != null) {
+                order.setOrderDetails(orderService.getOrderDetailsByOrderId(orderId));
+                request.setAttribute("order", order);
+                return "/WEB-INF/view/dashboard/orderManagement/orderDetail.jsp";
+            } else {
+                request.setAttribute("errorMessage", "Không tìm thấy đơn hàng.");
+            }
+        } catch (Exception e) {
+            request.setAttribute("errorMessage", "Lỗi khi xem chi tiết đơn hàng: " + e.getMessage());
+        }
+        return "redirect:/admin/orders";
+    }
+
+    @PostMapping("/{id}/status")
+    public String updateOrderStatus(@PathVariable("id") Integer orderId,
                                     @RequestParam("status") String status,
                                     @RequestParam(value = "filterStatus", required = false, defaultValue = "all") String filterStatus,
                                     HttpServletRequest request) {

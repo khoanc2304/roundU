@@ -19,7 +19,7 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 import org.springframework.web.servlet.view.InternalResourceViewResolver;
 
 import javax.sql.DataSource;
-import com.tourismapp.interceptor.AuthInterceptor;
+import com.tourismapp.interceptor.JwtAuthInterceptor;
 
 @Configuration
 @EnableWebMvc
@@ -86,12 +86,12 @@ public class AppConfig implements WebMvcConfigurer {
     }
 
     @Bean
-    public AuthInterceptor authInterceptor() {
-        return new AuthInterceptor();
+    public JwtAuthInterceptor jwtAuthInterceptor() {
+        return new JwtAuthInterceptor();
     }
 
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
-        registry.addInterceptor(authInterceptor());
+        registry.addInterceptor(jwtAuthInterceptor());
     }
 }

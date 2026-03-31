@@ -25,7 +25,7 @@ import java.io.IOException;
 import java.util.*;
 
 @Controller
-@RequestMapping("/productPage")
+@RequestMapping("/product")
 public class ProductController {
 
     @Autowired
@@ -37,40 +37,37 @@ public class ProductController {
     @Autowired
     private IUserService userService;
 
-    @GetMapping
-    public String doGet(@RequestParam(value = "action", defaultValue = "") String action,
-            @RequestParam(value = "c", required = false) String category,
-            HttpServletRequest request, HttpServletResponse response) throws IOException {
-
-        if ("filter".equals(action)) {
-            filterProducts(request, response);
-            return null;
-        }
-
-        if (category != null) {
-            return showProductsByCategory(category, request);
-        } else {
-            return showActiveProductDetail(request, response);
-        }
+    @GetMapping("/{id}")
+    public String showActiveProductDetail(@PathVariable("id") int id, HttpServletRequest request, HttpServletResponse response) throws IOException {
+        return handleShowActiveProductDetail(id, request, response);
     }
 
-    @PostMapping
-    public String doPost(@RequestParam(value = "action", defaultValue = "") String action,
-            HttpServletRequest request, HttpServletResponse response) {
-
-        switch (action) {
-            case "createReview":
-                return createReview(request, response);
-            case "editReview":
-                return editReview(request, response);
-            case "deleteReview":
-                return deleteReview(request, response);
-            default:
-                return ProjectPaths.JSP_HOMEPAGE_PATH;
-        }
+    @GetMapping("/category/{category}")
+    public String showProductsByCategory(@PathVariable("category") String category, HttpServletRequest request, HttpServletResponse response) throws IOException {
+        return handleShowProductsByCategory(category, request);
     }
 
-    private String createReview(HttpServletRequest request, HttpServletResponse response) {
+    @GetMapping("/filter")
+    public void filterProducts(HttpServletRequest request, HttpServletResponse response) throws IOException {
+        handleFilterProducts(request, response);
+    }
+
+    @PostMapping("/review/create")
+    public String createReview(HttpServletRequest request, HttpServletResponse response) {
+        return handleCreateReview(request, response);
+    }
+
+    @PostMapping("/review/edit")
+    public String editReview(HttpServletRequest request, HttpServletResponse response) {
+        return handleEditReview(request, response);
+    }
+
+    @PostMapping("/review/delete")
+    public String deleteReview(HttpServletRequest request, HttpServletResponse response) {
+        return handleDeleteReview(request, response);
+    }
+
+    private String handleCreateReview(HttpServletRequest request, HttpServletResponse response) {
         try {
             request.setCharacterEncoding("UTF-8");
         } catch (Exception ignored) {
@@ -99,7 +96,7 @@ public class ProductController {
             } else {
                 request.getSession().setAttribute("errorMessage", "Review sản phẩm không thành công!");
             }
-            return "redirect:" + ProjectPaths.HREF_TO_PRODUCTPAGE.substring(ProjectPaths.PREFIX_WEB_PATH.length()) + "?id=" + productId;
+            return "redirect:/product/" + productId;
         } catch (Exception e) {
             request.getSession().setAttribute("errorMessage", "Dữ liệu truyền vào không hợp lệ!");
             ErrDialog.showError("createReview(): " + e.getMessage());
@@ -107,7 +104,7 @@ public class ProductController {
         }
     }
 
-    private String editReview(HttpServletRequest request, HttpServletResponse response) {
+    private String handleEditReview(HttpServletRequest request, HttpServletResponse response) {
         try {
             request.setCharacterEncoding("UTF-8");
         } catch (Exception ignored) {
@@ -124,10 +121,10 @@ public class ProductController {
         } else {
             session.setAttribute("errorMessage", "Cập nhập review sản phẩm không thành công!");
         }
-        return "redirect:" + ProjectPaths.HREF_TO_PRODUCTPAGE.substring(ProjectPaths.PREFIX_WEB_PATH.length()) + "?id=" + productId;
+        return "redirect:/product/" + productId;
     }
 
-    private String deleteReview(HttpServletRequest request, HttpServletResponse response) {
+    private String handleDeleteReview(HttpServletRequest request, HttpServletResponse response) {
         try {
             request.setCharacterEncoding("UTF-8");
         } catch (Exception ignored) {
@@ -141,23 +138,11 @@ public class ProductController {
         } else {
             session.setAttribute("errorMessage", "Xoá review sản phẩm không thành công!");
         }
-        return "redirect:" + ProjectPaths.HREF_TO_PRODUCTPAGE.substring(ProjectPaths.PREFIX_WEB_PATH.length()) + "?id=" + productId;
+        return "redirect:/product/" + productId;
     }
 
-    private String showActiveProductDetail(HttpServletRequest request, HttpServletResponse response)
+    private String handleShowActiveProductDetail(int id, HttpServletRequest request, HttpServletResponse response)
             throws IOException {
-        String idParam = request.getParameter("id");
-        if (idParam == null || idParam.isEmpty()) {
-            response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Thiếu tham số ID product");
-            return null;
-        }
-        int id;
-        try {
-            id = Integer.parseInt(idParam);
-        } catch (NumberFormatException e) {
-            response.sendError(HttpServletResponse.SC_BAD_REQUEST, "ID không hợp lệ");
-            return null;
-        }
 
         Cookie[] cookies = request.getCookies();
         String viewed = null;
@@ -210,7 +195,7 @@ public class ProductController {
         Collections.reverse(reviewProduct);
 
         HttpSession session = request.getSession();
-        Users loggedUser = (Users) session.getAttribute("loggedUser");
+        Users loggedUser = (Users) request.getAttribute("loggedUser");
         boolean canComment = false;
         if (loggedUser != null) {
             canComment = reviewService.hasUserPurchasedProduct(loggedUser.getUserId(), id);
@@ -257,7 +242,7 @@ public class ProductController {
         return ProjectPaths.JSP_PRODUCTDETAILPAGE_PATH;
     }
 
-    private String showProductsByCategory(String category, HttpServletRequest request) {
+    private String handleShowProductsByCategory(String category, HttpServletRequest request) {
         Integer id = productService.mapCategoryId(category);
         if (id == null) {
             request.getSession().setAttribute("errorMessage", "Không tìm thấy danh mục: " + category);
@@ -279,7 +264,7 @@ public class ProductController {
         return ProjectPaths.JSP_PRODUCTPAGE_PATH;
     }
 
-    private void filterProducts(HttpServletRequest request, HttpServletResponse response) throws IOException {
+    private void handleFilterProducts(HttpServletRequest request, HttpServletResponse response) throws IOException {
         String category = request.getParameter("c");
         String brands = request.getParameter("brands");
         String cpus = request.getParameter("cpus");

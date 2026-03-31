@@ -10,10 +10,10 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.stereotype.Controller;
 import com.tourismapp.annotation.RequiresRole;
-import com.tourismapp.common.UserRole;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestParam;
 
@@ -24,143 +24,152 @@ import java.util.Optional;
 
 @RequiresRole({UserRole.ADMIN, UserRole.STAFF})
 @Controller
-@RequestMapping("/userManagement")
+@RequestMapping("/admin/users")
 public class UserManagementController {
 
     @Autowired
     private IUserService userService;
 
     @GetMapping
-    public String handleGet(@RequestParam(value = "action", required = false, defaultValue = "listUser") String action,
-                            @RequestParam(value = "id", required = false) Integer id,
-                            @RequestParam(value = "username", required = false) String username,
-                            @RequestParam(value = "status", required = false) String status,
-                            HttpServletRequest request, HttpSession session) {
+    public String listUser(@RequestParam(value = "username", required = false) String username,
+                           @RequestParam(value = "status", required = false) String status,
+                           HttpServletRequest request, HttpSession session) {
+        
+        if ((username != null && !username.isEmpty()) || (status != null && !status.isEmpty())) {
+            List<Users> searchResults = userService.searchUsers(username, status);
+            request.setAttribute("users", searchResults);
+            if (searchResults.isEmpty()) {
+                session.setAttribute("toastMessage", "Không tìm thấy người dùng nào khớp với tiêu chí.");
+            }
+        } else {
+            request.setAttribute("users", userService.getAllUsers());
+        }
+        return ProjectPaths.JSP_USERMANAGEMENT_PATH;
+    }
 
-        switch (action) {
-            case "createForm":
+    @GetMapping("/create")
+    public String createForm() {
+        return ProjectPaths.JSP_PATH_DASHBOARD + "userManagement/createUser.jsp";
+    }
+
+    @GetMapping("/{id}/edit")
+    public String editForm(@PathVariable("id") Integer id, HttpServletRequest request, HttpSession session) {
+        if (id == null) {
+            session.setAttribute("toastMessage", "ID không hợp lệ!");
+            return "redirect:/admin/users";
+        }
+        Users editUser = userService.getUserById(id);
+        if (editUser == null) {
+            session.setAttribute("toastMessage", "Không tìm thấy người dùng!");
+            return "redirect:/admin/users";
+        }
+        request.setAttribute("user", editUser);
+        return ProjectPaths.JSP_PATH_DASHBOARD + "userManagement/editUser.jsp";
+    }
+
+    @GetMapping("/{id}")
+    public String viewUser(@PathVariable("id") Integer id, HttpServletRequest request, HttpSession session) {
+        if (id == null) {
+            session.setAttribute("toastMessage", "ID không hợp lệ!");
+            return "redirect:/admin/users";
+        }
+        Users viewUser = userService.getUserById(id);
+        if (viewUser == null) {
+            session.setAttribute("toastMessage", "Không tìm thấy người dùng!");
+            return "redirect:/admin/users";
+        }
+        request.setAttribute("user", viewUser);
+        return ProjectPaths.JSP_PATH_DASHBOARD + "userManagement/viewUser.jsp";
+    }
+
+    @PostMapping("/create")
+    public String createUser(HttpServletRequest request, HttpSession session) {
+        try {
+            Users newUser = extractUserFromRequest(request);
+            Map<String, String> errors = userService.validateUserData(newUser, Boolean.FALSE);
+
+            if (!errors.isEmpty()) {
+                request.setAttribute("errors", errors);
+                preserveInput(request, newUser);
                 return ProjectPaths.JSP_PATH_DASHBOARD + "userManagement/createUser.jsp";
-            case "editForm":
-                if (id == null) {
-                    session.setAttribute("toastMessage", "ID không hợp lệ!");
-                    return "redirect:" + ProjectPaths.HREF_TO_USERMANAGEMENT.substring(ProjectPaths.PREFIX_WEB_PATH.length());
-                }
-                Users editUser = userService.getUserById(id);
-                if (editUser == null) {
-                    session.setAttribute("toastMessage", "Không tìm thấy người dùng!");
-                    return "redirect:" + ProjectPaths.HREF_TO_USERMANAGEMENT.substring(ProjectPaths.PREFIX_WEB_PATH.length());
-                }
-                request.setAttribute("user", editUser);
-                return ProjectPaths.JSP_PATH_DASHBOARD + "userManagement/editUser.jsp";
-            case "viewUser":
-                if (id == null) {
-                    session.setAttribute("toastMessage", "ID không hợp lệ!");
-                    return "redirect:" + ProjectPaths.HREF_TO_USERMANAGEMENT.substring(ProjectPaths.PREFIX_WEB_PATH.length());
-                }
-                Users viewUser = userService.getUserById(id);
-                if (viewUser == null) {
-                    session.setAttribute("toastMessage", "Không tìm thấy người dùng!");
-                    return "redirect:" + ProjectPaths.HREF_TO_USERMANAGEMENT.substring(ProjectPaths.PREFIX_WEB_PATH.length());
-                }
-                request.setAttribute("user", viewUser);
-                return ProjectPaths.JSP_PATH_DASHBOARD + "userManagement/viewUser.jsp";
-            case "searchUsers":
-                List<Users> searchResults = userService.searchUsers(username, status);
-                request.setAttribute("users", searchResults);
-                if (searchResults.isEmpty()) {
-                    session.setAttribute("toastMessage", "Không tìm thấy người dùng nào khớp với tiêu chí.");
-                }
-                return ProjectPaths.JSP_USERMANAGEMENT_PATH;
-            case "listUser":
-            default:
-                request.setAttribute("users", userService.getAllUsers());
-                return ProjectPaths.JSP_USERMANAGEMENT_PATH;
+            }
+
+            boolean success = userService.createUser(newUser);
+            if (success) {
+                session.setAttribute("toastMessage", "Tạo người dùng thành công!");
+                return "redirect:/admin/users";
+            } else {
+                request.setAttribute("errorMessage", "Không thể tạo người dùng. Có thể username/email đã tồn tại trong DB.");
+                preserveInput(request, newUser);
+                return ProjectPaths.JSP_PATH_DASHBOARD + "userManagement/createUser.jsp";
+            }
+        } catch (Exception e) {
+            session.setAttribute("toastMessage", "Lỗi hệ thống: " + e.getMessage());
+            e.printStackTrace();
+            return "redirect:/admin/users";
         }
     }
 
-    @PostMapping
-    public String handlePost(@RequestParam("action") String action,
-                             HttpServletRequest request, HttpSession session) {
+    @PostMapping("/{id}/edit")
+    public String editUser(@PathVariable("id") Integer id, HttpServletRequest request, HttpSession session) {
         try {
-            switch (action) {
-                case "createUser":
-                    Users newUser = extractUserFromRequest(request);
-                    Map<String, String> errors = userService.validateUserData(newUser, Boolean.FALSE);
+            Users existingUser = userService.getUserById(id);
 
-                    if (!errors.isEmpty()) {
-                        request.setAttribute("errors", errors);
-                        preserveInput(request, newUser);
-                        return ProjectPaths.JSP_PATH_DASHBOARD + "userManagement/createUser.jsp";
-                    }
+            if (existingUser == null) {
+                session.setAttribute("toastMessage", "Không tìm thấy người dùng!");
+                return "redirect:/admin/users";
+            }
 
-                    boolean success = userService.createUser(newUser);
-                    if (success) {
-                        session.setAttribute("toastMessage", "Tạo người dùng thành công!");
-                        return "redirect:" + ProjectPaths.HREF_TO_USERMANAGEMENT.substring(ProjectPaths.PREFIX_WEB_PATH.length());
-                    } else {
-                        request.setAttribute("errorMessage", "Không thể tạo người dùng. Có thể username/email đã tồn tại trong DB.");
-                        preserveInput(request, newUser);
-                        return ProjectPaths.JSP_PATH_DASHBOARD + "userManagement/createUser.jsp";
-                    }
+            Users updatedUser = updateUserFromRequest(request, existingUser);
+            Map<String, String> errors = userService.validateUserData(updatedUser, true);
 
-                case "editUser":
-                    int userId = Integer.parseInt(request.getParameter("id"));
-                    Users existingUser = userService.getUserById(userId);
+            Optional<Users> userByUsername = userService.findUserByUsername(updatedUser.getUsername());
+            if (userByUsername.isPresent() && userByUsername.get().getUserId() != updatedUser.getUserId()) {
+                errors.put("username", "Tên đăng nhập đã tồn tại.");
+            }
 
-                    if (existingUser == null) {
-                        session.setAttribute("toastMessage", "Không tìm thấy người dùng!");
-                        return "redirect:" + ProjectPaths.HREF_TO_USERMANAGEMENT.substring(ProjectPaths.PREFIX_WEB_PATH.length());
-                    }
+            Optional<Users> userByEmail = userService.findUserByEmail(updatedUser.getEmail());
+            if (userByEmail.isPresent() && userByEmail.get().getUserId() != updatedUser.getUserId()) {
+                errors.put("email", "Email đã tồn tại.");
+            }
 
-                    Users updatedUser = updateUserFromRequest(request, existingUser);
-                    errors = userService.validateUserData(updatedUser, true);
+            Optional<Users> userByPhone = userService.findUserByPhone(updatedUser.getPhone());
+            if (userByPhone.isPresent() && userByPhone.get().getUserId() != updatedUser.getUserId()) {
+                errors.put("phone", "Số điện thoại đã tồn tại.");
+            }
 
-                    Optional<Users> userByUsername = userService.findUserByUsername(updatedUser.getUsername());
-                    if (userByUsername.isPresent() && userByUsername.get().getUserId() != updatedUser.getUserId()) {
-                        errors.put("username", "Tên đăng nhập đã tồn tại.");
-                    }
+            if (!errors.isEmpty()) {
+                request.setAttribute("errors", errors);
+                request.setAttribute("user", updatedUser);
+                return ProjectPaths.JSP_PATH_DASHBOARD + "userManagement/editUser.jsp";
+            }
 
-                    Optional<Users> userByEmail = userService.findUserByEmail(updatedUser.getEmail());
-                    if (userByEmail.isPresent() && userByEmail.get().getUserId() != updatedUser.getUserId()) {
-                        errors.put("email", "Email đã tồn tại.");
-                    }
+            if (userService.updateUser(updatedUser)) {
+                session.setAttribute("toastMessage", "Cập nhật người dùng thành công!");
+            } else {
+                session.setAttribute("toastMessage", "Lỗi khi cập nhật người dùng!");
+            }
+            return "redirect:/admin/users";
+        } catch (Exception e) {
+            session.setAttribute("toastMessage", "Lỗi hệ thống: " + e.getMessage());
+            e.printStackTrace();
+            return "redirect:/admin/users";
+        }
+    }
 
-                    Optional<Users> userByPhone = userService.findUserByPhone(updatedUser.getPhone());
-                    if (userByPhone.isPresent() && userByPhone.get().getUserId() != updatedUser.getUserId()) {
-                        errors.put("phone", "Số điện thoại đã tồn tại.");
-                    }
-
-                    if (!errors.isEmpty()) {
-                        request.setAttribute("errors", errors);
-                        request.setAttribute("user", updatedUser);
-                        return ProjectPaths.JSP_PATH_DASHBOARD + "userManagement/editUser.jsp";
-                    }
-
-                    if (userService.updateUser(updatedUser)) {
-                        session.setAttribute("toastMessage", "Cập nhật người dùng thành công!");
-                    } else {
-                        session.setAttribute("toastMessage", "Lỗi khi cập nhật người dùng!");
-                    }
-                    return "redirect:" + ProjectPaths.HREF_TO_USERMANAGEMENT.substring(ProjectPaths.PREFIX_WEB_PATH.length());
-
-                case "deleteUser":
-                    int deleteId = Integer.parseInt(request.getParameter("userId"));
-                    if (userService.deleteUser(deleteId)) {
-                        session.setAttribute("toastMessage", "Xóa người dùng thành công!");
-                    } else {
-                        session.setAttribute("toastMessage", "Lỗi khi xóa người dùng: Không tìm thấy ID " + deleteId);
-                    }
-                    return "redirect:" + ProjectPaths.HREF_TO_USERMANAGEMENT.substring(ProjectPaths.PREFIX_WEB_PATH.length());
-
-                default:
-                    session.setAttribute("toastMessage", "Hành động không hợp lệ: " + action);
+    @PostMapping("/{id}/delete")
+    public String deleteUser(@PathVariable("id") Integer id, HttpServletRequest request, HttpSession session) {
+        try {
+            if (userService.deleteUser(id)) {
+                session.setAttribute("toastMessage", "Xóa người dùng thành công!");
+            } else {
+                session.setAttribute("toastMessage", "Lỗi khi xóa người dùng: Không tìm thấy ID " + id);
             }
         } catch (Exception e) {
             session.setAttribute("toastMessage", "Lỗi hệ thống: " + e.getMessage());
             e.printStackTrace();
         }
-
-        return "redirect:" + ProjectPaths.HREF_TO_USERMANAGEMENT.substring(ProjectPaths.PREFIX_WEB_PATH.length());
+        return "redirect:/admin/users";
     }
 
     private void preserveInput(HttpServletRequest request, Users newUser) {
